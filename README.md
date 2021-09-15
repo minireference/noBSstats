@@ -1,7 +1,7 @@
 # noBSstatsnotebooks
-Hands-on tutorials, exercises, and projects to accompany the No Bullshit Guide to Statistics.
+Hands-on tutorials, exercises, and projects to accompany the **No Bullshit Guide to Statistics**.
 
-Motivation: reading about data stuff is not enough... learners need to play with data. This is what this repo is about.
+Motivation: reading about stats is not enough... learners need to play with stats and do real-world data analysis. This is what this repo is about.
 
 
 ### Data
