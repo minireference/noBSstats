@@ -1,48 +1,67 @@
-# noBS Stats Notebooks
+# noBS STATS Notebooks
 
 Hands-on tutorials, exercises, and projects to accompany the **No Bullshit Guide to Statistics**.
-Motivation: reading about stats is not enough... you need to experiment with stats, play with different examples, and do some real-world data analysis tasks. This is what this repo is about.
+Motivation: reading about stats is not enough... you need to experiment with stats,
+play with different examples, and do some real-world data analysis tasks.
+This is what this repo is about.
 
 
 ## Getting started
-
 Use the binder button below to start an ephemeral JupyterLab instance where you can run the code in each notebook.
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstatsnotebooks/main)
 
+
 ## Contents
+Once have launched JupyterLab instance, use the file browser (folder icon in the left pane)
+to navigate to any of these subfolders and try the notebooks in them:
 
-Once have launched JupyterLab instance, use the file browser (folder icon in the left pane) to navigate to any of these subfolders and try the notebooks in them:
+- [`stats_overview/`](./stats_overview/): a complete worked example to introduce the main concepts of statistics
+- [`exercises/`](./exercises/): simple, routine exercises **COMING SOON**
+- [`problems/`](./problems/): problems requiring some thinking **COMING SOON**
+- [`missions/`](./missions/): multi-step procedures and workflows **COMING SOON**
 
-- [`stats_overview/`](./stats_overview/]: a complete worked example that introduces main concepts of statistics
-- [`notebooks/`](./notebooks/): other explorations (mostly in draft form)
 
+## Other stuff
 
-## Project info
+This repo also contains lots of "utility" code and notebooks that were used for the book:
+
+- [`data_generation`](./data_generation): notebooks used to generate datasets used in the book
+- [`figures_generation`](./figures_generation): notebooks to run to generate figures and tables
+- [`notebooks/`](./notebooks/): general exploratory notebooks and drafts
 
 
 ### Tech stack
-- Python and notebooks runnable in jupterlab
+- Python and notebooks runnable in `jupter-lab`
 - data manipulation using `pandas` and some `numpy`
 - graphing with `seaborn`
 - prob. and stats functionality from `scipy`
 - advanced stats from `statsmodels`
 
+All of these can be installed by running `pip install -r reqirements.txt` in the
+root of this project.
 
-### Pedagogy
-- hands on interactive exercises of complete statistical analyses (data->model->stats->report)
-- scaffolding (three-quarters filled, half-filled, and fully independent)
-- task: learner has to write a Python function
-  with well defined inputs (given...) that produces the expected output
-- the output of the function gets tested using a test function either inline or imported
-  Prior work: some tutorials ask learners to assign their answer to a variable then tests the answer using
-  [assert statements] (https://datascienceinpractice.github.io/assignments/D2_Pandas.html)
-  We'll be taking this idea to the next level by asking learners to "assign" a callable to the name.
+
+
+### Pedagogical notes
+
+- The goal is to have lots of hands-on activities, called missions, that ask
+  readers to do a complete statistical analyses (data->model->stats->report)
+- Each mission will provide some scaffolding so learners are not left completely
+  on their own (for beginners 3/4 of the steps are already filled in, then for
+  intermediate learners notebook is half-filled, and advanced learners are just
+  provided with the goal and otherwise left to work independently)
+- Most common task: write a Python function that fulfills a detailed specification,
+  including what inputs to accept and what output the function is expected to produce.
+- Student's solution (a filled-in function) gets tested using a test function,
+  just like unit test used in software projects.
+  - Prior work: tutorial ask learners to assign their answer to a variable:
+    [assert statements](https://datascienceinpractice.github.io/assignments/D2_Pandas.html)
+    We'll be taking this idea to the next level by asking learners to define a callable.
 
 
 
 ### TODOs
 
 - Convert repo to jupyter-book
-- 
 
