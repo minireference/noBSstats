@@ -16,19 +16,23 @@ Use the binder button below to start an ephemeral JupyterLab instance where you 
 Once have launched JupyterLab instance, use the file browser (folder icon in the left pane)
 to navigate to any of these subfolders and try the notebooks in them:
 
-- [`stats_overview/`](./stats_overview/): a complete worked example to introduce the main concepts of statistics
-- [`exercises/`](./exercises/): simple, routine exercises **COMING SOON**
+- [`notebooks/`](./notebooks/): notebooks to accompany each section of the book.
+- [`stats_overview/`](./stats_overview/): a complete worked example to introduce
+  all the statistics concepts from the book: DATA, PROB, STATS, and LINEAR MODELS.
+- [`exercises/`](./exercises/): simple, routine exercises to practice new concepts.
 - [`problems/`](./problems/): problems requiring some thinking **COMING SOON**
 - [`missions/`](./missions/): multi-step procedures and workflows **COMING SOON**
+- [`tutorials/`](./tutorials/): tutorials that introduce Python basics, and the Pandas and Seaborn Python libraries.
 
 
 ## Other stuff
 
-This repo also contains lots of "utility" code and notebooks that were used for the book:
+This repo also contains the "utility" code and notebooks that were used for the book:
 
-- [`data_generation`](./data_generation): notebooks used to generate datasets used in the book
-- [`figures_generation`](./figures_generation): notebooks to run to generate figures and tables
-- [`notebooks/`](./notebooks/): general exploratory notebooks and drafts
+- [`data_generation`](./data_generation): notebooks used to generate datasets used in the book.
+- [`figures_generation`](./figures_generation): notebooks to run to generate figures and tables.
+- [`notebooks/explorations/`](./notebooks/explorations/): general exploratory notebooks on statistics.
+- [`notebooks/drafts/`](./notebooks/drafts/): notebook drafts (not ready for prime time).
 
 
 ### Tech stack
@@ -63,5 +67,5 @@ root of this project.
 
 ### TODOs
 
-- Convert repo to jupyter-book
+- write CI script to strip out exercise solutions from notebooks
 
