@@ -16,6 +16,7 @@ Use the binder button below to start an ephemeral JupyterLab instance where you 
 Once have launched JupyterLab instance, use the file browser (folder icon in the left pane)
 to navigate to any of these subfolders and try the notebooks in them:
 
+- [`datasets/`](./datasets/): all the data used for examples, exercises, and problems in the book.
 - [`notebooks/`](./notebooks/): notebooks to accompany each section of the book.
 - [`stats_overview/`](./stats_overview/): a complete worked example to introduce
   all the statistics concepts from the book: DATA, PROB, STATS, and LINEAR MODELS.
