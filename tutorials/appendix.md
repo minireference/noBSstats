@@ -2,7 +2,6 @@
 
 - A. Answers and solutions
 - B. Notation
-- C. Intro to Python
-- D. Intro to Pandas
-- E. Data visualization with Seaborn
-
+- C. [Python tutorial](./python_tutorial.ipynb)
+- D. [Pandas tutorial](./pandas_tutorial.ipynb)
+- E. [Seaborn tutorial](./seaborn_tutorial.ipynb)
