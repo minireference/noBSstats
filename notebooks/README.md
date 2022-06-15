@@ -5,7 +5,7 @@ This folder contains the notebooks created for the **No Bullshit Guide to Statis
 
 
 
-## Chapter 1: DATA
+## Chapter 1: Data
 
 ### 1.1 Introduction to data
 This is a very short notebook that gives some examples of random selection and random assignment.
@@ -46,10 +46,55 @@ and how to generate data visualizations like histograms, box plots, bar plots, e
 
 
 
-## Chapter 2: PROB
+
+
+
+
+
+## Chapter 2: Probability
 
 ### 2.1 Probability theory
+This notebook contains a complete course on probability theory including definitions,
+calculus prerequisites, probability formulas, and lots of examples.
 
 - View notebook: [21_prob_theory.ipynb](./21_prob_theory.ipynb)  
 - Binder link: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstatsnotebooks/main?labpath=notebooks%2F21_prob_theory.ipynb)
 - Colab link: [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/minireference/noBSstatsnotebooks/blob/main/notebooks/21_prob_theory.ipynb)
+
+
+### 2.2 Multiple random variables
+(will be ready later in June)
+
+- View notebook: [22_multiple_random_vars.ipynb](./22_multiple_random_vars.ipynb)  
+- Binder link: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstatsnotebooks/main?labpath=notebooks%2F22_multiple_random_vars.ipynb)
+- Colab link: [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/minireference/noBSstatsnotebooks/blob/main/notebooks/22_multiple_random_vars.ipynb)
+
+
+### 2.3 Discrete probability distributions
+(coming soon)
+
+### 2.4 Continuous probability distributions}
+(coming soon)
+
+### 2.5 Probability models for random samples
+(coming soon)
+
+
+
+
+
+
+
+
+
+
+
+## Chapter 3: Inferential statistics
+(coming later this summer)
+
+
+## Chapter 4: Linear models
+(coming later this summer)
+
+
+
