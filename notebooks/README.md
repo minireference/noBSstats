@@ -45,3 +45,11 @@ and how to generate data visualizations like histograms, box plots, bar plots, e
 [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/minireference/noBSstatsnotebooks/blob/main/notebooks/13_descriptive_statistics.ipynb)
 
 
+
+## Chapter 2: PROB
+
+### 2.1 Probability theory
+
+- View notebook: [21_prob_theory.ipynb](./21_prob_theory.ipynb)  
+- Binder link: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstatsnotebooks/main?labpath=notebooks%2F21_prob_theory.ipynb)
+- Colab link: [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/minireference/noBSstatsnotebooks/blob/main/notebooks/21_prob_theory.ipynb)
