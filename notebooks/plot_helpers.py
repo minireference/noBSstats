@@ -133,3 +133,44 @@ def plot_pdf_and_cdf(rv, b, a=-np.inf, xlims=None, rv_name="X"):
     # return figure and axes
     return fig, axs
 
+
+
+def plot_pdf(rv, xlims=None, rv_name="X", ax=None, title=None):
+    """
+    Plot the pdf of the continuous random variable `rv` over the `xlims`.
+    """
+    pass
+
+
+
+def plot_pmf(rv, xlims=None, rv_name="X", ax=None, title=None):
+    """
+    Plot the pmf of the discrete random variable `rv` over the `xlims`.
+    """
+    # Setup ensure figure and axes
+    if ax is None:
+        fig, ax = plt.subplots()
+    else:
+        fig = ax.figure
+
+    # Computer limits
+    if xlims:
+        xmin, xmax = xlims
+    else:
+        xmin, xmax = rv.ppf(0.000000001), rv.ppf(0.99999)
+    xs = np.arange(xmin, xmax)
+
+    # Compute the probability mass function and plot it
+    fXs = rv.pmf(xs)
+    ax.stem(fXs, basefmt=" ")
+    ax.set_xticks(xs)
+    ax.set_xlabel(rv_name.lower())
+    ax.set_ylabel(f"$f_{rv_name}$")
+    
+    if title and title.lower() == "auto":
+        title = "Probability mass function of the random variable " + rv.dist.name + str(rv.args)
+    if title:
+        ax.set_title(title, y=0, pad=-30)
+
+    # return the axes
+    return ax
