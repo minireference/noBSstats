@@ -4,15 +4,65 @@ MIT License Minireferece Co.
 """
 # TODO: change x to xs (to signal it's a array-like)
 
-
-
-
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.integrate import quad
 import seaborn as sns
 
 
+# Figure settings
+sns.set(color_codes=True)                               # turn on Seaborn styles
+plt.rc('text', usetex=True)                             # enable latex for labels
+plt.rc('font', family='serif', serif=['Palatino'])      # set font to Minireference style guide
+
+DEFAULT_PARAMS_TO_LATEX = {
+    'mu': '\\mu',
+    'sigma': '\\sigma',
+    'lambda': '\\lambda',
+    'beta': '\\beta',
+    'a': 'a',
+    'b': 'b',
+    'N': 'N',
+    'K': 'K',
+    'k': 'k',
+    'n': 'n',
+    'p': 'p',
+    'r': 'r',
+}
+
+
+
+
+
+# Utils
+################################################################################
+
+def default_labeler(params, params_to_latex):
+    """
+    Returns string appropriate for probability distribution label used in plot.
+    """
+    params_to_latex = dict(DEFAULT_PARAMS_TO_LATEX, **params_to_latex)
+    label_parts = []
+    for param, value in params.items():
+        if param in params_to_latex:
+            label_part = '$' + params_to_latex[param] + '=' + str(value) + '$'
+        else:
+            label_part = str(param) + '=' + str(value)
+        label_parts.append(label_part)
+    label = ', '.join(label_parts)
+    return label
+
+
+
+
+# Continuous random variables
+################################################################################
+
+def plot_pdf(rv, xlims=None, rv_name="X", ax=None, title=None):
+    """
+    Plot the pdf of the continuous random variable `rv` over the `xlims`.
+    """
+    pass
 
 
 
@@ -49,7 +99,6 @@ def calc_prob_and_plot(rv, a, b, xlims=None, ax=None, title=None):
 
 
 
-
 def calc_prob_and_plot_tails(rv, x_l, x_r, xlims=None, ax=None, title=None):
     """
     Plot the area-under-the-curve visualization for the distribution's tails and
@@ -82,7 +131,6 @@ def calc_prob_and_plot_tails(rv, x_l, x_r, xlims=None, ax=None, title=None):
 
     # return prob and figure axes
     return p_tails, ax
-
 
 
 
@@ -135,19 +183,74 @@ def plot_pdf_and_cdf(rv, b, a=-np.inf, xlims=None, rv_name="X"):
 
 
 
-def plot_pdf(rv, xlims=None, rv_name="X", ax=None, title=None):
+def generate_pdf_panel(fname, k, model, params_matrix,
+                       params_to_latex={},
+                       kticks=5,
+                       fontsize=12,
+                       labeler=default_labeler):
     """
-    Plot the pdf of the continuous random variable `rv` over the `xlims`.
+    Generate PDF and PNG figures with panel of probability density function of
+    `model` over the sample space `k` for all RV parameters specified in the
+    list-of-lists `params_matrix`.
     """
-    pass
+    # We're drawing a figure with MxN subplots
+    M = len(params_matrix)
+    N = max( [len(row) for row in params_matrix] )
+
+    # prepare x-axis ticks at aevery multiple of `kticks`
+    kmax = np.max(k) + 1
+    xticks = np.arange(0, kmax, kticks)
+
+    # RV generation
+    fX_matrix = np.zeros( (M,N,kmax) )
+    for i in range(0,M):
+        for j in range(0,N):
+            params = params_matrix[i][j]
+            rv = model(**params)
+            fX_matrix[i][j] = rv.pdf(k)
+
+    # Generate the MxN panel of subplots
+    fig, axarr = plt.subplots(M, N, sharey=True)
+    for i in range(0,M):
+        for j in range(0,N):
+            ax = axarr[i][j]
+            fX = fX_matrix[i][j]
+            params = params_matrix[i][j]
+            label = labeler(params, params_to_latex)
+            ax.bar(k, fX, color='b', edgecolor='b')
+            ax.xaxis.set_ticks(xticks)
+            # ax.set_title(label, loc='right')
+            ax.text(0.93, 0.86, label,
+                    horizontalalignment='right',
+                    transform=ax.transAxes,
+                    size=fontsize)
+
+    # Save as PDF and PNG
+    basename = fname.replace('.pdf','').replace('.png','')
+    fig.savefig(basename + '.pdf',
+                format='pdf',
+                bbox_inches=None,
+                pad_inches=0.01,
+                frameon=None)
+    fig.savefig(basename + '.png',
+                format='png',
+                dpi=150,
+                bbox_inches=None,
+                pad_inches=0.01,
+                frameon=None)
 
 
+
+
+
+# Discrete random variables
+################################################################################
 
 def plot_pmf(rv, xlims=None, rv_name="X", ax=None, title=None):
     """
     Plot the pmf of the discrete random variable `rv` over the `xlims`.
     """
-    # Setup ensure figure and axes
+    # Setup figure and axes
     if ax is None:
         fig, ax = plt.subplots()
     else:
@@ -174,3 +277,61 @@ def plot_pmf(rv, xlims=None, rv_name="X", ax=None, title=None):
 
     # return the axes
     return ax
+
+
+
+def generate_pmf_panel(fname, k, model, params_matrix,
+                       params_to_latex={},
+                       kticks=5,
+                       fontsize=18,
+                       labeler=default_labeler):
+    """
+    Generate PDF and PNG figures with panel of probability mass function of
+    `model` over the sample space `k` for all RV parameters specified in the
+    list-of-lists `params_matrix`.
+    """
+    # We're drawing a figure with MxN subplots
+    M = len(params_matrix)
+    N = max( [len(row) for row in params_matrix] )
+
+    # prepare x-axis ticks at aevery multiple of `kticks`
+    kmax = np.max(k) + 1
+    xticks = np.arange(0, kmax, kticks)
+
+    # RV generation
+    fX_matrix = np.zeros( (M,N,kmax) )
+    for i in range(0,M):
+        for j in range(0,N):
+            params = params_matrix[i][j]
+            rv = model(**params)
+            fX_matrix[i][j] = rv.pmf(k)
+
+    # Generate the MxN panel of subplots
+    fig, axarr = plt.subplots(M, N, sharex=True, sharey=True)
+    for i in range(0,M):
+        for j in range(0,N):
+            ax = axarr[i][j]
+            fX = fX_matrix[i][j]
+            params = params_matrix[i][j]
+            label = labeler(params, params_to_latex)
+            ax.bar(k, fX, color='b', edgecolor='b')
+            ax.xaxis.set_ticks(xticks)
+            # ax.set_title(label, loc='right')
+            ax.text(0.95, 0.86, label,
+                    horizontalalignment='right',
+                    transform=ax.transAxes,
+                    size=fontsize)
+
+    # Save as PDF and PNG
+    basename = fname.replace('.pdf','').replace('.png','')
+    fig.savefig(basename + '.pdf',
+                format='pdf',
+                bbox_inches=None,
+                pad_inches=0.01,
+                frameon=None)
+    fig.savefig(basename + '.png',
+                format='png',
+                bbox_inches=None,
+                dpi=150,
+                pad_inches=0.01,
+                frameon=None)
