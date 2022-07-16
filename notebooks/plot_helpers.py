@@ -1,6 +1,6 @@
 """
 This file contains helper functions for plotting the probability distributions.
-MIT License Minireferece Co.
+(c) 2022 Minireferece Co. - MIT License
 """
 # TODO: change x to xs (to signal it's a array-like)
 
@@ -183,9 +183,9 @@ def plot_pdf_and_cdf(rv, b, a=-np.inf, xlims=None, rv_name="X"):
 
 
 
-def generate_pdf_panel(fname, k, model, params_matrix,
+def generate_pdf_panel(fname, xs, model, params_matrix,
                        params_to_latex={},
-                       kticks=5,
+                       xticks=5,
                        fontsize=12,
                        labeler=default_labeler):
     """
@@ -198,28 +198,27 @@ def generate_pdf_panel(fname, k, model, params_matrix,
     N = max( [len(row) for row in params_matrix] )
 
     # prepare x-axis ticks at aevery multiple of `kticks`
-    kmax = np.max(k) + 1
-    xticks = np.arange(0, kmax, kticks)
+    xmax = np.max(xs) + 1
+    xticks = np.arange(0, xmax, xticks)
 
     # RV generation
-    fX_matrix = np.zeros( (M,N,kmax) )
+    fXs_matrix = np.zeros( (M,N,len(xs)) )
     for i in range(0,M):
         for j in range(0,N):
             params = params_matrix[i][j]
             rv = model(**params)
-            fX_matrix[i][j] = rv.pdf(k)
+            fXs_matrix[i][j] = rv.pdf(xs)
 
     # Generate the MxN panel of subplots
     fig, axarr = plt.subplots(M, N, sharey=True)
     for i in range(0,M):
         for j in range(0,N):
             ax = axarr[i][j]
-            fX = fX_matrix[i][j]
+            fXs = fXs_matrix[i][j]
             params = params_matrix[i][j]
             label = labeler(params, params_to_latex)
-            ax.bar(k, fX, color='b', edgecolor='b')
+            sns.lineplot(x=xs, y=fXs, ax=ax)
             ax.xaxis.set_ticks(xticks)
-            # ax.set_title(label, loc='right')
             ax.text(0.93, 0.86, label,
                     horizontalalignment='right',
                     transform=ax.transAxes,
@@ -227,17 +226,9 @@ def generate_pdf_panel(fname, k, model, params_matrix,
 
     # Save as PDF and PNG
     basename = fname.replace('.pdf','').replace('.png','')
-    fig.savefig(basename + '.pdf',
-                format='pdf',
-                bbox_inches=None,
-                pad_inches=0.01,
-                frameon=None)
-    fig.savefig(basename + '.png',
-                format='png',
-                dpi=150,
-                bbox_inches=None,
-                pad_inches=0.01,
-                frameon=None)
+    fig.tight_layout()
+    fig.savefig(basename + '.pdf', dpi=300, bbox_inches="tight", pad_inches=0.02)
+    fig.savefig(basename + '.png', dpi=300, bbox_inches="tight", pad_inches=0.02)
 
 
 
@@ -280,7 +271,7 @@ def plot_pmf(rv, xlims=None, rv_name="X", ax=None, title=None):
 
 
 
-def generate_pmf_panel(fname, k, model, params_matrix,
+def generate_pmf_panel(fname, ks, model, params_matrix,
                        params_to_latex={},
                        kticks=5,
                        fontsize=18,
@@ -295,7 +286,7 @@ def generate_pmf_panel(fname, k, model, params_matrix,
     N = max( [len(row) for row in params_matrix] )
 
     # prepare x-axis ticks at aevery multiple of `kticks`
-    kmax = np.max(k) + 1
+    kmax = np.max(ks) + 1
     xticks = np.arange(0, kmax, kticks)
 
     # RV generation
@@ -304,7 +295,7 @@ def generate_pmf_panel(fname, k, model, params_matrix,
         for j in range(0,N):
             params = params_matrix[i][j]
             rv = model(**params)
-            fX_matrix[i][j] = rv.pmf(k)
+            fX_matrix[i][j] = rv.pmf(ks)
 
     # Generate the MxN panel of subplots
     fig, axarr = plt.subplots(M, N, sharex=True, sharey=True)
@@ -314,24 +305,17 @@ def generate_pmf_panel(fname, k, model, params_matrix,
             fX = fX_matrix[i][j]
             params = params_matrix[i][j]
             label = labeler(params, params_to_latex)
-            ax.bar(k, fX, color='b', edgecolor='b')
+            markerline, _stemlines, _baseline = ax.stem(fX, basefmt=" ")
+            plt.setp(markerline, markersize = 2)
             ax.xaxis.set_ticks(xticks)
-            # ax.set_title(label, loc='right')
             ax.text(0.95, 0.86, label,
                     horizontalalignment='right',
                     transform=ax.transAxes,
                     size=fontsize)
 
     # Save as PDF and PNG
+
     basename = fname.replace('.pdf','').replace('.png','')
-    fig.savefig(basename + '.pdf',
-                format='pdf',
-                bbox_inches=None,
-                pad_inches=0.01,
-                frameon=None)
-    fig.savefig(basename + '.png',
-                format='png',
-                bbox_inches=None,
-                dpi=150,
-                pad_inches=0.01,
-                frameon=None)
+    fig.tight_layout()
+    fig.savefig(basename + '.pdf', dpi=300, bbox_inches="tight", pad_inches=0.02)
+    fig.savefig(basename + '.png', dpi=300, bbox_inches="tight", pad_inches=0.02)
