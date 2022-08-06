@@ -31,10 +31,14 @@
 
 ## Probability models
 
-In probability theory, we model data as instances of a **random variable** $X$ described by a **probability distribution** $f_X$ (a math function) with particular parameters (usually denoted with Greek letters like $\theta$, $\mu$, $\sigma$, etc.).
+In probability theory, we model data as instances of a **random variable** $X$
+described by a **probability distribution** $f_X$ (a math function)
+with particular parameters (denoted by Greek letters like $\theta$, $\mu$, $\sigma$, etc.).
 
 Multiple different ways to specify and interact with probability distributions:
-- exact math model function (CDF from which we can extract pdf density function or pmf mass function). Math models allow us the most options: `rvs`, `cdf`, `pdf/pmf`, and stats like `mean`, `median`, `var/std`, `quartiles`.
+- exact math model function (probability distribution function)
+  Math models allow us the most options: `rvs`, `cdf`, `pdf/pmf`,
+  and stats like `mean`, `median`, `var/std`, `quartiles`.
 - random draws form a generative process
 - random draws from a real world process
 - data for an entire population (census)
