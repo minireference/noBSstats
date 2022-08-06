@@ -11,9 +11,31 @@ import seaborn as sns
 
 
 # Figure settings
-sns.set(color_codes=True)                               # turn on Seaborn styles
-plt.rc('text', usetex=True)                             # enable latex for labels
-plt.rc('font', family='serif', serif=['Palatino'])      # set font to Minireference style guide
+# sns.set(color_codes=True)                               # turn on Seaborn styles
+# plt.rc('text', usetex=True)                             # enable latex for labels
+# plt.rc('font', family='serif', serif=['Palatino'])      # set font to Minireference style guide
+rcparams = {
+    'figure.figsize': (7,4),
+    #     'figure.dpi': 300,
+    'font.serif': ['Palatino'],
+    'font.family': 'serif',    
+    #     'font.size': 20,
+    #     'figure.titlesize': 16,
+    #     'axes.titlesize':22,
+    #     'axes.labelsize':20,
+    #     'xtick.labelsize': 12,
+    #     'ytick.labelsize': 12,
+    #     'legend.fontsize': 16,
+    #     'legend.title_fontsize': 18,
+}
+sns.set_theme(
+    context="paper",
+    style="whitegrid",
+    palette="colorblind",  # ALT sns.color_palette('Blues', 4)
+    rc=rcparams,
+)
+
+
 
 DEFAULT_PARAMS_TO_LATEX = {
     'mu': '\\mu',
@@ -62,7 +84,33 @@ def plot_pdf(rv, xlims=None, rv_name="X", ax=None, title=None):
     """
     Plot the pdf of the continuous random variable `rv` over the `xlims`.
     """
-    pass
+    # Setup figure and axes
+    if ax is None:
+        fig, ax = plt.subplots()
+    else:
+        fig = ax.figure
+
+    # Computer limits
+    if xlims:
+        xmin, xmax = xlims
+    else:
+        xmin, xmax = rv.ppf(0.000000001), rv.ppf(0.99999)
+    xs = np.linspace(xmin, xmax, 1000)
+
+    # Compute the probability mass function and plot it
+    fXs = rv.pdf(xs)
+    sns.lineplot(x=xs, y=fXs, ax=ax)
+    ax.set_xlabel(rv_name.lower())
+    ax.set_ylabel(f"$f_{{{rv_name}}}$")
+
+    if title and title.lower() == "auto":
+        title = "Probability density function of the random variable " + rv.dist.name + str(rv.args)
+    if title:
+        ax.set_title(title, y=0, pad=-30)
+
+    # return the axes
+    return ax
+
 
 
 
@@ -259,7 +307,7 @@ def plot_pmf(rv, xlims=None, rv_name="X", ax=None, title=None):
     ax.stem(fXs, basefmt=" ")
     ax.set_xticks(xs)
     ax.set_xlabel(rv_name.lower())
-    ax.set_ylabel(f"$f_{rv_name}$")
+    ax.set_ylabel(f"$f_{{{rv_name}}}$")
     
     if title and title.lower() == "auto":
         title = "Probability mass function of the random variable " + rv.dist.name + str(rv.args)
