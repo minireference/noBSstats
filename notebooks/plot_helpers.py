@@ -80,7 +80,7 @@ def default_labeler(params, params_to_latex):
 # Continuous random variables
 ################################################################################
 
-def plot_pdf(rv, xlims=None, rv_name="X", ax=None, title=None):
+def plot_pdf(rv, xlims=None, ylims=None, rv_name="X", ax=None, title=None, label=None):
     """
     Plot the pdf of the continuous random variable `rv` over the `xlims`.
     """
@@ -90,7 +90,7 @@ def plot_pdf(rv, xlims=None, rv_name="X", ax=None, title=None):
     else:
         fig = ax.figure
 
-    # Computer limits
+    # Compute limits of plot
     if xlims:
         xmin, xmax = xlims
     else:
@@ -99,9 +99,11 @@ def plot_pdf(rv, xlims=None, rv_name="X", ax=None, title=None):
 
     # Compute the probability mass function and plot it
     fXs = rv.pdf(xs)
-    sns.lineplot(x=xs, y=fXs, ax=ax)
+    sns.lineplot(x=xs, y=fXs, ax=ax, label=label)
     ax.set_xlabel(rv_name.lower())
     ax.set_ylabel(f"$f_{{{rv_name}}}$")
+    if ylims:
+        ax.set_ylim(*ylims)
 
     if title and title.lower() == "auto":
         title = "Probability density function of the random variable " + rv.dist.name + str(rv.args)
@@ -285,7 +287,7 @@ def generate_pdf_panel(fname, xs, model, params_matrix,
 # Discrete random variables
 ################################################################################
 
-def plot_pmf(rv, xlims=None, rv_name="X", ax=None, title=None):
+def plot_pmf(rv, xlims=None, ylims=None, rv_name="X", ax=None, title=None, label=None):
     """
     Plot the pmf of the discrete random variable `rv` over the `xlims`.
     """
@@ -295,7 +297,7 @@ def plot_pmf(rv, xlims=None, rv_name="X", ax=None, title=None):
     else:
         fig = ax.figure
 
-    # Computer limits
+    # Compute limits of plot
     if xlims:
         xmin, xmax = xlims
     else:
@@ -304,11 +306,16 @@ def plot_pmf(rv, xlims=None, rv_name="X", ax=None, title=None):
 
     # Compute the probability mass function and plot it
     fXs = rv.pmf(xs)
-    ax.stem(fXs, basefmt=" ")
+    fXs = np.where(fXs == 0, np.nan, fXs)  # set zero fXs to np.nan
+    ax.stem(fXs, basefmt=" ", label=label)
     ax.set_xticks(xs)
     ax.set_xlabel(rv_name.lower())
     ax.set_ylabel(f"$f_{{{rv_name}}}$")
-    
+    if ylims:
+        ax.set_ylim(*ylims)
+    if label:
+        ax.legend()
+
     if title and title.lower() == "auto":
         title = "Probability mass function of the random variable " + rv.dist.name + str(rv.args)
     if title:
