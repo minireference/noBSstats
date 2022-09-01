@@ -3,6 +3,12 @@ Notebooks
 
 This folder contains the notebooks created for the **No Bullshit Guide to Statistics**.
 
+The purpose of these notebooks is to allow you
+to experiment and play with all the code examples presented in the book.
+Each notebook contains numerous empty code cells,
+which are an invitation for you to try some commands on your own.
+For example, you can copy-paste some of the neighbouring commands
+and try modifying them to see what outputs you get.
 
 
 ## Chapter 1: Data
