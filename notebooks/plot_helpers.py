@@ -236,7 +236,7 @@ def plot_pdf_and_cdf(rv, b, a=-np.inf, xlims=None, rv_name="X"):
 def generate_pdf_panel(fname, xs, model, params_matrix,
                        params_to_latex={},
                        xticks=5,
-                       fontsize=12,
+                       fontsize=10,
                        labeler=default_labeler):
     """
     Generate PDF and PNG figures with panel of probability density function of
@@ -280,7 +280,7 @@ def generate_pdf_panel(fname, xs, model, params_matrix,
     fig.savefig(basename + '.pdf', dpi=300, bbox_inches="tight", pad_inches=0.02)
     fig.savefig(basename + '.png', dpi=300, bbox_inches="tight", pad_inches=0.02)
 
-
+    return fig
 
 
 
@@ -329,7 +329,7 @@ def plot_pmf(rv, xlims=None, ylims=None, rv_name="X", ax=None, title=None, label
 def generate_pmf_panel(fname, ks, model, params_matrix,
                        params_to_latex={},
                        kticks=5,
-                       fontsize=18,
+                       fontsize=10,
                        labeler=default_labeler):
     """
     Generate PDF and PNG figures with panel of probability mass function of
@@ -350,7 +350,17 @@ def generate_pmf_panel(fname, ks, model, params_matrix,
         for j in range(0,N):
             params = params_matrix[i][j]
             rv = model(**params)
-            fX_matrix[i][j] = rv.pmf(ks)
+            low, high = rv.support()
+            if high == np.inf:
+                high = 1000
+            calX = range(low, high+1)
+            fXs = []
+            for k in ks:
+                if k in calX:
+                    fXs.append(rv.pmf(k))
+                else:
+                    fXs.append(np.nan)
+            fX_matrix[i][j] = fXs
 
     # Generate the MxN panel of subplots
     fig, axarr = plt.subplots(M, N, sharex=True, sharey=True)
@@ -374,3 +384,5 @@ def generate_pmf_panel(fname, ks, model, params_matrix,
     fig.tight_layout()
     fig.savefig(basename + '.pdf', dpi=300, bbox_inches="tight", pad_inches=0.02)
     fig.savefig(basename + '.png', dpi=300, bbox_inches="tight", pad_inches=0.02)
+    
+    return fig
