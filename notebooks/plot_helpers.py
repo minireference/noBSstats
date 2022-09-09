@@ -81,9 +81,8 @@ def default_labeler(params, params_to_latex):
 def ensure_containing_dir_exists(filepath):
     parent = os.path.join(filepath, os.pardir)
     absparent = os.path.abspath(parent)
-    print(absparent)
-    # if not os.path.exists(absparent):
-    #     os.makedirs(absparent)
+    if not os.path.exists(absparent):
+        os.makedirs(absparent)
 
 
 # Continuous random variables
