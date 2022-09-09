@@ -13,6 +13,8 @@ import numpy as np
 from scipy.integrate import quad
 import seaborn as sns
 
+from scipy.stats import randint
+
 
 # Figure settings
 # sns.set(color_codes=True)                               # turn on Seaborn styles
@@ -378,7 +380,11 @@ def generate_pmf_panel(fname, ks, model, params_matrix,
             ax = axarr[i][j]
             fX = fX_matrix[i][j]
             params = params_matrix[i][j]
-            label = labeler(params, params_to_latex)
+            if model == randint:
+                display_params = {"low":params["low"], "high":params["high"]-1}
+            else:
+                display_params = params
+            label = labeler(display_params, params_to_latex)
             markerline, _stemlines, _baseline = ax.stem(fX, basefmt=" ")
             plt.setp(markerline, markersize = 2)
             ax.xaxis.set_ticks(xticks)
