@@ -25,7 +25,7 @@ Introduction Notebook: [![Binder](https://mybinder.org/badge_logo.svg)](https://
 
 [![](https://img.youtube.com/vi/qG9ouDAWmmU/mqdefault.jpg)](https://www.youtube.com/watch?v=qG9ouDAWmmU)
 
-This video introduces some fundamental topics from probability theory like random events, random variables, and probabilistic models. Understanding probability theory allows us to build mathematical models for the variability in data we observe, and we're lucky to have the lego pieces in [`scipy.stats.distributions`](https://docs.scipy.org/doc/scipy/reference/stats.html#probability-distributions) at our disposal. Using the code from `scipy.stats.distributions` we can model most common random variables, generate random samples, do calculations using the probability functions and their inverses, etc.
+This video introduces some fundamental topics from probability theory like random events, random variables, and probabilistic models. Understanding probability theory allows us to build mathematical models for the variability in data we observe, and we're lucky to have the lego pieces in [`scipy.stats`](https://docs.scipy.org/doc/scipy/reference/stats.html#probability-distributions) at our disposal. Using the code from `scipy.stats` we can model most common random variables, generate random samples, do calculations using the probability functions and their inverses, etc.
 
 The second half of the video is concerned with that probability distribution for samples of size n from a probability distribution. We study the properties of certain statistics (quantities computed from a sample) and learn about the Central Limit Theorem which tells us some useful facts about the distribution of the sample mean (usually denoted as overline-x) from any distribution.
 
