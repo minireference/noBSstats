@@ -1,8 +1,12 @@
 """
 This file contains helper functions for plotting the probability distributions.
 (c) 2022 Minireferece Co. - MIT License
+
+TODOs:
+ - change x to xs (to signal it's a array-like)
+
 """
-# TODO: change x to xs (to signal it's a array-like)
+import os
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -74,7 +78,12 @@ def default_labeler(params, params_to_latex):
     label = ', '.join(label_parts)
     return label
 
-
+def ensure_containing_dir_exists(filepath):
+    parent = os.path.join(filepath, os.pardir)
+    absparent = os.path.abspath(parent)
+    print(absparent)
+    # if not os.path.exists(absparent):
+    #     os.makedirs(absparent)
 
 
 # Continuous random variables
@@ -275,6 +284,7 @@ def generate_pdf_panel(fname, xs, model, params_matrix,
                     size=fontsize)
 
     # Save as PDF and PNG
+    ensure_containing_dir_exists(fname)
     basename = fname.replace('.pdf','').replace('.png','')
     fig.tight_layout()
     fig.savefig(basename + '.pdf', dpi=300, bbox_inches="tight", pad_inches=0.02)
@@ -379,7 +389,7 @@ def generate_pmf_panel(fname, ks, model, params_matrix,
                     size=fontsize)
 
     # Save as PDF and PNG
-
+    ensure_containing_dir_exists(fname)
     basename = fname.replace('.pdf','').replace('.png','')
     fig.tight_layout()
     fig.savefig(basename + '.pdf', dpi=300, bbox_inches="tight", pad_inches=0.02)
