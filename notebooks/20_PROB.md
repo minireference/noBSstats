@@ -6,7 +6,7 @@
 - Calculus prerequisites [24_calculus_prerequisites.ipynb](./24_calculus_prerequisites.ipynb)
 - Continuous random variables [25_continuous_random_vars.ipynb](./25_continuous_random_vars.ipynb)
 - Inventory of continuous distributions [26_inventory_continuous_dists.ipynb](./26_inventory_continuous_dists.ipynb)
-- Probability models for random samples [25_random_samples.ipynb](./25_random_samples.ipynb)
+- Probability models for random samples [27_random_samples.ipynb](./27_random_samples.ipynb)
 
 
 
