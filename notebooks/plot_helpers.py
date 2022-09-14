@@ -13,7 +13,8 @@ import numpy as np
 from scipy.integrate import quad
 import seaborn as sns
 
-from scipy.stats import randint
+from scipy.stats import randint    # special handling beta+1=beta
+from scipy.stats import hypergeom  # special handling M=a+b, n=a, N=n
 
 
 # Figure settings
@@ -382,6 +383,8 @@ def generate_pmf_panel(fname, ks, model, params_matrix,
             params = params_matrix[i][j]
             if model == randint:
                 display_params = {"low":params["low"], "high":params["high"]-1}
+            elif model == hypergeom:
+                display_params = {"a":params["n"], "b":params["M"]-params["n"], "n":params["N"]}
             else:
                 display_params = params
             label = labeler(display_params, params_to_latex)
