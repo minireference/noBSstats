@@ -253,7 +253,7 @@ def generate_pdf_panel(fname, xs, model, params_matrix,
                        labeler=default_labeler):
     """
     Generate PDF and PNG figures with panel of probability density function of
-    `model` over the sample space `k` for all RV parameters specified in the
+    `model` over the sample space `xs` for all RV parameters specified in the
     list-of-lists `params_matrix`.
     """
     # We're drawing a figure with MxN subplots
@@ -395,14 +395,14 @@ def plot_cdf(rv, xlims=None, ylims=None, rv_name="X", ax=None, title=None, label
     return ax
 
 
-def generate_pmf_panel(fname, ks, model, params_matrix,
+def generate_pmf_panel(fname, xs, model, params_matrix,
                        params_to_latex={},
-                       kticks=5,
+                       xticks=None,
                        fontsize=10,
                        labeler=default_labeler):
     """
     Generate PDF and PNG figures with panel of probability mass function of
-    `model` over the sample space `k` for all RV parameters specified in the
+    `model` over the sample space `xs` for all RV parameters specified in the
     list-of-lists `params_matrix`.
     """
     # We're drawing a figure with MxN subplots
@@ -410,11 +410,10 @@ def generate_pmf_panel(fname, ks, model, params_matrix,
     N = max( [len(row) for row in params_matrix] )
 
     # prepare x-axis ticks at aevery multiple of `kticks`
-    kmax = np.max(ks) + 1
-    xticks = np.arange(0, kmax, kticks)
+    xmax = np.max(xs) + 1
 
     # RV generation
-    fX_matrix = np.zeros( (M,N,kmax) )
+    fX_matrix = np.zeros( (M,N,xmax) )
     for i in range(0,M):
         for j in range(0,N):
             params = params_matrix[i][j]
@@ -424,15 +423,26 @@ def generate_pmf_panel(fname, ks, model, params_matrix,
                 high = 1000
             calX = range(low, high+1)
             fXs = []
-            for k in ks:
-                if k in calX:
-                    fXs.append(rv.pmf(k))
+            for x in xs:
+                if x in calX:
+                    fXs.append(rv.pmf(x))
                 else:
                     fXs.append(np.nan)
             fX_matrix[i][j] = fXs
 
     # Generate the MxN panel of subplots
     fig, axarr = plt.subplots(M, N, sharex=True, sharey=True)
+    # We neeed to ensure `axarr` is an MxN matrix even if M or N are 1
+    if M == 1 and N == 1:
+        ax = axarr
+        axarr = np.ndarray((1,1), object)
+        axarr[0,0] = ax
+    elif M == 1:
+        axarr = axarr[np.newaxis,:]
+    elif N == 1:
+        axarr = axarr[:, np.newaxis]
+
+    # Construct the panel of plots
     for i in range(0,M):
         for j in range(0,N):
             ax = axarr[i][j]
@@ -447,7 +457,8 @@ def generate_pmf_panel(fname, ks, model, params_matrix,
             label = labeler(display_params, params_to_latex)
             markerline, _stemlines, _baseline = ax.stem(fX, basefmt=" ")
             plt.setp(markerline, markersize = 2)
-            ax.xaxis.set_ticks(xticks)
+            if xticks is not None:
+                ax.xaxis.set_ticks(xticks)
             ax.text(0.95, 0.86, label,
                     horizontalalignment='right',
                     transform=ax.transAxes,
