@@ -16,6 +16,7 @@ import seaborn as sns
 from scipy.stats import randint    # special handling beta+1=beta
 from scipy.stats import hypergeom  # special handling M=a+b, n=a, N=n
 from scipy.stats import expon      # hide loc=0 parameter
+from scipy.stats import gamma      # hide loc=0 parameter
 
 
 # Figure settings
@@ -247,7 +248,7 @@ def plot_pdf_and_cdf(rv, b, a=-np.inf, xlims=None, rv_name="X"):
 
 def generate_pdf_panel(fname, xs, model, params_matrix,
                        params_to_latex={},
-                       xticks=5,
+                       xticks=None, ylims=None,
                        fontsize=10,
                        labeler=default_labeler):
     """
@@ -259,10 +260,6 @@ def generate_pdf_panel(fname, xs, model, params_matrix,
     M = len(params_matrix)
     N = max( [len(row) for row in params_matrix] )
 
-    # prepare x-axis ticks at aevery multiple of `kticks`
-    xmax = np.max(xs) + 1
-    xticks = np.arange(0, xmax, xticks)
-
     # RV generation
     fXs_matrix = np.zeros( (M,N,len(xs)) )
     for i in range(0,M):
@@ -273,6 +270,17 @@ def generate_pdf_panel(fname, xs, model, params_matrix,
 
     # Generate the MxN panel of subplots
     fig, axarr = plt.subplots(M, N, sharey=True)
+    # We neeed to ensure `axarr` is an MxN matrix even if M or N are 1
+    if M == 1 and N == 1:
+        ax = axarr
+        axarr = np.ndarray((1,1), object)
+        axarr[0,0] = ax
+    elif M == 1:
+        axarr = axarr[np.newaxis,:]
+    elif N == 1:
+        axarr = axarr[:, np.newaxis]
+
+    # Construct the panel of plots
     for i in range(0,M):
         for j in range(0,N):
             ax = axarr[i][j]
@@ -280,11 +288,19 @@ def generate_pdf_panel(fname, xs, model, params_matrix,
             params = params_matrix[i][j]
             if model == expon:
                 display_params = {"scale":params["scale"]}
+            elif model == gamma:
+                lam = 1/params["scale"]
+                if lam >= 1:
+                    lam = int(lam)
+                display_params = {"a": params["a"], "lam":lam}
             else:
                 display_params = params
             label = labeler(display_params, params_to_latex)
             sns.lineplot(x=xs, y=fXs, ax=ax)
-            ax.xaxis.set_ticks(xticks)
+            if ylims:
+                ax.set_ylim(*ylims)
+            if xticks is not None:
+                ax.xaxis.set_ticks(xticks)
             ax.text(0.93, 0.86, label,
                     horizontalalignment='right',
                     transform=ax.transAxes,
