@@ -15,6 +15,7 @@ import seaborn as sns
 
 from scipy.stats import randint    # special handling beta+1=beta
 from scipy.stats import hypergeom  # special handling M=a+b, n=a, N=n
+from scipy.stats import expon      # hide loc=0 parameter
 
 
 # Figure settings
@@ -277,7 +278,11 @@ def generate_pdf_panel(fname, xs, model, params_matrix,
             ax = axarr[i][j]
             fXs = fXs_matrix[i][j]
             params = params_matrix[i][j]
-            label = labeler(params, params_to_latex)
+            if model == expon:
+                display_params = {"scale":params["scale"]}
+            else:
+                display_params = params
+            label = labeler(display_params, params_to_latex)
             sns.lineplot(x=xs, y=fXs, ax=ax)
             ax.xaxis.set_ticks(xticks)
             ax.text(0.93, 0.86, label,
@@ -336,6 +341,42 @@ def plot_pmf(rv, xlims=None, ylims=None, rv_name="X", ax=None, title=None, label
     # return the axes
     return ax
 
+
+def plot_cdf(rv, xlims=None, ylims=None, rv_name="X", ax=None, title=None, label=None):
+    """
+    Plot the CDF of the random variable `rv` (discrete or continuous) over the `xlims`.
+    """
+    # Setup figure and axes
+    if ax is None:
+        fig, ax = plt.subplots()
+    else:
+        fig = ax.figure
+
+    # Compute limits of plot
+    if xlims:
+        xmin, xmax = xlims
+    else:
+        xmin, xmax = rv.ppf(0.000000001), rv.ppf(0.99999)
+    xs = np.linspace(xmin, xmax, 1000)
+
+    # Compute the CDF and plot it
+    FXs = rv.cdf(xs)
+    sns.lineplot(x=xs, y=FXs, ax=ax)
+
+    # Set plot attributes
+    ax.set_xlabel(rv_name.lower())
+    ax.set_ylabel(f"$F_{{{rv_name}}}$")
+    if ylims:
+        ax.set_ylim(*ylims)
+    if label:
+        ax.legend()
+    if title and title.lower() == "auto":
+        title = "Cumulative distribution function of the random variable " + rv.dist.name + str(rv.args)
+    if title:
+        ax.set_title(title, y=0, pad=-30)
+
+    # return the axes
+    return ax
 
 
 def generate_pmf_panel(fname, ks, model, params_matrix,
