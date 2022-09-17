@@ -1,3 +1,27 @@
+**BONUS TOPIC**: You can explore the different methods available on any python object `int`, `float`, `str`, etc.  by starting to type the dot `.` after the name, e.g., `message.` then pressing the TAB button to get an "autocomplete" dropdown of all the methods available on the variable `message`. Most of these methods are common to all strings in Python. For example, try typing in `message.split()` and `message.upper()`.
+
+
+
+Don't worry about the lists and dictionary examples—I know they are complicated and we haven't explained all the syntax. We'll get to that in just a little bit. First let's practice computing some Python expressions.
+
+
+
+You can also use Python for spreadsheet-like functionality,
+manipulate tabular data, compute totals, etc.
+
+Whereas calculators allow only simple arithmetic calculations,
+the Python prompt accepts entire "paragraphs" of commands allowing you to write complicated multi-step procedures.
+This is what people call "coding" or "programming."
+
+
+# int/int --> float autoconversion
+print('If you divide an integrer by an integer in Python using the / operator...')
+print('...you get a float number', 6/5, 'has type', type(6/5))
+
+
+
+
+
 
 ### Useful anything-to-int conversions
 
