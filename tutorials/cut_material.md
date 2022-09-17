@@ -13,12 +13,27 @@ Whereas calculators allow only simple arithmetic calculations,
 the Python prompt accepts entire "paragraphs" of commands allowing you to write complicated multi-step procedures.
 This is what people call "coding" or "programming."
 
-
+```
 # int/int --> float autoconversion
 print('If you divide an integrer by an integer in Python using the / operator...')
 print('...you get a float number', 6/5, 'has type', type(6/5))
+```
 
+```
+# Expression involving a list
+scores = [61, 85, 92, 72]
+average = sum(scores)/len(scores)
+#        `sum` computes the sum of values in the list
+#                and `len` gives you the length of the list
+print("The average score is", average)
+```
 
+```
+# String expression using a values from a dictionary
+profile = {"first_name":"Julie", "last_name":"Tremblay", "score":98}
+message2 = "Hi " + profile["first_name"]
+print(message2)
+```
 
 
 
