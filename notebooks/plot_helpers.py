@@ -197,49 +197,54 @@ def calc_prob_and_plot_tails(rv, x_l, x_r, xlims=None, ax=None, title=None):
 
 
 
-def plot_pdf_and_cdf(rv, b, a=-np.inf, xlims=None, rv_name="X"):
+def plot_pdf_and_cdf(rv, b=None, a=-np.inf, xlims=None, rv_name="X", title=None):
     """
     Plot side-by-side figure that shows pdf and CDF of random variable `rv`.
-    Left plot shows area-under-the-curve visualization until x=b.
-    Right plot higlights point at (b, F_X(b)).
+    If `b` is specified, the left plot will shows the area-under-the-curve
+    visualization until x=b and tight plot higlights point at (b, F_X(b)).
     """
     fig, axs = plt.subplots(1, 2)
     ax0, ax1 = axs
 
-    title = "Probability distributions of the random variable " \
-        + "$" + rv_name + "$" + " ~ " \
-        + rv.dist.name + str(rv.args).replace(" ", "")
-    # + " between " + str(a) + " and " + str(b)
-    fig.suptitle(title)
+    # figure title
+    if title and title.lower() == "auto":
+        title = "Probability distributions of the random variable " \
+            + "$" + rv_name + "$" + " ~ " \
+            + rv.dist.name + str(rv.args).replace(" ", "")
+        fig.suptitle(title)
+    if title:
+        fig.suptitle(title)
 
     # 1. plot the probability density function (pdf)
     if xlims:
         xmin, xmax = xlims
     else:
         xmin, xmax = rv.ppf(0.001), rv.ppf(0.999)
-    x = np.linspace(xmin, xmax, 10000)
+    x = np.linspace(xmin, xmax, 1000)
     pX = rv.pdf(x)
     sns.lineplot(x=x, y=pX, ax=ax0)
     ax0.set_title("Probability density function")
 
-    # highlight the area under pX between x=a and x=b
-    mask = (x > a) & (x < b)
-    ax0.fill_between(x[mask], y1=pX[mask], alpha=0.2, facecolor="blue")
-    ax0.vlines([b], ymin=0, ymax=rv.pdf(b), linestyle="-", alpha=0.5, color="blue")
-    ax0.text(b, 0, "$b$", horizontalalignment="center", verticalalignment="top")
-    ax0.text(b, rv.pdf(b)/2.5, r"Pr$(\{" + rv_name + r" \leq b \})$    ",
-             horizontalalignment="right", verticalalignment="center")
+    if b:
+        # highlight the area under pX between x=a and x=b
+        mask = (x > a) & (x < b)
+        ax0.fill_between(x[mask], y1=pX[mask], alpha=0.2, facecolor="blue")
+        ax0.vlines([b], ymin=0, ymax=rv.pdf(b), linestyle="-", alpha=0.5, color="blue")
+        ax0.text(b, 0, "$b$", horizontalalignment="center", verticalalignment="top")
+        ax0.text(b, rv.pdf(b)/2.5, r"Pr$(\{" + rv_name + r" \leq b \})$    ",
+                 horizontalalignment="right", verticalalignment="center")
 
     # 2. plot the CDF
     FX = rv.cdf(x)
     sns.lineplot(x=x, y=FX, ax=ax1)
     ax1.set_title("Cumulative distribution function")
 
-    # highlight the point x=b
-    ax1.vlines([b], ymin=0, ymax=rv.cdf(b), linestyle="-", color="blue")
-    ax1.text(b, 0, "$b$", horizontalalignment="center", verticalalignment="top")
-    ax1.text(b, rv.cdf(b), "$(b, F_{" + rv_name + "}(b))$",
-             horizontalalignment="right", verticalalignment="bottom")
+    if b:
+        # highlight the point x=b
+        ax1.vlines([b], ymin=0, ymax=rv.cdf(b), linestyle="-", color="blue")
+        ax1.text(b, 0, "$b$", horizontalalignment="center", verticalalignment="top")
+        ax1.text(b, rv.cdf(b), "$(b, F_{" + rv_name + "}(b))$",
+                 horizontalalignment="right", verticalalignment="bottom")
 
     # return figure and axes
     return fig, axs
