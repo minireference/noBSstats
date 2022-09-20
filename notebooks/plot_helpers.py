@@ -63,8 +63,6 @@ DEFAULT_PARAMS_TO_LATEX = {
 
 
 
-
-
 # Utils
 ################################################################################
 
@@ -93,7 +91,7 @@ def ensure_containing_dir_exists(filepath):
 # Continuous random variables
 ################################################################################
 
-def plot_pdf(rv, xlims=None, ylims=None, rv_name="X", ax=None, title=None, label=None):
+def plot_pdf(rv, xlims=None, ylims=None, rv_name="X", ax=None, title=None, label=None, linestyle='solid'):
     """
     Plot the pdf of the continuous random variable `rv` over the `xlims`.
     """
@@ -112,7 +110,7 @@ def plot_pdf(rv, xlims=None, ylims=None, rv_name="X", ax=None, title=None, label
 
     # Compute the probability mass function and plot it
     fXs = rv.pdf(xs)
-    sns.lineplot(x=xs, y=fXs, ax=ax, label=label)
+    sns.lineplot(x=xs, y=fXs, ax=ax, label=label, linestyle=linestyle)
     ax.set_xlabel(rv_name.lower())
     ax.set_ylabel(f"$f_{{{rv_name}}}$")
     if ylims:
