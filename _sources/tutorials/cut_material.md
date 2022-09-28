@@ -1,3 +1,141 @@
+, listed in order from highest energy to lowest energy.
+
+
+
+
+
+from collections.abc import Iterable
+
+isinstance(profile.keys(), Iterable)
+
+isinstance(list(profile.keys()), Iterable)
+
+
+
+You can use the built-in function `sorted` to sort the list:
+
+```
+sorted(scores)  # returns a new list
+[61, 72, 79, 98]
+```
+
+Note using the sorted function does not change the original list:
+
+```
+scores
+[98, 79, 72, 61]
+```
+
+
+
+
+
+```Python
+print('\n\n\n')  # '\n' is a special character (an escape sequence) that prints a newline
+                 # we'll use this kind of preint-nelines statements to logically
+                 # separate the out outplut lines
+```
+
+```Python
+print('not True ==', not True)
+print('not False ==', not False)
+print('True and True ==', True and True)
+print('True and False ==', True and False)
+print('True or False ==', True or False)
+print('False or False ==', False or False)
+
+not True == False
+not False == True
+True and True == True
+True and False == False
+True or False == True
+False or False == False
+```
+
+
+```Python
+True and True, True and False, False and True, False and False
+(True, False, False, False)
+
+True or True, True or False, False or True, False or False
+(True, True, True, False)
+```
+
+
+
+### Additional reading material
+
+- Review Python syntax cheatsheet [https://blog.finxter.com/wp-content/uploads/2020/07/Finxter_WorldsMostDensePythonCheatSheet.pdf](https://blog.finxter.com/wp-content/uploads/2020/07/Finxter_WorldsMostDensePythonCheatSheet.pdf)
+  - add single dot next to concepts you've hear about
+  - double dot next to python concepts you understand
+  - triple dot next to concepts you've used in your code
+- Try poking-around and explore expressions involving numbers (`int` and `float`)
+  and  strings (`str`).
+- Go through all quiz questions in reading material as notebooks:
+  - 03-Variables: [https://introductorypython.github.io/tutorials/03-Variables.html](https://introductorypython.github.io/tutorials/03-Variables.html)
+  - 04-Operarators: [https://introductorypython.github.io/tutorials/04-Operators.html](https://introductorypython.github.io/tutorials/04-Operators.html)
+<!--
+- 06-Data types: [https://introductorypython.github.io/tutorials/06-DataTypes.html](https://introductorypython.github.io/tutorials/06-DataTypes.html) 
+  - Review Collections: Lists section. This is important because we can use lists
+    to represent vectors in Python, for example the two-dimensional vector can be defined as `v = [3,2]`
+  - Complete the section on for loops in 07-Loops notebook.
+    The for loop is important because it allows you to do operations for each element in the list.
+-->
+
+
+```
+scores.insert(2, 25)
+scores
+[61, 72, 25, 79, 98, 22]
+
+scores.remove(25)
+scores
+[61, 72, 79, 98, 22]
+```
+
+
+
+Additionally, there is a conventions about values are considered "truthy" (i.e. get converted to True when converted to boolean using bool) and which expressions are falsy (i.e. get converted to False when passed through bool).
+
+bool(0)
+False
+
+bool(1)
+True
+
+Any non-zero float is considered is truthy
+
+bool(133.3)
+True
+
+Any non-empty string is considered truthy:
+
+bool("something")
+True
+
+But empty string is falsy:
+
+bool("")
+False
+
+Boolean expressions are important to understand because they are used in conditional statements.
+
+
+
+We can obtain a similar output using the Python function globals(), which returns a dictionary of all the variables and functions in the global namespace.
+
+## ALT. print variables names
+
+# [key for key in globals().keys() if not key.startswith("_")]
+
+
+
+
+
+
+
+
+
 **BONUS TOPIC**: You can explore the different methods available on any python object `int`, `float`, `str`, etc.  by starting to type the dot `.` after the name, e.g., `message.` then pressing the TAB button to get an "autocomplete" dropdown of all the methods available on the variable `message`. Most of these methods are common to all strings in Python. For example, try typing in `message.split()` and `message.upper()`.
 
 
