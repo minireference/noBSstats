@@ -3,6 +3,18 @@
 
 
 
+Example: printing a ;-separated list of integers
+
+Let's say you want to print the list of scores with the character ; separating each value. The string method join can be used to join a list of strings, but you have a list of ints. No problem, we can use the list-comprehension syntax to convert the list of ints, to a list of strings, in no time.
+
+```
+scores = [61, 79, 98, 72]
+";".join([str(score) for score in scores])
+# '61;79;98;72'
+```
+
+
+
 
 from collections.abc import Iterable
 
