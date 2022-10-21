@@ -11,6 +11,8 @@ For example, you can copy-paste some of the neighbouring commands
 and try modifying them to see what outputs you get.
 
 
+
+
 ## Chapter 1: Data
 
 ### 1.1 Introduction to data
@@ -23,18 +25,14 @@ This is a very short notebook that gives some examples of random selection and r
 [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/minireference/noBSstatsnotebooks/blob/main/notebooks/11_intro_to_data.ipynb)
 
 
-
-
 ### 1.2 Data in practice
-
 This notebook explains practical aspects of data manipulations using Pandas
 and talks about data pre-processing steps like data cleaning and outlier removal.
 
 - View notebook: [12_data_in_practice.ipynb](./12_data_in_practice.ipynb)
 - Binder link: 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstatsnotebooks/main?labpath=notebooks%2F12_data_in_practice.ipynb)
-- Colab link:
-
+- Colab link: TODO
 
 TODO: finish the notebook with Alice, Bob, and Charlotte pre-processing steps:
 [12b_background_stories.ipynb](./12b_background_stories.ipynb).
@@ -58,14 +56,15 @@ and how to generate data visualizations like histograms, box plots, bar plots, e
 
 
 
+
+
+
 ## Chapter 2: Probability
 
 In this chapter you'll learn about random variables and probability models.
 
 
-
 ### 2.1 Discrete random variables
-
 This notebook contains a complete introduction to probability theory,
 including definitions, formulas, and lots of examples of discrete
 random variables like coin toss, die roll, and other.
@@ -76,7 +75,6 @@ random variables like coin toss, die roll, and other.
 
 
 ### 2.2 Multiple random variables
-
 This section will introduce you to the concept of a joint probability distribution.
 For example, the pair of random variables $(X,Y)$ can be described by the joint probability distribution function $f_{XY}$.
 
@@ -85,9 +83,7 @@ For example, the pair of random variables $(X,Y)$ can be described by the joint 
 - Colab link: [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/minireference/noBSstatsnotebooks/blob/main/notebooks/22_multiple_random_vars.ipynb)
 
 
-
 ### 2.3 Inventory of discrete distributions
-
 The Python module `scipy.stats` contains pre-defined probability models that you
 can use for modeling tasks. These what we call the LEGOs of the XXIst century.
 
@@ -97,15 +93,7 @@ can use for modeling tasks. These what we call the LEGOs of the XXIst century.
 
 
 
-
-
-
-
-
-
-
 ### 2.4 Calculus prerequisites
-
 You need to know a bit of calculus to understand the math machinery
 for calculating probabilities distributions of continuous random variables.
 Don't worry—there is only one new concept: the integral $\int_{x=a}^{x=b} f(x)dx$,
@@ -117,14 +105,11 @@ which corresponds to computing the area under the graph of $f(x)$ between $x=a$ 
 
 
 ### 2.5 Continuous random variables
-
 In this notebook we'll revisit all the probability concepts we learned for discrete
 random variables, and learn the analogous concepts for continuous random variables.
-Essentially,
-we need to do a conceptual search-and-replace of summations to integrals.
-Indeed,
-you can think of Section 2.5 as the result of taking Section 2.1 and replacing
-every occurrence $\textrm{Pr}(a \leq X \leq b)=\sum_{x=a}^{x=b}f_X(x)$
+Essentially, we need to do a conceptual search-and-replace of summations to integrals.
+Indeed, you can think of Section 2.5 as the result of taking Section 2.1
+and replacing every occurrence $\textrm{Pr}(a \leq X \leq b)=\sum_{x=a}^{x=b}f_X(x)$
 with $\textrm{Pr}(a \leq X \leq b)=\int_{x=a}^{x=b}f_X(x)dx$.
 
 - View notebook: [25_continuous_random_vars.ipynb](./25_continuous_random_vars.ipynb)
@@ -132,18 +117,28 @@ with $\textrm{Pr}(a \leq X \leq b)=\int_{x=a}^{x=b}f_X(x)dx$.
 - Colab link: [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/minireference/noBSstatsnotebooks/blob/main/notebooks/25_continuous_random_vars.ipynb)
 
 
-### 2.5 Inventory of continuous distributions
-
+### 2.6 Inventory of continuous distributions
 In this section we'll talk about the continuous LEGOs:
-`uniform`, `norm`, `gamma`, `expon`, `t`, etc.
+`uniform`, `norm`, `gamma`, `expon`, `t`, `f`, `chi2`, etc.
 
 - View notebook: [26_inventory_continuous_dists.ipynb](./26_inventory_continuous_dists.ipynb)
 - Binder link: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstatsnotebooks/main?labpath=notebooks%2F26_inventory_continuous_dists.ipynb)
 - Colab link: [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/minireference/noBSstatsnotebooks/blob/main/notebooks/26_inventory_continuous_dists.ipynb)
 
 
-### 2.7 Probability models for random samples
 
+### 2.7 Random variable generation
+How can we use computers to generation observations from random variables?
+In this notebooks, we'll describe some practical techniques for generating
+observations from any probability distribution.
+
+- View notebook: [27_random_var_generation.ipynb](./27_random_var_generation.ipynb)
+- Binder link: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstatsnotebooks/main?labpath=notebooks%2F27_random_var_generation.ipynb)
+- Colab link: [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/minireference/noBSstatsnotebooks/blob/main/notebooks/27_random_var_generation.ipynb)
+
+
+
+### 2.8 Probability models for random samples
 Consider a random variable $X$ with a known probability distribution $p_X$.
 What can we say about the characteristics of $n$ copies of the random variable
 $$
@@ -156,9 +151,9 @@ This is called the independent, identically distributed (iid) setting,
 and understanding the properties of $\mathbf{X}$ is important for all the 
 statistics operations we'll be doing in the next two chapters.
 
-- View notebook: [27_random_samples.ipynb](./27_random_samples.ipynb)
-- Binder link: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstatsnotebooks/main?labpath=notebooks%2F27_random_samples.ipynb)
-- Colab link: [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/minireference/noBSstatsnotebooks/blob/main/notebooks/27_random_samples.ipynb)
+- View notebook: [28_random_samples.ipynb](./28_random_samples.ipynb)
+- Binder link: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstatsnotebooks/main?labpath=notebooks%2F28_random_samples.ipynb)
+- Colab link: [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/minireference/noBSstatsnotebooks/blob/main/notebooks/28_random_samples.ipynb)
 
 
 
@@ -195,5 +190,3 @@ you check out the [Chapter 3 outline](https://docs.google.com/document/d/1fwep23
 
 In the meantime,
 you check out the [Chapter 4 outline](https://docs.google.com/document/d/1fwep23-95U-w1QMPU31nOvUnUXE2X3s_Dbk5JuLlKAY/edit#heading=h.9etj7aw4al9w) to see what will be covered.
-
-
