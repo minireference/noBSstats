@@ -10,6 +10,7 @@ import os
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 from scipy.integrate import quad
 import seaborn as sns
 
@@ -475,3 +476,91 @@ def generate_pmf_panel(fname, xs, model, params_matrix,
     fig.savefig(basename + '.png', dpi=300, bbox_inches="tight", pad_inches=0.02)
     
     return fig
+
+
+
+
+
+
+# Random samples
+################################################################################
+
+def plot_samples_and_mean(rv, n=30, N=10, ax=None, xlims=None, filename=None):
+    """
+    Generate a strip plot of `N` samples of size `n` from `rv`.
+    Calculate the mean for each sample, and plot is a diamond.
+    """
+    # Setup figure and axes
+    if ax is None:
+        fig, ax = plt.subplots()
+    else:
+        fig = ax.figure
+
+    # 1. generate the samples
+    samples = {}
+    for i in range(0, N):
+        column_name = "sample" + str(i)
+        samples[column_name] = rv.rvs(n)
+    samples_df = pd.DataFrame(samples)
+
+    # 2. plot the samples as strip plot
+    pal = "dark:b"
+    sns.stripplot(samples_df, orient="h", palette=pal, ax=ax)
+
+    # 3. add diamond-shaped marker to indicate mean in each sample
+    for i in range(0, N):
+        column_name = "sample" + str(i)
+        xbar_i = samples_df[column_name].mean()
+        ax.scatter(xbar_i, i, marker="D", s=75, color="r", zorder=10)
+
+    # 4. Handle keyword arguments
+    if xlims:
+        ax.set_xlim(xlims)
+    if filename:
+        basename = filename.replace('.pdf','').replace('.png','')
+        fig.tight_layout()
+        fig.savefig(basename + '.pdf', dpi=300, bbox_inches="tight", pad_inches=0.02)
+        fig.savefig(basename + '.png', dpi=300, bbox_inches="tight", pad_inches=0.02)
+
+    # return the data and the axes
+    return samples_df, ax
+
+
+def plot_sampling_distribution(rv, statfunc=np.mean, n=30, N=1000,
+                               label=None, ax=None, xlims=None, binwidth=None,
+                               filename=None):
+    """
+    Generate `N` samples of size `n` from the random varaible `rv`,
+    calculate the statistic `statfunc` from each sample and plot
+    a combined histogram + strip plot of the sampling distribution.
+    """
+    # Setup figure and axes
+    if ax is None:
+        fig, ax = plt.subplots()
+    else:
+        fig = ax.figure
+    
+    # 1. generate the samples
+    stats = []
+    for i in range(0, N):
+        sample = rv.rvs(n)
+        stat = statfunc(sample)
+        stats.append(stat)
+
+    # 2. plot a histogram of the sampling distribution
+    sns.histplot(stats, color="r", ax=ax, binwidth=binwidth, label=label)
+
+    # 3. add the scatter plot of `stats` below
+    sns.scatterplot(x=stats, y=-N/100, ax=ax, color="r", marker="D", s=30, alpha=0.1)
+
+    # 4. Handle keyword arguments
+    if xlims:
+        ax.set_xlim(xlims)
+    if filename:
+        basename = filename.replace('.pdf','').replace('.png','')
+        fig.tight_layout()
+        fig.savefig(basename + '.pdf', dpi=300, bbox_inches="tight", pad_inches=0.02)
+        fig.savefig(basename + '.png', dpi=300, bbox_inches="tight", pad_inches=0.02)
+
+    # return the sampling distribution stats an the axes
+    return stats, ax
