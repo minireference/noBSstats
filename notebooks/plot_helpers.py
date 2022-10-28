@@ -496,18 +496,18 @@ def plot_samples_and_mean(rv, n=30, N=10, ax=None, xlims=None, filename=None):
     else:
         fig = ax.figure
 
-    # 1. generate the samples
+    # 1. Generate the samples
     samples = {}
     for i in range(0, N):
         column_name = "sample" + str(i)
         samples[column_name] = rv.rvs(n)
     samples_df = pd.DataFrame(samples)
 
-    # 2. plot the samples as strip plot
+    # 2. Plot the samples as strip plot
     pal = "dark:b"
     sns.stripplot(samples_df, orient="h", palette=pal, ax=ax)
 
-    # 3. add diamond-shaped marker to indicate mean in each sample
+    # 3. Add diamond-shaped marker to indicate mean in each sample
     for i in range(0, N):
         column_name = "sample" + str(i)
         xbar_i = samples_df[column_name].mean()
@@ -540,14 +540,14 @@ def plot_sampling_distribution(rv, statfunc=np.mean, n=30, N=1000,
     else:
         fig = ax.figure
     
-    # 1. generate the samples
+    # 1. Generate the samples
     stats = []
     for i in range(0, N):
         sample = rv.rvs(n)
         stat = statfunc(sample)
         stats.append(stat)
 
-    # 2. plot a histogram of the sampling distribution
+    # 2. Plot a histogram of the sampling distribution
     sns.histplot(stats, color="r", ax=ax, binwidth=binwidth, label=label)
 
     # 3. add the scatter plot of `stats` below
@@ -564,3 +564,8 @@ def plot_sampling_distribution(rv, statfunc=np.mean, n=30, N=1000,
 
     # return the sampling distribution stats an the axes
     return stats, ax
+
+
+
+# TODO: refactor into `get_sampling_dist` and `plot_sampling_dist`
+# TODO: rename all r.v. generation functions to use `gen_` prefix.
