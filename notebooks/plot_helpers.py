@@ -4,7 +4,7 @@ This file contains helper functions for plotting the probability distributions.
 
 TODOs:
  - change x to xs (to signal it's a array-like)
-
+ - rename all r.v. generation functions to use `gen_` prefix.
 """
 import os
 
@@ -485,23 +485,32 @@ def generate_pmf_panel(fname, xs, model, params_matrix,
 # Random samples
 ################################################################################
 
-def plot_samples_and_mean(rv, n=30, N=10, ax=None, xlims=None, filename=None):
-    """
-    Generate a strip plot of `N` samples of size `n` from `rv`.
-    Calculate the mean for each sample, and plot is a diamond.
-    """
-    # Setup figure and axes
-    if ax is None:
-        fig, ax = plt.subplots()
-    else:
-        fig = ax.figure
 
-    # 1. Generate the samples
+def gen_samples(rv, n=30, N=10):
+    """
+    Generate `N` samples of size `n` from the random variable `rv`.
+    Returns a pd.DataFrame with `N` columns containing the samples.
+    """
     samples = {}
     for i in range(0, N):
         column_name = "sample" + str(i)
         samples[column_name] = rv.rvs(n)
     samples_df = pd.DataFrame(samples)
+    return samples_df
+
+
+def plot_samples(samples_df, ax=None, xlims=None, filename=None):
+    """
+    Draw a strip plots for each of the columns in `samples_df`.
+    Annotate each strip plot with the mean for each sample.
+    """
+    n, N = samples_df.shape  # sample size, number of samples
+
+    # 1. Setup figure and axes
+    if ax is None:
+        fig, ax = plt.subplots()
+    else:
+        fig = ax.figure
 
     # 2. Plot the samples as strip plot
     pal = "dark:b"
@@ -522,36 +531,41 @@ def plot_samples_and_mean(rv, n=30, N=10, ax=None, xlims=None, filename=None):
         fig.savefig(basename + '.pdf', dpi=300, bbox_inches="tight", pad_inches=0.02)
         fig.savefig(basename + '.png', dpi=300, bbox_inches="tight", pad_inches=0.02)
 
-    # return the data and the axes
-    return samples_df, ax
 
 
-def plot_sampling_distribution(rv, statfunc=np.mean, n=30, N=1000,
-                               label=None, ax=None, xlims=None, binwidth=None,
-                               filename=None):
+
+
+def gen_sampling_dist(rv, statfunc=np.mean, n=30, N=1000):
     """
-    Generate `N` samples of size `n` from the random varaible `rv`,
-    calculate the statistic `statfunc` from each sample and plot
-    a combined histogram + strip plot of the sampling distribution.
+    Generate `N` samples of size `n` from the random varaible `rv`
+    and calculate the statistic `statfunc` from each sample.
     """
-    # Setup figure and axes
-    if ax is None:
-        fig, ax = plt.subplots()
-    else:
-        fig = ax.figure
-    
-    # 1. Generate the samples
     stats = []
     for i in range(0, N):
         sample = rv.rvs(n)
         stat = statfunc(sample)
         stats.append(stat)
+    return stats
 
+
+def plot_sampling_dist(stats, label=None, xlims=None, binwidth=None, ax=None, filename=None):
+    """
+    Plot a combined histogram and strip plot of the values in `stats`.
+    """
+    # 1. Setup figure and axes
+    if ax is None:
+        fig, ax = plt.subplots()
+    else:
+        fig = ax.figure
+    if binwidth is None:
+        binwidth = (xlims[1]-xlims[0]) / 30
+    
     # 2. Plot a histogram of the sampling distribution
-    sns.histplot(stats, color="r", ax=ax, binwidth=binwidth, label=label)
+    sns.histplot(stats, binwidth=binwidth, stat="density", color="r", ax=ax, label=label)
 
     # 3. add the scatter plot of `stats` below
-    sns.scatterplot(x=stats, y=-N/100, ax=ax, color="r", marker="D", s=30, alpha=0.1)
+    y_offset = 1/(100*binwidth)
+    sns.scatterplot(x=stats, y=-y_offset, ax=ax, color="r", marker="D", s=30, alpha=0.1)
 
     # 4. Handle keyword arguments
     if xlims:
@@ -562,10 +576,3 @@ def plot_sampling_distribution(rv, statfunc=np.mean, n=30, N=1000,
         fig.savefig(basename + '.pdf', dpi=300, bbox_inches="tight", pad_inches=0.02)
         fig.savefig(basename + '.png', dpi=300, bbox_inches="tight", pad_inches=0.02)
 
-    # return the sampling distribution stats an the axes
-    return stats, ax
-
-
-
-# TODO: refactor into `get_sampling_dist` and `plot_sampling_dist`
-# TODO: rename all r.v. generation functions to use `gen_` prefix.
