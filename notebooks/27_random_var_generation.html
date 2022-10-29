@@ -981,44 +981,41 @@ in order to be able to discuss.</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
 
 <span class="n">rvN</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span>
-<span class="n">ndata</span> <span class="o">=</span> <span class="n">rvN</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">ndata</span> <span class="o">=</span> <span class="n">rvN</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">ecdf</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">ecdf</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Compute ECDF for on list of data observations.</span>
+<span class="sd">    Compute the value empirical cumulative distributon at `b`</span>
+<span class="sd">    based on observations in `data`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-    <span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-    <span class="n">ys</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span>
-    <span class="k">return</span> <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span>
+    <span class="n">sdata</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">sdata</span> <span class="o">&lt;=</span> <span class="n">b</span><span class="p">)</span>    <span class="c1"># counts num. of obs. &lt;= b</span>
+    <span class="k">return</span> <span class="n">count</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>   <span class="c1"># proportion of total</span>
 
-<span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">ecdf</span><span class="p">(</span><span class="n">ndata</span><span class="p">)</span>
-
-<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x1</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y1</span><span class="p">)</span>
+<span class="n">ecdf</span><span class="p">(</span><span class="n">ndata</span><span class="p">,</span> <span class="mi">900</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot: &gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.1
 </pre></div>
 </div>
-<img alt="../_images/27_random_var_generation_23_1.png" src="../_images/27_random_var_generation_23_1.png" />
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">600</span><span class="p">,</span><span class="mi">1300</span><span class="p">)</span>
 
-<span class="n">ecdf2</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">distributions</span><span class="o">.</span><span class="n">ECDF</span><span class="p">(</span><span class="n">ndata</span><span class="p">)</span>
+<span class="n">Femp</span> <span class="o">=</span> <span class="p">[</span><span class="n">ecdf</span><span class="p">(</span><span class="n">ndata</span><span class="p">,</span><span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">bs</span><span class="p">]</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">bs</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">Femp</span><span class="p">,</span> <span class="n">drawstyle</span><span class="o">=</span><span class="s1">&#39;steps-post&#39;</span><span class="p">)</span>
 
-<span class="n">x2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">ndata</span><span class="p">),</span><span class="nb">max</span><span class="p">(</span><span class="n">ndata</span><span class="p">),</span><span class="mi">1000</span><span class="p">)</span>
-<span class="n">y2</span> <span class="o">=</span> <span class="n">ecdf2</span><span class="p">(</span><span class="n">x2</span><span class="p">)</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x2</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y2</span><span class="p">)</span>
+<span class="n">FN</span> <span class="o">=</span> <span class="n">rvN</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">bs</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">bs</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">FN</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1027,6 +1024,19 @@ in order to be able to discuss.</p>
 </pre></div>
 </div>
 <img alt="../_images/27_random_var_generation_24_1.png" src="../_images/27_random_var_generation_24_1.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># # ALT: use the `ECDF` function generator from statsmodels</span>
+<span class="c1"># import statsmodels.api as sm</span>
+<span class="c1"># ecdf3 = sm.distributions.ECDF(ndata)</span>
+<span class="c1"># xs3 = np.linspace(600,1300)</span>
+<span class="c1"># ys3 = ecdf3(xs3)</span>
+<span class="c1"># sns.lineplot(x=xs3, y=ys3, drawstyle=&#39;steps-post&#39;)</span>
+<span class="c1"># sns.lineplot(x=xs3, y=rvN.cdf(xs3))</span>
+</pre></div>
+</div>
 </div>
 </div>
 </section>
@@ -1063,7 +1073,7 @@ in order to be able to discuss.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/27_random_var_generation_34_0.png" src="../_images/27_random_var_generation_34_0.png" />
+<img alt="../_images/27_random_var_generation_36_0.png" src="../_images/27_random_var_generation_36_0.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1087,7 +1097,7 @@ in order to be able to discuss.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/27_random_var_generation_37_0.png" src="../_images/27_random_var_generation_37_0.png" />
+<img alt="../_images/27_random_var_generation_39_0.png" src="../_images/27_random_var_generation_39_0.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1111,7 +1121,7 @@ in order to be able to discuss.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/27_random_var_generation_40_0.png" src="../_images/27_random_var_generation_40_0.png" />
+<img alt="../_images/27_random_var_generation_42_0.png" src="../_images/27_random_var_generation_42_0.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1135,7 +1145,7 @@ in order to be able to discuss.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/27_random_var_generation_43_0.png" src="../_images/27_random_var_generation_43_0.png" />
+<img alt="../_images/27_random_var_generation_45_0.png" src="../_images/27_random_var_generation_45_0.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1161,7 +1171,7 @@ in order to be able to discuss.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/27_random_var_generation_46_0.png" src="../_images/27_random_var_generation_46_0.png" />
+<img alt="../_images/27_random_var_generation_48_0.png" src="../_images/27_random_var_generation_48_0.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1209,7 +1219,7 @@ in order to be able to discuss.</p>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot: &gt;
 </pre></div>
 </div>
-<img alt="../_images/27_random_var_generation_48_1.png" src="../_images/27_random_var_generation_48_1.png" />
+<img alt="../_images/27_random_var_generation_50_1.png" src="../_images/27_random_var_generation_50_1.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1219,7 +1229,7 @@ in order to be able to discuss.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/27_random_var_generation_49_0.png" src="../_images/27_random_var_generation_49_0.png" />
+<img alt="../_images/27_random_var_generation_51_0.png" src="../_images/27_random_var_generation_51_0.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1232,7 +1242,7 @@ in order to be able to discuss.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/27_random_var_generation_51_0.png" src="../_images/27_random_var_generation_51_0.png" />
+<img alt="../_images/27_random_var_generation_53_0.png" src="../_images/27_random_var_generation_53_0.png" />
 </div>
 </div>
 </section>
@@ -1254,7 +1264,7 @@ in order to be able to discuss.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(5.234856810728147, 5.0)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(5.109668045377111, 5.0)
 </pre></div>
 </div>
 </div>
@@ -1266,7 +1276,7 @@ in order to be able to discuss.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(25.15717234348484, 25.0)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(25.122809740176113, 25.0)
 </pre></div>
 </div>
 </div>
@@ -1279,7 +1289,7 @@ in order to be able to discuss.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1.9314446826998646, array(2.))
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1.8822845194553515, array(2.))
 </pre></div>
 </div>
 </div>
@@ -1292,7 +1302,7 @@ in order to be able to discuss.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(5.458315123884374, array(6.))
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(4.852065273813558, array(6.))
 </pre></div>
 </div>
 </div>
@@ -1322,7 +1332,7 @@ in order to be able to discuss.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.04037818973384988
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.028425656571834323
 </pre></div>
 </div>
 </div>
@@ -1340,7 +1350,7 @@ in order to be able to discuss.</p>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot: ylabel=&#39;Density&#39;&gt;
 </pre></div>
 </div>
-<img alt="../_images/27_random_var_generation_66_1.png" src="../_images/27_random_var_generation_66_1.png" />
+<img alt="../_images/27_random_var_generation_68_1.png" src="../_images/27_random_var_generation_68_1.png" />
 </div>
 </div>
 </section>
@@ -1350,14 +1360,17 @@ in order to be able to discuss.</p>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
 
+
 <span class="n">rvN</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span>
+<span class="c1"># TMP TMP</span>
+<span class="n">ndata</span> <span class="o">=</span> <span class="n">rvN</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">ks_1samp</span><span class="p">(</span><span class="n">ndata</span><span class="p">,</span> <span class="n">rvN</span><span class="o">.</span><span class="n">cdf</span><span class="p">)</span>
 <span class="n">result</span><span class="o">.</span><span class="n">statistic</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.0217693457010818
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.08295259915175968
 </pre></div>
 </div>
 </div>
@@ -1375,7 +1388,7 @@ in order to be able to discuss.</p>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot: ylabel=&#39;Density&#39;&gt;
 </pre></div>
 </div>
-<img alt="../_images/27_random_var_generation_70_1.png" src="../_images/27_random_var_generation_70_1.png" />
+<img alt="../_images/27_random_var_generation_72_1.png" src="../_images/27_random_var_generation_72_1.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1392,7 +1405,7 @@ in order to be able to discuss.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.014541347619878409
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.04623843644401282
 </pre></div>
 </div>
 </div>
@@ -1406,7 +1419,7 @@ in order to be able to discuss.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.14865754724817348
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.1540484160915378
 </pre></div>
 </div>
 </div>
@@ -1420,7 +1433,7 @@ in order to be able to discuss.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.07207808875405208
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.06369652771373713
 </pre></div>
 </div>
 </div>
@@ -1431,12 +1444,11 @@ in order to be able to discuss.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">kstwo</span>
 
-<span class="k">def</span> <span class="nf">eCDF</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-    <span class="n">data</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>               <span class="c1"># sort the data</span>
-    <span class="n">count</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">data</span> <span class="o">&lt;=</span> <span class="n">b</span><span class="p">)</span>    <span class="c1"># counts # obs. &lt;= b</span>
-    <span class="k">return</span> <span class="n">count</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>  <span class="c1"># proportion of total</span>
+<span class="c1"># def eCDF(data, b):</span>
+<span class="c1">#     data.sort()               # sort the data</span>
+<span class="c1">#     count = sum(data &lt;= b)    # counts # obs. &lt;= b</span>
+<span class="c1">#     return count / len(data)  # proportion of total</span>
 
 <span class="k">def</span> <span class="nf">ks_dist</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">rv</span><span class="o">=</span><span class="n">norm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -1445,7 +1457,7 @@ in order to be able to discuss.</p>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ks_dists</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">xi</span> <span class="ow">in</span> <span class="n">sample</span><span class="p">:</span>
-        <span class="n">eCDFx</span> <span class="o">=</span> <span class="n">eCDF</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">xi</span><span class="p">)</span>
+        <span class="n">eCDFx</span> <span class="o">=</span> <span class="n">ecdf</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">xi</span><span class="p">)</span>
         <span class="n">ks_dist</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">eCDFx</span> <span class="o">-</span> <span class="n">rv</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">xi</span><span class="p">))</span>
         <span class="n">ks_dists</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ks_dist</span><span class="p">)</span>
     <span class="n">max_ks_dist</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">ks_dists</span><span class="p">)</span>
@@ -1456,7 +1468,7 @@ in order to be able to discuss.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.0217693457010818
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.07295259915175967
 </pre></div>
 </div>
 </div>
@@ -1468,7 +1480,7 @@ in order to be able to discuss.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.014541347619878409
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.045833275636411985
 </pre></div>
 </div>
 </div>
@@ -1488,14 +1500,14 @@ in order to be able to discuss.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([1031.82734552,  987.38924294, 1064.04604836,  837.09952676,
-        974.84160011,  816.86515814, 1103.42547556, 1085.37214691,
-        974.9835915 , 1125.75426155, 1059.92948176, 1071.38534689,
-        863.01659227,  964.99961474,  988.85886674, 1008.33930019,
-       1169.67069386,  915.80440157, 1215.30334249,  928.31094708,
-       1134.38873281, 1053.48908723,  961.67701145, 1002.55609055,
-       1055.44766442, 1139.60080685,  858.17194812, 1046.89504593,
-       1016.67572784,  990.74879849])
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([1023.58164337, 1131.96101253,  984.55474377, 1012.80305486,
+       1132.29795341,  988.55844272, 1007.18730146,  965.75084772,
+        871.25525042,  951.85447822, 1195.34477816,  935.41388813,
+       1036.88280592,  901.31299392, 1108.28724107, 1037.25328851,
+        947.86131426, 1113.55450491, 1069.39365217,  985.43147615,
+       1005.76884122, 1061.69078775,  918.03390485,  961.51179333,
+        867.2228447 ,  949.78597689, 1125.72622423, 1074.13524081,
+        956.19700644, 1133.8603416 ])
 </pre></div>
 </div>
 </div>
@@ -1507,7 +1519,7 @@ in order to be able to discuss.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1014.8957966217971
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1015.1491211166709
 </pre></div>
 </div>
 </div>
@@ -1521,7 +1533,7 @@ in order to be able to discuss.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>997.8430229056871
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1010.7744918037457
 </pre></div>
 </div>
 </div>
@@ -1549,24 +1561,19 @@ in order to be able to discuss.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[1016.58, 993.87, 1012.14, 1016.98, 996.38, 1013.23, 1006.53, 982.33, 1033.73, 1010.68]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[984.23, 994.66, 1008.5, 1004.75, 995.42, 1039.53, 1021.28, 1032.82, 996.22, 995.08]
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">bmeans</span> <span class="o">-</span> <span class="n">sample</span><span class="o">.</span><span class="n">mean</span><span class="p">()))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">bmeans</span> <span class="o">-</span> <span class="n">nsample</span><span class="o">.</span><span class="n">mean</span><span class="p">()))</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span> <span class="p">[</span><span class="mi">49</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">bmeans</span> <span class="o">-</span> <span class="n">sample</span><span class="o">.</span><span class="n">mean</span><span class="p">()))</span>
-
-<span class="ne">NameError</span>: name &#39;sample&#39; is not defined
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>30.921350228753795
 </pre></div>
 </div>
 </div>
@@ -1621,7 +1628,7 @@ in order to be able to discuss.</p>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(600.0, 1400.0)
 </pre></div>
 </div>
-<img alt="../_images/27_random_var_generation_94_1.png" src="../_images/27_random_var_generation_94_1.png" />
+<img alt="../_images/27_random_var_generation_97_1.png" src="../_images/27_random_var_generation_97_1.png" />
 </div>
 </div>
 <div class="cell docutils container">
