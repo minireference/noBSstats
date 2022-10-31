@@ -534,6 +534,11 @@ title="Print to PDF"
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#generating-observations-from-the-sampling-distribution">
+     Generating observations from the sampling distribution
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#example-1-continued-sampling-distribution-of-the-mean">
      Example 1 (continued): sampling distribution of the mean
     </a>
@@ -657,6 +662,11 @@ title="Print to PDF"
    Sampling distributions of statistics
   </a>
   <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#generating-observations-from-the-sampling-distribution">
+     Generating observations from the sampling distribution
+    </a>
+   </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#example-1-continued-sampling-distribution-of-the-mean">
      Example 1 (continued): sampling distribution of the mean
@@ -1053,6 +1063,94 @@ the quantity  <span class="math notranslate nohighlight">\(g(\mathbf{X})\)</span
 This should make sense intuitively,
 since the inputs to the function <span class="math notranslate nohighlight">\(\mathbf{X}\)</span> are random, the output of the function is also random.</p>
 <p>The probability distribution of the random variable <span class="math notranslate nohighlight">\(g(\mathbf{X})\)</span> is called the <strong>sampling distribution</strong> of <span class="math notranslate nohighlight">\(g\)</span>.</p>
+<section id="generating-observations-from-the-sampling-distribution">
+<h3>Generating observations from the sampling distribution<a class="headerlink" href="#generating-observations-from-the-sampling-distribution" title="Permalink to this headline">#</a></h3>
+<p>The function <code class="docutils literal notranslate"><span class="pre">gen_sampling_dist</span></code> generates <code class="docutils literal notranslate"><span class="pre">N</span></code> samples of size <code class="docutils literal notranslate"><span class="pre">n</span></code> from the random variable object <code class="docutils literal notranslate"><span class="pre">rv</span></code>
+and calculates the values of statistic function <code class="docutils literal notranslate"><span class="pre">statfunc</span></code> from each of the samples.
+The function returns a lists of the values of the statistic calculated from each sample.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">gen_sampling_dist</span><span class="p">(</span><span class="n">rv</span><span class="p">,</span> <span class="n">statfunc</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
+    <span class="n">stats</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
+        <span class="n">sample</span> <span class="o">=</span> <span class="n">rv</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">stat</span> <span class="o">=</span> <span class="n">statfunc</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+        <span class="n">stats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">stat</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">stats</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can plot a histogram of the sampling distribution
+by calling <code class="docutils literal notranslate"><span class="pre">sns.histplot(stats)</span></code>.
+We can also generate a strip plot using <code class="docutils literal notranslate"><span class="pre">sns.stripplot(x=stats,</span> <span class="pre">marker=&quot;D&quot;)</span></code>,
+specifying the <code class="docutils literal notranslate"><span class="pre">D</span></code> (diamond) marker to indicate we are plotting the means from each sample.</p>
+<p>The plot helper function <code class="docutils literal notranslate"><span class="pre">plot_sampling_dist(stats)</span></code> generates a combined plot that
+shows both a histogram and a scatter plot,
+as shown in the figures below.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">t</span> <span class="k">as</span> <span class="n">tdist</span>
+<span class="n">df</span> <span class="o">=</span> <span class="mi">7</span>
+<span class="n">rvT</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="mi">73</span><span class="p">)</span>
+
+<span class="n">tbars</span> <span class="o">=</span> <span class="n">gen_sampling_dist</span><span class="p">(</span><span class="n">rvT</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">tbars</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[-0.20692173656720428,
+ -0.16224861284022118,
+ -0.1090169029864607,
+ -0.1867889689437277,
+ 0.18050360448711014,
+ 0.4229869739955812,
+ 0.2836718970302719,
+ 0.014562470568990715,
+ 0.08609259470778338,
+ 0.1477972404150818]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">tbars</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot: ylabel=&#39;Count&#39;&gt;
+</pre></div>
+</div>
+<img alt="../_images/28_random_samples_42_1.png" src="../_images/28_random_samples_42_1.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">stripplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">tbars</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot: &gt;
+</pre></div>
+</div>
+<img alt="../_images/28_random_samples_43_1.png" src="../_images/28_random_samples_43_1.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_sampling_dist</span><span class="p">(</span><span class="n">tbars</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/28_random_samples_44_0.png" src="../_images/28_random_samples_44_0.png" />
+</div>
+</div>
+</section>
 <section id="example-1-continued-sampling-distribution-of-the-mean">
 <h3>Example 1 (continued): sampling distribution of the mean<a class="headerlink" href="#example-1-continued-sampling-distribution-of-the-mean" title="Permalink to this headline">#</a></h3>
 <p>Let’s define a random variable <code class="docutils literal notranslate"><span class="pre">rvU</span></code> <span class="math notranslate nohighlight">\(\sim \mathcal{U}(0,1)\)</span>.</p>
@@ -1112,7 +1210,7 @@ and plot the observations as a scatter plot.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/28_random_samples_43_0.png" src="../_images/28_random_samples_43_0.png" />
+<img alt="../_images/28_random_samples_52_0.png" src="../_images/28_random_samples_52_0.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1123,7 +1221,7 @@ and plot the observations as a scatter plot.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/28_random_samples_44_0.png" src="../_images/28_random_samples_44_0.png" />
+<img alt="../_images/28_random_samples_53_0.png" src="../_images/28_random_samples_53_0.png" />
 </div>
 </div>
 <p><strong>Visualizing the sampling distribution of the mean.</strong><br />
@@ -1149,7 +1247,7 @@ then plot a histogram of the means.</p>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot: ylabel=&#39;Count&#39;&gt;
 </pre></div>
 </div>
-<img alt="../_images/28_random_samples_47_1.png" src="../_images/28_random_samples_47_1.png" />
+<img alt="../_images/28_random_samples_56_1.png" src="../_images/28_random_samples_56_1.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1168,7 +1266,7 @@ then plot a histogram of the means.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(0.4998909933672198, 0.0521325531296645)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(0.5017437363340532, 0.05279751270548474)
 </pre></div>
 </div>
 </div>
@@ -1230,7 +1328,7 @@ then plot a histogram of the means.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/28_random_samples_61_0.png" src="../_images/28_random_samples_61_0.png" />
+<img alt="../_images/28_random_samples_70_0.png" src="../_images/28_random_samples_70_0.png" />
 </div>
 </div>
 <p>We can compute the mean and the variance of the sampling distribution:</p>
@@ -1241,7 +1339,7 @@ then plot a histogram of the means.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1000.3592586263096, 18.624079944025013)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(999.835159784365, 18.98311093421671)
 </pre></div>
 </div>
 </div>
@@ -1303,7 +1401,7 @@ We will now generate <span class="math notranslate nohighlight">\(N=1000\)</span
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/28_random_samples_75_0.png" src="../_images/28_random_samples_75_0.png" />
+<img alt="../_images/28_random_samples_84_0.png" src="../_images/28_random_samples_84_0.png" />
 </div>
 </div>
 <p>We can compute the mean and the variance of the sampling distribution:</p>
@@ -1314,7 +1412,7 @@ We will now generate <span class="math notranslate nohighlight">\(N=1000\)</span
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(4.99264529558565, 0.9238369996189244)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(5.061609416960459, 0.9053329022062302)
 </pre></div>
 </div>
 </div>
@@ -1352,6 +1450,32 @@ where <span class="math notranslate nohighlight">\(\sigma\)</span> is the standa
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;figures/prob/samples_from_U01_n10_n30_n100.pdf&quot;</span>
+
+<span class="n">N</span> <span class="o">=</span> <span class="mi">10</span>         <span class="c1"># number of samples to plot</span>
+
+<span class="k">with</span> <span class="n">plt</span><span class="o">.</span><span class="n">rc_context</span><span class="p">({</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:(</span><span class="mi">10</span><span class="p">,</span><span class="mf">2.5</span><span class="p">)}):</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">100</span><span class="p">],</span> <span class="n">axs</span><span class="p">):</span>
+        <span class="n">usamples_df</span> <span class="o">=</span> <span class="n">gen_samples</span><span class="p">(</span><span class="n">rvU</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
+        <span class="n">plot_samples</span><span class="p">(</span><span class="n">usamples_df</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Samples of size $n=</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">$&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Save fig as .pdf and .png</span>
+    <span class="n">basename</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.pdf&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.png&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">basename</span> <span class="o">+</span> <span class="s1">&#39;.pdf&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">,</span> <span class="n">pad_inches</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">basename</span> <span class="o">+</span> <span class="s1">&#39;.png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">,</span> <span class="n">pad_inches</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/28_random_samples_96_0.png" src="../_images/28_random_samples_96_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;figures/prob/sampling_dist_of_Ubar_n10_n30_n100.pdf&quot;</span>
 
 <span class="n">N</span> <span class="o">=</span> <span class="mi">1000</span>         <span class="c1"># number of samples</span>
@@ -1370,7 +1494,7 @@ where <span class="math notranslate nohighlight">\(\sigma\)</span> is the standa
         <span class="n">plot_sampling_dist</span><span class="p">(</span><span class="n">ubars</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">xlims</span><span class="o">=</span><span class="n">xlims</span><span class="p">,</span> <span class="n">binwidth</span><span class="o">=</span><span class="n">binwidth</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;$n=</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">$&quot;</span><span class="p">)</span>
         <span class="c1"># B. plot the distribution predicted by the CLT</span>
         <span class="n">rvUbar</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">rvU</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">rvU</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
-        <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">xs</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">rvUbar</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">xs</span><span class="p">),</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+        <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">xs</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">rvUbar</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">xs</span><span class="p">),</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;m&quot;</span><span class="p">)</span>
         <span class="nb">globals</span><span class="p">()[</span><span class="sa">f</span><span class="s2">&quot;ubars</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ubars</span>
 
     <span class="c1"># Save as PDF and PNG</span>
@@ -1382,7 +1506,7 @@ where <span class="math notranslate nohighlight">\(\sigma\)</span> is the standa
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/28_random_samples_87_0.png" src="../_images/28_random_samples_87_0.png" />
+<img alt="../_images/28_random_samples_97_0.png" src="../_images/28_random_samples_97_0.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1392,7 +1516,7 @@ where <span class="math notranslate nohighlight">\(\sigma\)</span> is the standa
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(0.09013220460494549, 0.052816363187414755, 0.029473813507022387)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(0.09385096069566823, 0.05206512975146488, 0.02890429253471356)
 </pre></div>
 </div>
 </div>
@@ -1418,11 +1542,38 @@ where <span class="math notranslate nohighlight">\(\sigma\)</span> is the standa
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
 
-<span class="n">mu</span> <span class="o">=</span> <span class="mi">1000</span>
-<span class="n">sigma</span> <span class="o">=</span> <span class="mi">100</span>
-<span class="n">rvN</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span><span class="n">sigma</span><span class="p">)</span>
+<span class="n">mu</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">rvZ</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span><span class="n">sigma</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;figures/prob/samples_from_Z_n10_n30_n100.pdf&quot;</span>
+
+<span class="n">N</span> <span class="o">=</span> <span class="mi">10</span>           <span class="c1"># number of samples to plot</span>
+<span class="n">xlims</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+    
+<span class="k">with</span> <span class="n">plt</span><span class="o">.</span><span class="n">rc_context</span><span class="p">({</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:(</span><span class="mi">10</span><span class="p">,</span><span class="mf">2.5</span><span class="p">)}):</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">100</span><span class="p">],</span> <span class="n">axs</span><span class="p">):</span>
+        <span class="n">zsamples_df</span> <span class="o">=</span> <span class="n">gen_samples</span><span class="p">(</span><span class="n">rvZ</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
+        <span class="n">plot_samples</span><span class="p">(</span><span class="n">zsamples_df</span><span class="p">,</span> <span class="n">xlims</span><span class="o">=</span><span class="n">xlims</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Samples of size $n=</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">$&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Save fig as .pdf and .png</span>
+    <span class="n">basename</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.pdf&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.png&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">basename</span> <span class="o">+</span> <span class="s1">&#39;.pdf&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">,</span> <span class="n">pad_inches</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">basename</span> <span class="o">+</span> <span class="s1">&#39;.png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">,</span> <span class="n">pad_inches</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/28_random_samples_103_0.png" src="../_images/28_random_samples_103_0.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1445,7 +1596,7 @@ where <span class="math notranslate nohighlight">\(\sigma\)</span> is the standa
         <span class="n">plot_sampling_dist</span><span class="p">(</span><span class="n">nbars</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">xlims</span><span class="o">=</span><span class="n">xlims</span><span class="p">,</span> <span class="n">binwidth</span><span class="o">=</span><span class="n">binwidth</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;$n=</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">$&quot;</span><span class="p">)</span>
         <span class="c1"># B. plot the distribution predicted by the CLT</span>
         <span class="n">rvNbar</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">rvN</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">rvN</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
-        <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">xs</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">rvNbar</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">xs</span><span class="p">),</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+        <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">xs</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">rvNbar</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">xs</span><span class="p">),</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;m&quot;</span><span class="p">)</span>
         <span class="nb">globals</span><span class="p">()[</span><span class="sa">f</span><span class="s2">&quot;nbars</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nbars</span>
 
     <span class="c1"># Save as PDF and PNG</span>
@@ -1457,7 +1608,7 @@ where <span class="math notranslate nohighlight">\(\sigma\)</span> is the standa
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/28_random_samples_93_0.png" src="../_images/28_random_samples_93_0.png" />
+<img alt="../_images/28_random_samples_104_0.png" src="../_images/28_random_samples_104_0.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1467,7 +1618,7 @@ where <span class="math notranslate nohighlight">\(\sigma\)</span> is the standa
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(30.724651377758903, 18.709073052505943, 9.98079424473659)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(30.95060440206822, 17.600277520315146, 10.32731723609717)
 </pre></div>
 </div>
 </div>
@@ -1502,6 +1653,33 @@ where <span class="math notranslate nohighlight">\(\sigma\)</span> is the standa
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;figures/prob/samples_from_Elambda02_n10_n30_n100.pdf&quot;</span>
+
+<span class="n">N</span> <span class="o">=</span> <span class="mi">10</span>           <span class="c1"># number of samples to plot</span>
+<span class="n">xlims</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.1</span><span class="p">,</span><span class="mi">30</span><span class="p">]</span>
+    
+<span class="k">with</span> <span class="n">plt</span><span class="o">.</span><span class="n">rc_context</span><span class="p">({</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:(</span><span class="mi">10</span><span class="p">,</span><span class="mf">2.5</span><span class="p">)}):</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">100</span><span class="p">],</span> <span class="n">axs</span><span class="p">):</span>
+        <span class="n">esamples_df</span> <span class="o">=</span> <span class="n">gen_samples</span><span class="p">(</span><span class="n">rvE</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
+        <span class="n">plot_samples</span><span class="p">(</span><span class="n">esamples_df</span><span class="p">,</span> <span class="n">xlims</span><span class="o">=</span><span class="n">xlims</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Samples of size $n=</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">$&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Save fig as .pdf and .png</span>
+    <span class="n">basename</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.pdf&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.png&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">basename</span> <span class="o">+</span> <span class="s1">&#39;.pdf&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">,</span> <span class="n">pad_inches</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">basename</span> <span class="o">+</span> <span class="s1">&#39;.png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">,</span> <span class="n">pad_inches</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/28_random_samples_112_0.png" src="../_images/28_random_samples_112_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;figures/prob/sampling_dist_of_Ebar_n10_n30_n100.pdf&quot;</span>
 
 <span class="n">N</span> <span class="o">=</span> <span class="mi">1000</span>        <span class="c1"># number of samples</span>
@@ -1511,7 +1689,7 @@ where <span class="math notranslate nohighlight">\(\sigma\)</span> is the standa
     <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># plot parameters</span>
-    <span class="n">xlims</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">]</span>
+    <span class="n">xlims</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span>
     <span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">*</span><span class="n">xlims</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
     
     <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">100</span><span class="p">],</span> <span class="n">axs</span><span class="p">):</span>
@@ -1520,7 +1698,7 @@ where <span class="math notranslate nohighlight">\(\sigma\)</span> is the standa
         <span class="n">plot_sampling_dist</span><span class="p">(</span><span class="n">ebars</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">xlims</span><span class="o">=</span><span class="n">xlims</span><span class="p">,</span> <span class="n">binwidth</span><span class="o">=</span><span class="n">binwidth</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;$n=</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">$&quot;</span><span class="p">)</span>
         <span class="c1"># B. plot the distribution predicted by the CLT</span>
         <span class="n">rvEbar</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">rvE</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">rvE</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
-        <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">xs</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">rvEbar</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">xs</span><span class="p">),</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+        <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">xs</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">rvEbar</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">xs</span><span class="p">),</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;m&quot;</span><span class="p">)</span>
         <span class="nb">globals</span><span class="p">()[</span><span class="sa">f</span><span class="s2">&quot;ebars</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ebars</span>
 
     <span class="c1"># Save as PDF and PNG</span>
@@ -1532,7 +1710,7 @@ where <span class="math notranslate nohighlight">\(\sigma\)</span> is the standa
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/28_random_samples_101_0.png" src="../_images/28_random_samples_101_0.png" />
+<img alt="../_images/28_random_samples_113_0.png" src="../_images/28_random_samples_113_0.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1542,7 +1720,7 @@ where <span class="math notranslate nohighlight">\(\sigma\)</span> is the standa
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1.5378804154646586, 0.8980174907742404, 0.5200715551197027)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1.610691781590936, 0.8882128866190877, 0.5172447055878753)
 </pre></div>
 </div>
 </div>
