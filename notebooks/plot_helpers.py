@@ -15,9 +15,11 @@ from scipy.integrate import quad
 import seaborn as sns
 
 from scipy.stats import randint    # special handling beta+1=beta
+from scipy.stats import nbinom     # display parameter n as r
 from scipy.stats import hypergeom  # special handling M=a+b, n=a, N=n
 from scipy.stats import expon      # hide loc=0 parameter
 from scipy.stats import gamma      # hide loc=0 parameter
+
 
 
 # Figure settings
@@ -456,6 +458,8 @@ def generate_pmf_panel(fname, xs, model, params_matrix,
                 display_params = {"low":params["low"], "high":params["high"]-1}
             elif model == hypergeom:
                 display_params = {"a":params["n"], "b":params["M"]-params["n"], "n":params["N"]}
+            elif model == nbinom:
+                display_params = {"r":params["n"], "p":params["p"]}
             else:
                 display_params = params
             label = labeler(display_params, params_to_latex)
@@ -478,13 +482,54 @@ def generate_pmf_panel(fname, xs, model, params_matrix,
     return fig
 
 
+# Diagnositic plots (used in Section 2.7 Random variable generation)
+################################################################################
+# The function qq_plot tries to imitate the behaviour of the function `qqplot`
+# defined in `statsmodels.graphics.api`. Usage: `qqplot(data, dist=norm(0,1), line='q')`. See:
+# https://github.com/statsmodels/statsmodels/blob/main/statsmodels/graphics/gofplots.py#L912-L919
+#
+# TODO: figure out how to plot all of data correctly: currenlty missing first and last data point
+
+def qq_plot(data, dist, ax=None, xlims=None, filename=None):
+    # Setup figure and axes
+    if ax is None:
+        fig, ax = plt.subplots()
+    else:
+        fig = ax.figure
+
+    # Add the Q-Q scatter plot
+    qs = np.linspace(0, 1, len(data)+1)
+    xs = dist.ppf(qs)
+    ys = np.quantile(data, qs)
+    sns.scatterplot(x=xs, y=ys, ax=ax, alpha=0.2)
+
+    # Compute the parameters m and b for the diagonal
+    xq25, xq75 = dist.ppf([0.25, 0.75])
+    yq25, yq75 = np.quantile(data, [0.25,0.75])
+    m = (yq75-yq25)/(xq75-xq25)
+    b = yq25 - m * xq25
+    # add the line  y = m*x+b  to the plot
+    linexs = np.linspace(min(xs[1:]),max(xs[:-1]))
+    lineys = m*linexs + b
+    sns.lineplot(x=linexs, y=lineys, ax=ax, color="r")
+
+    # Handle keyword arguments
+    if xlims:
+        ax.set_xlim(xlims)
+    if filename:
+        basename = filename.replace('.pdf','').replace('.png','')
+        fig.tight_layout()
+        fig.savefig(basename + '.pdf', dpi=300, bbox_inches="tight", pad_inches=0.02)
+        fig.savefig(basename + '.png', dpi=300, bbox_inches="tight", pad_inches=0.02)
+
+    return ax
+
 
 
 
 
 # Random samples
 ################################################################################
-
 
 def gen_samples(rv, n=30, N=10):
     """
@@ -537,7 +582,7 @@ def plot_samples(samples_df, ax=None, xlims=None, filename=None):
 
 def gen_sampling_dist(rv, statfunc=np.mean, n=30, N=1000):
     """
-    Generate `N` samples of size `n` from the random varaible `rv`
+    Generate `N` samples of size `n` from the random variable `rv`
     and calculate the statistic `statfunc` from each sample.
     """
     stats = []
@@ -558,7 +603,9 @@ def plot_sampling_dist(stats, label=None, xlims=None, binwidth=None, ax=None, fi
     else:
         fig = ax.figure
     if binwidth is None:
-        binwidth = (xlims[1]-xlims[0]) / 30
+        if xlims is None:
+            xlims = min(stats), max(stats)
+        binwidth = (xlims[1]-xlims[0]) / 30            
     
     # 2. Plot a histogram of the sampling distribution
     sns.histplot(stats, binwidth=binwidth, stat="density", color="r", ax=ax, label=label)
