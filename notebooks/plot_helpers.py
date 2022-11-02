@@ -19,6 +19,7 @@ from scipy.stats import nbinom     # display parameter n as r
 from scipy.stats import hypergeom  # special handling M=a+b, n=a, N=n
 from scipy.stats import expon      # hide loc=0 parameter
 from scipy.stats import gamma      # hide loc=0 parameter
+from scipy.stats import norm
 
 
 
@@ -579,7 +580,6 @@ def plot_samples(samples_df, ax=None, xlims=None, filename=None):
 
 
 
-
 def gen_sampling_dist(rv, statfunc=np.mean, n=30, N=1000):
     """
     Generate `N` samples of size `n` from the random variable `rv`
@@ -623,3 +623,59 @@ def plot_sampling_dist(stats, label=None, xlims=None, binwidth=None, ax=None, fi
         fig.savefig(basename + '.pdf', dpi=300, bbox_inches="tight", pad_inches=0.02)
         fig.savefig(basename + '.png', dpi=300, bbox_inches="tight", pad_inches=0.02)
 
+
+        
+
+
+# Panels illustrating CLT
+################################################################################
+
+        
+def plot_samples_panel(rv, xlims, N=10, ns=[10,30,100], filename=None):
+    """
+    Draw a panel of strip plots for `N` sample with sizes `ns`.
+    Need to pass `xlims` because cannot be determined automatically.
+    """
+    fig, axs = plt.subplots(1, len(ns), sharey=True, figsize=(10,2.5))
+
+    for n, ax in zip(ns, axs):
+        samples_df = gen_samples(rv, n=n, N=N)
+        plot_samples(samples_df, xlims=xlims, ax=ax)
+        ax.set_title(f"Samples of size $n={n}$")
+
+    if filename:
+        basename = filename.replace('.pdf','').replace('.png','')
+        fig.tight_layout()
+        fig.savefig(basename + '.pdf', dpi=300, bbox_inches="tight", pad_inches=0.02)
+        fig.savefig(basename + '.png', dpi=300, bbox_inches="tight", pad_inches=0.02)
+
+
+
+def plot_sampling_dists_panel(rv, xlims, N=1000, ns=[10,30,100], binwidth=None, filename=None):
+    """
+    Draw a panel of combined histogram and strip plot of the sampling distibutions
+    of random variable `rv` for sample sizes `ns`.
+    Need to pass appropriate `xlims` and `binwidth` parameters depending on `rv`.
+    """
+    fig, axs = plt.subplots(1, len(ns), sharey=True, figsize=(10,2.5))
+
+    # plot parameters
+    xs = np.linspace(*xlims, 1000)
+
+    xbarss = []
+    for n, ax in zip([10,30,100], axs):
+        # A. generate and plot sampling distributoin
+        xbars = gen_sampling_dist(rv, statfunc=np.mean, n=n, N=N)
+        plot_sampling_dist(xbars, ax=ax, xlims=xlims, binwidth=binwidth, label=f"$n={n}$")
+        # B. plot the distribution predicted by the CLT
+        rvXbar = norm(rv.mean(), rv.std()/np.sqrt(n))
+        sns.lineplot(x=xs, y=rvXbar.pdf(xs), ax=ax, color="m")
+        xbarss.append(xbars)
+
+    if filename:
+        basename = filename.replace('.pdf','').replace('.png','')
+        fig.tight_layout()
+        fig.savefig(basename + '.pdf', dpi=300, bbox_inches="tight", pad_inches=0.02)
+        fig.savefig(basename + '.png', dpi=300, bbox_inches="tight", pad_inches=0.02)
+    
+    return xbarss
