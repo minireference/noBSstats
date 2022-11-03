@@ -873,6 +873,133 @@ title="Print to PDF"
 </div>
 </div>
 </div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">N</span> <span class="o">=</span> <span class="mi">10</span>   <span class="c1"># number of samples</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">30</span>   <span class="c1"># sample size</span>
+
+<span class="c1"># generate N samples from (U_1,U_2,...,U_n)</span>
+<span class="n">usamples</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
+    <span class="n">column_name</span> <span class="o">=</span> <span class="s2">&quot;sample&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">usamples</span><span class="p">[</span><span class="n">column_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">rvU</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+<span class="c1"># usamples</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">line</span> <span class="mi">8</span>
+<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
+<span class="g g-Whitespace">      </span><span class="mi">7</span>     <span class="n">column_name</span> <span class="o">=</span> <span class="s2">&quot;sample&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+<span class="ne">----&gt; </span><span class="mi">8</span>     <span class="n">usamples</span><span class="p">[</span><span class="n">column_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">rvU</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">10</span> <span class="c1"># usamples</span>
+
+<span class="ne">NameError</span>: name &#39;rvU&#39; is not defined
+</pre></div>
+</div>
+</div>
+</div>
+<p>In the last line we converted the dictionary <code class="docutils literal notranslate"><span class="pre">usamples</span></code> to a Pandas data frame <code class="docutils literal notranslate"><span class="pre">usamples_df</span></code>,
+which will make plotting easier.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># convert usamples to a Pandas data frame</span>
+<span class="n">usamples_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">usamples</span><span class="p">)</span>
+<span class="n">usamples_df</span><span class="o">.</span><span class="n">shape</span>
+<span class="c1"># usamples_df</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(30, 10)
+</pre></div>
+</div>
+</div>
+</div>
+<p>To obtain a strip plot of all the samples,
+we can simply call the Seaborn function <code class="docutils literal notranslate"><span class="pre">stripplot</span></code> on the data frame <code class="docutils literal notranslate"><span class="pre">usamples_df</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># generate strip plot</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">stripplot</span><span class="p">(</span><span class="n">usamples_df</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;h&quot;</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="s2">&quot;dark:b&quot;</span><span class="p">)</span>
+
+<span class="c1"># add diamond-shaped marker to indicate mean in each sample</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
+    <span class="n">column_name</span> <span class="o">=</span> <span class="s2">&quot;sample&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">ubar_i</span> <span class="o">=</span> <span class="n">usamples_df</span><span class="p">[</span><span class="n">column_name</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">ubar_i</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">75</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/cut_material_7_0.png" src="../_images/cut_material_7_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">t</span> <span class="k">as</span> <span class="n">tdist</span>
+<span class="n">df</span> <span class="o">=</span> <span class="mi">7</span>
+<span class="n">rvT</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="mi">73</span><span class="p">)</span>
+
+<span class="n">tbars</span> <span class="o">=</span> <span class="n">gen_sampling_dist</span><span class="p">(</span><span class="n">rvT</span><span class="p">,</span> <span class="n">statfunc</span><span class="o">=</span><span class="n">mean</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">tbars</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[0.2546629162847764,
+ -0.052805898240538746,
+ 0.10989680612229603,
+ -0.1252411111148421,
+ -0.30134098448585095,
+ 0.18245499973804416,
+ -0.3919513998786795,
+ -0.21461552521963348,
+ -0.2140129421919345,
+ 0.20552369335691717]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">tbars</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot:ylabel=&#39;Count&#39;&gt;
+</pre></div>
+</div>
+<img alt="../_images/cut_material_10_1.png" src="../_images/cut_material_10_1.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">stripplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">tbars</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot:&gt;
+</pre></div>
+</div>
+<img alt="../_images/cut_material_11_1.png" src="../_images/cut_material_11_1.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_sampling_dist</span><span class="p">(</span><span class="n">tbars</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/cut_material_12_0.png" src="../_images/cut_material_12_0.png" />
+</div>
+</div>
 <p>Repeat S insights: for loop + histogram of obs from <span class="math notranslate nohighlight">\(f_X\)</span> from any r.v. allows you to see visualize any stats procedure</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -887,223 +1014,10 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot: ylabel=&#39;Density&#39;&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot:ylabel=&#39;Density&#39;&gt;
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<img alt="../_images/cut_material_4_72.png" src="../_images/cut_material_4_72.png" />
+<img alt="../_images/cut_material_14_1.png" src="../_images/cut_material_14_1.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1126,229 +1040,10 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot: &gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot:&gt;
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>findfont: Generic family &#39;serif&#39; not found because none of the following families were found: Palatino
-</pre></div>
-</div>
-<img alt="../_images/cut_material_5_74.png" src="../_images/cut_material_5_74.png" />
+<img alt="../_images/cut_material_15_1.png" src="../_images/cut_material_15_1.png" />
 </div>
 </div>
 <section id="example-2-generating-observations-from-the-geometric-distribution">
@@ -1382,18 +1077,7 @@ we simply need to call the function <code class="docutils literal notranslate"><
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span> <span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">gen_g</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
-
-<span class="nn">Cell In [4], line 5,</span> in <span class="ni">gen_g</span><span class="nt">(p)</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="k">def</span> <span class="nf">gen_g</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
-<span class="ne">----&gt; </span><span class="mi">5</span>     <span class="n">u</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span>
-<span class="g g-Whitespace">      </span><span class="mi">6</span>     <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">):</span>
-<span class="g g-Whitespace">      </span><span class="mi">7</span>         <span class="k">if</span> <span class="n">u</span> <span class="o">&lt;=</span> <span class="n">rvG</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
-
-<span class="ne">NameError</span>: name &#39;random&#39; is not defined
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2
 </pre></div>
 </div>
 </div>
@@ -1412,7 +1096,7 @@ we simply need to call the function <code class="docutils literal notranslate"><
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot:ylabel=&#39;Count&#39;&gt;
 </pre></div>
 </div>
-<img alt="../_images/cut_material_12_1.png" src="../_images/cut_material_12_1.png" />
+<img alt="../_images/cut_material_22_1.png" src="../_images/cut_material_22_1.png" />
 </div>
 </div>
 </section>
@@ -1442,7 +1126,7 @@ we simply need to call the function <code class="docutils literal notranslate"><
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.1, 0.5, &#39;Saturday\nMean&#39;)
 </pre></div>
 </div>
-<img alt="../_images/cut_material_14_1.png" src="../_images/cut_material_14_1.png" />
+<img alt="../_images/cut_material_24_1.png" src="../_images/cut_material_24_1.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1500,7 +1184,7 @@ we simply need to call the function <code class="docutils literal notranslate"><
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/cut_material_19_0.png" src="../_images/cut_material_19_0.png" />
+<img alt="../_images/cut_material_29_0.png" src="../_images/cut_material_29_0.png" />
 </div>
 </div>
 <section id="sampling-distribution-of-the-mean">
@@ -1521,7 +1205,7 @@ we simply need to call the function <code class="docutils literal notranslate"><
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/cut_material_21_0.png" src="../_images/cut_material_21_0.png" />
+<img alt="../_images/cut_material_31_0.png" src="../_images/cut_material_31_0.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1577,7 +1261,7 @@ and the standard error is 0.09145
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/cut_material_27_0.png" src="../_images/cut_material_27_0.png" />
+<img alt="../_images/cut_material_37_0.png" src="../_images/cut_material_37_0.png" />
 </div>
 </div>
 <section id="id1">
@@ -1597,7 +1281,7 @@ and the standard error is 0.09145
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/cut_material_29_0.png" src="../_images/cut_material_29_0.png" />
+<img alt="../_images/cut_material_39_0.png" src="../_images/cut_material_39_0.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1648,7 +1332,7 @@ and the standard error is 31.47
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/cut_material_33_0.png" src="../_images/cut_material_33_0.png" />
+<img alt="../_images/cut_material_43_0.png" src="../_images/cut_material_43_0.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2225,7 +1909,7 @@ and the current bottling process only produces “up to spec” bottles only …
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.FacetGrid at 0x13419f9d0&gt;
 </pre></div>
 </div>
-<img alt="../_images/cut_material_122_1.png" src="../_images/cut_material_122_1.png" />
+<img alt="../_images/cut_material_132_1.png" src="../_images/cut_material_132_1.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2477,7 +2161,7 @@ and the current bottling process only produces “up to spec” bottles only …
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.FacetGrid at 0x1343d1880&gt;
 </pre></div>
 </div>
-<img alt="../_images/cut_material_131_1.png" src="../_images/cut_material_131_1.png" />
+<img alt="../_images/cut_material_141_1.png" src="../_images/cut_material_141_1.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2490,7 +2174,7 @@ and the current bottling process only produces “up to spec” bottles only …
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.FacetGrid at 0x13442b100&gt;
 </pre></div>
 </div>
-<img alt="../_images/cut_material_132_1.png" src="../_images/cut_material_132_1.png" />
+<img alt="../_images/cut_material_142_1.png" src="../_images/cut_material_142_1.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2519,7 +2203,7 @@ and the current bottling process only produces “up to spec” bottles only …
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.JointGrid at 0x134285730&gt;
 </pre></div>
 </div>
-<img alt="../_images/cut_material_135_1.png" src="../_images/cut_material_135_1.png" />
+<img alt="../_images/cut_material_145_1.png" src="../_images/cut_material_145_1.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2534,7 +2218,7 @@ and the current bottling process only produces “up to spec” bottles only …
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.JointGrid at 0x134590820&gt;
 </pre></div>
 </div>
-<img alt="../_images/cut_material_136_1.png" src="../_images/cut_material_136_1.png" />
+<img alt="../_images/cut_material_146_1.png" src="../_images/cut_material_146_1.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2548,7 +2232,7 @@ and the current bottling process only produces “up to spec” bottles only …
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.FacetGrid at 0x133d27850&gt;
 </pre></div>
 </div>
-<img alt="../_images/cut_material_137_1.png" src="../_images/cut_material_137_1.png" />
+<img alt="../_images/cut_material_147_1.png" src="../_images/cut_material_147_1.png" />
 </div>
 </div>
 </section>
@@ -2595,7 +2279,7 @@ and the current bottling process only produces “up to spec” bottles only …
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/cut_material_140_0.png" src="../_images/cut_material_140_0.png" />
+<img alt="../_images/cut_material_150_0.png" src="../_images/cut_material_150_0.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2638,7 +2322,7 @@ and the current bottling process only produces “up to spec” bottles only …
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/cut_material_143_0.png" src="../_images/cut_material_143_0.png" />
+<img alt="../_images/cut_material_153_0.png" src="../_images/cut_material_153_0.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2668,7 +2352,7 @@ and the current bottling process only produces “up to spec” bottles only …
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/cut_material_144_0.png" src="../_images/cut_material_144_0.png" />
+<img alt="../_images/cut_material_154_0.png" src="../_images/cut_material_154_0.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2724,7 +2408,7 @@ and the current bottling process only produces “up to spec” bottles only …
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/cut_material_145_0.png" src="../_images/cut_material_145_0.png" />
+<img alt="../_images/cut_material_155_0.png" src="../_images/cut_material_155_0.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2752,7 +2436,7 @@ and the current bottling process only produces “up to spec” bottles only …
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/cut_material_146_0.png" src="../_images/cut_material_146_0.png" />
+<img alt="../_images/cut_material_156_0.png" src="../_images/cut_material_156_0.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2785,7 +2469,7 @@ and the current bottling process only produces “up to spec” bottles only …
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/cut_material_147_0.png" src="../_images/cut_material_147_0.png" />
+<img alt="../_images/cut_material_157_0.png" src="../_images/cut_material_157_0.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2824,7 +2508,7 @@ and the current bottling process only produces “up to spec” bottles only …
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/cut_material_148_0.png" src="../_images/cut_material_148_0.png" />
+<img alt="../_images/cut_material_158_0.png" src="../_images/cut_material_158_0.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2873,7 +2557,7 @@ and the current bottling process only produces “up to spec” bottles only …
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x134b43730&gt;]
 </pre></div>
 </div>
-<img alt="../_images/cut_material_152_1.png" src="../_images/cut_material_152_1.png" />
+<img alt="../_images/cut_material_162_1.png" src="../_images/cut_material_162_1.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2897,7 +2581,7 @@ and the current bottling process only produces “up to spec” bottles only …
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.contour.QuadContourSet at 0x134265700&gt;
 </pre></div>
 </div>
-<img alt="../_images/cut_material_153_1.png" src="../_images/cut_material_153_1.png" />
+<img alt="../_images/cut_material_163_1.png" src="../_images/cut_material_163_1.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2934,7 +2618,7 @@ and the current bottling process only produces “up to spec” bottles only …
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot:&gt;
 </pre></div>
 </div>
-<img alt="../_images/cut_material_155_1.png" src="../_images/cut_material_155_1.png" />
+<img alt="../_images/cut_material_165_1.png" src="../_images/cut_material_165_1.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2999,7 +2683,7 @@ and the current bottling process only produces “up to spec” bottles only …
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/cut_material_156_0.png" src="../_images/cut_material_156_0.png" />
+<img alt="../_images/cut_material_166_0.png" src="../_images/cut_material_166_0.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -3070,7 +2754,7 @@ and the current bottling process only produces “up to spec” bottles only …
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/cut_material_157_0.png" src="../_images/cut_material_157_0.png" />
+<img alt="../_images/cut_material_167_0.png" src="../_images/cut_material_167_0.png" />
 </div>
 </div>
 <section id="coin-tosses-for-n-100-n-1000-and-n-10000">
@@ -3130,7 +2814,7 @@ and the current bottling process only produces “up to spec” bottles only …
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/cut_material_162_0.png" src="../_images/cut_material_162_0.png" />
+<img alt="../_images/cut_material_172_0.png" src="../_images/cut_material_172_0.png" />
 </div>
 </div>
 </section>
@@ -3191,7 +2875,7 @@ and the current bottling process only produces “up to spec” bottles only …
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/cut_material_164_0.png" src="../_images/cut_material_164_0.png" />
+<img alt="../_images/cut_material_174_0.png" src="../_images/cut_material_174_0.png" />
 </div>
 </div>
 </section>
@@ -3227,7 +2911,7 @@ and the current bottling process only produces “up to spec” bottles only …
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/cut_material_167_0.png" src="../_images/cut_material_167_0.png" />
+<img alt="../_images/cut_material_177_0.png" src="../_images/cut_material_177_0.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -3404,7 +3088,7 @@ and the current bottling process only produces “up to spec” bottles only …
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/cut_material_180_0.png" src="../_images/cut_material_180_0.png" />
+<img alt="../_images/cut_material_190_0.png" src="../_images/cut_material_190_0.png" />
 </div>
 </div>
 </section>
@@ -3465,7 +3149,7 @@ and the current bottling process only produces “up to spec” bottles only …
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/cut_material_182_0.png" src="../_images/cut_material_182_0.png" />
+<img alt="../_images/cut_material_192_0.png" src="../_images/cut_material_192_0.png" />
 </div>
 </div>
 </section>
