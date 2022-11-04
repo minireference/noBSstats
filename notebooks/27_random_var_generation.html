@@ -983,9 +983,6 @@ title="Print to PDF"
 <span class="p">)</span>
 
 <span class="o">%</span><span class="k">config</span> InlineBackend.figure_format = &#39;retina&#39;
-
-<span class="c1"># # silence annoying warnings</span>
-<span class="c1"># import warnings; warnings.filterwarnings(&#39;ignore&#39;)</span>
 </pre></div>
 </div>
 </div>
@@ -1005,10 +1002,23 @@ title="Print to PDF"
 <p>Running simulations of random variables is super useful:</p>
 <ul class="simple">
 <li><p>fake data generation</p></li>
-<li><p>prob</p></li>
-<li><p>stats</p></li>
+<li><p>probability calculations</p></li>
+<li><p>statistical procedures</p></li>
 </ul>
 <p>(see book)</p>
+<p>General procedure to simulate <span class="math notranslate nohighlight">\(\mathbb{E}_X(g)\)</span>:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">30</span>
+
+<span class="n">gvalues</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">xi</span> <span class="o">=</span> <span class="n">gen_x</span><span class="p">()</span>
+    <span class="n">gi</span> <span class="o">=</span> <span class="n">g</span><span class="p">(</span><span class="n">xi</span><span class="p">)</span>
+    <span class="n">gvalues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gi</span><span class="p">)</span>
+
+<span class="n">expg</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">gvalues</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span>
+</pre></div>
+</div>
+<p>We’ll see different variations of this procedure (for loop that generates many random observations and does something with them).</p>
 </section>
 <section id="random-variable-generation-using-a-computer">
 <h2>Random variable generation using a computer<a class="headerlink" href="#random-variable-generation-using-a-computer" title="Permalink to this headline">#</a></h2>
@@ -1086,11 +1096,24 @@ and compute the proportion of the outcome <span class="math notranslate nohighli
 </div>
 </div>
 </div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># # ALT. Use regular for-loop, instead of list comprehension syntax</span>
+<span class="c1"># n = 1000</span>
+<span class="c1"># bsample = []</span>
+<span class="c1"># for i in range(0,n):</span>
+<span class="c1">#     b = gen_b(p=0.3)</span>
+<span class="c1">#     bsample.append(b)</span>
+<span class="c1"># bsample.count(1) / n</span>
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 </section>
 <section id="continuous-random-variable-generation">
 <h3>Continuous random variable generation<a class="headerlink" href="#continuous-random-variable-generation" title="Permalink to this headline">#</a></h3>
-<p>TODO: explain the invers-CDF trick</p>
+<p>See the book or explanations of the the invers-CDF trick.</p>
 <section id="example-2-generating-observations-from-a-shifted-uniform-distribution">
 <h4>Example 2: generating observations from a shifted uniform distribution<a class="headerlink" href="#example-2-generating-observations-from-a-shifted-uniform-distribution" title="Permalink to this headline">#</a></h4>
 <p><span class="math notranslate nohighlight">\(V \sim \mathcal{U}(\alpha=100,\beta=120)\)</span></p>
@@ -1165,21 +1188,7 @@ and compute the proportion of the outcome <span class="math notranslate nohighli
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot: ylabel=&#39;Density&#39;&gt;
 </pre></div>
 </div>
-<img alt="../_images/27_random_var_generation_28_1.png" src="../_images/27_random_var_generation_28_1.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># filename = &quot;figures/prob/generate_vsample_and_pdf_rvV.pdf&quot;</span>
-<span class="c1"># from scipy.stats import uniform</span>
-<span class="c1"># with plt.rc_context({&quot;figure.figsize&quot;:(4,2)}):</span>
-<span class="c1">#     ax = sns.histplot(vsample, stat=&quot;density&quot;, alpha=0.5, binwidth=2)</span>
-<span class="c1">#     xs = np.linspace(90,130,1000)</span>
-<span class="c1">#     sns.lineplot(x=xs, y=uniform(100,20).pdf(xs), ax=ax, color=&quot;r&quot;)</span>
-<span class="c1">#     ax.figure.tight_layout()</span>
-<span class="c1">#     ax.figure.savefig(filename, dpi=300, bbox_inches=&quot;tight&quot;, pad_inches=0.02)</span>
-</pre></div>
-</div>
+<img alt="../_images/27_random_var_generation_29_1.png" src="../_images/27_random_var_generation_29_1.png" />
 </div>
 </div>
 </section>
@@ -1213,7 +1222,7 @@ and compute the proportion of the outcome <span class="math notranslate nohighli
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[0.5024273707608603, 10.625297726488984, 2.731193337322976]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[0.5024273707608603, 10.625297726488983, 2.7311933373229755]
 </pre></div>
 </div>
 </div>
@@ -1237,20 +1246,6 @@ and compute the proportion of the outcome <span class="math notranslate nohighli
 </pre></div>
 </div>
 <img alt="../_images/27_random_var_generation_36_1.png" src="../_images/27_random_var_generation_36_1.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># filename = &quot;figures/prob/generate_exp_and_pdf_rvE.pdf&quot;</span>
-<span class="c1"># with plt.rc_context({&quot;figure.figsize&quot;:(4,2)}):</span>
-<span class="c1">#     ax = sns.histplot(esample, stat=&quot;density&quot;, alpha=0.5)</span>
-<span class="c1">#     es = np.linspace(0,30,1000)</span>
-<span class="c1">#     sns.lineplot(x=xs, y=rvE.pdf(es), ax=ax, color=&quot;r&quot;)</span>
-<span class="c1">#     ax.set_xlim([0,30])</span>
-<span class="c1">#     ax.figure.tight_layout()</span>
-<span class="c1">#     ax.figure.savefig(filename, dpi=300, bbox_inches=&quot;tight&quot;, pad_inches=0.02)</span>
-</pre></div>
-</div>
 </div>
 </div>
 <p>We’ll develop various way to analyze this “goodness of fit” between the sample <code class="docutils literal notranslate"><span class="pre">esample</span></code> data we generated
@@ -1316,21 +1311,7 @@ but it guarantees the <code class="docutils literal notranslate"><span class="pr
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot: ylabel=&#39;Proportion&#39;&gt;
 </pre></div>
 </div>
-<img alt="../_images/27_random_var_generation_47_1.png" src="../_images/27_random_var_generation_47_1.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># filename = &quot;figures/prob/ecdf_vsample_and_cdf_plot_rvV.pdf&quot;</span>
-<span class="c1"># with plt.rc_context({&quot;figure.figsize&quot;:(5,3)}):</span>
-<span class="c1">#     ax = sns.ecdfplot(vsample, label=&quot;eCDF(vsample)&quot;)</span>
-<span class="c1">#     bs = np.linspace(80,140)</span>
-<span class="c1">#     sns.lineplot(x=bs, y=rvV.cdf(bs), ax=ax, label=&quot;$F_V$&quot;)</span>
-<span class="c1">#     ax.figure.tight_layout()</span>
-<span class="c1">#     ax.set_ylim([-0.05,1.05])</span>
-<span class="c1">#     ax.figure.savefig(filename, dpi=300, bbox_inches=&quot;tight&quot;, pad_inches=0.02)</span>
-</pre></div>
-</div>
+<img alt="../_images/27_random_var_generation_46_1.png" src="../_images/27_random_var_generation_46_1.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1356,21 +1337,7 @@ but it guarantees the <code class="docutils literal notranslate"><span class="pr
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot: ylabel=&#39;Proportion&#39;&gt;
 </pre></div>
 </div>
-<img alt="../_images/27_random_var_generation_50_1.png" src="../_images/27_random_var_generation_50_1.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># filename = &quot;figures/prob/ecdf_esample_and_cdf_plot_rvE.pdf&quot;</span>
-<span class="c1"># with plt.rc_context({&quot;figure.figsize&quot;:(5,3)}):</span>
-<span class="c1">#     ax = sns.ecdfplot(esample, label=&quot;eCDF(esample)&quot;)</span>
-<span class="c1">#     bs = np.linspace(-1,30)</span>
-<span class="c1">#     sns.lineplot(x=bs, y=rvE.cdf(bs), ax=ax, label=&quot;$F_E$&quot;)</span>
-<span class="c1">#     ax.figure.tight_layout()</span>
-<span class="c1">#     ax.set_ylim([-0.05,1.05])</span>
-<span class="c1">#     ax.figure.savefig(filename, dpi=300, bbox_inches=&quot;tight&quot;, pad_inches=0.02)</span>
-</pre></div>
-</div>
+<img alt="../_images/27_random_var_generation_48_1.png" src="../_images/27_random_var_generation_48_1.png" />
 </div>
 </div>
 </section>
@@ -1399,7 +1366,7 @@ Here are the first five values we simulated:</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[0.5024273707608603, 10.625297726488984, 2.731193337322976]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[0.5024273707608603, 10.625297726488983, 2.7311933373229755]
 </pre></div>
 </div>
 </div>
@@ -1468,7 +1435,7 @@ so we’ll be able to make a variety of comparisons.</p>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(-0.05, 1.05)
 </pre></div>
 </div>
-<img alt="../_images/27_random_var_generation_65_1.png" src="../_images/27_random_var_generation_65_1.png" />
+<img alt="../_images/27_random_var_generation_62_1.png" src="../_images/27_random_var_generation_62_1.png" />
 </div>
 </div>
 </section>
@@ -1510,7 +1477,7 @@ so we’ll be able to make a variety of comparisons.</p>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(-0.05, 1.05)
 </pre></div>
 </div>
-<img alt="../_images/27_random_var_generation_70_1.png" src="../_images/27_random_var_generation_70_1.png" />
+<img alt="../_images/27_random_var_generation_67_1.png" src="../_images/27_random_var_generation_67_1.png" />
 </div>
 </div>
 </section>
@@ -1543,18 +1510,7 @@ plotted versus the quantiles of the theoretical model <span class="math notransl
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/27_random_var_generation_78_0.png" src="../_images/27_random_var_generation_78_0.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># filename = &quot;figures/prob/qqplot_nsample_vs_norm1000_100.pdf&quot;</span>
-<span class="c1"># with plt.rc_context({&quot;figure.figsize&quot;:(4,3)}):</span>
-<span class="c1">#     fig = qqplot(nsample, dist=norm(1000,100), line=&#39;q&#39;, markersize=1)</span>
-<span class="c1">#     fig.tight_layout()</span>
-<span class="c1">#     fig.savefig(filename, dpi=300, bbox_inches=&quot;tight&quot;, pad_inches=0.02)</span>
-</pre></div>
-</div>
+<img alt="../_images/27_random_var_generation_75_0.png" src="../_images/27_random_var_generation_75_0.png" />
 </div>
 </div>
 </section>
@@ -1568,18 +1524,7 @@ plotted versus the quantiles of the theoretical model <span class="math notransl
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/27_random_var_generation_81_0.png" src="../_images/27_random_var_generation_81_0.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># filename = &quot;figures/prob/qqplot_nsample_vs_stdnorm.pdf&quot;</span>
-<span class="c1"># with plt.rc_context({&quot;figure.figsize&quot;:(4,3)}):</span>
-<span class="c1">#     fig = qqplot(nsample, dist=norm(0,1), line=&#39;q&#39;, markersize=1)</span>
-<span class="c1">#     fig.tight_layout()</span>
-<span class="c1">#     fig.savefig(filename, dpi=300, bbox_inches=&quot;tight&quot;, pad_inches=0.02)</span>
-</pre></div>
-</div>
+<img alt="../_images/27_random_var_generation_78_0.png" src="../_images/27_random_var_generation_78_0.png" />
 </div>
 </div>
 </section>
@@ -1595,18 +1540,7 @@ plotted versus the quantiles of the theoretical model <span class="math notransl
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/27_random_var_generation_85_0.png" src="../_images/27_random_var_generation_85_0.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># filename = &quot;figures/prob/qqplot_vsample_vs_stdnorm.pdf&quot;</span>
-<span class="c1"># with plt.rc_context({&quot;figure.figsize&quot;:(4,3)}):</span>
-<span class="c1">#     fig = qqplot(vsample, dist=norm(0,1), line=&#39;q&#39;, markersize=1)</span>
-<span class="c1">#     fig.tight_layout()</span>
-<span class="c1">#     fig.savefig(filename, dpi=300, bbox_inches=&quot;tight&quot;, pad_inches=0.02)</span>
-</pre></div>
-</div>
+<img alt="../_images/27_random_var_generation_82_0.png" src="../_images/27_random_var_generation_82_0.png" />
 </div>
 </div>
 </section>
@@ -1620,22 +1554,11 @@ plotted versus the quantiles of the theoretical model <span class="math notransl
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/27_random_var_generation_88_0.png" src="../_images/27_random_var_generation_88_0.png" />
+<img alt="../_images/27_random_var_generation_85_0.png" src="../_images/27_random_var_generation_85_0.png" />
 </div>
 </div>
 <p>Note the lowest quantiles don’t match (exponential data limited to zero),
 and the high quantiles don’t match either (exponential data has a long tail).</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># filename = &quot;figures/prob/qqplot_esample_vs_stdnorm.pdf&quot;</span>
-<span class="c1"># with plt.rc_context({&quot;figure.figsize&quot;:(4,3)}):</span>
-<span class="c1">#     fig = qqplot(esample, dist=norm(0,1), line=&#39;q&#39;, markersize=1)</span>
-<span class="c1">#     fig.tight_layout()</span>
-<span class="c1">#     fig.savefig(filename, dpi=300, bbox_inches=&quot;tight&quot;, pad_inches=0.02)</span>
-</pre></div>
-</div>
-</div>
-</div>
 </section>
 </section>
 <section id="shifted-uniform-sample-vs-true-model">
@@ -1648,18 +1571,7 @@ and the high quantiles don’t match either (exponential data has a long tail).<
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/27_random_var_generation_92_0.png" src="../_images/27_random_var_generation_92_0.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># filename = &quot;figures/prob/qqplot_vsample_vs_rvV.pdf&quot;</span>
-<span class="c1"># with plt.rc_context({&quot;figure.figsize&quot;:(4,3)}):</span>
-<span class="c1">#     fig = qqplot(vsample, dist=rvV, line=&#39;q&#39;, markersize=1)</span>
-<span class="c1">#     fig.tight_layout()</span>
-<span class="c1">#     fig.savefig(filename, dpi=300, bbox_inches=&quot;tight&quot;, pad_inches=0.02)</span>
-</pre></div>
-</div>
+<img alt="../_images/27_random_var_generation_89_0.png" src="../_images/27_random_var_generation_89_0.png" />
 </div>
 </div>
 </section>
@@ -1672,18 +1584,7 @@ and the high quantiles don’t match either (exponential data has a long tail).<
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/27_random_var_generation_95_0.png" src="../_images/27_random_var_generation_95_0.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># filename = &quot;figures/prob/qqplot_esample_vs_rvE.pdf&quot;</span>
-<span class="c1"># with plt.rc_context({&quot;figure.figsize&quot;:(4,3)}):</span>
-<span class="c1">#     fig = qqplot(esample, dist=rvE, line=&#39;q&#39;, markersize=1)</span>
-<span class="c1">#     fig.tight_layout()</span>
-<span class="c1">#     fig.savefig(filename, dpi=300, bbox_inches=&quot;tight&quot;, pad_inches=0.02)</span>
-</pre></div>
-</div>
+<img alt="../_images/27_random_var_generation_92_0.png" src="../_images/27_random_var_generation_92_0.png" />
 </div>
 </div>
 </section>
@@ -1815,7 +1716,7 @@ let’s compare the <a class="reference external" href="https://pandas.pydata.or
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(27.53085874882216, 25.0)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(27.530858748822155, 25.0)
 </pre></div>
 </div>
 </div>
@@ -1842,7 +1743,7 @@ let’s compare the <a class="reference external" href="https://pandas.pydata.or
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(3.557504048617028, array(6.))
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(3.557504048617026, array(6.))
 </pre></div>
 </div>
 </div>
@@ -1883,7 +1784,7 @@ let’s compare the <a class="reference external" href="https://pandas.pydata.or
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(3.557504048617028, array(0.))
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(3.557504048617026, array(0.))
 </pre></div>
 </div>
 </div>
@@ -1962,7 +1863,7 @@ let’s compare the <a class="reference external" href="https://pandas.pydata.or
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot: ylabel=&#39;Proportion&#39;&gt;
 </pre></div>
 </div>
-<img alt="../_images/27_random_var_generation_138_1.png" src="../_images/27_random_var_generation_138_1.png" />
+<img alt="../_images/27_random_var_generation_135_1.png" src="../_images/27_random_var_generation_135_1.png" />
 </div>
 </div>
 </section>
@@ -2277,20 +2178,7 @@ and <span class="math notranslate nohighlight">\(|F_X(x_i) - F_{\mathbf{x}}(x_{i
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(600.0, 1400.0)
 </pre></div>
 </div>
-<img alt="../_images/27_random_var_generation_176_1.png" src="../_images/27_random_var_generation_176_1.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># filename = &quot;figures/prob/bootstrap_sample_from_norm1000_100.pdf&quot;</span>
-<span class="c1"># with plt.rc_context({&quot;figure.figsize&quot;:(5,3)}):</span>
-<span class="c1">#     ax = sns.lineplot(x=xs, y=rvN.pdf(xs))</span>
-<span class="c1">#     sns.histplot(sample, binwidth=25, ax=ax, stat=&quot;density&quot;)</span>
-<span class="c1">#     ax.set_xlim(600,1400)</span>
-<span class="c1">#     ax.figure.tight_layout()</span>
-<span class="c1">#     ax.figure.savefig(filename, dpi=300, bbox_inches=&quot;tight&quot;, pad_inches=0.02)</span>
-</pre></div>
-</div>
+<img alt="../_images/27_random_var_generation_173_1.png" src="../_images/27_random_var_generation_173_1.png" />
 </div>
 </div>
 <div class="cell docutils container">
