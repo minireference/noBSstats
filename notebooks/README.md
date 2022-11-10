@@ -85,7 +85,7 @@ For example, the pair of random variables $(X,Y)$ can be described by the joint 
 
 ### 2.3 Inventory of discrete distributions
 The Python module `scipy.stats` contains pre-defined probability models that you
-can use for modeling tasks. These what we call the LEGOs of the XXIst century.
+can use for modeling tasks. These are like LEGOs for the XXIst century.
 
 - View notebook: [23_inventory_discrete_dists.ipynb](./23_inventory_discrete_dists.ipynb)
 - Binder link: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstatsnotebooks/main?labpath=notebooks%2F23_inventory_discrete_dists.ipynb)
@@ -95,8 +95,8 @@ can use for modeling tasks. These what we call the LEGOs of the XXIst century.
 
 ### 2.4 Calculus prerequisites
 You need to know a bit of calculus to understand the math machinery
-for calculating probabilities distributions of continuous random variables.
-Don't worry—there is only one new concept: the integral $\int_{x=a}^{x=b} f(x)dx$,
+for calculating probabilities of continuous random variables.
+Don't worry—there is only one new concept to learn: the integral $\int_{x=a}^{x=b} f(x)dx$,
 which corresponds to computing the area under the graph of $f(x)$ between $x=a$ and $x=b$.
 
 - View notebook: [24_calculus_prerequisites.ipynb](./24_calculus_prerequisites.ipynb)
@@ -107,8 +107,7 @@ which corresponds to computing the area under the graph of $f(x)$ between $x=a$ 
 ### 2.5 Continuous random variables
 In this notebook we'll revisit all the probability concepts we learned for discrete
 random variables, and learn the analogous concepts for continuous random variables.
-Essentially, we need to do a conceptual search-and-replace of summations to integrals.
-Indeed, you can think of Section 2.5 as the result of taking Section 2.1
+You can think of Section 2.5 as the result of taking Section 2.1
 and replacing every occurrence $\textrm{Pr}(a \leq X \leq b)=\sum_{x=a}^{x=b}f_X(x)$
 with $\textrm{Pr}(a \leq X \leq b)=\int_{x=a}^{x=b}f_X(x)dx$.
 
@@ -118,8 +117,9 @@ with $\textrm{Pr}(a \leq X \leq b)=\int_{x=a}^{x=b}f_X(x)dx$.
 
 
 ### 2.6 Inventory of continuous distributions
-In this section we'll talk about the continuous LEGOs:
-`uniform`, `norm`, `gamma`, `expon`, `t`, `f`, `chi2`, etc.
+In this section we'll complete the inventory of probability distributions by
+introducing the "continuous LEGOs" distributions like `uniform`, `norm`, `expon`,
+`t`, `f`, `chi2`, `gamma`, `beta`, etc.
 
 - View notebook: [26_inventory_continuous_dists.ipynb](./26_inventory_continuous_dists.ipynb)
 - Binder link: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstatsnotebooks/main?labpath=notebooks%2F26_inventory_continuous_dists.ipynb)
@@ -130,7 +130,8 @@ In this section we'll talk about the continuous LEGOs:
 ### 2.7 Random variable generation
 How can we use computers to generation observations from random variables?
 In this notebooks, we'll describe some practical techniques for generating
-observations from any probability distribution.
+observations from any probability distribution, and develop math tools to verify
+that the random generation process is workin as expected.
 
 - View notebook: [27_random_var_generation.ipynb](./27_random_var_generation.ipynb)
 - Binder link: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstatsnotebooks/main?labpath=notebooks%2F27_random_var_generation.ipynb)
@@ -139,16 +140,12 @@ observations from any probability distribution.
 
 
 ### 2.8 Probability models for random samples
-Consider a random variable $X$ with a known probability distribution $p_X$.
+Consider a random variable $X$ with a known probability distribution $f_X$.
 What can we say about the characteristics of $n$ copies of the random variable
-$$
-  \mathbf{X} = X_1X_2X_3\cdots X_n \sim f_{X_1X_2\cdots X_n}.
-$$
-Each $X_i$ is independent copy of the random variable $X$,
-so the joint probability distribution is given by 
-$f_{X_1X_2\cdots X_n}(x_1,x_2,\ldots,x_n) = \prod_{i=1}^{i=n} f_X(x_i)$.
-This is called the independent, identically distributed (iid) setting,
-and understanding the properties of $\mathbf{X}$ is important for all the 
+$\mathbf{X} = X_1X_2X_3\cdots X_n \sim f_{X_1X_2\cdots X_n}$.
+Each $X_i$ is independent copy of the random variable $X$.
+This is called the independent, identically distributed (iid) setting.
+Understanding the properties of $\mathbf{X}$ is important for all the 
 statistics operations we'll be doing in the next two chapters.
 
 - View notebook: [28_random_samples.ipynb](./28_random_samples.ipynb)

@@ -30,7 +30,11 @@ from scipy.stats import norm
 rcparams = {
     'figure.figsize': (7,4),
     #     'figure.dpi': 300,
-    'font.serif': ['Palatino'],
+    'font.serif': ['Palatino', 'DejaVu Serif', 'Bitstream Vera Serif',
+                   'Computer Modern Roman', 'New Century Schoolbook',
+                   'Century Schoolbook L', 'Utopia', 'ITC Bookman',
+                   'Bookman', 'Nimbus Roman No9 L', 'Times New Roman',
+                   'Times', 'Charter', 'serif'],
     'font.family': 'serif',    
     #     'font.size': 20,
     #     'figure.titlesize': 16,
