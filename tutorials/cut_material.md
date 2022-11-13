@@ -1,5 +1,101 @@
+
+
+### Example 3
+
+Write a function water_phase(temp) that takes input temperature temp in Celcius, uses if/else statements to find what state water is in (assume pressure is 1atm). The function returns a string, which is one of "Solid", "Liquid", "Gas".
+
+```
+def water_phase(temp):
+    """
+    Returns phase of water at `temp`.
+    Input temp is temperature in Celcius (int or float)
+    temp must be greater than -273.15.
+    """
+    if temp > 0 and temp < 100:
+        return 'Liquid'
+    elif temp <= 0:
+        return 'Solid'
+    elif temp >= 100:
+        return 'Gas'
+```
+
+
+## tests to try: correct implementation of `water_phase` should return all True
+
+print( water_phase(20.0) == "Liquid" )
+print( water_phase(-20.0) == "Solid" )
+print( water_phase(200.0) == "Gas" )
+print( water_phase(0.0) in ["Liquid", "Solid"] )
+
+## range tests
+
+```
+results = []
+for temp in range(1, 100):
+    result = (water_phase(temp) == 'Liquid')
+    results.append(result)
+
+# temp <= 0
+for temp in range(-100, 1):
+    result = (water_phase(temp) == 'Solid')
+    results.append(result)
+
+# temp >= 100
+for temp in range(100, 5000):
+    result = (water_phase(temp) == 'Gas')
+    results.append(result)
+
+print('Completed a total of', len(results), 'checks...')
+all(results)  # True if all results are True
+```
+
+Completed a total of 5100 checks...
+
+
+
+
+
+
+Certain functions do not return a value (we call these _procedures_) and they consist of sequences of commands we want to execute, that don't have any outputs. FunctIons can also be attached to objects, in which case they are called _methods_. We'll talk about these layer on, for now let's focus on simple math-like functions that receive some input and produce output:
+
+TODO: mention multiple return values
+
+
+
+Functions are all over the place:
+- In high school math (the green book) we learn the basic vocabulary of $y=f(x)$ functions
+  and their parameters, which allows us to describe any real world process
+- In calculus we analyze functions $f(x)$ behaviour over time
+  (integral of f = sum of values of $f(x)$ between x=start and x=finish;
+  and derivative of f at a = the slope of the graph of f(x) when x=a)
+- In linear algebra we study linear transformations, which are functions
+  that satisfy $f(ax+by)=af(x)+bf(y)$, meaning a linear combination of inputs
+  produces the same linear combination of outputs.
+- In probability theory we use functions to describe the probability density of
+  a random variables. For example $X = \mathcal{N}(\mu, \sigma^2)$ is a random variable
+  whose density is described by the function p(x) = K*exp(-((x-mu)/sigma)^2/2)
+  in stats we talk about functions computed from samples (estimators)
+- In ML we learn about probabilistic models and use them to predict y from given input x
+
+<!-- 
+see also https://www.pythonlikeyoumeanit.com/Module2_EssentialsOfPython/Functions.html
+-->
+
+
+
+
+# average value of the list `scores`
+avg = sum(scores) / len(scores)
+avg
+
+Instead of using the existing, convenient `sum` Python builtin function,
+
+
+
 , listed in order from highest energy to lowest energy.
 
+
+SymPy: see examples of solutions to math problems expressed as sympy commands in this [paper](https://arxiv.org/pdf/2112.15594.pdf#page=11) (see [this video](https://www.youtube.com/watch?v=9JZdAq8poww?t=169) for explainer).
 
 
 
@@ -11,6 +107,18 @@ Let's say you want to print the list of scores with the character ; separating e
 scores = [61, 79, 98, 72]
 ";".join([str(score) for score in scores])
 # '61;79;98;72'
+```
+
+
+##### Example 2: Converting float to str
+```
+s = str(42.5)
+
+s
+'42.5'
+
+type(s)
+str
 ```
 
 
