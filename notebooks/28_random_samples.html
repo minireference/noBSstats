@@ -755,47 +755,47 @@ title="Print to PDF"
                 
   <section class="tex2jax_ignore mathjax_ignore" id="section-2-8-probability-models-for-random-samples">
 <h1>Section 2.8 — Probability models for random samples<a class="headerlink" href="#section-2-8-probability-models-for-random-samples" title="Permalink to this headline">#</a></h1>
-<p>This notebook contains the code examples from <span class="xref myst">Section 2.8 Probability models for random samples</span> of the <strong>No Bullshit Guide to Statistics</strong>.</p>
+<p>This notebook contains the code examples from <a class="reference external" href="https://minireference.com/static/excerpts/noBSstats/noBSstats_ch02_PROB.pdf#page=225">Section 2.8 Probability models for random samples</a> of the <strong>No Bullshit Guide to Statistics</strong>.</p>
 <section id="notebook-setup">
 <h2>Notebook setup<a class="headerlink" href="#notebook-setup" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># load Python modules</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># load Python modules
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 
-<span class="kn">from</span> <span class="nn">plot_helpers</span> <span class="kn">import</span> <span class="n">gen_samples</span>
-<span class="kn">from</span> <span class="nn">plot_helpers</span> <span class="kn">import</span> <span class="n">plot_samples</span>
-<span class="kn">from</span> <span class="nn">plot_helpers</span> <span class="kn">import</span> <span class="n">plot_samples_panel</span>
-<span class="kn">from</span> <span class="nn">plot_helpers</span> <span class="kn">import</span> <span class="n">gen_sampling_dist</span>
-<span class="kn">from</span> <span class="nn">plot_helpers</span> <span class="kn">import</span> <span class="n">plot_sampling_dist</span>
-<span class="kn">from</span> <span class="nn">plot_helpers</span> <span class="kn">import</span> <span class="n">plot_sampling_dists_panel</span>
+from plot_helpers import gen_samples
+from plot_helpers import plot_samples
+from plot_helpers import plot_samples_panel
+from plot_helpers import gen_sampling_dist
+from plot_helpers import plot_sampling_dist
+from plot_helpers import plot_sampling_dists_panel
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Figures setup</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">set_theme</span><span class="p">(</span>
-    <span class="n">context</span><span class="o">=</span><span class="s2">&quot;paper&quot;</span><span class="p">,</span>
-    <span class="n">style</span><span class="o">=</span><span class="s2">&quot;whitegrid&quot;</span><span class="p">,</span>
-    <span class="n">palette</span><span class="o">=</span><span class="s2">&quot;colorblind&quot;</span><span class="p">,</span>
-    <span class="n">rc</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">4</span><span class="p">)},</span>
-<span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Figures setup
+sns.set_theme(
+    context=&quot;paper&quot;,
+    style=&quot;whitegrid&quot;,
+    palette=&quot;colorblind&quot;,
+    rc={&#39;figure.figsize&#39;: (7,4)},
+)
 
-<span class="o">%</span><span class="k">config</span> InlineBackend.figure_format = &#39;retina&#39;
+%config InlineBackend.figure_format = &#39;retina&#39;
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># set random seed for repeatability</span>
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># set random seed for repeatability
+np.random.seed(42)
 </pre></div>
 </div>
 </div>
@@ -833,18 +833,18 @@ the variability of a statistic when computed on a random sample <span class="mat
 \]</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">mean</span><span class="p">(</span><span class="n">sample</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Compute the mean of the values in `sample`.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def mean(sample):
+    &quot;&quot;&quot;
+    Compute the mean of the values in `sample`.
+    &quot;&quot;&quot;
+    return sum(sample) / len(sample)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mean</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">11</span><span class="p">])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>mean([1,3,11])
 </pre></div>
 </div>
 </div>
@@ -859,15 +859,15 @@ the variability of a statistic when computed on a random sample <span class="mat
 <h3>Example 1.1: Samples from a uniform distribution<a class="headerlink" href="#example-1-1-samples-from-a-uniform-distribution" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">uniform</span>
-<span class="n">rvU</span> <span class="o">=</span> <span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from scipy.stats import uniform
+rvU = uniform(0,1)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mean</span><span class="p">(</span><span class="n">rvU</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>mean(rvU.rvs(10))
 </pre></div>
 </div>
 </div>
@@ -879,7 +879,7 @@ the variability of a statistic when computed on a random sample <span class="mat
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mean</span><span class="p">(</span><span class="n">rvU</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>mean(rvU.rvs(100))
 </pre></div>
 </div>
 </div>
@@ -891,7 +891,7 @@ the variability of a statistic when computed on a random sample <span class="mat
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mean</span><span class="p">(</span><span class="n">rvU</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">1000</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>mean(rvU.rvs(1000))
 </pre></div>
 </div>
 </div>
@@ -903,7 +903,7 @@ the variability of a statistic when computed on a random sample <span class="mat
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mean</span><span class="p">(</span><span class="n">rvU</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">1000000</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>mean(rvU.rvs(1000000))
 </pre></div>
 </div>
 </div>
@@ -918,22 +918,22 @@ the variability of a statistic when computed on a random sample <span class="mat
 <h3>Example 1.2: Samples from the normal<a class="headerlink" href="#example-1-2-samples-from-the-normal" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
-<span class="n">rvZ</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from scipy.stats import norm
+rvZ = norm(0,1)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>np.random.seed(123)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mean</span><span class="p">(</span><span class="n">rvZ</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>mean(rvZ.rvs(10))
 </pre></div>
 </div>
 </div>
@@ -945,7 +945,7 @@ the variability of a statistic when computed on a random sample <span class="mat
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mean</span><span class="p">(</span><span class="n">rvZ</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>mean(rvZ.rvs(100))
 </pre></div>
 </div>
 </div>
@@ -957,7 +957,7 @@ the variability of a statistic when computed on a random sample <span class="mat
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mean</span><span class="p">(</span><span class="n">rvZ</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">1000</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>mean(rvZ.rvs(1000))
 </pre></div>
 </div>
 </div>
@@ -969,7 +969,7 @@ the variability of a statistic when computed on a random sample <span class="mat
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mean</span><span class="p">(</span><span class="n">rvZ</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">1000000</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>mean(rvZ.rvs(1000000))
 </pre></div>
 </div>
 </div>
@@ -984,23 +984,23 @@ the variability of a statistic when computed on a random sample <span class="mat
 <h3>Example 1.3: Samples from the exponential distribution<a class="headerlink" href="#example-1-3-samples-from-the-exponential-distribution" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">expon</span>
-<span class="n">lam</span> <span class="o">=</span> <span class="mf">0.2</span>
-<span class="n">rvE</span> <span class="o">=</span> <span class="n">expon</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="n">lam</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from scipy.stats import expon
+lam = 0.2
+rvE = expon(0, 1/lam)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>np.random.seed(123)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mean</span><span class="p">(</span><span class="n">rvE</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>mean(rvE.rvs(10))
 </pre></div>
 </div>
 </div>
@@ -1012,7 +1012,7 @@ the variability of a statistic when computed on a random sample <span class="mat
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mean</span><span class="p">(</span><span class="n">rvE</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>mean(rvE.rvs(100))
 </pre></div>
 </div>
 </div>
@@ -1024,7 +1024,7 @@ the variability of a statistic when computed on a random sample <span class="mat
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mean</span><span class="p">(</span><span class="n">rvE</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">1000</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>mean(rvE.rvs(1000))
 </pre></div>
 </div>
 </div>
@@ -1036,7 +1036,7 @@ the variability of a statistic when computed on a random sample <span class="mat
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mean</span><span class="p">(</span><span class="n">rvE</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">1000000</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>mean(rvE.rvs(1000000))
 </pre></div>
 </div>
 </div>
@@ -1076,8 +1076,8 @@ where each <span class="math notranslate nohighlight">\(U_i\)</span> is an insta
 by initializing an instance of the <code class="docutils literal notranslate"><span class="pre">uniform</span></code> family of distributions defined in <code class="docutils literal notranslate"><span class="pre">scipy.stats</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">uniform</span>
-<span class="n">rvU</span> <span class="o">=</span> <span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from scipy.stats import uniform
+rvU = uniform(0,1)
 </pre></div>
 </div>
 </div>
@@ -1087,9 +1087,9 @@ by calling the method <code class="docutils literal notranslate"><span class="pr
 which generates a sequence of <code class="docutils literal notranslate"><span class="pre">n</span></code> observations of the random variable <span class="math notranslate nohighlight">\(U\)</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">30</span>
-<span class="n">usample</span> <span class="o">=</span> <span class="n">rvU</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-<span class="n">usample</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>n = 30
+usample = rvU.rvs(n)
+usample
 </pre></div>
 </div>
 </div>
@@ -1108,7 +1108,7 @@ which generates a sequence of <code class="docutils literal notranslate"><span c
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mean</span><span class="p">(</span><span class="n">usample</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>mean(usample)
 </pre></div>
 </div>
 </div>
@@ -1122,8 +1122,8 @@ which generates a sequence of <code class="docutils literal notranslate"><span c
 and plot the observations as a scatter plot.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">usamples_df</span> <span class="o">=</span> <span class="n">gen_samples</span><span class="p">(</span><span class="n">rvU</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-<span class="n">plot_samples</span><span class="p">(</span><span class="n">usamples_df</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>usamples_df = gen_samples(rvU, n=30, N=10)
+plot_samples(usamples_df)
 </pre></div>
 </div>
 </div>
@@ -1135,14 +1135,14 @@ and plot the observations as a scatter plot.</p>
 Let’s now generate <span class="math notranslate nohighlight">\(N=1000\)</span> samples <span class="math notranslate nohighlight">\(\mathbf{u}_1, \mathbf{u}_2, \mathbf{u}_3, \ldots, \mathbf{u}_N\)</span>, compute the mean of each sample to form a list of observations <code class="docutils literal notranslate"><span class="pre">ubars</span></code> = <span class="math notranslate nohighlight">\([\overline{\mathbf{u}_1}, \overline{\mathbf{u}_2}, \overline{\mathbf{u}_3}, \ldots, \overline{\mathbf{u}_N}]\)</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">N</span> <span class="o">=</span> <span class="mi">1000</span>  <span class="c1"># number of samples</span>
-<span class="n">n</span> <span class="o">=</span> <span class="mi">30</span>    <span class="c1"># sample size</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>N = 1000  # number of samples
+n = 30    # sample size
 
-<span class="n">ubars</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
-    <span class="n">usample</span> <span class="o">=</span> <span class="n">rvU</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-    <span class="n">ubar</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">usample</span><span class="p">)</span>
-    <span class="n">ubars</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ubar</span><span class="p">)</span>
+ubars = []
+for i in range(0, N):
+    usample = rvU.rvs(n)
+    ubar = mean(usample)
+    ubars.append(ubar)
 </pre></div>
 </div>
 </div>
@@ -1155,8 +1155,8 @@ specifying the <code class="docutils literal notranslate"><span class="pre">D</s
 so you can see individual observations.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">ubars</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">ubars</span><span class="p">,</span> <span class="n">y</span><span class="o">=-</span><span class="mi">5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sns.histplot(ubars, color=&quot;r&quot;)
+sns.scatterplot(x=ubars, y=-5, color=&quot;r&quot;, marker=&quot;D&quot;, alpha=0.1)
 </pre></div>
 </div>
 </div>
@@ -1170,7 +1170,7 @@ so you can see individual observations.</p>
 <p>We can compute the mean and the variance of the sampling distribution:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">ubars</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">ubars</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>np.mean(ubars), np.std(ubars)
 </pre></div>
 </div>
 </div>
@@ -1189,27 +1189,27 @@ and calculates the values of statistic function <code class="docutils literal no
 The function returns a lists of the values of the statistic calculated from each sample.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">gen_sampling_dist</span><span class="p">(</span><span class="n">rv</span><span class="p">,</span> <span class="n">statfunc</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
-    <span class="n">stats</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
-        <span class="n">sample</span> <span class="o">=</span> <span class="n">rv</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-        <span class="n">stat</span> <span class="o">=</span> <span class="n">statfunc</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
-        <span class="n">stats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">stat</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">stats</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def gen_sampling_dist(rv, statfunc, n, N=1000):
+    stats = []
+    for i in range(0, N):
+        sample = rv.rvs(n)
+        stat = statfunc(sample)
+        stats.append(stat)
+    return stats
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ubars</span> <span class="o">=</span> <span class="n">gen_sampling_dist</span><span class="p">(</span><span class="n">rvU</span><span class="p">,</span> <span class="n">statfunc</span><span class="o">=</span><span class="n">mean</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>ubars = gen_sampling_dist(rvU, statfunc=mean, n=30, N=1000)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">ubars</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">ubars</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>np.mean(ubars), np.std(ubars)
 </pre></div>
 </div>
 </div>
@@ -1225,8 +1225,8 @@ The function returns a lists of the values of the statistic calculated from each
 <p>Let’s define a random variable <code class="docutils literal notranslate"><span class="pre">rvZ</span></code> <span class="math notranslate nohighlight">\(\sim \mathcal{N}(\mu=0, \sigma=1)\)</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
-<span class="n">rvZ</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from scipy.stats import norm
+rvZ = norm(0,1)
 </pre></div>
 </div>
 </div>
@@ -1235,8 +1235,8 @@ The function returns a lists of the values of the statistic calculated from each
 and plot the observations as a scatter plot.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nsamples_df</span> <span class="o">=</span> <span class="n">gen_samples</span><span class="p">(</span><span class="n">rvZ</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-<span class="n">plot_samples</span><span class="p">(</span><span class="n">nsamples_df</span><span class="p">,</span> <span class="n">xlims</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>nsamples_df = gen_samples(rvZ, n=30, N=10)
+plot_samples(nsamples_df, xlims=[-3,3])
 </pre></div>
 </div>
 </div>
@@ -1248,7 +1248,7 @@ and plot the observations as a scatter plot.</p>
 Let’s now generate <span class="math notranslate nohighlight">\(N=1000\)</span> samples <span class="math notranslate nohighlight">\(\mathbf{z}_1, \mathbf{z}_2, \mathbf{z}_3, \ldots, \mathbf{z}_N\)</span>, compute the mean of each sample <code class="docutils literal notranslate"><span class="pre">zbars</span></code> = <span class="math notranslate nohighlight">\([\overline{\mathbf{z}_1}, \overline{\mathbf{z}_2}, \overline{\mathbf{z}_3}, \ldots, \overline{\mathbf{z}_N}]\)</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">zbars</span> <span class="o">=</span> <span class="n">gen_sampling_dist</span><span class="p">(</span><span class="n">rvZ</span><span class="p">,</span> <span class="n">statfunc</span><span class="o">=</span><span class="n">mean</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>zbars = gen_sampling_dist(rvZ, statfunc=mean, n=30)
 </pre></div>
 </div>
 </div>
@@ -1258,7 +1258,7 @@ shows both a histogram and a scatter plot,
 as shown in the figures below.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_sampling_dist</span><span class="p">(</span><span class="n">zbars</span><span class="p">,</span> <span class="n">xlims</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_sampling_dist(zbars, xlims=[-1,1])
 </pre></div>
 </div>
 </div>
@@ -1269,7 +1269,7 @@ as shown in the figures below.</p>
 <p>We can compute the mean and the variance of the sampling distribution:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">zbars</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">zbars</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>np.mean(zbars), np.std(zbars)
 </pre></div>
 </div>
 </div>
@@ -1285,10 +1285,10 @@ as shown in the figures below.</p>
 <p>Let’s define a random variable <code class="docutils literal notranslate"><span class="pre">rvE</span></code> <span class="math notranslate nohighlight">\(\sim \textrm{Expon}(\lambda=0.2)\)</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">expon</span>
-<span class="n">lam</span> <span class="o">=</span> <span class="mf">0.2</span>      <span class="c1"># lambda</span>
-<span class="n">scale</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="n">lam</span>
-<span class="n">rvE</span> <span class="o">=</span> <span class="n">expon</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from scipy.stats import expon
+lam = 0.2      # lambda
+scale = 1/lam
+rvE = expon(0, scale)
 </pre></div>
 </div>
 </div>
@@ -1297,8 +1297,8 @@ as shown in the figures below.</p>
 and plot the observations as a scatter plot.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">esamples_df</span> <span class="o">=</span> <span class="n">gen_samples</span><span class="p">(</span><span class="n">rvE</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-<span class="n">plot_samples</span><span class="p">(</span><span class="n">esamples_df</span><span class="p">,</span> <span class="n">xlims</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">0.1</span><span class="p">,</span><span class="mi">30</span><span class="p">])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>esamples_df = gen_samples(rvE, n=30, N=10)
+plot_samples(esamples_df, xlims=[-0.1,30])
 </pre></div>
 </div>
 </div>
@@ -1310,14 +1310,14 @@ and plot the observations as a scatter plot.</p>
 We will now generate <span class="math notranslate nohighlight">\(N=1000\)</span> samples <span class="math notranslate nohighlight">\(\mathbf{e}_1, \mathbf{e}_2, \mathbf{e}_3, \ldots, \mathbf{e}_N\)</span>, compute the mean of each sample <span class="math notranslate nohighlight">\(\overline{\mathbf{e}_1}, \overline{\mathbf{e}_2}, \overline{\mathbf{e}_3}, \ldots, \overline{\mathbf{e}_N}\)</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ebars</span> <span class="o">=</span> <span class="n">gen_sampling_dist</span><span class="p">(</span><span class="n">rvE</span><span class="p">,</span> <span class="n">statfunc</span><span class="o">=</span><span class="n">mean</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>ebars = gen_sampling_dist(rvE, statfunc=mean, n=30)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_sampling_dist</span><span class="p">(</span><span class="n">ebars</span><span class="p">,</span> <span class="n">xlims</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_sampling_dist(ebars, xlims=[0,10])
 </pre></div>
 </div>
 </div>
@@ -1328,7 +1328,7 @@ We will now generate <span class="math notranslate nohighlight">\(N=1000\)</span
 <p>We can compute the mean and the variance of the sampling distribution:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">ebars</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">ebars</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>np.mean(ebars), np.std(ebars)
 </pre></div>
 </div>
 </div>
@@ -1354,16 +1354,16 @@ where <span class="math notranslate nohighlight">\(\sigma\)</span> is the standa
 <h3>Example 1 (cont.): sampling distribution as a function of <span class="math notranslate nohighlight">\(n\)</span><a class="headerlink" href="#example-1-cont-sampling-distribution-as-a-function-of-n" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">uniform</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from scipy.stats import uniform
 
-<span class="n">rvU</span> <span class="o">=</span> <span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+rvU = uniform(0,1)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_samples_panel</span><span class="p">(</span><span class="n">rvZ</span><span class="p">,</span> <span class="n">xlims</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_samples_panel(rvZ, xlims=None)
 </pre></div>
 </div>
 </div>
@@ -1373,8 +1373,8 @@ where <span class="math notranslate nohighlight">\(\sigma\)</span> is the standa
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ubarss</span> <span class="o">=</span> <span class="n">plot_sampling_dists_panel</span><span class="p">(</span><span class="n">rvU</span><span class="p">,</span> <span class="n">xlims</span><span class="o">=</span><span class="p">[</span><span class="mf">0.25</span><span class="p">,</span><span class="mf">0.75</span><span class="p">],</span> <span class="n">binwidth</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
-<span class="n">ubars10</span><span class="p">,</span> <span class="n">ubars30</span><span class="p">,</span> <span class="n">ubars100</span> <span class="o">=</span> <span class="n">ubarss</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>ubarss = plot_sampling_dists_panel(rvU, xlims=[0.25,0.75], binwidth=0.01)
+ubars10, ubars30, ubars100 = ubarss
 </pre></div>
 </div>
 </div>
@@ -1384,7 +1384,7 @@ where <span class="math notranslate nohighlight">\(\sigma\)</span> is the standa
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">ubars10</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">ubars30</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">ubars100</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>np.std(ubars10), np.std(ubars30), np.std(ubars100)
 </pre></div>
 </div>
 </div>
@@ -1398,8 +1398,8 @@ where <span class="math notranslate nohighlight">\(\sigma\)</span> is the standa
 to the theoretical standard deviations predicted by the CLT.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
-<span class="n">rvU</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="o">/</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="n">rvU</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="o">/</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">30</span><span class="p">),</span> <span class="n">rvU</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="o">/</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from math import sqrt
+rvU.std()/sqrt(10), rvU.std()/sqrt(30), rvU.std()/sqrt(100)
 </pre></div>
 </div>
 </div>
@@ -1414,18 +1414,18 @@ to the theoretical standard deviations predicted by the CLT.</p>
 <h3>Example 2 (cont.): sampling distribution as a function of <span class="math notranslate nohighlight">\(n\)</span><a class="headerlink" href="#example-2-cont-sampling-distribution-as-a-function-of-n" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from scipy.stats import norm
 
-<span class="n">mu</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">sigma</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="n">rvZ</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span>
+mu = 0
+sigma = 1
+rvZ = norm(mu, sigma)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_samples_panel</span><span class="p">(</span><span class="n">rvZ</span><span class="p">,</span> <span class="n">xlims</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_samples_panel(rvZ, xlims=[-3, 3])
 </pre></div>
 </div>
 </div>
@@ -1435,8 +1435,8 @@ to the theoretical standard deviations predicted by the CLT.</p>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">zbarss</span> <span class="o">=</span> <span class="n">plot_sampling_dists_panel</span><span class="p">(</span><span class="n">rvZ</span><span class="p">,</span> <span class="n">xlims</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">binwidth</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
-<span class="n">zbars10</span><span class="p">,</span> <span class="n">zbars30</span><span class="p">,</span> <span class="n">zbars100</span> <span class="o">=</span> <span class="n">zbarss</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>zbarss = plot_sampling_dists_panel(rvZ, xlims=[-1, 1], binwidth=0.02)
+zbars10, zbars30, zbars100 = zbarss
 </pre></div>
 </div>
 </div>
@@ -1446,7 +1446,7 @@ to the theoretical standard deviations predicted by the CLT.</p>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">zbars10</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">zbars30</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">zbars100</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>np.std(zbars10), np.std(zbars30), np.std(zbars100)
 </pre></div>
 </div>
 </div>
@@ -1459,8 +1459,8 @@ to the theoretical standard deviations predicted by the CLT.</p>
 <p>Let’s compare these observations from the</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
-<span class="n">rvZ</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="o">/</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="n">rvZ</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="o">/</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">30</span><span class="p">),</span> <span class="n">rvZ</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="o">/</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from math import sqrt
+rvZ.std()/sqrt(10), rvZ.std()/sqrt(30), rvZ.std()/sqrt(100)
 </pre></div>
 </div>
 </div>
@@ -1475,18 +1475,18 @@ to the theoretical standard deviations predicted by the CLT.</p>
 <h3>Example 3 (cont.): sampling distribution as a function of <span class="math notranslate nohighlight">\(n\)</span><a class="headerlink" href="#example-3-cont-sampling-distribution-as-a-function-of-n" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">expon</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from scipy.stats import expon
 
-<span class="n">lam</span> <span class="o">=</span> <span class="mf">0.2</span>      <span class="c1"># lambda</span>
-<span class="n">scale</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="n">lam</span>
-<span class="n">rvE</span> <span class="o">=</span> <span class="n">expon</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="p">)</span>
+lam = 0.2      # lambda
+scale = 1/lam
+rvE = expon(0, scale)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_samples_panel</span><span class="p">(</span><span class="n">rvE</span><span class="p">,</span> <span class="n">xlims</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">0.1</span><span class="p">,</span><span class="mi">30</span><span class="p">])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plot_samples_panel(rvE, xlims=[-0.1,30])
 </pre></div>
 </div>
 </div>
@@ -1496,8 +1496,8 @@ to the theoretical standard deviations predicted by the CLT.</p>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ebarss</span> <span class="o">=</span> <span class="n">plot_sampling_dists_panel</span><span class="p">(</span><span class="n">rvE</span><span class="p">,</span> <span class="n">xlims</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="n">binwidth</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
-<span class="n">ebars10</span><span class="p">,</span> <span class="n">ebars30</span><span class="p">,</span> <span class="n">ebars100</span> <span class="o">=</span> <span class="n">ebarss</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>ebarss = plot_sampling_dists_panel(rvE, xlims=[-0.1, 10], binwidth=0.2)
+ebars10, ebars30, ebars100 = ebarss
 </pre></div>
 </div>
 </div>
@@ -1507,7 +1507,7 @@ to the theoretical standard deviations predicted by the CLT.</p>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">ebars10</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">ebars30</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">ebars100</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>np.std(ebars10), np.std(ebars30), np.std(ebars100)
 </pre></div>
 </div>
 </div>
@@ -1520,9 +1520,9 @@ to the theoretical standard deviations predicted by the CLT.</p>
 <p>Let’s compare these observations from the</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from math import sqrt
 
-<span class="n">rvE</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="o">/</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="n">rvE</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="o">/</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">30</span><span class="p">),</span> <span class="n">rvE</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="o">/</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+rvE.std()/sqrt(10), rvE.std()/sqrt(30), rvE.std()/sqrt(100)
 </pre></div>
 </div>
 </div>

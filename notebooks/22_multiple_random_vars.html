@@ -627,37 +627,37 @@ title="Print to PDF"
                 
   <section class="tex2jax_ignore mathjax_ignore" id="section-2-2-multiple-random-variable">
 <h1>Section 2.2 — Multiple random variable<a class="headerlink" href="#section-2-2-multiple-random-variable" title="Permalink to this headline">#</a></h1>
-<p>This notebook contains all the code examples from <span class="xref myst">Section 2.2 Multiple random variables</span> in the <strong>No Bullshit Guide to Statistics</strong>.</p>
+<p>This notebook contains all the code examples from <a class="reference external" href="https://minireference.com/static/excerpts/noBSstats/noBSstats_ch02_PROB.pdf#page=40">Section 2.2 Multiple random variables</a> in the <strong>No Bullshit Guide to Statistics</strong>.</p>
 <section id="notebook-setup">
 <h2>Notebook setup<a class="headerlink" href="#notebook-setup" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># load Python modules</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>               <span class="c1"># numerical calculations</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>  <span class="c1"># generic plotting functions</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>            <span class="c1"># plotting distributions</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># load Python modules
+import numpy as np               # numerical calculations
+import matplotlib.pyplot as plt  # generic plotting functions
+import seaborn as sns            # plotting distributions
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Figures setup</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">set_theme</span><span class="p">(</span>
-    <span class="n">context</span><span class="o">=</span><span class="s2">&quot;paper&quot;</span><span class="p">,</span>
-    <span class="n">style</span><span class="o">=</span><span class="s2">&quot;whitegrid&quot;</span><span class="p">,</span>
-    <span class="n">palette</span><span class="o">=</span><span class="s2">&quot;colorblind&quot;</span><span class="p">,</span>
-    <span class="n">rc</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">4</span><span class="p">)},</span>
-<span class="p">)</span>
-<span class="o">%</span><span class="k">config</span> InlineBackend.figure_format = &#39;retina&#39;
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Figures setup
+sns.set_theme(
+    context=&quot;paper&quot;,
+    style=&quot;whitegrid&quot;,
+    palette=&quot;colorblind&quot;,
+    rc={&#39;figure.figsize&#39;: (7,4)},
+)
+%config InlineBackend.figure_format = &#39;retina&#39;
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># set random seed for repeatability</span>
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># set random seed for repeatability
+np.random.seed(42)
 </pre></div>
 </div>
 </div>
@@ -669,34 +669,34 @@ title="Print to PDF"
 <h3>Example 1: two coin tosses<a class="headerlink" href="#example-1-two-coin-tosses" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">fC</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;heads&quot;</span><span class="p">,</span> <span class="s2">&quot;tails&quot;</span><span class="p">}:</span>
-        <span class="k">return</span> <span class="mi">1</span><span class="o">/</span><span class="mi">2</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="mi">0</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def fC(c):
+    if c in {&quot;heads&quot;, &quot;tails&quot;}:
+        return 1/2
+    else:
+        return 0
 
-<span class="k">def</span> <span class="nf">fC1C2</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span><span class="n">c2</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">fC</span><span class="p">(</span><span class="n">c1</span><span class="p">)</span><span class="o">*</span><span class="n">fC</span><span class="p">(</span><span class="n">c2</span><span class="p">)</span>
+def fC1C2(c1,c2):
+    return fC(c1)*fC(c2)
 
-<span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">fXYs</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
-<span class="n">map_int_to_label</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s2">&quot;heads&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;tails&quot;</span><span class="p">}</span>
-<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
-        <span class="n">xs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-        <span class="n">ys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
-        <span class="n">fXYxy</span> <span class="o">=</span> <span class="n">fC1C2</span><span class="p">(</span><span class="n">map_int_to_label</span><span class="p">[</span><span class="n">x</span><span class="p">],</span> <span class="n">map_int_to_label</span><span class="p">[</span><span class="n">y</span><span class="p">])</span>
-        <span class="n">fXYs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fXYxy</span><span class="p">)</span>
+xs, ys, fXYs = [], [], []
+map_int_to_label = {0: &quot;heads&quot;, 1: &quot;tails&quot;}
+for x in range(0,1+1):
+    for y in range(0,1+1):
+        xs.append(x)
+        ys.append(y)
+        fXYxy = fC1C2(map_int_to_label[x], map_int_to_label[y])
+        fXYs.append(fXYxy)
 
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">subplot_kw</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">))</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">fXYs</span><span class="p">,</span> <span class="n">basefmt</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([</span><span class="s2">&quot;heads&quot;</span><span class="p">,</span> <span class="s2">&quot;tails&quot;</span><span class="p">])</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">([</span><span class="s2">&quot;heads&quot;</span><span class="p">,</span> <span class="s2">&quot;tails&quot;</span><span class="p">])</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$c_1$&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$c_2$&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_zlabel</span><span class="p">(</span><span class="s2">&quot;$f_</span><span class="si">{C_1C_2}</span><span class="s2">$&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_zlim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">])</span>
+fig, ax = plt.subplots(subplot_kw=dict(projection=&#39;3d&#39;))
+ax.stem(xs, ys, fXYs, basefmt=&quot; &quot;)
+ax.set_xticks([0,1])
+ax.set_xticklabels([&quot;heads&quot;, &quot;tails&quot;])
+ax.set_yticks([0,1])
+ax.set_yticklabels([&quot;heads&quot;, &quot;tails&quot;])
+ax.set_xlabel(&quot;$c_1$&quot;)
+ax.set_ylabel(&quot;$c_2$&quot;)
+ax.set_zlabel(&quot;$f_{C_1C_2}$&quot;)
+ax.set_zlim([0, 0.3])
 </pre></div>
 </div>
 </div>
@@ -712,29 +712,29 @@ title="Print to PDF"
 <h3>Example 2: rolling two dice<a class="headerlink" href="#example-2-rolling-two-dice" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">fD</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">d</span> <span class="ow">in</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">}:</span>
-        <span class="k">return</span> <span class="mi">1</span><span class="o">/</span><span class="mi">6</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="mi">0</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def fD(d):
+    if d in {1,2,3,4,5,6}:
+        return 1/6
+    else:
+        return 0
 
-<span class="k">def</span> <span class="nf">fD1D2</span><span class="p">(</span><span class="n">d1</span><span class="p">,</span><span class="n">d2</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">fD</span><span class="p">(</span><span class="n">d1</span><span class="p">)</span><span class="o">*</span><span class="n">fD</span><span class="p">(</span><span class="n">d2</span><span class="p">)</span>
+def fD1D2(d1,d2):
+    return fD(d1)*fD(d2)
 
-<span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">fXYs</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
-        <span class="n">xs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-        <span class="n">ys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
-        <span class="n">fXYxy</span> <span class="o">=</span> <span class="n">fD1D2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
-        <span class="n">fXYs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fXYxy</span><span class="p">)</span>
+xs, ys, fXYs = [], [], []
+for x in range(1,6+1):
+    for y in range(1,6+1):
+        xs.append(x)
+        ys.append(y)
+        fXYxy = fD1D2(x,y)
+        fXYs.append(fXYxy)
 
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">subplot_kw</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">))</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">fXYs</span><span class="p">,</span> <span class="n">basefmt</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$d_1$&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$d_2$&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_zlabel</span><span class="p">(</span><span class="s2">&quot;$f_</span><span class="si">{D_1D_2}</span><span class="s2">$&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_zlim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">])</span>
+fig, ax = plt.subplots(subplot_kw=dict(projection=&#39;3d&#39;))
+ax.stem(xs, ys, fXYs, basefmt=&quot; &quot;)
+ax.set_xlabel(&quot;$d_1$&quot;)
+ax.set_ylabel(&quot;$d_2$&quot;)
+ax.set_zlabel(&quot;$f_{D_1D_2}$&quot;)
+ax.set_zlim([0, 0.05])
 </pre></div>
 </div>
 </div>
@@ -747,21 +747,21 @@ title="Print to PDF"
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># PLOT D_1 + D_2 = 7</span>
-<span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">fXYs</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
-    <span class="n">y</span> <span class="o">=</span> <span class="mi">7</span> <span class="o">-</span> <span class="n">x</span>
-    <span class="n">xs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-    <span class="n">ys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
-    <span class="n">fXYxy</span> <span class="o">=</span> <span class="n">fD1D2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
-    <span class="n">fXYs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fXYxy</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># PLOT D_1 + D_2 = 7
+xs, ys, fXYs = [], [], []
+for x in range(1,6+1):
+    y = 7 - x
+    xs.append(x)
+    ys.append(y)
+    fXYxy = fD1D2(x,y)
+    fXYs.append(fXYxy)
 
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">subplot_kw</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">))</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">fXYs</span><span class="p">,</span> <span class="n">basefmt</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$d_1$&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$d_2$&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_zlabel</span><span class="p">(</span><span class="s2">&quot;$f_</span><span class="si">{D_1D_2}</span><span class="s2">$&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_zlim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">])</span>
+fig, ax = plt.subplots(subplot_kw=dict(projection=&#39;3d&#39;))
+ax.stem(xs, ys, fXYs, basefmt=&quot; &quot;)
+ax.set_xlabel(&quot;$d_1$&quot;)
+ax.set_ylabel(&quot;$d_2$&quot;)
+ax.set_zlabel(&quot;$f_{D_1D_2}$&quot;)
+ax.set_zlim([0, 0.05])
 </pre></div>
 </div>
 </div>
@@ -777,48 +777,48 @@ title="Print to PDF"
 <h3>Example 3: coin-dependent dice roll<a class="headerlink" href="#example-3-coin-dependent-dice-roll" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">fC</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;heads&quot;</span><span class="p">,</span> <span class="s2">&quot;tails&quot;</span><span class="p">}:</span>
-        <span class="k">return</span> <span class="mi">1</span><span class="o">/</span><span class="mi">2</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="mi">0</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def fC(c):
+    if c in {&quot;heads&quot;, &quot;tails&quot;}:
+        return 1/2
+    else:
+        return 0
 
-<span class="k">def</span> <span class="nf">fD</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">d</span> <span class="ow">in</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">}:</span>
-        <span class="k">return</span> <span class="mi">1</span><span class="o">/</span><span class="mi">6</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="mi">0</span>
+def fD(d):
+    if d in {1,2,3,4,5,6}:
+        return 1/6
+    else:
+        return 0
 
-<span class="k">def</span> <span class="nf">fD4</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">d</span> <span class="ow">in</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">}:</span>
-        <span class="k">return</span> <span class="mi">1</span><span class="o">/</span><span class="mi">4</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="mi">0</span>
+def fD4(d):
+    if d in {1,2,3,4}:
+        return 1/4
+    else:
+        return 0
 
-<span class="k">def</span> <span class="nf">fCD</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="n">d</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="s2">&quot;heads&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">fC</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="o">*</span><span class="n">fD</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">c</span> <span class="o">==</span> <span class="s2">&quot;tails&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">fC</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="o">*</span><span class="n">fD4</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+def fCD(c,d):
+    if c == &quot;heads&quot;:
+        return fC(c)*fD(d)
+    elif c == &quot;tails&quot;:
+        return fC(c)*fD4(d)
 
 
-<span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">fXYs</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
-<span class="n">map_int_to_label</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s2">&quot;heads&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;tails&quot;</span><span class="p">}</span>
-<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
-        <span class="n">xs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-        <span class="n">ys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
-        <span class="n">fXYxy</span> <span class="o">=</span> <span class="n">fCD</span><span class="p">(</span><span class="n">map_int_to_label</span><span class="p">[</span><span class="n">x</span><span class="p">],</span><span class="n">y</span><span class="p">)</span>
-        <span class="n">fXYs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fXYxy</span><span class="p">)</span>
+xs, ys, fXYs = [], [], []
+map_int_to_label = {0: &quot;heads&quot;, 1: &quot;tails&quot;}
+for x in range(0,1+1):
+    for y in range(1,6+1):
+        xs.append(x)
+        ys.append(y)
+        fXYxy = fCD(map_int_to_label[x],y)
+        fXYs.append(fXYxy)
 
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">subplot_kw</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">))</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">fXYs</span><span class="p">,</span> <span class="n">basefmt</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([</span><span class="s2">&quot;heads&quot;</span><span class="p">,</span> <span class="s2">&quot;tails&quot;</span><span class="p">])</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$c$&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$d$&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_zlabel</span><span class="p">(</span><span class="s2">&quot;$f_</span><span class="si">{CD}</span><span class="s2">$&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_zlim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">])</span>
+fig, ax = plt.subplots(subplot_kw=dict(projection=&#39;3d&#39;))
+ax.stem(xs, ys, fXYs, basefmt=&quot; &quot;)
+ax.set_xticks([0,1])
+ax.set_xticklabels([&quot;heads&quot;, &quot;tails&quot;])
+ax.set_xlabel(&quot;$c$&quot;)
+ax.set_ylabel(&quot;$d$&quot;)
+ax.set_zlabel(&quot;$f_{CD}$&quot;)
+ax.set_zlim([0, 0.2])
 </pre></div>
 </div>
 </div>
@@ -831,7 +831,7 @@ title="Print to PDF"
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fXYs</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fXYs
 </pre></div>
 </div>
 </div>
@@ -854,7 +854,7 @@ title="Print to PDF"
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">sum</span><span class="p">(</span><span class="n">fXYs</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sum(fXYs)
 </pre></div>
 </div>
 </div>
@@ -866,8 +866,8 @@ title="Print to PDF"
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># f_{Y|X}(y|heads)  [as a list]</span>
-<span class="p">[</span><span class="n">fCD</span><span class="p">(</span><span class="s2">&quot;heads&quot;</span><span class="p">,</span><span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># f_{Y|X}(y|heads)  [as a list]
+[fCD(&quot;heads&quot;,d) for d in range(1,6+1)]
 </pre></div>
 </div>
 </div>
@@ -884,8 +884,8 @@ title="Print to PDF"
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># f_{Y|X}(y|tails)  [as a list]</span>
-<span class="p">[</span><span class="n">fCD</span><span class="p">(</span><span class="s2">&quot;tails&quot;</span><span class="p">,</span><span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># f_{Y|X}(y|tails)  [as a list]
+[fCD(&quot;tails&quot;,d) for d in range(1,6+1)]
 </pre></div>
 </div>
 </div>
@@ -897,9 +897,9 @@ title="Print to PDF"
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># f_Y(y)    [as a list]</span>
-<span class="n">fYs</span> <span class="o">=</span> <span class="p">[</span><span class="n">fCD</span><span class="p">(</span><span class="s2">&quot;heads&quot;</span><span class="p">,</span><span class="n">d</span><span class="p">)</span><span class="o">+</span><span class="n">fCD</span><span class="p">(</span><span class="s2">&quot;tails&quot;</span><span class="p">,</span><span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
-<span class="n">fYs</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># f_Y(y)    [as a list]
+fYs = [fCD(&quot;heads&quot;,d)+fCD(&quot;tails&quot;,d) for d in range(1,6+1)]
+fYs
 </pre></div>
 </div>
 </div>
@@ -916,16 +916,16 @@ title="Print to PDF"
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># # ALT. compute f_{Y|X}(y|heads)*0.5 + f_{Y|X}(y|tails)*0.5</span>
-<span class="c1"># fYs = [fD(d)*0.5+fD4(d)*0.5 for d in range(1,6+1)]</span>
-<span class="c1"># fYs</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># # ALT. compute f_{Y|X}(y|heads)*0.5 + f_{Y|X}(y|tails)*0.5
+# fYs = [fD(d)*0.5+fD4(d)*0.5 for d in range(1,6+1)]
+# fYs
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">sum</span><span class="p">(</span><span class="n">fYs</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sum(fYs)
 </pre></div>
 </div>
 </div>
@@ -940,54 +940,54 @@ title="Print to PDF"
 <h3>Example 4: diagnostic test<a class="headerlink" href="#example-4-diagnostic-test" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">fV</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">return</span> <span class="mf">0.03</span>
-    <span class="k">elif</span> <span class="n">v</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">return</span> <span class="mf">0.97</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def fV(v):
+    if v == 1:
+        return 0.03
+    elif v == 0:
+        return 0.97
 
-<span class="k">def</span> <span class="nf">fTgivenV1</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">return</span> <span class="mf">0.90</span>
-    <span class="k">elif</span> <span class="n">t</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">return</span> <span class="mf">0.10</span>
+def fTgivenV1(t):
+    if t == 1:
+        return 0.90
+    elif t == 0:
+        return 0.10
 
-<span class="k">def</span> <span class="nf">fTgivenV0</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">return</span> <span class="mf">0.20</span>
-    <span class="k">elif</span> <span class="n">t</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">return</span> <span class="mf">0.80</span>
+def fTgivenV0(t):
+    if t == 1:
+        return 0.20
+    elif t == 0:
+        return 0.80
 
-<span class="k">def</span> <span class="nf">fTgivenV</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">v</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">fTgivenV1</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">v</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">fTgivenV0</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+def fTgivenV(t,v):
+    if v == 1:
+        return fTgivenV1(t)
+    elif v == 0:
+        return fTgivenV0(t)
 
-<span class="k">def</span> <span class="nf">fVT</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">t</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">fV</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">*</span><span class="n">fTgivenV</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">v</span><span class="p">)</span>
+def fVT(v,t):
+    return fV(v)*fTgivenV(t,v)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vs</span><span class="p">,</span> <span class="n">ts</span><span class="p">,</span> <span class="n">fVTs</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
-        <span class="n">vs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
-        <span class="n">ts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
-        <span class="n">fVTvt</span> <span class="o">=</span> <span class="n">fVT</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">t</span><span class="p">)</span>
-        <span class="n">fVTs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fVTvt</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>vs, ts, fVTs = [], [], []
+for v in range(0,1+1):
+    for t in range(0,1+1):
+        vs.append(v)
+        ts.append(t)
+        fVTvt = fVT(v,t)
+        fVTs.append(fVTvt)
 
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">subplot_kw</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">))</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">vs</span><span class="p">,</span> <span class="n">ts</span><span class="p">,</span> <span class="n">fVTs</span><span class="p">,</span> <span class="n">basefmt</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$v$&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$t$&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_zlabel</span><span class="p">(</span><span class="s2">&quot;$f_</span><span class="si">{VT}</span><span class="s2">$&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_zlim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">])</span>
+fig, ax = plt.subplots(subplot_kw=dict(projection=&#39;3d&#39;))
+ax.stem(vs, ts, fVTs, basefmt=&quot; &quot;, bottom=0.0)
+ax.set_xticks([0,1])
+ax.set_xlabel(&quot;$v$&quot;)
+ax.set_yticks([0,1])
+ax.set_ylabel(&quot;$t$&quot;)
+ax.set_zlabel(&quot;$f_{VT}$&quot;)
+ax.set_zlim([0, 0.9])
 </pre></div>
 </div>
 </div>
@@ -1000,8 +1000,8 @@ title="Print to PDF"
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># f_T(0) = </span>
-<span class="mf">0.8</span><span class="o">*</span> <span class="mf">0.97</span> <span class="o">+</span> <span class="mf">0.10</span> <span class="o">*</span><span class="mf">.03</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># f_T(0) = 
+0.8* 0.97 + 0.10 *.03
 </pre></div>
 </div>
 </div>
@@ -1013,8 +1013,8 @@ title="Print to PDF"
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># f_T(1) = </span>
-<span class="mf">0.2</span><span class="o">*</span> <span class="mf">0.97</span> <span class="o">+</span> <span class="mf">0.90</span> <span class="o">*</span><span class="mf">.03</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># f_T(1) = 
+0.2* 0.97 + 0.90 *.03
 </pre></div>
 </div>
 </div>
@@ -1026,9 +1026,9 @@ title="Print to PDF"
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
-    <span class="n">fVTt</span> <span class="o">=</span> <span class="n">fVT</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">t</span><span class="p">)</span> <span class="o">+</span> <span class="n">fVT</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">t</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Pr({T=&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">t</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;}) =&quot;</span><span class="p">,</span> <span class="n">fVTt</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>for t in range(0,1+1):
+    fVTt = fVT(0,t) + fVT(1,t)
+    print(&quot;Pr({T=&quot;+str(t)+&quot;}) =&quot;, fVTt)
 </pre></div>
 </div>
 </div>
@@ -1041,11 +1041,11 @@ Pr({T=1}) = 0.221
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
-        <span class="n">fVTvt</span> <span class="o">=</span> <span class="n">fVT</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">t</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Pr({V=&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;,T=&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">t</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;}) =&quot;</span><span class="p">,</span>
-              <span class="n">fTgivenV</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">v</span><span class="p">),</span> <span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="n">fV</span><span class="p">(</span><span class="n">v</span><span class="p">),</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="n">fVTvt</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>for v in range(0,1+1):
+    for t in range(0,1+1):
+        fVTvt = fVT(v,t)
+        print(&quot;Pr({V=&quot;+str(v) + &quot;,T=&quot;+str(t)+&quot;}) =&quot;,
+              fTgivenV(t,v), &quot;*&quot;, fV(v), &quot;=&quot;, fVTvt)
 </pre></div>
 </div>
 </div>
@@ -1073,10 +1073,10 @@ and denominator in this fraction,
 and returns the ratio.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">fVgivenT</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">t</span><span class="p">):</span>
-    <span class="n">num</span> <span class="o">=</span> <span class="n">fTgivenV</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">v</span><span class="p">)</span> <span class="o">*</span> <span class="n">fV</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
-    <span class="n">denom</span> <span class="o">=</span> <span class="n">fTgivenV</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="n">fV</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">fTgivenV</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">fV</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">num</span><span class="o">/</span><span class="n">denom</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def fVgivenT(v,t):
+    num = fTgivenV(t,v) * fV(v)
+    denom = fTgivenV(t,0) * fV(0) + fTgivenV(t,1) * fV(1)
+    return num/denom
 </pre></div>
 </div>
 </div>
@@ -1085,7 +1085,7 @@ and returns the ratio.</p>
 given they tested positive is:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fVgivenT</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fVgivenT(1,1)
 </pre></div>
 </div>
 </div>
@@ -1101,7 +1101,7 @@ divided by sum of the probabilities of all outcomes where positive test can occu
 <span class="math notranslate nohighlight">\(f_{VT}(1,1)+f_{VT}(0,1)\)</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fVT</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">fVT</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">fVT</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fVT(1,1) / (fVT(0,1) + fVT(1,1))
 </pre></div>
 </div>
 </div>
@@ -1119,25 +1119,25 @@ divided by sum of the probabilities of all outcomes where positive test can occu
 <h3>Example 1: Multivariable uniform<a class="headerlink" href="#example-1-multivariable-uniform" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xmin</span> <span class="o">=</span> <span class="mi">100</span>
-<span class="n">xmax</span> <span class="o">=</span> <span class="mi">200</span>
-<span class="n">ymin</span> <span class="o">=</span> <span class="mi">10</span>
-<span class="n">ymax</span> <span class="o">=</span> <span class="mi">20</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>xmin = 100
+xmax = 200
+ymin = 10
+ymax = 20
 
-<span class="c1"># joint pdf of = randint(100, 200) x randint(10,20)</span>
-<span class="k">def</span> <span class="nf">fU</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
-    <span class="n">A</span> <span class="o">=</span> <span class="p">(</span><span class="n">xmax</span><span class="o">-</span><span class="n">xmin</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">ymax</span><span class="o">-</span><span class="n">ymin</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">xmin</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="ow">and</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">xmax</span> <span class="ow">and</span> <span class="n">ymin</span> <span class="o">&lt;=</span> <span class="n">y</span> <span class="ow">and</span> <span class="n">y</span> <span class="o">&lt;=</span> <span class="n">ymax</span><span class="p">:</span>
-        <span class="k">return</span> <span class="mi">1</span><span class="o">/</span><span class="n">A</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="mf">0.0</span>
+# joint pdf of = randint(100, 200) x randint(10,20)
+def fU(x,y):
+    A = (xmax-xmin) * (ymax-ymin)
+    if xmin &lt;= x and x &lt;= xmax and ymin &lt;= y and y &lt;= ymax:
+        return 1/A
+    else:
+        return 0.0
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fU</span><span class="p">(</span><span class="mi">170</span><span class="p">,</span><span class="mi">12</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fU(170,12)
 </pre></div>
 </div>
 </div>
