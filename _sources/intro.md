@@ -7,10 +7,9 @@ can run the code in each notebook.
 
 
 ## Contents
-
+- [`stats_overview/`](./stats_overview/00_Introduction.html): a complete worked example to introduce the main concepts of statistics
 - [`notebooks/`](./notebooks/README.md): notebooks to accompany each section of the book.
-- [`stats_overview/`](./stats_overview/): a complete worked example to introduce the main concepts of statistics
-- [`tutorials/`](./tutorials/): tutorials that introduce Python basics, and the Pandas and Seaborn Python libraries.
+- [`tutorials/`](./tutorials/appendix.html): tutorials that introduce Python basics, and the Pandas and Seaborn Python libraries.
 
 
 ## Book plug
