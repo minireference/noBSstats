@@ -13,6 +13,7 @@ import numpy as np
 import pandas as pd
 from scipy.integrate import quad
 import seaborn as sns
+from statistics import mean
 
 from scipy.stats import randint    # special handling beta+1=beta
 from scipy.stats import nbinom     # display parameter n as r
@@ -683,3 +684,49 @@ def plot_sampling_dists_panel(rv, xlims, N=1000, ns=[10,30,100], binwidth=None, 
         fig.savefig(basename + '.png', dpi=300, bbox_inches="tight", pad_inches=0.02)
     
     return xbarss
+
+
+
+def savefigure(obj, filename):
+    """
+    Save the figure associated with `obj` (axes or figure).
+    Assumes `filename` is relative path to pdf to save to,
+    e.g. `figures/stats/some_figure.pdf`.
+    """
+    ensure_containing_dir_exists(filename)
+    if not filename.endswith(".pdf"):
+        filename = filename + ".pdf"
+
+    if isinstance(obj, plt.Axes):
+        fig = obj.figure
+    elif isinstance(obj, plt.Figure):
+        fig = obj
+    else:
+        raise ValueError("First argument must be Matplotlib figure or axes")
+
+    # remove surrounding whitespace as much as possible
+    fig.tight_layout()
+
+    # save as PDF
+    fig.savefig(filename, dpi=300, bbox_inches="tight", pad_inches=0)
+    print("Saved figure to", filename)
+
+    # save as PNG
+    filename2 = filename.replace(".pdf", ".png")
+    fig.savefig(filename2, dpi=300, bbox_inches="tight", pad_inches=0)
+    print("Saved figure to", filename2)
+
+
+
+def bootstrap_stat(sample, statfunc=mean, B=5000):
+    """
+    Compute the sampling dist. of the `statfunc` estimator
+    from `B` bootstrap samples generated from `sample`.
+    """
+    n = len(sample)
+    bstats = []
+    for i in range(0, B):
+        bsample = np.random.choice(sample, n, replace=True)
+        bstat = statfunc(bsample)
+        bstats.append(bstat)
+    return bstats
