@@ -31,7 +31,9 @@ from scipy.stats import norm
 rcparams = {
     'figure.figsize': (7,4),
     #     'figure.dpi': 300,
-    'font.serif': ['Palatino', 'DejaVu Serif', 'Bitstream Vera Serif',
+    'font.serif': ['Palatino',   # as per Minireference Co. style guide
+                   # backup fonts in case the Palatino is not available
+                   'DejaVu Serif', 'Bitstream Vera Serif',
                    'Computer Modern Roman', 'New Century Schoolbook',
                    'Century Schoolbook L', 'Utopia', 'ITC Bookman',
                    'Bookman', 'Nimbus Roman No9 L', 'Times New Roman',
@@ -55,30 +57,38 @@ sns.set_theme(
 
 
 
-DEFAULT_PARAMS_TO_LATEX = {
-    'mu': '\\mu',
-    'sigma': '\\sigma',
-    'lambda': '\\lambda',
-    'beta': '\\beta',
-    'a': 'a',
-    'b': 'b',
-    'N': 'N',
-    'K': 'K',
-    'k': 'k',
-    'n': 'n',
-    'p': 'p',
-    'r': 'r',
-}
+
 
 
 
 # Utils
 ################################################################################
 
+def ensure_containing_dir_exists(filepath):
+    parent = os.path.join(filepath, os.pardir)
+    absparent = os.path.abspath(parent)
+    if not os.path.exists(absparent):
+        os.makedirs(absparent)
+
+
 def default_labeler(params, params_to_latex):
     """
     Returns string appropriate for probability distribution label used in plot.
     """
+    DEFAULT_PARAMS_TO_LATEX = {
+        'mu': '\\mu',
+        'sigma': '\\sigma',
+        'lambda': '\\lambda',
+        'beta': '\\beta',
+        'a': 'a',
+        'b': 'b',
+        'N': 'N',
+        'K': 'K',
+        'k': 'k',
+        'n': 'n',
+        'p': 'p',
+        'r': 'r',
+    }
     params_to_latex = dict(DEFAULT_PARAMS_TO_LATEX, **params_to_latex)
     label_parts = []
     for param, value in params.items():
@@ -90,11 +100,37 @@ def default_labeler(params, params_to_latex):
     label = ', '.join(label_parts)
     return label
 
-def ensure_containing_dir_exists(filepath):
-    parent = os.path.join(filepath, os.pardir)
-    absparent = os.path.abspath(parent)
-    if not os.path.exists(absparent):
-        os.makedirs(absparent)
+
+def savefigure(obj, filename):
+    """
+    Save the figure associated with `obj` (axes or figure).
+    Assumes `filename` is relative path to pdf to save to,
+    e.g. `figures/stats/some_figure.pdf`.
+    """
+    ensure_containing_dir_exists(filename)
+    if not filename.endswith(".pdf"):
+        filename = filename + ".pdf"
+
+    if isinstance(obj, plt.Axes):
+        fig = obj.figure
+    elif isinstance(obj, plt.Figure):
+        fig = obj
+    else:
+        raise ValueError("First argument must be Matplotlib figure or axes")
+
+    # remove surrounding whitespace as much as possible
+    fig.tight_layout()
+
+    # save as PDF
+    fig.savefig(filename, dpi=300, bbox_inches="tight", pad_inches=0)
+    print("Saved figure to", filename)
+
+    # save as PNG
+    filename2 = filename.replace(".pdf", ".png")
+    fig.savefig(filename2, dpi=300, bbox_inches="tight", pad_inches=0)
+    print("Saved figure to", filename2)
+
+
 
 
 # Continuous random variables
@@ -634,7 +670,6 @@ def plot_sampling_dist(stats, label=None, xlims=None, binwidth=None, ax=None, fi
 
 # Panels illustrating CLT
 ################################################################################
-
         
 def plot_samples_panel(rv, xlims, N=10, ns=[10,30,100], filename=None):
     """
@@ -687,35 +722,9 @@ def plot_sampling_dists_panel(rv, xlims, N=1000, ns=[10,30,100], binwidth=None, 
 
 
 
-def savefigure(obj, filename):
-    """
-    Save the figure associated with `obj` (axes or figure).
-    Assumes `filename` is relative path to pdf to save to,
-    e.g. `figures/stats/some_figure.pdf`.
-    """
-    ensure_containing_dir_exists(filename)
-    if not filename.endswith(".pdf"):
-        filename = filename + ".pdf"
 
-    if isinstance(obj, plt.Axes):
-        fig = obj.figure
-    elif isinstance(obj, plt.Figure):
-        fig = obj
-    else:
-        raise ValueError("First argument must be Matplotlib figure or axes")
-
-    # remove surrounding whitespace as much as possible
-    fig.tight_layout()
-
-    # save as PDF
-    fig.savefig(filename, dpi=300, bbox_inches="tight", pad_inches=0)
-    print("Saved figure to", filename)
-
-    # save as PNG
-    filename2 = filename.replace(".pdf", ".png")
-    fig.savefig(filename2, dpi=300, bbox_inches="tight", pad_inches=0)
-    print("Saved figure to", filename2)
-
+# STATISTICS
+################################################################################
 
 
 def bootstrap_stat(sample, statfunc=mean, B=5000):
