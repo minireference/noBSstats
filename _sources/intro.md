@@ -7,7 +7,7 @@ can run the code in each notebook.
 
 
 ## Contents
-- [`stats_overview/`](./stats_overview/00_Introduction.ipynb): a complete worked example to introduce the main concepts of statistics
+- [`stats_overview/`](./stats_overview/README.md): a complete worked example to introduce the main concepts of statistics
 - [`notebooks/`](./notebooks/README.md): notebooks to accompany each section of the book.
 - [`tutorials/`](./tutorials/appendix.md): tutorials that introduce Python basics, and the Pandas and Seaborn Python libraries.
 
