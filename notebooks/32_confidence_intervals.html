@@ -1,0 +1,1152 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Section 3.2 — Confidence intervals &#8212; No BS Stats Notebooks</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Section 3.3 — Introduction to hypothesis testing" href="33_intro_to_NHST.html" />
+    <link rel="prev" title="Section 3.1 — Estimators" href="31_estimators.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../_static/logo.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">No BS Stats Notebooks</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    No Bullshit Stats Notebooks
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../stats_overview/README.html">
+   Statistics overview
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../stats_overview/00_Introduction.html">
+     Introduction
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../stats_overview/01_DATA.html">
+     Chapter 1: DATA
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../stats_overview/02_PROB.html">
+     Chapter 2: Probability theory
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../stats_overview/03_STATS.html">
+     Chapter 3: Inferential statistics
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../stats_overview/04_LINEAR_MODELS.html">
+     Chapter 4: Linear models
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="10_DATA.html">
+   Chapter 1 — Data
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="11_intro_to_data.html">
+     Section 1.1 — Introduction to data
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="12_data_in_practice.html">
+     Section 1.2 — Data in practice
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="13_descriptive_statistics.html">
+     Section 1.3 — Descriptive statistics
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../exercises/exercises_13_descr_stats.html">
+     Descriptive statistics exercises
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="20_PROB.html">
+   Chapter 2 — Probability theory
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="21_discrete_random_vars.html">
+     Section 2.1 — Discrete random variables
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../exercises/exercises_21_discrete_RVs.html">
+     Exercises for Section 2.1 Discrete random variables
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="22_multiple_random_vars.html">
+     Section 2.2 — Multiple random variable
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="23_inventory_discrete_dists.html">
+     Section 2.3 — Inventory of discrete distributions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="24_calculus_prerequisites.html">
+     Section 2.4 — Calculus prerequisites
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="25_continuous_random_vars.html">
+     Section 2.5 — Continuous random variables
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="26_inventory_continuous_dists.html">
+     Section 2.6 — Inventory of continuous distributions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="27_random_var_generation.html">
+     Section 2.7 — Random variable generation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="28_random_samples.html">
+     Section 2.8 — Probability models for random samples
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="30_STATS.html">
+   Chapter 3 — Inferential statistics
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="31_estimators.html">
+     Section 3.1 — Estimators
+    </a>
+   </li>
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
+     Section 3.2 — Confidence intervals
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="33_intro_to_NHST.html">
+     Section 3.3 — Introduction to hypothesis testing
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="34_analytical_approximation.html">
+     Section 3.4 — Analytical approximation methods
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="40_LINEAR_MODELS.html">
+   Chapter 4 — Linear models
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../tutorials/appendix.html">
+   Appendix
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+  <label for="toctree-checkbox-5">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorials/python_tutorial.html">
+     Appendix C — Python tutorial
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorials/pandas_tutorial.html">
+     Appendix D — Pandas tutorial
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../tutorials/seaborn_tutorial.html">
+     Appendix E — Seaborn tutorial
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/minireference/noBSstatsnotebooks/main?urlpath=tree/./notebooks/32_confidence_intervals.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="../_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="initThebeSBT()"
+  class="headerbtn headerbtn-launch-thebe"
+  data-toggle="tooltip"
+data-placement="left"
+title="Launch Thebe"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="headerbtn__text-container">Live Code</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/minireference/noBSstatsnotebooks"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/minireference/noBSstatsnotebooks/issues/new?title=Issue%20on%20page%20%2Fnotebooks/32_confidence_intervals.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../_sources/notebooks/32_confidence_intervals.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#notebook-setup">
+   Notebook setup
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#definitions">
+   Definitions
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#confidence-intervals">
+   Confidence intervals
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#analytical-approximations">
+     Analytical approximations
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#confidence-interval-for-the-sample-mean">
+       Confidence interval for the sample mean
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#confidence-interval-for-the-sample-variance">
+       Confidence interval for the sample variance
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#bootstrap-confidence-intervals">
+     Bootstrap confidence intervals
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id1">
+       Confidence interval for the sample mean
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id2">
+       Confidence interval for the sample variance
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#confidence-interval-for-the-sample-median-optional">
+       Confidence interval for the sample median (optional)
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#confidence-interval-for-the-90th-percentile-optional">
+       Confidence interval for the 90th percentile (optional)
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#explanations">
+   Explanations
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#discussion">
+   Discussion
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Section 3.2 — Confidence intervals</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#notebook-setup">
+   Notebook setup
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#definitions">
+   Definitions
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#confidence-intervals">
+   Confidence intervals
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#analytical-approximations">
+     Analytical approximations
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#confidence-interval-for-the-sample-mean">
+       Confidence interval for the sample mean
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#confidence-interval-for-the-sample-variance">
+       Confidence interval for the sample variance
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#bootstrap-confidence-intervals">
+     Bootstrap confidence intervals
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id1">
+       Confidence interval for the sample mean
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id2">
+       Confidence interval for the sample variance
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#confidence-interval-for-the-sample-median-optional">
+       Confidence interval for the sample median (optional)
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#confidence-interval-for-the-90th-percentile-optional">
+       Confidence interval for the 90th percentile (optional)
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#explanations">
+   Explanations
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#discussion">
+   Discussion
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="section-3-2-confidence-intervals">
+<h1>Section 3.2 — Confidence intervals<a class="headerlink" href="#section-3-2-confidence-intervals" title="Permalink to this headline">#</a></h1>
+<p>This notebook contains the code examples from <span class="xref myst">Section 3.2 Confidence intervals</span> of the <strong>No Bullshit Guide to Statistics</strong>.</p>
+<section id="notebook-setup">
+<h2>Notebook setup<a class="headerlink" href="#notebook-setup" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># load Python modules
+import os
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Plot helper functions
+from plot_helpers import plot_pdf
+from plot_helpers import savefigure
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Figures setup
+sns.set_theme(
+    context=&quot;paper&quot;,
+    style=&quot;whitegrid&quot;,
+    palette=&quot;colorblind&quot;,
+    rc={&#39;figure.figsize&#39;: (5,2)},
+)
+blue, orange  = sns.color_palette()[0], sns.color_palette()[1]
+
+DESTDIR = &quot;figures/stats/confidence_intervals&quot;
+
+%config InlineBackend.figure_format = &#39;retina&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># set random seed for repeatability
+np.random.seed(42)
+</pre></div>
+</div>
+</div>
+</div>
+<p><span class="math notranslate nohighlight">\(\def\stderr#1{\mathbf{se}_{#1}}\)</span>
+<span class="math notranslate nohighlight">\(\def\stderrhat#1{\hat{\mathbf{se}}_{#1}}\)</span>
+<span class="math notranslate nohighlight">\(\newcommand{\Mean}{\textbf{Mean}}\)</span>
+<span class="math notranslate nohighlight">\(\newcommand{\Var}{\textbf{Var}}\)</span>
+<span class="math notranslate nohighlight">\(\newcommand{\Std}{\textbf{Std}}\)</span>
+<span class="math notranslate nohighlight">\(\newcommand{\Freq}{\textbf{Freq}}\)</span>
+<span class="math notranslate nohighlight">\(\newcommand{\RelFreq}{\textbf{RelFreq}}\)</span>
+<span class="math notranslate nohighlight">\(\newcommand{\DMeans}{\textbf{DMeans}}\)</span>
+<span class="math notranslate nohighlight">\(\newcommand{\Prop}{\textbf{Prop}}\)</span>
+<span class="math notranslate nohighlight">\(\newcommand{\DProps}{\textbf{DProps}}\)</span></p>
+<p>(this cell contains the macro definitions <span class="math notranslate nohighlight">\(\stderr{}\)</span>, <span class="math notranslate nohighlight">\(\stderrhat{}\)</span>, <span class="math notranslate nohighlight">\(\Mean\)</span>, …)</p>
+</section>
+<section id="definitions">
+<h2>Definitions<a class="headerlink" href="#definitions" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def mean(sample):
+    return sum(sample) / len(sample)
+
+def var(sample):
+    xbar = mean(sample)
+    sumsqdevs = sum([(xi-xbar)**2 for xi in sample])
+    return sumsqdevs / (len(sample)-1)
+
+def dmeans(xsample, ysample):
+    &quot;&quot;&quot;
+    Compute the difference between group means of the samples.
+    &quot;&quot;&quot;
+    dhat = mean(xsample) - mean(ysample)
+    return dhat
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from scipy.stats import norm
+mu = 1000
+sigma = 100
+rvN = norm(mu, sigma)
+
+np.random.seed(47)
+nsample20 = rvN.rvs(20)
+nsample20
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 915.19905242, 1130.59063579, 1092.42079662, 1064.04118012,
+        894.52630171, 1179.77607151,  898.72132495, 1082.36233243,
+        970.53496466,  940.75294285,  860.62729413, 1110.41796717,
+        906.76597141,  905.68435632, 1043.66062317, 1079.495827  ,
+       1071.95331527, 1008.76622566,  867.72515937, 1005.17939788])
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="confidence-intervals">
+<h2>Confidence intervals<a class="headerlink" href="#confidence-intervals" title="Permalink to this headline">#</a></h2>
+<div class="math notranslate nohighlight">
+\[
+ CI = \left[
+         F^{-1}\big(\tfrac{\alpha}{2}\big),
+         F^{-1}\big(1-\tfrac{\alpha}{2}\big)
+      \right]
+\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>filename = os.path.join(DESTDIR, &quot;confidence_intervals_mean_N50n20_normal_mu1000_sigma100.pdf&quot;)
+
+from scipy.stats import norm
+from plot_helpers import gen_samples
+import seaborn as sns
+import matplotlib.pyplot as plt
+import warnings
+palette = sns.color_palette(palette=[&quot;#ff0000&quot;, &quot;#000000&quot;])
+
+
+N = 50
+n = 20
+
+# Generate N=50 samples of size n=20 from a normal dist
+rvN = norm(1000,100)
+np.random.seed(47)
+samples_df = gen_samples(rvN, n=n, N=N)
+samples_df.columns = range(0,N)
+df2 = samples_df.melt(var_name=&quot;sample&quot;, value_name=&quot;n&quot;)
+
+def confint(data):
+    &quot;&quot;&quot;
+    Compute 90% confidence interval.
+    Note:  1.729 = tdist(19).ppf(0.95)
+    &quot;&quot;&quot;
+    n = len(data)
+    mean = data.mean()
+    std = data.std(ddof=1)
+    se = std/np.sqrt(n)
+    return [mean - 1.729*se, mean + 1.729*se]
+
+# Add new column to indicate if CI contains mean or not
+for sidx in range(0,N):
+    sample = df2[df2[&quot;sample&quot;]==sidx][&quot;n&quot;].values
+    C_L, C_U = confint(sample)
+    if C_L &lt;= 1000 and 1000 &lt;= C_U:
+        outcome = 1  # includes 1000
+    else:
+        outcome = 0  # doesn&#39;t include 1000
+    df2.loc[df2[&quot;sample&quot;]==sidx,&quot;success&quot;] = outcome
+
+
+with warnings.catch_warnings(), plt.rc_context({&quot;figure.figsize&quot;:(9,3)}):
+    warnings.filterwarnings(&#39;ignore&#39;, category=UserWarning)    
+    ax = sns.pointplot(x=&quot;sample&quot;, y=&quot;n&quot;, hue=&quot;success&quot;, data=df2,
+                       errorbar=confint, palette=palette,
+                       join=False, capsize=0.5, markers=&quot; &quot;, errwidth=1)
+    ax.set_ylabel(&quot;$\overline{\mathbf{n}}$&quot;)
+    ax.axhline(y=1000, color=&#39;b&#39;, label=&#39;Mean&#39;, linestyle=&#39;--&#39;, linewidth=1)
+    ax.legend([],[], frameon=False)
+    savefigure(ax, filename)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/confidence_intervals/confidence_intervals_mean_N50n20_normal_mu1000_sigma100.pdf
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/confidence_intervals/confidence_intervals_mean_N50n20_normal_mu1000_sigma100.png
+</pre></div>
+</div>
+<img alt="../_images/32_confidence_intervals_16_2.png" src="../_images/32_confidence_intervals_16_2.png" />
+</div>
+</div>
+<section id="analytical-approximations">
+<h3>Analytical approximations<a class="headerlink" href="#analytical-approximations" title="Permalink to this headline">#</a></h3>
+<section id="confidence-interval-for-the-sample-mean">
+<h4>Confidence interval for the sample mean<a class="headerlink" href="#confidence-interval-for-the-sample-mean" title="Permalink to this headline">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>n = 20
+xbar = mean(nsample20)
+xstd = np.std(nsample20, ddof=1)
+sehat = xstd / np.sqrt(n)
+
+from scipy.stats import t as tdist
+rvT = tdist(n-1)
+
+t_05 = abs(rvT.ppf(0.05))
+t_95 = abs(rvT.ppf(0.95))
+CI_mu_tdist = [xbar - t_05*sehat, xbar + t_95*sehat]
+CI_mu_tdist
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[963.6268617138455, 1039.2933123335304]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># ALT1.
+from scipy.stats import t as tdist
+tdist.interval(0.9, df=n-1, loc=xbar, scale=sehat)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(963.6268617138455, 1039.2933123335304)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># ALT2.
+import statsmodels.stats.api as sms
+sms.DescrStatsW(nsample20).tconfint_mean(alpha=0.1)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(963.6268617138455, 1039.2933123335304)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="confidence-interval-for-the-sample-variance">
+<h4>Confidence interval for the sample variance<a class="headerlink" href="#confidence-interval-for-the-sample-variance" title="Permalink to this headline">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>n = 20
+xvar = np.var(nsample20, ddof=1)
+
+from scipy.stats import chi2
+rvX2 = chi2(n-1)
+
+x2_05 = rvX2.ppf(0.05)
+x2_95 = rvX2.ppf(0.95)
+CI_sigma2_tdist = [(n-1)*xvar/x2_95, (n-1)*xvar/x2_05]
+CI_sigma2_tdist
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[6035.031718920199, 17981.3094693008]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="bootstrap-confidence-intervals">
+<h3>Bootstrap confidence intervals<a class="headerlink" href="#bootstrap-confidence-intervals" title="Permalink to this headline">#</a></h3>
+<section id="id1">
+<h4>Confidence interval for the sample mean<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>np.random.seed(48)
+nbars_boot = bootstrap_stat(nsample20, statfunc=mean)
+CI_mu_boot = [np.percentile(nbars_boot,5),
+              np.percentile(nbars_boot,95)]
+CI_mu_boot
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">12</span><span class="p">],</span> <span class="n">line</span> <span class="mi">2</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">48</span><span class="p">)</span>
+<span class="ne">----&gt; </span><span class="mi">2</span> <span class="n">nbars_boot</span> <span class="o">=</span> <span class="n">bootstrap_stat</span><span class="p">(</span><span class="n">nsample20</span><span class="p">,</span> <span class="n">statfunc</span><span class="o">=</span><span class="n">mean</span><span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="n">CI_mu_boot</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">nbars_boot</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span>               <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">nbars_boot</span><span class="p">,</span><span class="mi">95</span><span class="p">)]</span>
+<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="n">CI_mu_boot</span>
+
+<span class="ne">NameError</span>: name &#39;bootstrap_stat&#39; is not defined
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># true
+[np.percentile(nbars,5),
+ np.percentile(nbars,95)]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id2">
+<h4>Confidence interval for the sample variance<a class="headerlink" href="#id2" title="Permalink to this headline">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>np.random.seed(48)
+nvars_boot = bootstrap_stat(nsample20, statfunc=var)
+CI_sigma2_boot = [np.percentile(nvars_boot,5),
+                 np.percentile(nvars_boot,95)]
+CI_sigma2_boot
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># true
+[np.percentile(nvars,5),
+ np.percentile(nvars,95)]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="confidence-interval-for-the-sample-median-optional">
+<h4>Confidence interval for the sample median (optional)<a class="headerlink" href="#confidence-interval-for-the-sample-median-optional" title="Permalink to this headline">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>nmedians_boot = bootstrap_stat(nsample20, statfunc=np.median)
+CI_median_boot = [np.percentile(nmedians_boot,5),
+                  np.percentile(nmedians_boot,95)]
+CI_median_boot
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># true
+[np.percentile(nmedians,5),
+ np.percentile(nmedians,95)]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="confidence-interval-for-the-90th-percentile-optional">
+<h4>Confidence interval for the 90th percentile (optional)<a class="headerlink" href="#confidence-interval-for-the-90th-percentile-optional" title="Permalink to this headline">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>ninetypctiles_boot = bootstrap_stat(nsample20, statfunc=ninetypctile)
+CI_ninetypctile_boot = [np.percentile(ninetypctiles_boot,5),
+                        np.percentile(ninetypctiles_boot,95)]
+CI_ninetypctile_boot
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># true
+[np.percentile(ninetypctiles,5),
+ np.percentile(ninetypctiles,95)]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="explanations">
+<h2>Explanations<a class="headerlink" href="#explanations" title="Permalink to this headline">#</a></h2>
+</section>
+<section id="discussion">
+<h2>Discussion<a class="headerlink" href="#discussion" title="Permalink to this headline">#</a></h2>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "minireference/noBSstatsnotebooks",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./notebooks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="31_estimators.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Section 3.1 — Estimators</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="33_intro_to_NHST.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Section 3.3 — Introduction to hypothesis testing</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Ivan Savov<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>
