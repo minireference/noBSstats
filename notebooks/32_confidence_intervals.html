@@ -708,47 +708,47 @@ title="Print to PDF"
 <h2>Notebook setup<a class="headerlink" href="#notebook-setup" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># load Python modules
-import os
-import numpy as np
-import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># load Python modules</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Plot helper functions
-from plot_helpers import plot_pdf
-from plot_helpers import savefigure
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot helper functions</span>
+<span class="kn">from</span> <span class="nn">plot_helpers</span> <span class="kn">import</span> <span class="n">plot_pdf</span>
+<span class="kn">from</span> <span class="nn">plot_helpers</span> <span class="kn">import</span> <span class="n">savefigure</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Figures setup
-sns.set_theme(
-    context=&quot;paper&quot;,
-    style=&quot;whitegrid&quot;,
-    palette=&quot;colorblind&quot;,
-    rc={&#39;figure.figsize&#39;: (5,2)},
-)
-blue, orange  = sns.color_palette()[0], sns.color_palette()[1]
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Figures setup</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set_theme</span><span class="p">(</span>
+    <span class="n">context</span><span class="o">=</span><span class="s2">&quot;paper&quot;</span><span class="p">,</span>
+    <span class="n">style</span><span class="o">=</span><span class="s2">&quot;whitegrid&quot;</span><span class="p">,</span>
+    <span class="n">palette</span><span class="o">=</span><span class="s2">&quot;colorblind&quot;</span><span class="p">,</span>
+    <span class="n">rc</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">)},</span>
+<span class="p">)</span>
+<span class="n">blue</span><span class="p">,</span> <span class="n">orange</span>  <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
 
-DESTDIR = &quot;figures/stats/confidence_intervals&quot;
+<span class="n">DESTDIR</span> <span class="o">=</span> <span class="s2">&quot;figures/stats/confidence_intervals&quot;</span>
 
-%config InlineBackend.figure_format = &#39;retina&#39;
+<span class="o">%</span><span class="k">config</span> InlineBackend.figure_format = &#39;retina&#39;
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># set random seed for repeatability
-np.random.seed(42)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># set random seed for repeatability</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -769,34 +769,48 @@ np.random.seed(42)
 <h2>Definitions<a class="headerlink" href="#definitions" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def mean(sample):
-    return sum(sample) / len(sample)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">mean</span><span class="p">(</span><span class="n">sample</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
 
-def var(sample):
-    xbar = mean(sample)
-    sumsqdevs = sum([(xi-xbar)**2 for xi in sample])
-    return sumsqdevs / (len(sample)-1)
+<span class="k">def</span> <span class="nf">var</span><span class="p">(</span><span class="n">sample</span><span class="p">):</span>
+    <span class="n">xbar</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+    <span class="n">sumsqdevs</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([(</span><span class="n">xi</span><span class="o">-</span><span class="n">xbar</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">xi</span> <span class="ow">in</span> <span class="n">sample</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">sumsqdevs</span> <span class="o">/</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 
-def dmeans(xsample, ysample):
-    &quot;&quot;&quot;
-    Compute the difference between group means of the samples.
-    &quot;&quot;&quot;
-    dhat = mean(xsample) - mean(ysample)
-    return dhat
+<span class="k">def</span> <span class="nf">dmeans</span><span class="p">(</span><span class="n">xsample</span><span class="p">,</span> <span class="n">ysample</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the difference between group means of the samples.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dhat</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">xsample</span><span class="p">)</span> <span class="o">-</span> <span class="n">mean</span><span class="p">(</span><span class="n">ysample</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">dhat</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from scipy.stats import norm
-mu = 1000
-sigma = 100
-rvN = norm(mu, sigma)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># simulation based sampling distributoin</span>
+<span class="k">def</span> <span class="nf">gen_sampling_dist</span><span class="p">(</span><span class="n">rv</span><span class="p">,</span> <span class="n">statfunc</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">10000</span><span class="p">):</span>
+    <span class="n">stats</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
+        <span class="n">sample</span> <span class="o">=</span> <span class="n">rv</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">stat</span> <span class="o">=</span> <span class="n">statfunc</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+        <span class="n">stats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">stat</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">stats</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
+<span class="n">mu</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">rvN</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span>
 
-np.random.seed(47)
-nsample20 = rvN.rvs(20)
-nsample20
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">47</span><span class="p">)</span>
+<span class="n">nsample20</span> <span class="o">=</span> <span class="n">rvN</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">nsample20</span>
 </pre></div>
 </div>
 </div>
@@ -822,57 +836,57 @@ nsample20
 \]</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>filename = os.path.join(DESTDIR, &quot;confidence_intervals_mean_N50n20_normal_mu1000_sigma100.pdf&quot;)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;confidence_intervals_mean_N50n20_normal_mu1000_sigma100.pdf&quot;</span><span class="p">)</span>
 
-from scipy.stats import norm
-from plot_helpers import gen_samples
-import seaborn as sns
-import matplotlib.pyplot as plt
-import warnings
-palette = sns.color_palette(palette=[&quot;#ff0000&quot;, &quot;#000000&quot;])
-
-
-N = 50
-n = 20
-
-# Generate N=50 samples of size n=20 from a normal dist
-rvN = norm(1000,100)
-np.random.seed(47)
-samples_df = gen_samples(rvN, n=n, N=N)
-samples_df.columns = range(0,N)
-df2 = samples_df.melt(var_name=&quot;sample&quot;, value_name=&quot;n&quot;)
-
-def confint(data):
-    &quot;&quot;&quot;
-    Compute 90% confidence interval.
-    Note:  1.729 = tdist(19).ppf(0.95)
-    &quot;&quot;&quot;
-    n = len(data)
-    mean = data.mean()
-    std = data.std(ddof=1)
-    se = std/np.sqrt(n)
-    return [mean - 1.729*se, mean + 1.729*se]
-
-# Add new column to indicate if CI contains mean or not
-for sidx in range(0,N):
-    sample = df2[df2[&quot;sample&quot;]==sidx][&quot;n&quot;].values
-    C_L, C_U = confint(sample)
-    if C_L &lt;= 1000 and 1000 &lt;= C_U:
-        outcome = 1  # includes 1000
-    else:
-        outcome = 0  # doesn&#39;t include 1000
-    df2.loc[df2[&quot;sample&quot;]==sidx,&quot;success&quot;] = outcome
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
+<span class="kn">from</span> <span class="nn">plot_helpers</span> <span class="kn">import</span> <span class="n">gen_samples</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">palette</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">(</span><span class="n">palette</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;#ff0000&quot;</span><span class="p">,</span> <span class="s2">&quot;#000000&quot;</span><span class="p">])</span>
 
 
-with warnings.catch_warnings(), plt.rc_context({&quot;figure.figsize&quot;:(9,3)}):
-    warnings.filterwarnings(&#39;ignore&#39;, category=UserWarning)    
-    ax = sns.pointplot(x=&quot;sample&quot;, y=&quot;n&quot;, hue=&quot;success&quot;, data=df2,
-                       errorbar=confint, palette=palette,
-                       join=False, capsize=0.5, markers=&quot; &quot;, errwidth=1)
-    ax.set_ylabel(&quot;$\overline{\mathbf{n}}$&quot;)
-    ax.axhline(y=1000, color=&#39;b&#39;, label=&#39;Mean&#39;, linestyle=&#39;--&#39;, linewidth=1)
-    ax.legend([],[], frameon=False)
-    savefigure(ax, filename)
+<span class="n">N</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">20</span>
+
+<span class="c1"># Generate N=50 samples of size n=20 from a normal dist</span>
+<span class="n">rvN</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">47</span><span class="p">)</span>
+<span class="n">samples_df</span> <span class="o">=</span> <span class="n">gen_samples</span><span class="p">(</span><span class="n">rvN</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
+<span class="n">samples_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">N</span><span class="p">)</span>
+<span class="n">df2</span> <span class="o">=</span> <span class="n">samples_df</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="n">var_name</span><span class="o">=</span><span class="s2">&quot;sample&quot;</span><span class="p">,</span> <span class="n">value_name</span><span class="o">=</span><span class="s2">&quot;n&quot;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">confint</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute 90% confidence interval.</span>
+<span class="sd">    Note:  1.729 = tdist(19).ppf(0.95)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">mean</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">std</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">se</span> <span class="o">=</span> <span class="n">std</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">mean</span> <span class="o">-</span> <span class="mf">1.729</span><span class="o">*</span><span class="n">se</span><span class="p">,</span> <span class="n">mean</span> <span class="o">+</span> <span class="mf">1.729</span><span class="o">*</span><span class="n">se</span><span class="p">]</span>
+
+<span class="c1"># Add new column to indicate if CI contains mean or not</span>
+<span class="k">for</span> <span class="n">sidx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">N</span><span class="p">):</span>
+    <span class="n">sample</span> <span class="o">=</span> <span class="n">df2</span><span class="p">[</span><span class="n">df2</span><span class="p">[</span><span class="s2">&quot;sample&quot;</span><span class="p">]</span><span class="o">==</span><span class="n">sidx</span><span class="p">][</span><span class="s2">&quot;n&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">C_L</span><span class="p">,</span> <span class="n">C_U</span> <span class="o">=</span> <span class="n">confint</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">C_L</span> <span class="o">&lt;=</span> <span class="mi">1000</span> <span class="ow">and</span> <span class="mi">1000</span> <span class="o">&lt;=</span> <span class="n">C_U</span><span class="p">:</span>
+        <span class="n">outcome</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># includes 1000</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">outcome</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># doesn&#39;t include 1000</span>
+    <span class="n">df2</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df2</span><span class="p">[</span><span class="s2">&quot;sample&quot;</span><span class="p">]</span><span class="o">==</span><span class="n">sidx</span><span class="p">,</span><span class="s2">&quot;success&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">outcome</span>
+
+
+<span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">(),</span> <span class="n">plt</span><span class="o">.</span><span class="n">rc_context</span><span class="p">({</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:(</span><span class="mi">9</span><span class="p">,</span><span class="mi">3</span><span class="p">)}):</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">)</span>    
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">pointplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;sample&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;n&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;success&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df2</span><span class="p">,</span>
+                       <span class="n">errorbar</span><span class="o">=</span><span class="n">confint</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="n">palette</span><span class="p">,</span>
+                       <span class="n">join</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">capsize</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">markers</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">errwidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$\overline{\mathbf</span><span class="si">{n}</span><span class="s2">}$&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Mean&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">([],[],</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">savefigure</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -883,7 +897,7 @@ with warnings.catch_warnings(), plt.rc_context({&quot;figure.figsize&quot;:(9,3)
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/confidence_intervals/confidence_intervals_mean_N50n20_normal_mu1000_sigma100.png
 </pre></div>
 </div>
-<img alt="../_images/32_confidence_intervals_16_2.png" src="../_images/32_confidence_intervals_16_2.png" />
+<img alt="../_images/32_confidence_intervals_15_2.png" src="../_images/32_confidence_intervals_15_2.png" />
 </div>
 </div>
 <section id="analytical-approximations">
@@ -892,18 +906,18 @@ with warnings.catch_warnings(), plt.rc_context({&quot;figure.figsize&quot;:(9,3)
 <h4>Confidence interval for the sample mean<a class="headerlink" href="#confidence-interval-for-the-sample-mean" title="Permalink to this headline">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>n = 20
-xbar = mean(nsample20)
-xstd = np.std(nsample20, ddof=1)
-sehat = xstd / np.sqrt(n)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">xbar</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">nsample20</span><span class="p">)</span>
+<span class="n">xstd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">nsample20</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">sehat</span> <span class="o">=</span> <span class="n">xstd</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
 
-from scipy.stats import t as tdist
-rvT = tdist(n-1)
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">t</span> <span class="k">as</span> <span class="n">tdist</span>
+<span class="n">rvT</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 
-t_05 = abs(rvT.ppf(0.05))
-t_95 = abs(rvT.ppf(0.95))
-CI_mu_tdist = [xbar - t_05*sehat, xbar + t_95*sehat]
-CI_mu_tdist
+<span class="n">t_05</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">rvT</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.05</span><span class="p">))</span>
+<span class="n">t_95</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">rvT</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.95</span><span class="p">))</span>
+<span class="n">CI_mu_tdist</span> <span class="o">=</span> <span class="p">[</span><span class="n">xbar</span> <span class="o">-</span> <span class="n">t_05</span><span class="o">*</span><span class="n">sehat</span><span class="p">,</span> <span class="n">xbar</span> <span class="o">+</span> <span class="n">t_95</span><span class="o">*</span><span class="n">sehat</span><span class="p">]</span>
+<span class="n">CI_mu_tdist</span>
 </pre></div>
 </div>
 </div>
@@ -915,9 +929,9 @@ CI_mu_tdist
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># ALT1.
-from scipy.stats import t as tdist
-tdist.interval(0.9, df=n-1, loc=xbar, scale=sehat)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ALT1.</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">t</span> <span class="k">as</span> <span class="n">tdist</span>
+<span class="n">tdist</span><span class="o">.</span><span class="n">interval</span><span class="p">(</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">df</span><span class="o">=</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">xbar</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">sehat</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -929,14 +943,14 @@ tdist.interval(0.9, df=n-1, loc=xbar, scale=sehat)
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># ALT2.
-import statsmodels.stats.api as sms
-sms.DescrStatsW(nsample20).tconfint_mean(alpha=0.1)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ALT2.</span>
+<span class="kn">import</span> <span class="nn">statsmodels.stats.api</span> <span class="k">as</span> <span class="nn">sms</span>
+<span class="n">sms</span><span class="o">.</span><span class="n">DescrStatsW</span><span class="p">(</span><span class="n">nsample20</span><span class="p">)</span><span class="o">.</span><span class="n">tconfint_mean</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(963.6268617138455, 1039.2933123335304)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(963.6268617138454, 1039.2933123335301)
 </pre></div>
 </div>
 </div>
@@ -946,16 +960,16 @@ sms.DescrStatsW(nsample20).tconfint_mean(alpha=0.1)
 <h4>Confidence interval for the sample variance<a class="headerlink" href="#confidence-interval-for-the-sample-variance" title="Permalink to this headline">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>n = 20
-xvar = np.var(nsample20, ddof=1)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">xvar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">nsample20</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-from scipy.stats import chi2
-rvX2 = chi2(n-1)
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">chi2</span>
+<span class="n">rvX2</span> <span class="o">=</span> <span class="n">chi2</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 
-x2_05 = rvX2.ppf(0.05)
-x2_95 = rvX2.ppf(0.95)
-CI_sigma2_tdist = [(n-1)*xvar/x2_95, (n-1)*xvar/x2_05]
-CI_sigma2_tdist
+<span class="n">x2_05</span> <span class="o">=</span> <span class="n">rvX2</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)</span>
+<span class="n">x2_95</span> <span class="o">=</span> <span class="n">rvX2</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.95</span><span class="p">)</span>
+<span class="n">CI_sigma2_tdist</span> <span class="o">=</span> <span class="p">[(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">xvar</span><span class="o">/</span><span class="n">x2_95</span><span class="p">,</span> <span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">xvar</span><span class="o">/</span><span class="n">x2_05</span><span class="p">]</span>
+<span class="n">CI_sigma2_tdist</span>
 </pre></div>
 </div>
 </div>
@@ -969,38 +983,53 @@ CI_sigma2_tdist
 </section>
 <section id="bootstrap-confidence-intervals">
 <h3>Bootstrap confidence intervals<a class="headerlink" href="#bootstrap-confidence-intervals" title="Permalink to this headline">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">bootstrap_stat</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">statfunc</span><span class="p">,</span> <span class="n">B</span><span class="o">=</span><span class="mi">5000</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the sampling dist. of the `statfunc` estimator</span>
+<span class="sd">    from `B` bootstrap samples generated from `sample`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+    <span class="n">bstats</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span>
+        <span class="n">bsample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">bstat</span> <span class="o">=</span> <span class="n">statfunc</span><span class="p">(</span><span class="n">bsample</span><span class="p">)</span>
+        <span class="n">bstats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bstat</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">bstats</span>
+</pre></div>
+</div>
+</div>
+</div>
 <section id="id1">
 <h4>Confidence interval for the sample mean<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>np.random.seed(48)
-nbars_boot = bootstrap_stat(nsample20, statfunc=mean)
-CI_mu_boot = [np.percentile(nbars_boot,5),
-              np.percentile(nbars_boot,95)]
-CI_mu_boot
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">48</span><span class="p">)</span>
+<span class="n">nbars_boot</span> <span class="o">=</span> <span class="n">bootstrap_stat</span><span class="p">(</span><span class="n">nsample20</span><span class="p">,</span> <span class="n">statfunc</span><span class="o">=</span><span class="n">mean</span><span class="p">)</span>
+<span class="n">CI_mu_boot</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">nbars_boot</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span>
+              <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">nbars_boot</span><span class="p">,</span><span class="mi">95</span><span class="p">)]</span>
+<span class="n">CI_mu_boot</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">12</span><span class="p">],</span> <span class="n">line</span> <span class="mi">2</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">48</span><span class="p">)</span>
-<span class="ne">----&gt; </span><span class="mi">2</span> <span class="n">nbars_boot</span> <span class="o">=</span> <span class="n">bootstrap_stat</span><span class="p">(</span><span class="n">nsample20</span><span class="p">,</span> <span class="n">statfunc</span><span class="o">=</span><span class="n">mean</span><span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="n">CI_mu_boot</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">nbars_boot</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span>               <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">nbars_boot</span><span class="p">,</span><span class="mi">95</span><span class="p">)]</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="n">CI_mu_boot</span>
-
-<span class="ne">NameError</span>: name &#39;bootstrap_stat&#39; is not defined
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[966.9101312640927, 1035.6221138821832]
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># true
-[np.percentile(nbars,5),
- np.percentile(nbars,95)]
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># true sampling distribuiton (simulation)</span>
+<span class="n">nbars</span> <span class="o">=</span> <span class="n">gen_sampling_dist</span><span class="p">(</span><span class="n">rvN</span><span class="p">,</span> <span class="n">statfunc</span><span class="o">=</span><span class="n">mean</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">nbars</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span>
+ <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">nbars</span><span class="p">,</span><span class="mi">95</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[963.1651448677608, 1037.2236488759474]
 </pre></div>
 </div>
 </div>
@@ -1010,20 +1039,31 @@ CI_mu_boot
 <h4>Confidence interval for the sample variance<a class="headerlink" href="#id2" title="Permalink to this headline">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>np.random.seed(48)
-nvars_boot = bootstrap_stat(nsample20, statfunc=var)
-CI_sigma2_boot = [np.percentile(nvars_boot,5),
-                 np.percentile(nvars_boot,95)]
-CI_sigma2_boot
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">48</span><span class="p">)</span>
+<span class="n">nvars_boot</span> <span class="o">=</span> <span class="n">bootstrap_stat</span><span class="p">(</span><span class="n">nsample20</span><span class="p">,</span> <span class="n">statfunc</span><span class="o">=</span><span class="n">var</span><span class="p">)</span>
+<span class="n">CI_sigma2_boot</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">nvars_boot</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span>
+                 <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">nvars_boot</span><span class="p">,</span><span class="mi">95</span><span class="p">)]</span>
+<span class="n">CI_sigma2_boot</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[6266.960681769309, 12339.2572499587]
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># true
-[np.percentile(nvars,5),
- np.percentile(nvars,95)]
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># true</span>
+<span class="n">nvars</span> <span class="o">=</span> <span class="n">gen_sampling_dist</span><span class="p">(</span><span class="n">rvN</span><span class="p">,</span> <span class="n">statfunc</span><span class="o">=</span><span class="n">var</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">nvars</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span>
+ <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">nvars</span><span class="p">,</span><span class="mi">95</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[5333.12751396754, 15931.562101382808]
 </pre></div>
 </div>
 </div>
@@ -1033,19 +1073,30 @@ CI_sigma2_boot
 <h4>Confidence interval for the sample median (optional)<a class="headerlink" href="#confidence-interval-for-the-sample-median-optional" title="Permalink to this headline">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>nmedians_boot = bootstrap_stat(nsample20, statfunc=np.median)
-CI_median_boot = [np.percentile(nmedians_boot,5),
-                  np.percentile(nmedians_boot,95)]
-CI_median_boot
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nmedians_boot</span> <span class="o">=</span> <span class="n">bootstrap_stat</span><span class="p">(</span><span class="n">nsample20</span><span class="p">,</span> <span class="n">statfunc</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">)</span>
+<span class="n">CI_median_boot</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">nmedians_boot</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span>
+                  <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">nmedians_boot</span><span class="p">,</span><span class="mi">95</span><span class="p">)]</span>
+<span class="n">CI_median_boot</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[915.199052423386, 1071.9533152748243]
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># true
-[np.percentile(nmedians,5),
- np.percentile(nmedians,95)]
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># true</span>
+<span class="n">nmedians</span> <span class="o">=</span> <span class="n">gen_sampling_dist</span><span class="p">(</span><span class="n">rvN</span><span class="p">,</span> <span class="n">statfunc</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">nmedians</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span>
+ <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">nmedians</span><span class="p">,</span><span class="mi">95</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[956.1837483787382, 1044.358290198796]
 </pre></div>
 </div>
 </div>
@@ -1055,19 +1106,38 @@ CI_median_boot
 <h4>Confidence interval for the 90th percentile (optional)<a class="headerlink" href="#confidence-interval-for-the-90th-percentile-optional" title="Permalink to this headline">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>ninetypctiles_boot = bootstrap_stat(nsample20, statfunc=ninetypctile)
-CI_ninetypctile_boot = [np.percentile(ninetypctiles_boot,5),
-                        np.percentile(ninetypctiles_boot,95)]
-CI_ninetypctile_boot
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">ninetypctile</span><span class="p">(</span><span class="n">sample</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="mi">90</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># true
-[np.percentile(ninetypctiles,5),
- np.percentile(ninetypctiles,95)]
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ninetypctiles_boot</span> <span class="o">=</span> <span class="n">bootstrap_stat</span><span class="p">(</span><span class="n">nsample20</span><span class="p">,</span> <span class="n">statfunc</span><span class="o">=</span><span class="n">ninetypctile</span><span class="p">)</span>
+<span class="n">CI_ninetypctile_boot</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">ninetypctiles_boot</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span>
+                        <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">ninetypctiles_boot</span><span class="p">,</span><span class="mi">95</span><span class="p">)]</span>
+<span class="n">CI_ninetypctile_boot</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[1079.7824775466474, 1179.7760715125444]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># true</span>
+<span class="n">ninetypctiles</span> <span class="o">=</span> <span class="n">gen_sampling_dist</span><span class="p">(</span><span class="n">rvN</span><span class="p">,</span> <span class="n">statfunc</span><span class="o">=</span><span class="n">ninetypctile</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">ninetypctiles</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span>
+ <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">ninetypctiles</span><span class="p">,</span><span class="mi">95</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[1061.4381044914307, 1175.6365583470213]
 </pre></div>
 </div>
 </div>
