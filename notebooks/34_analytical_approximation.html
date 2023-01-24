@@ -597,6 +597,25 @@ title="Print to PDF"
   <a class="reference internal nav-link" href="#comparison-of-resampling-methods-and-analytical-approximations">
    Comparison of resampling methods and analytical approximations
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#chi-square-test-for-variance">
+     Chi-square test for variance
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#explanations">
+   Explanations
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#one-sided-and-two-sided-tests">
+     One-sided and two-sided tests
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -684,6 +703,25 @@ title="Print to PDF"
   <a class="reference internal nav-link" href="#comparison-of-resampling-methods-and-analytical-approximations">
    Comparison of resampling methods and analytical approximations
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#chi-square-test-for-variance">
+     Chi-square test for variance
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#explanations">
+   Explanations
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#one-sided-and-two-sided-tests">
+     One-sided and two-sided tests
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -703,10 +741,20 @@ title="Print to PDF"
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># load Python modules</span>
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot helper functions</span>
+<span class="kn">from</span> <span class="nn">plot_helpers</span> <span class="kn">import</span> <span class="n">plot_pdf</span>
+<span class="kn">from</span> <span class="nn">plot_helpers</span> <span class="kn">import</span> <span class="n">savefigure</span>
 </pre></div>
 </div>
 </div>
@@ -720,6 +768,9 @@ title="Print to PDF"
     <span class="n">palette</span><span class="o">=</span><span class="s2">&quot;colorblind&quot;</span><span class="p">,</span>
     <span class="n">rc</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">4</span><span class="p">)},</span>
 <span class="p">)</span>
+<span class="n">blue</span><span class="p">,</span> <span class="n">orange</span>  <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">red</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">(</span><span class="s2">&quot;tab10&quot;</span><span class="p">)[</span><span class="mi">3</span><span class="p">]</span>
+<span class="n">DESTDIR</span> <span class="o">=</span> <span class="s2">&quot;figures/stats/NHST&quot;</span>
 
 <span class="o">%</span><span class="k">config</span> InlineBackend.figure_format = &#39;retina&#39;
 </pre></div>
@@ -1034,6 +1085,141 @@ and <code class="docutils literal notranslate"><span class="pre">df</span></code
 <p>Analytical approximations are currently taught in most stats courses (STAT 101). Historically, analytical approximations have been used more widely because they require only simple arithmetic calculations: statistic practitioners (scientists, engineers, etc.) simply need to compute sample statistics, plug them into a formula, and obtain a <span class="math notranslate nohighlight">\(p\)</span>-value. This convenience comes at the cost of numerous assumptions about the data distribution, which often don’t hold in practice (e.g. assuming population is normal, when it isn’t).</p>
 <p>In recent years, resampling methods like the permutation test and bootstrap estimation are becoming more popular, widely used in industry, and increasingly also taught at universities (see this <a class="reference external" href="https://minireference.com/blog/fixing-the-introductory-statistics-curriculum/">blog post</a> about the <em>modern statistics</em> curriculum). <strong>The main advantage so resampling methods is that they require less modelling assumptions.</strong> Procedures like the permutation test can be applied broadly to any scenario where two groups are being compared, and don’t require developing specific formulas for different cases. Resampling methods are easier to understand since the they are directly related to the sampling distribution, and there are no formulas to memorize.</p>
 <p>Understanding resampling methods requires some basic familiarity with programming, but the skills required are not advanced: knowledge of variables, expressions, and basic <code class="docutils literal notranslate"><span class="pre">for</span></code> loop is sufficient. If you were able to follow the code examples described above (see <code class="docutils literal notranslate"><span class="pre">resample_under_H0</span></code>, <code class="docutils literal notranslate"><span class="pre">permutation_test</span></code>, and <code class="docutils literal notranslate"><span class="pre">bootstrap_stat</span></code>), then you’ve already <strong>seen all the code you will need for the entire book!</strong>  I’ve prepared a <a class="reference external" href="https://nobsstats.com/tutorials/python_tutorial.html">python tutorial</a> to make readers with no prior experience with Python will be able to quickly pick up the syntax.</p>
+<section id="chi-square-test-for-variance">
+<h3>Chi-square test for variance<a class="headerlink" href="#chi-square-test-for-variance" title="Permalink to this headline">#</a></h3>
+<p>see also:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.itl.nist.gov/div898/handbook/eda/section3/eda358.htm">https://www.itl.nist.gov/div898/handbook/eda/section3/eda358.htm</a></p></li>
+<li><p><a class="reference external" href="https://openpress.usask.ca/introtoappliedstatsforpsych/chapter/9-5-chi-squared-test-for-variance-or-standard-deviation/">https://openpress.usask.ca/introtoappliedstatsforpsych/chapter/9-5-chi-squared-test-for-variance-or-standard-deviation/</a></p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># via https://stats.stackexchange.com/questions/495912/chi2-test-for-the-variance-in-python</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">chi2</span>
+
+<span class="k">def</span> <span class="nf">var_test</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">va0</span><span class="p">,</span> <span class="n">direction</span> <span class="o">=</span> <span class="s2">&quot;two-tailed&quot;</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">):</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">Q</span> <span class="o">=</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="n">va0</span> 
+    <span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="s2">&quot;lower&quot;</span><span class="p">:</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">chi2</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">Q</span> <span class="o">&lt;=</span> <span class="n">q</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;H_0 rejected&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;H_0 not rejected&quot;</span>
+    <span class="k">elif</span> <span class="n">direction</span> <span class="o">==</span> <span class="s2">&quot;upper&quot;</span><span class="p">:</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">chi2</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">Q</span> <span class="o">&gt;=</span> <span class="n">q</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;H_0 rejected&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;H_0 not rejected&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">q1</span> <span class="o">=</span> <span class="n">chi2</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="n">alpha</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">q2</span> <span class="o">=</span> <span class="n">chi2</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">alpha</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">Q</span> <span class="o">&lt;=</span> <span class="n">q1</span> <span class="ow">or</span> <span class="n">Q</span> <span class="o">&gt;=</span> <span class="n">q2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;H_0 rejected&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;H_0 not rejected&quot;</span>
+
+<span class="n">n</span> <span class="o">=</span> <span class="mi">25</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+<span class="n">var_test</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">va0</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;H_0 rejected&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="explanations">
+<h2>Explanations<a class="headerlink" href="#explanations" title="Permalink to this headline">#</a></h2>
+<section id="one-sided-and-two-sided-tests">
+<h3>One-sided and two-sided tests<a class="headerlink" href="#one-sided-and-two-sided-tests" title="Permalink to this headline">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;panel_p-values_left_twotailed_right_tests.pdf&quot;</span><span class="p">)</span>
+    
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">t</span> <span class="k">as</span> <span class="n">tdist</span>
+<span class="n">rvT</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>
+
+<span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="n">ys</span> <span class="o">=</span> <span class="n">rvT</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">plt</span><span class="o">.</span><span class="n">rc_context</span><span class="p">({</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:(</span><span class="mi">7</span><span class="p">,</span><span class="mi">2</span><span class="p">)}),</span> <span class="n">sns</span><span class="o">.</span><span class="n">axes_style</span><span class="p">(</span><span class="s2">&quot;ticks&quot;</span><span class="p">):</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">,</span> <span class="n">ax3</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+
+
+    <span class="c1"># LEFT</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;(a) left-tailed test&#39;</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span> <span class="c1">#, y=-0.26)</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">xs</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">ys</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.42</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
+
+    <span class="c1"># highlight the left tail</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">xs</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">xs</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">y1</span><span class="o">=</span><span class="n">ys</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.03</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$t$&quot;</span><span class="p">,</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+
+
+
+    <span class="c1"># TWO-TAILED</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;(b) two-tailed test&#39;</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span><span class="c1">#, y=-0.26)</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">xs</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">ys</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.42</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
+
+    <span class="c1"># highlight the left and right tails</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">xs</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">xs</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">y1</span><span class="o">=</span><span class="n">ys</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.03</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$-|t|$&quot;</span><span class="p">,</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">xs</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">xs</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">y1</span><span class="o">=</span><span class="n">ys</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.03</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$|t|$&quot;</span><span class="p">,</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+
+
+
+    <span class="c1"># RIGHT</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;(c) right-tailed test&#39;</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span><span class="c1">#, y=-0.26)</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">xs</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">ys</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax3</span><span class="p">)</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.42</span><span class="p">)</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
+
+    <span class="c1"># highlight the right tail</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">xs</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">xs</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">y1</span><span class="o">=</span><span class="n">ys</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.03</span><span class="p">,</span> <span class="s2">&quot;$t$&quot;</span><span class="p">,</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+
+
+<span class="n">savefigure</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/NHST/panel_p-values_left_twotailed_right_tests.pdf
+Saved figure to figures/stats/NHST/panel_p-values_left_twotailed_right_tests.png
+</pre></div>
+</div>
+<img alt="../_images/34_analytical_approximation_40_1.png" src="../_images/34_analytical_approximation_40_1.png" />
+</div>
+</div>
+</section>
 </section>
 </section>
 
