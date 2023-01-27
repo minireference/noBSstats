@@ -187,3 +187,29 @@ you check out the [Chapter 3 outline](https://docs.google.com/document/d/1fwep23
 
 In the meantime,
 you check out the [Chapter 4 outline](https://docs.google.com/document/d/1fwep23-95U-w1QMPU31nOvUnUXE2X3s_Dbk5JuLlKAY/edit#heading=h.9etj7aw4al9w) to see what will be covered.
+
+
+
+____
+
+
+## Math and code conventions used in notebooks
+
+Datasets:
+
+- `eprices`: the dataframe loaded from `datasets/eprices.csv`
+- `eprices{W}`: the subset of the rows from dataframe for group `{W}`
+- `x{A}`: data from group `{A}` (notation chosen to match math symbol $\mathbf{x}_A$)
+
+
+Sampling and resampling conventions:
+
+- `{x}sample`: generated sample from `rvX` by simulation.
+  Optionally include sample size, e.g. `{x}sample20` when $n=20$.
+  - `{x}samples_df`: dataframe that contains `N` `{x}samples`
+- `rsample`: sample generated using resampling (e.g. permutation test) 
+  - `rsamples_df`: a DataFrame that contains data from `R` `rsample`s
+    and has an extra column `rep=1:n` (to imitate `replicate` col used by `infer`).
+- `bsample`: bootstrap sample generated from `sample`
+  - `bsamples_df`: a DataFrame that contains data from `B` `bsample`s
+
