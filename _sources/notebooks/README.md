@@ -197,13 +197,15 @@ ____
 
 Datasets:
 
-- `eprices`: the dataframe loaded from `datasets/eprices.csv`
-- `eprices{W}`: the subset of the rows from dataframe for group `{W}`
-- `x{A}`: data from group `{A}` (notation chosen to match math symbol $\mathbf{x}_A$)
+- `eprices` (df): the dataframe loaded from `datasets/eprices.csv`
+- `eprices{W}` (df): the subset of the rows from data frame for group `{W}`
+  - `sampleW` and `sampleE` (array or series): of the `price` data column 
+- `ksample`: kombucha volumes sample, also `ksample02`, `ksample03`, from different batches
+- `aweights`: apples sample weights
+- `scoresR` and `scoresU`
 
 
 Sampling and resampling conventions:
-
 - `{x}sample`: generated sample from `rvX` by simulation.
   Optionally include sample size, e.g. `{x}sample20` when $n=20$.
   - `{x}samples_df`: dataframe that contains `N` `{x}samples`
