@@ -165,7 +165,7 @@ statistics operations we'll be doing in the next two chapters.
 
 ## Chapter 3: Inferential statistics
 
-(coming late 2022 or early 2023)
+(coming Feb 2023)
 
 In the meantime,
 you check out the [Chapter 3 outline](https://docs.google.com/document/d/1fwep23-95U-w1QMPU31nOvUnUXE2X3s_Dbk5JuLlKAY/edit#heading=h.w1m7v7b5wie3) to see what will be covered.
@@ -175,43 +175,12 @@ you check out the [Chapter 3 outline](https://docs.google.com/document/d/1fwep23
 
 
 
-
-
-
-
-
-
 ## Chapter 4: Linear models
 
-(coming late 2022 or early 2023)
+(coming Spring 2023)
 
-In the meantime,
-you check out the [Chapter 4 outline](https://docs.google.com/document/d/1fwep23-95U-w1QMPU31nOvUnUXE2X3s_Dbk5JuLlKAY/edit#heading=h.9etj7aw4al9w) to see what will be covered.
-
-
-
-____
-
-
-## Math and code conventions used in notebooks
-
-Datasets:
-
-- `eprices` (df): the dataframe loaded from `datasets/eprices.csv`
-- `eprices{W}` (df): the subset of the rows from data frame for group `{W}`
-  - `sampleW` and `sampleE` (array or series): of the `price` data column 
-- `ksample`: kombucha volumes sample, also `ksample02`, `ksample03`, from different batches
-- `aweights`: apples sample weights
-- `scoresR` and `scoresU`
-
-
-Sampling and resampling conventions:
-- `{x}sample`: generated sample from `rvX` by simulation.
-  Optionally include sample size, e.g. `{x}sample20` when $n=20$.
-  - `{x}samples_df`: dataframe that contains `N` `{x}samples`
-- `rsample`: sample generated using resampling (e.g. permutation test) 
-  - `rsamples_df`: a DataFrame that contains data from `R` `rsample`s
-    and has an extra column `rep=1:n` (to imitate `replicate` col used by `infer`).
-- `bsample`: bootstrap sample generated from `sample`
-  - `bsamples_df`: a DataFrame that contains data from `B` `bsample`s
+In the meantime, you watch
+[PART IV](https://nobsstats.com/stats_overview/README.html#linear-models)
+of the [Stats overview](https://nobsstats.com/stats_overview/README.html) tutorial,
+and read the [Chapter 4 outline](https://docs.google.com/document/d/1fwep23-95U-w1QMPU31nOvUnUXE2X3s_Dbk5JuLlKAY/edit#heading=h.9etj7aw4al9w) to see what will be covered.
 
