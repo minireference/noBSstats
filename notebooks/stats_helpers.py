@@ -1,7 +1,8 @@
 import numpy as np
-
-from scipy.stats import norm
 from scipy.stats import chi2
+from scipy.stats import norm
+from scipy.stats import t as tdist
+
 
 
 # ESTIMATORS
@@ -24,11 +25,24 @@ def dmeans(xsample, ysample):
     return dhat
 
 
-
 # UTILS
 ################################################################################
 
-def tailsof(stats, obs, alternative="two-sided"):
+def calcdf(stdX, n, stdY, m):
+    """
+    Calculate the degrees of freedom parameter used for Welch's t-test.
+    """
+    vX = stdX**2 / n
+    vY = stdY**2 / m
+    df = (vX + vY)**2 / (vX**2/(n-1) + vY**2/(m-1))
+    return df
+
+
+
+# TAIL CALCULATION UTILS
+################################################################################
+
+def tailsof(stats, obs, alternative="two-sided"):    # TODO: rename to tailstats
     """
     Select the subset of the values in `stats` that
     equal or more extreme than the observed value `obs`.
@@ -46,11 +60,30 @@ def tailsof(stats, obs, alternative="two-sided"):
     return tails
 
 
+def tailprobs(rv, obs, alternative="two-sided"):
+    """
+    Calculate the probability of all outcomes of the random variable `rv` that
+    equally or more extreme than the observed value `obs`.
+    """
+    assert alternative in ["greater", "less", "two-sided"]
+    if alternative == "greater":
+        pvalue = 1 - rv.cdf(obs)
+    elif alternative == "less":
+        pvalue = rv.cdf(obs)
+    elif alternative == "two-sided":
+        absobs = abs(obs)
+        pleft = rv.cdf(-absobs)
+        pright = 1 - rv.cdf(absobs)
+        pvalue = 2*min(pleft, pright)
+    return pvalue
+
+
+
 
 # BASIC TESTS (used for kombucha data generation)
 ################################################################################
 
-def ztest(sample, mu0, sigma0):
+def ztest(sample, mu0, sigma0, alternative="two-sided"):
     """
     Z-test to detect mean deviation from known normal population.
     """
@@ -59,28 +92,26 @@ def ztest(sample, mu0, sigma0):
     se = sigma0 / np.sqrt(n)
     obsz = (mean - mu0) / se
     absz = abs(obsz)
-    pval = norm.cdf(-absz) + 1-norm.cdf(absz)
+    if alternative == "two-sided":
+        pval = norm.cdf(-absz) + 1 - norm.cdf(absz)
+    else:
+        raise ValueError("Not implemented.")
     return obsz, pval
 
 
-def chi2test(sample, sigma0, onesided=False):
+def chi2test(sample, sigma0, alternative="greater"):    # TODO: rename chi2test_var
     """
-    Run chi2 test to detect sample variance deviation
-    from a known population variance `sigma0`.
-    # TODO: refactor to use `alternative` argument like other scipy tests
+    Run chi2 test to detect sample variance deviation 
+    from the known population variance `sigma0`.
     """
     n = len(sample)
-    s2 = sample.var()
-    obschi2 = (n-1)*s2 / sigma0**2
-    df = n-1
+    s2 = np.var(sample, ddof=1)
+    obschi2 = (n - 1) * s2 / sigma0**2
+    df = n - 1
     rvX2 = chi2(df)
-    if onesided:
-        pval = 1-rvX2.cdf(obschi2)
-    else:
-        p_lower = rvX2.cdf(obschi2)
-        p_upper = 1-rvX2.cdf(obschi2)
-        pval = 2*min(p_lower, p_upper)
-    return obschi2, pval
+    pvalue = tailprobs(rvX2, obschi2, alternative=alternative)
+    return obschi2, pvalue
+
 
 
 
@@ -228,6 +259,7 @@ def cohend(sample, mu):
     cohend = (mean - mu) / std
     return cohend
 
+
 def cohend2(sample1, sample2):
     """
     Compute Cohen's d measure of effect size for two independent samples.
@@ -236,8 +268,79 @@ def cohend2(sample1, sample2):
     mean1, mean2 = np.mean(sample1), np.mean(sample2)
     var1, var2 = np.var(sample1, ddof=1), np.var(sample2, ddof=1)
     # calculate the pooled variance and standard deviaiton
-    var_pooled = ((n1-1)*var1 + (n2-1)*var2) / (n1 + n2 - 2)
-    std_pooled = np.sqrt(var_pooled)
-    cohend = (mean1 - mean2) / std_pooled
+    pooled_var = ((n1-1)*var1 + (n2-1)*var2) / (n1 + n2 - 2)
+    pooled_std = np.sqrt(pooled_var)
+    cohend = (mean1 - mean2) / pooled_std
     return cohend
 
+
+
+
+# T-TESTS
+################################################################################
+
+def ttest_mean(sample, mu0, alternative="two-sided"):
+    """
+    T-test to detect mean deviation from a population with known mean `mu0`.
+    """
+    assert alternative in ["greater", "less", "two-sided"]
+    obsmean = np.mean(sample)
+    n = len(sample)
+    std = np.std(sample, ddof=1)
+    sehat = std / np.sqrt(n)
+    obst = (obsmean - mu0) / sehat
+    rvT = tdist(n-1)
+    pvalue = tailprobs(rvT, obst, alternative=alternative)
+    return obst, pvalue
+
+
+def ttest_dmeans(sample1, sample2, equal_var=False, alternative="two-sided"):
+    """
+    T-test to detect difference between two groups based on their means.
+    """
+    # 1. Calculate the observed mean difference between means
+    obsd = np.mean(sample1) - np.mean(sample2)
+    # 2. Calculate the sample size and the standard deviation for each group
+    n1, n2 = len(sample1), len(sample1)
+    std1, std2 = np.std(sample1, ddof=1), np.std(sample2, ddof=1)
+
+    if equal_var:
+        # 4. Compute the pooled variance and standard error of estimator D
+        pooled_var = ((n1-1)*std1**2 + (n2-1)*std2**2) / (n1 + n2 - 2)
+        pooled_std = np.sqrt(pooled_var)
+        seD = pooled_std * np.sqrt(1/n1 + 1/n2)
+        # 5. Obtain the degrees of freedom
+        df = n1 + n2 - 2
+
+    else:
+        # 4'. Compute the standard error of the estimator D (Welch's t-test)
+        seD = np.sqrt(std1**2/n1 + std2**2/n2)
+        # 5'. Obtain the degrees of freedom from the crazy formula
+        df = (std1**2/n1 + std2**2/n2)**2 / \
+            ((std1**2/n1)**2/(n1-1) + (std2**2/n2)**2/(n2-1) )
+
+    # 6. Compute the value of the t-statistic
+    obst = (obsd - 0) / seD
+
+    # Calculate the p-value
+    rvT = tdist(df)
+    pvalue = tailprobs(rvT, obst, alternative=alternative)
+    return obst, pvalue
+
+
+def ttest_paired(sample1, sample2, alternative="two-sided"):
+    """
+    Implement `ttest_rel`
+    """
+    n = len(sample1)
+    n2 = len(sample2)
+    assert n == n2, "Paired t-test assumes both saamples are of the same size"
+    ds = np.array(sample1) - np.array(sample2)
+    std = np.std(ds, ddof=1)
+    meand  = np.mean(ds)
+    se = std / np.sqrt(n)
+    df = n - 1
+    obst = (meand - 0) / se
+    rvT = tdist(df)
+    pvalue = tailprobs(rvT, obst, alternative=alternative)
+    return obst, pvalue
