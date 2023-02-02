@@ -39,10 +39,12 @@ def calcdf(stdX, n, stdY, m):
 
 
 
+
+
 # TAIL CALCULATION UTILS
 ################################################################################
 
-def tailsof(stats, obs, alternative="two-sided"):    # TODO: rename to tailstats
+def tailstats(stats, obs, alternative="two-sided"):
     """
     Select the subset of the values in `stats` that
     equal or more extreme than the observed value `obs`.
@@ -74,7 +76,7 @@ def tailprobs(rv, obs, alternative="two-sided"):
         absobs = abs(obs)
         pleft = rv.cdf(-absobs)
         pright = 1 - rv.cdf(absobs)
-        pvalue = 2*min(pleft, pright)
+        pvalue = 2 * min(pleft, pright)
     return pvalue
 
 
@@ -145,7 +147,7 @@ def simulation_test_mean(sample, mu0, sigma0, N=10000):
     xbars = gen_sampling_dist(rvXH0, statfunc=mean, n=n)
 
     # 3. Compute the p-value
-    tails = tailsof(xbars, obsmean)
+    tails = tailstats(xbars, obsmean)
     pvalue = len(tails) / len(xbars)
     return xbars, pvalue
 
@@ -163,7 +165,7 @@ def simulation_test(sample, rvH0, statfunc, N=10000, alternative="two-sided"):
     statsH0 = gen_sampling_dist(rvH0, statfunc=statfunc, n=n)
 
     # 3. Compute the p-value
-    tails = tailsof(statsH0, obsstat, alternative=alternative)
+    tails = tailstats(statsH0, obsstat, alternative=alternative)
     pvalue = len(tails) / len(statsH0)
     return statsH0, pvalue
 
@@ -202,7 +204,7 @@ def bootstrap_test_mean(sample, mu0, B=10000):
     bmeans = bootstrap_stat(sample_H0, np.mean, B=B)
     
     # 3. Compute the p-value
-    tails = tailsof(bmeans, obsmean)
+    tails = tailstats(bmeans, obsmean)
     pvalue = len(tails) / len(bmeans)
     return bmeans, pvalue
 
@@ -234,13 +236,13 @@ def permutation_test(sample1, sample2, statfunc, P=10000):
     # 2. Get sampling dist. of `statfunc` under H0
     pstats = []
     for i in range(0, P):
-        resample1, resample2 = resample_under_H0(sample1, sample2)
-        pstat = statfunc(resample1, resample2)
+        rs1, rs2 = resample_under_H0(sample1, sample2)
+        pstat = statfunc(rs1, rs2)
         pstats.append(pstat)
 
     # 3. Compute the p-value
-    tailstats = tailsof(pstats, obsstat)
-    pvalue = len(tailstats) / len(pstats)
+    tails = tailstats(pstats, obsstat)
+    pvalue = len(tails) / len(pstats)
 
     return pstats, pvalue
 
@@ -300,29 +302,28 @@ def ttest_dmeans(sample1, sample2, equal_var=False, alternative="two-sided"):
     """
     # 1. Calculate the observed mean difference between means
     obsd = np.mean(sample1) - np.mean(sample2)
+
     # 2. Calculate the sample size and the standard deviation for each group
     n1, n2 = len(sample1), len(sample1)
     std1, std2 = np.std(sample1, ddof=1), np.std(sample2, ddof=1)
 
+    # 3. Calculate the standard error and degrees of f.
     if equal_var:
-        # 4. Compute the pooled variance and standard error of estimator D
+        # Use pooled variance
         pooled_var = ((n1-1)*std1**2 + (n2-1)*std2**2) / (n1 + n2 - 2)
         pooled_std = np.sqrt(pooled_var)
         seD = pooled_std * np.sqrt(1/n1 + 1/n2)
-        # 5. Obtain the degrees of freedom
         df = n1 + n2 - 2
-
     else:
-        # 4'. Compute the standard error of the estimator D (Welch's t-test)
+        # Compute the standard error using general formula (Welch's t-test)
         seD = np.sqrt(std1**2/n1 + std2**2/n2)
-        # 5'. Obtain the degrees of freedom from the crazy formula
-        df = (std1**2/n1 + std2**2/n2)**2 / \
-            ((std1**2/n1)**2/(n1-1) + (std2**2/n2)**2/(n2-1) )
+        # Use Welch's formula for degrees of freedom
+        df = calcdf(std1, n1, std2, n2)
 
-    # 6. Compute the value of the t-statistic
+    # 4. Compute the value of the t-statistic
     obst = (obsd - 0) / seD
 
-    # Calculate the p-value
+    # 5. Calculate the p-value from the t-distribution
     rvT = tdist(df)
     pvalue = tailprobs(rvT, obst, alternative=alternative)
     return obst, pvalue
@@ -330,11 +331,11 @@ def ttest_dmeans(sample1, sample2, equal_var=False, alternative="two-sided"):
 
 def ttest_paired(sample1, sample2, alternative="two-sided"):
     """
-    Implement `ttest_rel`
+    T-test for comparing relative change in a set of pairded measurements.
     """
     n = len(sample1)
     n2 = len(sample2)
-    assert n == n2, "Paired t-test assumes both saamples are of the same size"
+    assert n == n2, "Paired t-test assumes both saamples are of the same size."
     ds = np.array(sample1) - np.array(sample2)
     std = np.std(ds, ddof=1)
     meand  = np.mean(ds)
@@ -344,3 +345,4 @@ def ttest_paired(sample1, sample2, alternative="two-sided"):
     rvT = tdist(df)
     pvalue = tailprobs(rvT, obst, alternative=alternative)
     return obst, pvalue
+

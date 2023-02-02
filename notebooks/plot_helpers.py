@@ -61,8 +61,32 @@ sns.set_theme(
 
 
 
-# Utils
+# UTILS
 ################################################################################
+
+def nicebins(stats, obs, nbins=60):
+    """
+    Choose bins that are aligned with observation `obs` so that
+    `tailstats(stats,obs)` hist. will cover `stats` hist. cleanly.
+    """
+    stats = np.array(stats)
+    xmin, xbar, xmax = stats.min(), stats.mean(), stats.max()
+    if not xmin <= obs <= xmax:
+        return np.linspace(xmin, xmax, nbins)
+    # Find values we want the bins to be aligned to
+    dev = abs(xbar - obs)
+    x1, x2 = xbar-dev, xbar+dev
+    # Calculate prop. of bins to allocate to middle...
+    propmid = (x2-x1) / (xmax-xmin)
+    # ... and generate the bins for the mid-section
+    nmid = int(nbins * propmid)
+    binsmid = np.linspace(x1, x2, nmid+1)
+    # Generate left and right bins with the same step size as `binsmid``
+    step = (x2-x1) / nmid
+    binsleft = np.sort(np.arange(x1, xmin, -step)[1:])
+    binsright = np.arange(x2, xmax, step)[1:]
+    return np.concatenate([binsleft, binsmid, binsright])
+
 
 def ensure_containing_dir_exists(filepath):
     parent = os.path.join(filepath, os.pardir)
@@ -723,19 +747,3 @@ def plot_sampling_dists_panel(rv, xlims, N=1000, ns=[10,30,100], binwidth=None, 
 
 
 
-# STATISTICS
-################################################################################
-
-
-def bootstrap_stat(sample, statfunc=mean, B=5000):
-    """
-    Compute the sampling dist. of the `statfunc` estimator
-    from `B` bootstrap samples generated from `sample`.
-    """
-    n = len(sample)
-    bstats = []
-    for i in range(0, B):
-        bsample = np.random.choice(sample, n, replace=True)
-        bstat = statfunc(bsample)
-        bstats.append(bstat)
-    return bstats
