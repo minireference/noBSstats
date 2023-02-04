@@ -862,17 +862,31 @@ title="Print to PDF"
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Figures setup</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>  <span class="c1"># needed otherwise `sns.set_theme` doesn&#39;t work</span>
+<span class="kn">from</span> <span class="nn">plot_helpers</span> <span class="kn">import</span> <span class="n">RCPARAMS</span>
+<span class="n">RCPARAMS</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">)})</span>   <span class="c1"># good for screen</span>
+<span class="c1"># RCPARAMS.update({&#39;figure.figsize&#39;: (5, 1.6)})  # good for print</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">set_theme</span><span class="p">(</span>
     <span class="n">context</span><span class="o">=</span><span class="s2">&quot;paper&quot;</span><span class="p">,</span>
     <span class="n">style</span><span class="o">=</span><span class="s2">&quot;whitegrid&quot;</span><span class="p">,</span>
     <span class="n">palette</span><span class="o">=</span><span class="s2">&quot;colorblind&quot;</span><span class="p">,</span>
-    <span class="n">rc</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">)},</span>
+    <span class="n">rc</span><span class="o">=</span><span class="n">RCPARAMS</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="n">blue</span><span class="p">,</span> <span class="n">orange</span>  <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
 
-<span class="n">DESTDIR</span> <span class="o">=</span> <span class="s2">&quot;figures/stats/confidence_intervals&quot;</span>
+<span class="c1"># Useful colors</span>
+<span class="n">snspal</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">()</span>
+<span class="n">blue</span><span class="p">,</span> <span class="n">orange</span><span class="p">,</span> <span class="n">purple</span> <span class="o">=</span> <span class="n">snspal</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">snspal</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">snspal</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
 
+<span class="c1"># High-resolution please</span>
 <span class="o">%</span><span class="k">config</span> InlineBackend.figure_format = &#39;retina&#39;
+
+<span class="c1"># Where to store figures</span>
+<span class="n">DESTDIR</span> <span class="o">=</span> <span class="s2">&quot;figures/stats/confidence_intervals&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Figure size 640x480 with 0 Axes&gt;
 </pre></div>
 </div>
 </div>
@@ -1071,7 +1085,7 @@ title="Print to PDF"
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ALT2. setting `loc` and `scale` parameters on the T-distribution </span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ALT. setting `loc` and `scale` parameters on the T-distribution </span>
 <span class="n">rvTAbar</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">amean</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">sehat</span><span class="p">)</span>
 <span class="n">rvTAbar</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.05</span><span class="p">),</span> <span class="n">rvTAbar</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.95</span><span class="p">)</span>
 </pre></div>
@@ -1085,7 +1099,7 @@ title="Print to PDF"
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ALT1. use the scipy.stats function</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ALT2. use the scipy.stats function</span>
 <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">t</span> <span class="k">as</span> <span class="n">tdist</span>
 <span class="n">tdist</span><span class="o">.</span><span class="n">interval</span><span class="p">(</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">df</span><span class="o">=</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">amean</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">sehat</span><span class="p">)</span>
 </pre></div>
@@ -1099,7 +1113,7 @@ title="Print to PDF"
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ALT2. use the statsmodels function</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ALT3. use the statsmodels function</span>
 <span class="kn">import</span> <span class="nn">statsmodels.stats.api</span> <span class="k">as</span> <span class="nn">sms</span>
 <span class="n">sms</span><span class="o">.</span><span class="n">DescrStatsW</span><span class="p">(</span><span class="n">asample</span><span class="p">)</span><span class="o">.</span><span class="n">tconfint_mean</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
 </pre></div>
@@ -1115,7 +1129,7 @@ title="Print to PDF"
 <h4>Bootstrap confidence interval for the mean<a class="headerlink" href="#bootstrap-confidence-interval-for-the-mean" title="Permalink to this headline">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">48</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
 <span class="n">ameans_boot</span> <span class="o">=</span> <span class="n">bootstrap_stat</span><span class="p">(</span><span class="n">asample</span><span class="p">,</span> <span class="n">statfunc</span><span class="o">=</span><span class="n">mean</span><span class="p">)</span>
 <span class="n">CI_mu_boot</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">ameans_boot</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span>
               <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">ameans_boot</span><span class="p">,</span><span class="mi">95</span><span class="p">)]</span>
@@ -1124,7 +1138,29 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[197.1, 208.20166666666663]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[197.23333333333332, 208.23333333333332]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ALT. use the `bootstrap` function from `scipy.stats`</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">bootstrap</span>
+
+<span class="n">res</span> <span class="o">=</span> <span class="n">bootstrap</span><span class="p">((</span><span class="n">asample</span><span class="p">,),</span>
+                <span class="n">statistic</span><span class="o">=</span><span class="n">mean</span><span class="p">,</span>
+                <span class="n">vectorized</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">confidence_level</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span>
+                <span class="n">n_resamples</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span>
+                <span class="n">method</span><span class="o">=</span><span class="s1">&#39;percentile&#39;</span><span class="p">)</span>
+<span class="p">[</span><span class="n">res</span><span class="o">.</span><span class="n">confidence_interval</span><span class="o">.</span><span class="n">low</span><span class="p">,</span>
+ <span class="n">res</span><span class="o">.</span><span class="n">confidence_interval</span><span class="o">.</span><span class="n">high</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[197.13333333333333, 208.3]
 </pre></div>
 </div>
 </div>

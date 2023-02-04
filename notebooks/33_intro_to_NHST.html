@@ -1141,6 +1141,7 @@ title="Print to PDF"
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot helper functions</span>
+<span class="kn">from</span> <span class="nn">plot_helpers</span> <span class="kn">import</span> <span class="n">nicebins</span>
 <span class="kn">from</span> <span class="nn">plot_helpers</span> <span class="kn">import</span> <span class="n">plot_pdf</span>
 <span class="kn">from</span> <span class="nn">plot_helpers</span> <span class="kn">import</span> <span class="n">savefigure</span>
 </pre></div>
@@ -1150,17 +1151,32 @@ title="Print to PDF"
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Figures setup</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>  <span class="c1"># needed otherwise `sns.set_theme` doesn&#39;t work</span>
+<span class="kn">from</span> <span class="nn">plot_helpers</span> <span class="kn">import</span> <span class="n">RCPARAMS</span>
+<span class="n">RCPARAMS</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">)})</span>   <span class="c1"># good for screen</span>
+<span class="c1"># RCPARAMS.update({&#39;figure.figsize&#39;: (5, 1.6)})  # good for print</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">set_theme</span><span class="p">(</span>
     <span class="n">context</span><span class="o">=</span><span class="s2">&quot;paper&quot;</span><span class="p">,</span>
     <span class="n">style</span><span class="o">=</span><span class="s2">&quot;whitegrid&quot;</span><span class="p">,</span>
     <span class="n">palette</span><span class="o">=</span><span class="s2">&quot;colorblind&quot;</span><span class="p">,</span>
-    <span class="n">rc</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">4</span><span class="p">)},</span>
+    <span class="n">rc</span><span class="o">=</span><span class="n">RCPARAMS</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="n">blue</span><span class="p">,</span> <span class="n">orange</span>  <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
-<span class="n">red</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">(</span><span class="s2">&quot;tab10&quot;</span><span class="p">)[</span><span class="mi">3</span><span class="p">]</span>
-<span class="n">DESTDIR</span> <span class="o">=</span> <span class="s2">&quot;figures/stats/NHST&quot;</span>
 
+<span class="c1"># Useful colors</span>
+<span class="n">snspal</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">()</span>
+<span class="n">blue</span><span class="p">,</span> <span class="n">orange</span><span class="p">,</span> <span class="n">purple</span> <span class="o">=</span> <span class="n">snspal</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">snspal</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">snspal</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+<span class="c1"># red = sns.color_palette(&quot;tab10&quot;)[3]</span>
+
+<span class="c1"># High-resolution please</span>
 <span class="o">%</span><span class="k">config</span> InlineBackend.figure_format = &#39;retina&#39;
+
+<span class="c1"># Where to store figures</span>
+<span class="n">DESTDIR</span> <span class="o">=</span> <span class="s2">&quot;figures/stats/NHST&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Figure size 640x480 with 0 Axes&gt;
 </pre></div>
 </div>
 </div>
@@ -1294,12 +1310,13 @@ is essential to the logic of hypothesis testing.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#######################################################</span>
-<span class="k">def</span> <span class="nf">tailsof</span><span class="p">(</span><span class="n">stats</span><span class="p">,</span> <span class="n">obs</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;two-sided&quot;</span><span class="p">):</span>
+
+<span class="k">def</span> <span class="nf">tailstats</span><span class="p">(</span><span class="n">stats</span><span class="p">,</span> <span class="n">obs</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;two-sided&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Select the subset of the values in `stats` that</span>
 <span class="sd">    equal or more extreme than the observed value `obs`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">assert</span> <span class="n">alternative</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;greater&quot;</span><span class="p">,</span><span class="s2">&quot;less&quot;</span><span class="p">,</span><span class="s2">&quot;two-sided&quot;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">alternative</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;greater&quot;</span><span class="p">,</span> <span class="s2">&quot;less&quot;</span><span class="p">,</span> <span class="s2">&quot;two-sided&quot;</span><span class="p">]</span>
     <span class="n">stats</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">stats</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">alternative</span> <span class="o">==</span> <span class="s2">&quot;greater&quot;</span><span class="p">:</span>
         <span class="n">tails</span> <span class="o">=</span> <span class="n">stats</span><span class="p">[</span><span class="n">stats</span> <span class="o">&gt;=</span> <span class="n">obs</span><span class="p">]</span>
@@ -1323,7 +1340,7 @@ we want to select the observations that are equal to or larger than the observed
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stats</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
 <span class="n">obs</span> <span class="o">=</span> <span class="mi">2</span>
-<span class="n">tailsof</span><span class="p">(</span><span class="n">stats</span><span class="p">,</span> <span class="n">obs</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;greater&quot;</span><span class="p">)</span>
+<span class="n">tailstats</span><span class="p">(</span><span class="n">stats</span><span class="p">,</span> <span class="n">obs</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;greater&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1336,7 +1353,7 @@ we want to select the observations that are equal to or larger than the observed
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obs</span> <span class="o">=</span> <span class="o">-</span><span class="mi">3</span>
-<span class="n">tailsof</span><span class="p">(</span><span class="n">stats</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;less&quot;</span><span class="p">)</span>
+<span class="n">tailstats</span><span class="p">(</span><span class="n">stats</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;less&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1348,7 +1365,8 @@ we want to select the observations that are equal to or larger than the observed
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tailsof</span><span class="p">(</span><span class="n">stats</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;two-sided&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obs</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">tailstats</span><span class="p">(</span><span class="n">stats</span><span class="p">,</span> <span class="n">obs</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;two-sided&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1452,7 +1470,7 @@ theory: <span class="math notranslate nohighlight">\(K \sim \mathcal{N}(1000,10)
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot: ylabel=&#39;Count&#39;&gt;
 </pre></div>
 </div>
-<img alt="../_images/33_intro_to_NHST_37_1.png" src="../_images/33_intro_to_NHST_37_1.png" />
+<img alt="../_images/33_intro_to_NHST_39_1.png" src="../_images/33_intro_to_NHST_39_1.png" />
 </div>
 </div>
 </section>
@@ -1534,26 +1552,26 @@ which describes the variability of the kombucha volumes when the factory is oper
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot: ylabel=&#39;Count&#39;&gt;
 </pre></div>
 </div>
-<img alt="../_images/33_intro_to_NHST_47_1.png" src="../_images/33_intro_to_NHST_47_1.png" />
+<img alt="../_images/33_intro_to_NHST_49_1.png" src="../_images/33_intro_to_NHST_49_1.png" />
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># plot the sampling distribution as a histogram</span>
-<span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">kbars</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">kbars</span><span class="p">),</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">bins</span> <span class="o">=</span> <span class="n">nicebins</span><span class="p">(</span><span class="n">kbars</span><span class="p">,</span> <span class="n">obsmean04</span><span class="p">)</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">kbars</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">)</span>
 
 <span class="c1"># plot red line for the observed statistic</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">obsmean04</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">obsmean04</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
 
 <span class="c1"># plot the values that are equal or more extreme in red</span>
-<span class="n">tails</span> <span class="o">=</span> <span class="n">tailsof</span><span class="p">(</span><span class="n">kbars</span><span class="p">,</span> <span class="n">obsmean04</span><span class="p">)</span>
+<span class="n">tails</span> <span class="o">=</span> <span class="n">tailstats</span><span class="p">(</span><span class="n">kbars</span><span class="p">,</span> <span class="n">obsmean04</span><span class="p">)</span>
 <span class="n">_</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">tails</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/33_intro_to_NHST_49_0.png" src="../_images/33_intro_to_NHST_49_0.png" />
+<img alt="../_images/33_intro_to_NHST_51_0.png" src="../_images/33_intro_to_NHST_51_0.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1664,20 +1682,20 @@ but how big is this deviation?</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># plot the sampling distribution as a histogram</span>
-<span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">kbars</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">kbars</span><span class="p">),</span> <span class="mi">51</span><span class="p">)</span>
+<span class="n">bins</span> <span class="o">=</span> <span class="n">nicebins</span><span class="p">(</span><span class="n">kbars</span><span class="p">,</span> <span class="n">obsmean01</span><span class="p">)</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">kbars</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">)</span>
 
 <span class="c1"># plot red line for the observed statistic</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">obsmean01</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">obsmean01</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
 
 <span class="c1"># plot the values that are equal or more extreme in red</span>
-<span class="n">tails</span> <span class="o">=</span> <span class="n">tailsof</span><span class="p">(</span><span class="n">kbars</span><span class="p">,</span> <span class="n">obsmean01</span><span class="p">)</span>
+<span class="n">tails</span> <span class="o">=</span> <span class="n">tailstats</span><span class="p">(</span><span class="n">kbars</span><span class="p">,</span> <span class="n">obsmean01</span><span class="p">)</span>
 <span class="n">_</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">tails</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/33_intro_to_NHST_62_0.png" src="../_images/33_intro_to_NHST_62_0.png" />
+<img alt="../_images/33_intro_to_NHST_64_0.png" src="../_images/33_intro_to_NHST_64_0.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1720,7 +1738,7 @@ which sample <code class="docutils literal notranslate"><span class="pre">ksampl
     <span class="n">xbars</span> <span class="o">=</span> <span class="n">gen_sampling_dist</span><span class="p">(</span><span class="n">rvXH0</span><span class="p">,</span> <span class="n">statfunc</span><span class="o">=</span><span class="n">mean</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
 
     <span class="c1"># 3. Compute the p-value</span>
-    <span class="n">tails</span> <span class="o">=</span> <span class="n">tailsof</span><span class="p">(</span><span class="n">xbars</span><span class="p">,</span> <span class="n">obsmean</span><span class="p">)</span>
+    <span class="n">tails</span> <span class="o">=</span> <span class="n">tailstats</span><span class="p">(</span><span class="n">xbars</span><span class="p">,</span> <span class="n">obsmean</span><span class="p">)</span>
     <span class="n">pvalue</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tails</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">xbars</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">xbars</span><span class="p">,</span> <span class="n">pvalue</span>
 </pre></div>
@@ -1818,20 +1836,20 @@ which sample <code class="docutils literal notranslate"><span class="pre">ksampl
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kvars</span> <span class="o">=</span> <span class="n">gen_sampling_dist</span><span class="p">(</span><span class="n">rvK</span><span class="p">,</span> <span class="n">statfunc</span><span class="o">=</span><span class="n">var</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 
 <span class="c1"># plot the sampling distribution as a histogram</span>
-<span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">kvars</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">kvars</span><span class="p">),</span> <span class="mi">51</span><span class="p">)</span>
+<span class="n">bins</span> <span class="o">=</span> <span class="n">nicebins</span><span class="p">(</span><span class="n">kvars</span><span class="p">,</span> <span class="n">obsvar02</span><span class="p">)</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">kvars</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">)</span>
 
 <span class="c1"># plot red line for the observed statistic</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">obsvar02</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">obsvar02</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
 
 <span class="c1"># plot the values that are equal or more extreme in red</span>
-<span class="n">tails</span> <span class="o">=</span> <span class="n">tailsof</span><span class="p">(</span><span class="n">kvars</span><span class="p">,</span> <span class="n">obsvar02</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;greater&quot;</span><span class="p">)</span>
+<span class="n">tails</span> <span class="o">=</span> <span class="n">tailstats</span><span class="p">(</span><span class="n">kvars</span><span class="p">,</span> <span class="n">obsvar02</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;greater&quot;</span><span class="p">)</span>
 <span class="n">_</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">tails</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/33_intro_to_NHST_78_0.png" src="../_images/33_intro_to_NHST_78_0.png" />
+<img alt="../_images/33_intro_to_NHST_80_0.png" src="../_images/33_intro_to_NHST_80_0.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1883,20 +1901,20 @@ which sample <code class="docutils literal notranslate"><span class="pre">ksampl
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kvars40</span> <span class="o">=</span> <span class="n">gen_sampling_dist</span><span class="p">(</span><span class="n">rvK</span><span class="p">,</span> <span class="n">statfunc</span><span class="o">=</span><span class="n">var</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
 
 <span class="c1"># plot the sampling distribution as a histogram</span>
-<span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">kvars40</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">kvars40</span><span class="p">),</span> <span class="mi">51</span><span class="p">)</span>
+<span class="n">bins</span> <span class="o">=</span> <span class="n">nicebins</span><span class="p">(</span><span class="n">kvars40</span><span class="p">,</span> <span class="n">obsvar08</span><span class="p">)</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">kvars40</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">)</span>
 
 <span class="c1"># plot red line for the observed statistic</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">obsvar08</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">obsvar08</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
 
 <span class="c1"># plot the values that are equal or more extreme in red</span>
-<span class="n">tails</span> <span class="o">=</span> <span class="n">tailsof</span><span class="p">(</span><span class="n">kvars40</span><span class="p">,</span> <span class="n">obsvar08</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;greater&quot;</span><span class="p">)</span>
+<span class="n">tails</span> <span class="o">=</span> <span class="n">tailstats</span><span class="p">(</span><span class="n">kvars40</span><span class="p">,</span> <span class="n">obsvar08</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;greater&quot;</span><span class="p">)</span>
 <span class="n">_</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">tails</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/33_intro_to_NHST_84_0.png" src="../_images/33_intro_to_NHST_84_0.png" />
+<img alt="../_images/33_intro_to_NHST_86_0.png" src="../_images/33_intro_to_NHST_86_0.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1961,7 +1979,7 @@ Now let’s estimate the effect size <span class="math notranslate nohighlight">
     <span class="n">statsH0</span> <span class="o">=</span> <span class="n">gen_sampling_dist</span><span class="p">(</span><span class="n">rvH0</span><span class="p">,</span> <span class="n">statfunc</span><span class="o">=</span><span class="n">statfunc</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
 
     <span class="c1"># 3. Compute the p-value</span>
-    <span class="n">tails</span> <span class="o">=</span> <span class="n">tailsof</span><span class="p">(</span><span class="n">statsH0</span><span class="p">,</span> <span class="n">obsstat</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="n">alternative</span><span class="p">)</span>
+    <span class="n">tails</span> <span class="o">=</span> <span class="n">tailstats</span><span class="p">(</span><span class="n">statsH0</span><span class="p">,</span> <span class="n">obsstat</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="n">alternative</span><span class="p">)</span>
     <span class="n">pvalue</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tails</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">statsH0</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">statsH0</span><span class="p">,</span> <span class="n">pvalue</span>
 </pre></div>
@@ -2004,7 +2022,7 @@ Now let’s estimate the effect size <span class="math notranslate nohighlight">
     <span class="n">bmeans</span> <span class="o">=</span> <span class="n">bootstrap_stat</span><span class="p">(</span><span class="n">sample_H0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">,</span> <span class="n">B</span><span class="o">=</span><span class="n">B</span><span class="p">)</span>
     
     <span class="c1"># 3. Compute the p-value</span>
-    <span class="n">tails</span> <span class="o">=</span> <span class="n">tailsof</span><span class="p">(</span><span class="n">bmeans</span><span class="p">,</span> <span class="n">obsmean</span><span class="p">)</span>
+    <span class="n">tails</span> <span class="o">=</span> <span class="n">tailstats</span><span class="p">(</span><span class="n">bmeans</span><span class="p">,</span> <span class="n">obsmean</span><span class="p">)</span>
     <span class="n">pvalue</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tails</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">bmeans</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">bmeans</span><span class="p">,</span> <span class="n">pvalue</span>
 </pre></div>
@@ -2087,10 +2105,10 @@ Now let’s estimate the effect size <span class="math notranslate nohighlight">
 <span class="c1"># sns.histplot(kbars_boot, bins=bins)</span>
 <span class="c1"># # plot red line for the observed statistic</span>
 <span class="c1"># obsmean05 = mean(ksample05)</span>
-<span class="c1"># plt.axvline(obsmean05, color=&#39;r&#39;)</span>
+<span class="c1"># plt.axvline(obsmean05, color=&quot;red&quot;)</span>
 
 <span class="c1"># # plot the values that are equal or more extreme in red</span>
-<span class="c1"># tails = tailsof(kbars_boot, obsmean05)</span>
+<span class="c1"># tails = tailstats(kbars_boot, obsmean05)</span>
 <span class="c1"># _ = sns.histplot(tails, bins=bins, color=&quot;red&quot;)</span>
 </pre></div>
 </div>
@@ -2186,8 +2204,8 @@ We can then compute the value of the <code class="docutils literal notranslate">
         <span class="n">pstats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pstat</span><span class="p">)</span>
 
     <span class="c1"># 3. Compute the p-value</span>
-    <span class="n">tailstats</span> <span class="o">=</span> <span class="n">tailsof</span><span class="p">(</span><span class="n">pstats</span><span class="p">,</span> <span class="n">obsstat</span><span class="p">)</span>
-    <span class="n">pvalue</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tailstats</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">pstats</span><span class="p">)</span>
+    <span class="n">tails</span> <span class="o">=</span> <span class="n">tailstats</span><span class="p">(</span><span class="n">pstats</span><span class="p">,</span> <span class="n">obsstat</span><span class="p">)</span>
+    <span class="n">pvalue</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tails</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">pstats</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">pstats</span><span class="p">,</span> <span class="n">pvalue</span>
 
@@ -2344,19 +2362,20 @@ falls within this distribution.</p></li>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># plot the sampling distribution in blue</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">dstats</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">bins</span> <span class="o">=</span> <span class="n">nicebins</span><span class="p">(</span><span class="n">dstats</span><span class="p">,</span> <span class="n">dhat</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">dstats</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">)</span>
 
 <span class="c1"># plot red line for the observed statistic</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">dhat</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">dhat</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
 
 <span class="c1"># plot the values that are equal or more extreme in red</span>
-<span class="n">tailstats</span> <span class="o">=</span> <span class="n">tailsof</span><span class="p">(</span><span class="n">dstats</span><span class="p">,</span> <span class="n">dhat</span><span class="p">)</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">tailstats</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+<span class="n">tails</span> <span class="o">=</span> <span class="n">tailstats</span><span class="p">(</span><span class="n">dstats</span><span class="p">,</span> <span class="n">dhat</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">tails</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/33_intro_to_NHST_130_0.png" src="../_images/33_intro_to_NHST_130_0.png" />
+<img alt="../_images/33_intro_to_NHST_132_0.png" src="../_images/33_intro_to_NHST_132_0.png" />
 </div>
 </div>
 <section id="discussion">
@@ -2430,19 +2449,82 @@ because we use randomness as part of the calculation.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># plot the sampling distribution in blue</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">pstats</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">bins</span> <span class="o">=</span> <span class="n">nicebins</span><span class="p">(</span><span class="n">dstats</span><span class="p">,</span> <span class="n">dhat</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">pstats</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">)</span>
 
 <span class="c1"># plot red line for the observed statistic</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">dhat</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">dhat</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
 
 <span class="c1"># plot the values that are equal or more extreme in red</span>
-<span class="n">tailstats</span> <span class="o">=</span> <span class="n">tailsof</span><span class="p">(</span><span class="n">pstats</span><span class="p">,</span> <span class="n">dhat</span><span class="p">)</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">tailstats</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+<span class="n">tails</span> <span class="o">=</span> <span class="n">tailstats</span><span class="p">(</span><span class="n">pstats</span><span class="p">,</span> <span class="n">dhat</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">tails</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/33_intro_to_NHST_146_0.png" src="../_images/33_intro_to_NHST_146_0.png" />
+<img alt="../_images/33_intro_to_NHST_148_0.png" src="../_images/33_intro_to_NHST_148_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">tails</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([-3.28770739, -3.05542986, -3.01319759, -2.97096531, -2.92873303,
+       -2.90761689, -2.90761689, -2.73868778, -2.71757164, -2.71757164,
+       -2.71757164, -2.65422323, -2.65422323, -2.59087481, -2.54864253,
+       -2.5275264 , -2.50641026, -2.50641026, -2.50641026, -2.48529412,
+       -2.48529412, -2.48529412, -2.46417798, -2.46417798, -2.46417798,
+       -2.46417798, -2.44306184, -2.44306184, -2.4219457 , -2.4219457 ,
+       -2.4219457 , -2.40082956, -2.40082956, -2.40082956, -2.40082956,
+       -2.37971342, -2.35859729, -2.35859729, -2.35859729, -2.33748115,
+       -2.33748115, -2.31636501, -2.31636501, -2.31636501, -2.31636501,
+       -2.29524887, -2.29524887, -2.27413273, -2.27413273, -2.27413273,
+       -2.27413273, -2.25301659, -2.25301659, -2.25301659, -2.25301659,
+       -2.25301659, -2.25301659, -2.25301659, -2.25301659, -2.25301659,
+       -2.25301659, -2.25301659, -2.21078431, -2.21078431, -2.21078431,
+        2.22360483,  2.22360483,  2.22360483,  2.22360483,  2.24472097,
+        2.24472097,  2.2658371 ,  2.2658371 ,  2.2658371 ,  2.2658371 ,
+        2.2658371 ,  2.2658371 ,  2.2658371 ,  2.28695324,  2.28695324,
+        2.28695324,  2.28695324,  2.30806938,  2.30806938,  2.30806938,
+        2.30806938,  2.32918552,  2.32918552,  2.32918552,  2.32918552,
+        2.35030166,  2.35030166,  2.35030166,  2.3714178 ,  2.3714178 ,
+        2.39253394,  2.39253394,  2.41365008,  2.41365008,  2.41365008,
+        2.41365008,  2.43476621,  2.43476621,  2.43476621,  2.45588235,
+        2.47699849,  2.47699849,  2.47699849,  2.49811463,  2.49811463,
+        2.54034691,  2.54034691,  2.56146305,  2.60369532,  2.60369532,
+        2.62481146,  2.62481146,  2.62481146,  2.6459276 ,  2.6459276 ,
+        2.68815988,  2.68815988,  2.70927602,  2.77262443,  2.89932127,
+        2.89932127,  2.94155354,  2.98378582,  3.0260181 ,  3.06825038,
+        3.06825038,  3.08936652,  3.13159879,  3.15271493,  3.15271493,
+        3.59615385])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bins</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([-2.73979411, -2.63850025, -2.53720639, -2.43591254, -2.33461868,
+       -2.23332483, -2.13203097, -2.03073712, -1.92944326, -1.8281494 ,
+       -1.72685555, -1.62556169, -1.52426784, -1.42297398, -1.32168012,
+       -1.22038627, -1.11909241, -1.01779856, -0.9165047 , -0.81521085,
+       -0.71391699, -0.61262313, -0.51132928, -0.41003542, -0.30874157,
+       -0.20744771, -0.10615386, -0.00486   ,  0.09643386,  0.19772771,
+        0.29902157,  0.40031542,  0.50160928,  0.60290313,  0.70419699,
+        0.80549085,  0.9067847 ,  1.00807856,  1.10937241,  1.21066627,
+        1.31196012,  1.41325398,  1.51454784,  1.61584169,  1.71713555,
+        1.8184294 ,  1.91972326,  2.02101712,  2.12231097,  2.22360483,
+        2.32489868,  2.42619254,  2.52748639,  2.62878025,  2.73007411,
+        2.83136796,  2.93266182,  3.03395567,  3.13524953])
+</pre></div>
+</div>
 </div>
 </div>
 <div class="cell docutils container">
@@ -2479,7 +2561,9 @@ because we use randomness as part of the calculation.</p>
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
 <span class="n">ts</span> <span class="o">=</span> <span class="n">rvT</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
 
-<span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">100</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+
+<span class="n">bins</span> <span class="o">=</span> <span class="n">nicebins</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">nbins</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
 
 <span class="k">with</span> <span class="n">plt</span><span class="o">.</span><span class="n">rc_context</span><span class="p">({</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:(</span><span class="mi">7</span><span class="p">,</span><span class="mi">2</span><span class="p">)}),</span> <span class="n">sns</span><span class="o">.</span><span class="n">axes_style</span><span class="p">(</span><span class="s2">&quot;ticks&quot;</span><span class="p">):</span>
     <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">,</span> <span class="n">ax3</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -2495,9 +2579,9 @@ because we use randomness as part of the calculation.</p>
     <span class="n">ax1</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
     <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
     <span class="c1"># highlight the left tail</span>
-    <span class="n">tailstats1</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">ts</span> <span class="k">if</span> <span class="n">t</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">tailstats1</span> <span class="o">=</span> <span class="n">tailstats</span><span class="p">(</span><span class="n">ts</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;less&quot;</span><span class="p">)</span>
     <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">tailstats1</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
-    <span class="n">ax1</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">200</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$\hat{\theta}_{\mathbf</span><span class="si">{x}</span><span class="s2">}$&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">300</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$\hat{\theta}_{\mathbf</span><span class="si">{x}</span><span class="s2">}$&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
 
 
     <span class="c1"># TWO-TAILED</span>
@@ -2511,8 +2595,8 @@ because we use randomness as part of the calculation.</p>
     <span class="c1"># highlight the left and right tails</span>
     <span class="n">tailstats2</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">ts</span> <span class="k">if</span> <span class="n">t</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="mi">2</span> <span class="ow">or</span> <span class="n">t</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">]</span>
     <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">tailstats2</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
-    <span class="n">ax2</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">200</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$-|\hat{\theta}_{\mathbf</span><span class="si">{x}</span><span class="s2">}|$&quot;</span><span class="p">,</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
-    <span class="n">ax2</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">200</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$|\hat{\theta}_{\mathbf</span><span class="si">{x}</span><span class="s2">}|$&quot;</span><span class="p">,</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">300</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$-|\hat{\theta}_{\mathbf</span><span class="si">{x}</span><span class="s2">}|$&quot;</span><span class="p">,</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">300</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$|\hat{\theta}_{\mathbf</span><span class="si">{x}</span><span class="s2">}|$&quot;</span><span class="p">,</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
 
 
     <span class="c1"># RIGHT</span>
@@ -2526,7 +2610,7 @@ because we use randomness as part of the calculation.</p>
     <span class="c1"># highlight the right tail</span>
     <span class="n">tailstats3</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">ts</span> <span class="k">if</span> <span class="n">t</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">]</span>
     <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">tailstats3</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
-    <span class="n">ax3</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">200</span><span class="p">,</span> <span class="s2">&quot;$\hat{</span><span class="se">\\</span><span class="s2">theta}_{\mathbf</span><span class="si">{x}</span><span class="s2">}$&quot;</span><span class="p">,</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">300</span><span class="p">,</span> <span class="s2">&quot;$\hat{</span><span class="se">\\</span><span class="s2">theta}_{\mathbf</span><span class="si">{x}</span><span class="s2">}$&quot;</span><span class="p">,</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
 
 <span class="n">savefigure</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
 </pre></div>
@@ -2539,7 +2623,7 @@ because we use randomness as part of the calculation.</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/NHST/panel_hist_p-values_left_twotailed_right_tests.png
 </pre></div>
 </div>
-<img alt="../_images/33_intro_to_NHST_154_2.png" src="../_images/33_intro_to_NHST_154_2.png" />
+<img alt="../_images/33_intro_to_NHST_157_2.png" src="../_images/33_intro_to_NHST_157_2.png" />
 </div>
 </div>
 </section>
@@ -2757,7 +2841,7 @@ the confidence interval for the difference between population means <span class=
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot: ylabel=&#39;Count&#39;&gt;
 </pre></div>
 </div>
-<img alt="../_images/33_intro_to_NHST_179_1.png" src="../_images/33_intro_to_NHST_179_1.png" />
+<img alt="../_images/33_intro_to_NHST_181_1.png" src="../_images/33_intro_to_NHST_181_1.png" />
 </div>
 </div>
 <div class="cell docutils container">
