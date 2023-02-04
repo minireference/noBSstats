@@ -170,7 +170,7 @@ def savefigure(obj, filename):
 # Continuous random variables
 ################################################################################
 
-def plot_pdf(rv, xlims=None, ylims=None, rv_name="X", ax=None, title=None, label=None, linestyle='solid', **kwargs):
+def plot_pdf(rv, xlims=None, ylims=None, rv_name="X", ax=None, title=None, **kwargs):
     """
     Plot the pdf of the continuous random variable `rv` over the `xlims`.
     """
@@ -189,7 +189,7 @@ def plot_pdf(rv, xlims=None, ylims=None, rv_name="X", ax=None, title=None, label
 
     # Compute the probability mass function and plot it
     fXs = rv.pdf(xs)
-    sns.lineplot(x=xs, y=fXs, ax=ax, label=label, linestyle=linestyle, **kwargs)
+    sns.lineplot(x=xs, y=fXs, ax=ax, **kwargs)
     ax.set_xlabel(rv_name.lower())
     ax.set_ylabel(f"$f_{{{rv_name}}}$")
     if ylims:
