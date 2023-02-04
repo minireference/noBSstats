@@ -24,13 +24,9 @@ from scipy.stats import norm
 
 
 
-# Figure settings
-# sns.set(color_codes=True)                               # turn on Seaborn styles
-# plt.rc('text', usetex=True)                             # enable latex for labels
-# plt.rc('font', family='serif', serif=['Palatino'])      # set font to Minireference style guide
-rcparams = {
-    'figure.figsize': (7,4),
-    #     'figure.dpi': 300,
+# Global figures settings (reused in all notebooks)
+RCPARAMS = {
+    'figure.figsize': (7,4),     # overriden on base-by-case basis
     'font.serif': ['Palatino',   # as per Minireference Co. style guide
                    # backup fonts in case the Palatino is not available
                    'DejaVu Serif', 'Bitstream Vera Serif',
@@ -39,6 +35,7 @@ rcparams = {
                    'Bookman', 'Nimbus Roman No9 L', 'Times New Roman',
                    'Times', 'Charter', 'serif'],
     'font.family': 'serif',    
+    #     'figure.dpi': 300,
     #     'font.size': 20,
     #     'figure.titlesize': 16,
     #     'axes.titlesize':22,
@@ -48,16 +45,29 @@ rcparams = {
     #     'legend.fontsize': 16,
     #     'legend.title_fontsize': 18,
 }
-sns.set_theme(
-    context="paper",
-    style="whitegrid",
-    palette="colorblind",  # ALT sns.color_palette('Blues', 4)
-    rc=rcparams,
-)
 
+# EACH NOTEBOOK SHOULD INCLUDE SOMETHING LIKE
 
+# # Figures setup
+# DESTDIR = "figures/stats/confidence_intervals"
+# plt.clf()  # needed otherwise `sns.set_theme` doesn't work
+# from plot_helpers import RCPARAMS
+# RCPARAMS.update({'figure.figsize': (10, 3)})   # good for screen
+# # RCPARAMS.update({'figure.figsize': (5, 1.6)})  # good for print
+# sns.set_theme(
+#     context="paper",
+#     style="whitegrid",
+#     palette="colorblind",
+#     rc=RCPARAMS,
+# )
+# # High-resolution please
+# %config InlineBackend.figure_format = 'retina'
 
-
+# Not used:
+#    sns.set(color_codes=True)              # turn on Seaborn styles
+#    plt.rc('text', usetex=True)            # enable latex for labels
+#    ALT palette="colorblind"
+#    ALT sns.color_palette('Blues', 4)
 
 
 
@@ -160,7 +170,7 @@ def savefigure(obj, filename):
 # Continuous random variables
 ################################################################################
 
-def plot_pdf(rv, xlims=None, ylims=None, rv_name="X", ax=None, title=None, label=None, linestyle='solid'):
+def plot_pdf(rv, xlims=None, ylims=None, rv_name="X", ax=None, title=None, label=None, linestyle='solid', **kwargs):
     """
     Plot the pdf of the continuous random variable `rv` over the `xlims`.
     """
@@ -179,7 +189,7 @@ def plot_pdf(rv, xlims=None, ylims=None, rv_name="X", ax=None, title=None, label
 
     # Compute the probability mass function and plot it
     fXs = rv.pdf(xs)
-    sns.lineplot(x=xs, y=fXs, ax=ax, label=label, linestyle=linestyle)
+    sns.lineplot(x=xs, y=fXs, ax=ax, label=label, linestyle=linestyle, **kwargs)
     ax.set_xlabel(rv_name.lower())
     ax.set_ylabel(f"$f_{{{rv_name}}}$")
     if ylims:
