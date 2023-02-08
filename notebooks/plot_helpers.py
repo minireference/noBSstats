@@ -22,6 +22,10 @@ from scipy.stats import expon      # hide loc=0 parameter
 from scipy.stats import gamma      # hide loc=0 parameter
 from scipy.stats import norm
 
+# Useful colors
+snspal = sns.color_palette()
+blue, orange, purple = snspal[0], snspal[1], snspal[4]
+
 
 
 # Global figures settings (reused in all notebooks)
@@ -613,14 +617,15 @@ def gen_samples(rv, n=30, N=10):
     Returns a pd.DataFrame with `N` columns containing the samples.
     """
     samples = {}
-    for i in range(0, N):
-        column_name = "sample" + str(i)
+    for i in range(1, N+1):
+        column_name = "sample " + str(i)
         samples[column_name] = rv.rvs(n)
     samples_df = pd.DataFrame(samples)
     return samples_df
 
 
-def plot_samples(samples_df, ax=None, xlims=None, filename=None):
+def plot_samples(samples_df, ax=None, xlims=None, filename=None,
+                 showmean=True, showstd=False):
     """
     Draw a strip plots for each of the columns in `samples_df`.
     Annotate each strip plot with the mean for each sample.
@@ -637,11 +642,18 @@ def plot_samples(samples_df, ax=None, xlims=None, filename=None):
     pal = "dark:b"
     sns.stripplot(samples_df, orient="h", palette=pal, ax=ax)
 
-    # 3. Add diamond-shaped marker to indicate mean in each sample
-    for i in range(0, N):
-        column_name = "sample" + str(i)
+    # 3. Add annotations 
+    for i in range(1, N+1):
+        column_name = "sample " + str(i)
         xbar_i = samples_df[column_name].mean()
-        ax.scatter(xbar_i, i, marker="D", s=75, color="r", zorder=10)
+        if showmean:
+            # diamond-shaped marker to indicate mean in each sample
+            ax.scatter(xbar_i, i-1, marker="D", s=45, color=orange, zorder=10)
+        if showstd:
+            # vertical bar to indicate xbar-std and xbar+std in each sample
+            xstd_i = samples_df[column_name].std()
+            stdbars_i = [xbar_i - xstd_i, xbar_i + xstd_i]
+            ax.scatter(stdbars_i, [i-1,i-1], marker="|", s=70, color=orange, zorder=10)
 
     # 4. Handle keyword arguments
     if xlims:
@@ -652,6 +664,7 @@ def plot_samples(samples_df, ax=None, xlims=None, filename=None):
         fig.savefig(basename + '.pdf', dpi=300, bbox_inches="tight", pad_inches=0.02)
         fig.savefig(basename + '.png', dpi=300, bbox_inches="tight", pad_inches=0.02)
 
+    return ax
 
 
 
@@ -668,7 +681,8 @@ def gen_sampling_dist(rv, statfunc=np.mean, n=30, N=1000):
     return stats
 
 
-def plot_sampling_dist(stats, label=None, xlims=None, binwidth=None, ax=None, filename=None):
+def plot_sampling_dist(stats, label=None, xlims=None, ax=None,
+                       binwidth=None, scatter="mean", filename=None):
     """
     Plot a combined histogram and strip plot of the values in `stats`.
     """
@@ -687,7 +701,12 @@ def plot_sampling_dist(stats, label=None, xlims=None, binwidth=None, ax=None, fi
 
     # 3. add the scatter plot of `stats` below
     y_offset = 1/(100*binwidth)
-    sns.scatterplot(x=stats, y=-y_offset, ax=ax, color="r", marker="D", s=30, alpha=0.1)
+    if scatter == "mean":
+        sns.scatterplot(x=stats, y=-y_offset, ax=ax, color=orange, marker="D", s=30, alpha=0.1)
+    elif scatter == "std":
+        sns.scatterplot(x=[0.0], y=-y_offset, color=orange, marker="D", s=30, alpha=0.9)
+        sns.scatterplot(x=stats, y=-y_offset, ax=ax, color=orange, marker="|", s=30, alpha=0.1)
+        
 
     # 4. Handle keyword arguments
     if xlims:
