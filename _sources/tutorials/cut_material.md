@@ -1,4 +1,9 @@
 
+				When using the cloud notebooks,
+				you should download the notebook to your computer at the end of the session
+				if you want to keep a copy of your calculations/explorations.
+
+
 
 ### Example 3
 
