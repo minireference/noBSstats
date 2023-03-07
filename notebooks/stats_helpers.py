@@ -44,28 +44,28 @@ def calcdf(stdX, n, stdY, m):
 # TAIL CALCULATION UTILS
 ################################################################################
 
-def tailstats(stats, obs, alternative="two-sided"):
+def tailvalues(values, obs, alternative="two-sided"):
     """
-    Select the subset of the values in `stats` that
-    equal or more extreme than the observed value `obs`.
+    Select the subset of the elements in list `values` that
+    are equal or more extreme than the observed value `obs`.
     """
     assert alternative in ["greater", "less", "two-sided"]
-    stats = np.array(stats)
+    values = np.array(values)
     if alternative == "greater":
-        tails = stats[stats >= obs]
+        tails = values[values >= obs]
     elif alternative == "less":
-        tails = stats[stats <= obs]
+        tails = values[values <= obs]
     elif alternative == "two-sided":
-        statsmean = np.mean(stats)
-        dev = abs(statsmean - obs)
-        tails = stats[abs(stats-statsmean) >= dev]
+        mean = np.mean(values)
+        dev = abs(mean - obs)
+        tails = values[abs(values-mean) >= dev]
     return tails
 
 
 def tailprobs(rv, obs, alternative="two-sided"):
     """
-    Calculate the probability of all outcomes of the random variable `rv` that
-    equally or more extreme than the observed value `obs`.
+    Calculate the probability of all outcomes of the random variable `rv`
+    that are equal or more extreme than the observed value `obs`.
     """
     assert alternative in ["greater", "less", "two-sided"]
     if alternative == "greater":
@@ -100,10 +100,10 @@ def ztest(sample, mu0, sigma0, alternative="two-sided"):
     return obsz, pval
 
 
-def chi2test(sample, sigma0, alternative="greater"):    # TODO: rename chi2test_var
+def chi2test_var(sample, sigma0, alternative="greater"):
     """
-    Run chi2 test to detect sample variance deviation 
-    from the known population variance `sigma0`.
+    Run chi2 test to detect if a sample variance deviation
+    from the known population variance `sigma0` exists.
     """
     n = len(sample)
     s2 = np.var(sample, ddof=1)
@@ -119,17 +119,17 @@ def chi2test(sample, sigma0, alternative="greater"):    # TODO: rename chi2test_
 # SIMULATION TEST (Section 3.3)
 ################################################################################
 
-def gen_sampling_dist(rv, statfunc, n, N=10000):
+def gen_sampling_dist(rv, estfunc, n, N=10000):
     """
-    Simulate `N` samples of size `n` from the RV `rv`
-    to generate the sampling distribution of `statfunc`.
+    Simulate `N` samples of size `n` from the random variable `rv` to
+    generate the sampling distribution of the estimator `estfunc`.
     """
-    stats = []
+    estimates = []
     for i in range(0, N):
         sample = rv.rvs(n)
-        stat = statfunc(sample)
-        stats.append(stat)
-    return stats
+        estimate = estfunc(sample)
+        estimates.append(estimate)
+    return estimates
 
 
 def simulation_test_mean(sample, mu0, sigma0, N=10000):
@@ -143,30 +143,30 @@ def simulation_test_mean(sample, mu0, sigma0, N=10000):
 
     # 2. Get sampling distribution of mean under H0
     rvXH0 = norm(mu0, sigma0)
-    xbars = gen_sampling_dist(rvXH0, statfunc=mean, n=n)
+    xbars = gen_sampling_dist(rvXH0, estfunc=mean, n=n)
 
     # 3. Compute the p-value
-    tails = tailstats(xbars, obsmean)
+    tails = tailvalues(xbars, obsmean)
     pvalue = len(tails) / len(xbars)
     return xbars, pvalue
 
 
-def simulation_test(sample, rvH0, statfunc, N=10000, alternative="two-sided"):
+def simulation_test(sample, rvH0, estfunc, N=10000, alternative="two-sided"):
     """
-    Compute the p-value of `statfunc(sample)` under H0
+    Compute the p-value of the observed estimate `estfunc(sample)` under H0
     described by the random variable `rvH0`.
     """
     # 1. Compute the observed value of the mean for the sample
-    obsstat = statfunc(sample)
+    obsest = estfunc(sample)
     n = len(sample)
 
     # 2. Obtain the sampling distribution of the mean under H0
-    statsH0 = gen_sampling_dist(rvH0, statfunc=statfunc, n=n)
+    sampl_dist_H0 = gen_sampling_dist(rvH0, estfunc=estfunc, n=n)
 
     # 3. Compute the p-value
-    tails = tailstats(statsH0, obsstat, alternative=alternative)
-    pvalue = len(tails) / len(statsH0)
-    return statsH0, pvalue
+    tails = tailvalues(sampl_dist_H0, obsest, alternative=alternative)
+    pvalue = len(tails) / len(sampl_dist_H0)
+    return sampl_dist_H0, pvalue
 
 
 
@@ -174,18 +174,18 @@ def simulation_test(sample, rvH0, statfunc, N=10000, alternative="two-sided"):
 # BOOTSTRAP TEST FOR THE MEAN
 ################################################################################
 
-def bootstrap_stat(sample, statfunc, B=10000):
+def gen_boot_dist(sample, estfunc, B=10000):
     """
-    Compute the sampling distribiton of `statfunc`
-    from `B` bootstrap samples generated from `sample`.
+    Generate estimates from the sampling distribiton of the estimator `estfunc`
+    based on `B` bootstrap samples (sampling with replacement) from `sample`.
     """
     n = len(sample)
-    bstats = []
+    bestimates = []
     for i in range(0, B):
         bsample = np.random.choice(sample, n, replace=True)
-        bstat = statfunc(bsample)
-        bstats.append(bstat)
-    return bstats
+        bestimate = estfunc(bsample)
+        bestimates.append(bestimate)
+    return bestimates
 
 
 def bootstrap_test_mean(sample, mu0, B=10000):
@@ -200,10 +200,10 @@ def bootstrap_test_mean(sample, mu0, B=10000):
     # 2. Get sampling distribution of the mean under H0
     #    by "shifting" the sample so its mean is `mu0`
     sample_H0 = np.array(sample) - obsmean + mu0
-    bmeans = bootstrap_stat(sample_H0, np.mean, B=B)
+    bmeans = gen_boot_dist(sample_H0, np.mean, B=B)
     
     # 3. Compute the p-value
-    tails = tailstats(bmeans, obsmean)
+    tails = tailvalues(bmeans, obsmean)
     pvalue = len(tails) / len(bmeans)
     return bmeans, pvalue
 
@@ -224,26 +224,26 @@ def resample_under_H0(sample1, sample2):
     return resample1, resample2
 
 
-def permutation_test(sample1, sample2, statfunc, P=10000):
+def permutation_test(sample1, sample2, estfunc, P=10000):
     """
-    Compute the p-value of the observed `statfunc(sample1, sample2)` under
-    the null hypothesis where the group membership is randomized.
+    Compute the p-value of the observed estimate `estfunc(sample1,sample2)`
+    under the null hypothesis where the group membership is randomized.
     """
-    # 1. Compute the observed value of `statfunc`
-    obsstat = statfunc(sample1, sample2)
+    # 1. Compute the observed value of `estfunc`
+    obsest = estfunc(sample1, sample2)
 
-    # 2. Get sampling dist. of `statfunc` under H0
-    pstats = []
+    # 2. Get sampling dist. of `estfunc` under H0
+    pestimates = []
     for i in range(0, P):
         rs1, rs2 = resample_under_H0(sample1, sample2)
-        pstat = statfunc(rs1, rs2)
-        pstats.append(pstat)
+        pestimate = estfunc(rs1, rs2)
+        pestimates.append(pestimate)
 
     # 3. Compute the p-value
-    tails = tailstats(pstats, obsstat)
-    pvalue = len(tails) / len(pstats)
+    tails = tailvalues(pestimates, obsest)
+    pvalue = len(tails) / len(pestimates)
 
-    return pstats, pvalue
+    return pestimates, pvalue
 
 
 

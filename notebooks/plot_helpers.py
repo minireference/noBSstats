@@ -81,7 +81,7 @@ RCPARAMS = {
 def nicebins(stats, obs, nbins=60):
     """
     Choose bins that are aligned with observation `obs` so that
-    `tailstats(stats,obs)` hist. will cover `stats` hist. cleanly.
+    `tailvalues(stats,obs)` hist. will cover `stats` hist. cleanly.
     """
     stats = np.array(stats)
     xmin, xbar, xmax = stats.min(), stats.mean(), stats.max()
@@ -668,10 +668,10 @@ def plot_samples(samples_df, ax=None, xlims=None, filename=None,
 
 
 
-def gen_sampling_dist(rv, statfunc=np.mean, n=30, N=1000):
+def gen_sampling_dist(rv, statfunc, n, N=1000):
     """
-    Generate `N` samples of size `n` from the random variable `rv`
-    and calculate the statistic `statfunc` from each sample.
+    Simulate `N` samples of size `n` from the random variable `rv` to
+    generate the sampling distribution of the statistic `statfunc`.
     """
     stats = []
     for i in range(0, N):
@@ -758,7 +758,7 @@ def plot_sampling_dists_panel(rv, xlims, N=1000, ns=[10,30,100], binwidth=None, 
     xbarss = []
     for n, ax in zip([10,30,100], axs):
         # A. generate and plot sampling distributoin
-        xbars = gen_sampling_dist(rv, statfunc=np.mean, n=n, N=N)
+        xbars = gen_sampling_dist(rv, np.mean, n=n, N=N)
         plot_sampling_dist(xbars, ax=ax, xlims=xlims, binwidth=binwidth, label=f"$n={n}$")
         # B. plot the distribution predicted by the CLT
         rvXbar = norm(rv.mean(), rv.std()/np.sqrt(n))
