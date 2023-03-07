@@ -747,6 +747,18 @@ title="Print to PDF"
     <a class="reference internal nav-link" href="#explanations">
      Explanations
     </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#frequentist-interpretation">
+       Frequentist interpretation
+      </a>
+     </li>
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#assumptions">
+       Assumptions
+      </a>
+     </li>
+    </ul>
    </li>
    <li class="toc-h2 nav-item toc-entry">
     <a class="reference internal nav-link" href="#discussion">
@@ -864,6 +876,15 @@ title="Print to PDF"
 <span class="math notranslate nohighlight">\(\newcommand{\DMeans}{\textbf{DMeans}}\)</span>
 <span class="math notranslate nohighlight">\(\newcommand{\Prop}{\textbf{Prop}}\)</span>
 <span class="math notranslate nohighlight">\(\newcommand{\DProps}{\textbf{DProps}}\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+\newcommand{\CI}[1]{\textbf{CI}_{#1}}
+\newcommand{\CIL}[1]{\textbf{L}_{#1}}
+\newcommand{\CIU}[1]{\textbf{U}_{#1}}
+\newcommand{\ci}[1]{\textbf{ci}_{#1}}
+\newcommand{\cil}[1]{\textbf{l}_{#1}}
+\newcommand{\ciu}[1]{\textbf{u}_{#1}}
+\]</div>
 <p>(this cell contains the macro definitions like <span class="math notranslate nohighlight">\(\stderr{\overline{\mathbf{x}}}\)</span>, <span class="math notranslate nohighlight">\(\stderrhat{}\)</span>, <span class="math notranslate nohighlight">\(\Mean\)</span>, …)</p>
 </section>
 <section id="definitions">
@@ -906,12 +927,12 @@ title="Print to PDF"
 <span class="n">N</span> <span class="o">=</span> <span class="mi">50</span>
 <span class="n">n</span> <span class="o">=</span> <span class="mi">20</span>
 
-<span class="c1"># Generate N=50 samples of size n=20 from a normal dist</span>
 <span class="n">rvX</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
 
+<span class="c1"># Generate N=50 samples of size n=20 from a normal dist</span>
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">47</span><span class="p">)</span>
 <span class="n">samples_df</span> <span class="o">=</span> <span class="n">gen_samples</span><span class="p">(</span><span class="n">rvX</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
-<span class="n">samples_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">N</span><span class="p">)</span>
+<span class="n">samples_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">df2</span> <span class="o">=</span> <span class="n">samples_df</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="n">var_name</span><span class="o">=</span><span class="s2">&quot;sample&quot;</span><span class="p">,</span> <span class="n">value_name</span><span class="o">=</span><span class="s2">&quot;n&quot;</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">confint</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
@@ -926,7 +947,7 @@ title="Print to PDF"
     <span class="k">return</span> <span class="p">[</span><span class="n">mean</span> <span class="o">-</span> <span class="mf">1.729</span><span class="o">*</span><span class="n">se</span><span class="p">,</span> <span class="n">mean</span> <span class="o">+</span> <span class="mf">1.729</span><span class="o">*</span><span class="n">se</span><span class="p">]</span>
 
 <span class="c1"># Add new column to indicate if CI contains mean or not</span>
-<span class="k">for</span> <span class="n">sidx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">N</span><span class="p">):</span>
+<span class="k">for</span> <span class="n">sidx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
     <span class="n">sample</span> <span class="o">=</span> <span class="n">df2</span><span class="p">[</span><span class="n">df2</span><span class="p">[</span><span class="s2">&quot;sample&quot;</span><span class="p">]</span><span class="o">==</span><span class="n">sidx</span><span class="p">][</span><span class="s2">&quot;n&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
     <span class="n">C_L</span><span class="p">,</span> <span class="n">C_U</span> <span class="o">=</span> <span class="n">confint</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">C_L</span> <span class="o">&lt;=</span> <span class="n">rvX</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="ow">and</span> <span class="n">rvX</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="n">C_U</span><span class="p">:</span>
@@ -941,7 +962,7 @@ title="Print to PDF"
     <span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">pointplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;sample&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;n&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;success&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df2</span><span class="p">,</span>
                        <span class="n">errorbar</span><span class="o">=</span><span class="n">confint</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="n">palette</span><span class="p">,</span>
                        <span class="n">join</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">capsize</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">markers</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">errwidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$\overline{\mathbf</span><span class="si">{x}</span><span class="s2">}$&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$\mu_X$&quot;</span><span class="p">)</span> <span class="c1"># &quot;$\overline{\mathbf{x}}$&quot;</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">rvX</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Mean&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">([],[],</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">savefigure</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
@@ -955,7 +976,7 @@ title="Print to PDF"
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/confidence_intervals/confidence_intervals_mean_rvX_n20.png
 </pre></div>
 </div>
-<img alt="../_images/5e0170a619bd9ab2019c9fbdafd93ca12331d413b60902541129d768e77ffba5.png" src="../_images/5e0170a619bd9ab2019c9fbdafd93ca12331d413b60902541129d768e77ffba5.png" />
+<img alt="../_images/ff229dd06cb4d3b4b2a21ed31a01a7a220c86681e1f006fc11ea63f2a9e291b9.png" src="../_images/ff229dd06cb4d3b4b2a21ed31a01a7a220c86681e1f006fc11ea63f2a9e291b9.png" />
 </div>
 </div>
 </section>
@@ -964,7 +985,7 @@ title="Print to PDF"
 <h2>Confidence interval constructions<a class="headerlink" href="#confidence-interval-constructions" title="Permalink to this heading">#</a></h2>
 <div class="math notranslate nohighlight">
 \[
- CI = \left[
+ \CI{1-\alpha} = \left[
          F^{-1}\big(\tfrac{\alpha}{2}\big),
          F^{-1}\big(1-\tfrac{\alpha}{2}\big)
       \right]
@@ -973,19 +994,34 @@ title="Print to PDF"
 <h3>Bootstrap confidence intervals<a class="headerlink" href="#bootstrap-confidence-intervals" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#######################################################</span>
-<span class="k">def</span> <span class="nf">bootstrap_stat</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">statfunc</span><span class="p">,</span> <span class="n">B</span><span class="o">=</span><span class="mi">10000</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Compute the sampling distribiton of `statfunc`</span>
-<span class="sd">    from `B` bootstrap samples generated from `sample`.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
-    <span class="n">bstats</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span>
-        <span class="n">bsample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">bstat</span> <span class="o">=</span> <span class="n">statfunc</span><span class="p">(</span><span class="n">bsample</span><span class="p">)</span>
-        <span class="n">bstats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bstat</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">bstats</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">stats_helpers</span> <span class="kn">import</span> <span class="n">gen_boot_dist</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xsample</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">]</span>
+<span class="n">bstats</span> <span class="o">=</span> <span class="n">gen_boot_dist</span><span class="p">(</span><span class="n">xsample</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">mean</span><span class="p">)</span>
+
+<span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">bstats</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">bstats</span><span class="p">,</span><span class="mi">95</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[2.7142857142857144, 5.285714285714286]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">bstats</span><span class="p">,</span><span class="mf">0.05</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">bstats</span><span class="p">,</span><span class="mf">0.95</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[2.7142857142857144, 5.285714285714286]
 </pre></div>
 </div>
 </div>
@@ -993,6 +1029,39 @@ title="Print to PDF"
 </section>
 <section id="analytical-approximations">
 <h3>Analytical approximations<a class="headerlink" href="#analytical-approximations" title="Permalink to this heading">#</a></h3>
+<div class="math notranslate nohighlight">
+\[
+ \CI{\mu_X,1-\alpha} = \left[
+         F_{T_{\overline{\mathbf{X}}}}^{-1}\big(\tfrac{\alpha}{2}\big),
+         F_{T_{\overline{\mathbf{X}}}}^{-1}\big(1-\tfrac{\alpha}{2}\big)
+      \right]
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+ \CI{\mu_X} = \left[
+         F_{T}^{-1}\big(\tfrac{\alpha}{2}\big),
+         F_{T}^{-1}\big(1-\tfrac{\alpha}{2}\big)
+      \right]
+\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">t</span> <span class="k">as</span> <span class="n">tdist</span>
+
+<span class="n">xsample</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">]</span>
+<span class="n">xbar</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">xsample</span><span class="p">)</span> 
+<span class="n">sehat</span> <span class="o">=</span> <span class="n">std</span><span class="p">(</span><span class="n">xsample</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">xsample</span><span class="p">))</span>
+<span class="n">rvTXbar</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">xbar</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">sehat</span><span class="p">)</span>
+
+<span class="p">[</span><span class="n">rvTXbar</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.05</span><span class="p">),</span> <span class="n">rvTXbar</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.95</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[2.4133999449331136, 5.586600055066886]
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 </section>
 <section id="confidence-interval-for-the-population-mean">
@@ -1003,25 +1072,53 @@ title="Print to PDF"
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">apples</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/apples.csv&quot;</span><span class="p">)</span>
 <span class="n">asample</span> <span class="o">=</span> <span class="n">apples</span><span class="p">[</span><span class="s2">&quot;weight&quot;</span><span class="p">]</span>
-<span class="c1"># asample</span>
+<span class="n">n</span> <span class="o">=</span> <span class="n">asample</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+<span class="n">n</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>30
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="n">asample</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-<span class="n">amean</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">asample</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">asample</span><span class="o">.</span><span class="n">values</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([205., 182., 192., 189., 217., 192., 210., 240., 225., 191., 193.,
+       209., 167., 183., 210., 198., 239., 188., 179., 182., 200., 197.,
+       245., 192., 201., 218., 198., 211., 208., 217.])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">abar</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">asample</span><span class="p">)</span>
 <span class="n">astd</span> <span class="o">=</span> <span class="n">std</span><span class="p">(</span><span class="n">asample</span><span class="p">)</span>
-<span class="n">sehat</span> <span class="o">=</span> <span class="n">astd</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="n">asehat</span> <span class="o">=</span> <span class="n">std</span><span class="p">(</span><span class="n">asample</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">t</span> <span class="k">as</span> <span class="n">tdist</span>
-<span class="n">rvT</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">abar</span><span class="p">,</span> <span class="n">astd</span><span class="p">,</span> <span class="n">asehat</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(202.6, 18.60033370112223, 3.3959407817427336)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">t</span> <span class="k">as</span> <span class="n">tdist</span>
 
-<span class="n">t_05</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">rvT</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.05</span><span class="p">))</span>
-<span class="n">t_95</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">rvT</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.95</span><span class="p">))</span>
-<span class="n">CI_mu_tdist</span> <span class="o">=</span> <span class="p">[</span><span class="n">amean</span> <span class="o">-</span> <span class="n">t_05</span><span class="o">*</span><span class="n">sehat</span><span class="p">,</span> <span class="n">amean</span> <span class="o">+</span> <span class="n">t_95</span><span class="o">*</span><span class="n">sehat</span><span class="p">]</span>
-<span class="n">CI_mu_tdist</span>
+<span class="n">rvTAbar</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">abar</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">asehat</span><span class="p">)</span>
+<span class="p">[</span><span class="n">rvTAbar</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.05</span><span class="p">),</span> <span class="n">rvTAbar</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.95</span><span class="p">)]</span>
 </pre></div>
 </div>
 </div>
@@ -1033,14 +1130,16 @@ title="Print to PDF"
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ALT. setting `loc` and `scale` parameters on the T-distribution </span>
-<span class="n">rvTAbar</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">amean</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">sehat</span><span class="p">)</span>
-<span class="n">rvTAbar</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.05</span><span class="p">),</span> <span class="n">rvTAbar</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.95</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ALT. using standard t-distribution </span>
+<span class="n">rvT</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">t_05</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">rvT</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.05</span><span class="p">))</span>
+<span class="n">t_95</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">rvT</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.95</span><span class="p">))</span>
+<span class="p">[</span><span class="n">abar</span> <span class="o">-</span> <span class="n">t_05</span><span class="o">*</span><span class="n">asehat</span><span class="p">,</span> <span class="n">abar</span> <span class="o">+</span> <span class="n">t_95</span><span class="o">*</span><span class="n">asehat</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(196.82986523723363, 208.37013476276636)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[196.82986523723363, 208.37013476276636]
 </pre></div>
 </div>
 </div>
@@ -1049,12 +1148,12 @@ title="Print to PDF"
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ALT2. use the scipy.stats function</span>
 <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">t</span> <span class="k">as</span> <span class="n">tdist</span>
-<span class="n">tdist</span><span class="o">.</span><span class="n">interval</span><span class="p">(</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">df</span><span class="o">=</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">amean</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">sehat</span><span class="p">)</span>
+<span class="n">tdist</span><span class="o">.</span><span class="n">interval</span><span class="p">(</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">df</span><span class="o">=</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">abar</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">sehat</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(196.82986523723363, 208.37013476276636)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(201.2126685922735, 203.9873314077265)
 </pre></div>
 </div>
 </div>
@@ -1078,7 +1177,7 @@ title="Print to PDF"
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
-<span class="n">ameans_boot</span> <span class="o">=</span> <span class="n">bootstrap_stat</span><span class="p">(</span><span class="n">asample</span><span class="p">,</span> <span class="n">statfunc</span><span class="o">=</span><span class="n">mean</span><span class="p">)</span>
+<span class="n">ameans_boot</span> <span class="o">=</span> <span class="n">gen_boot_dist</span><span class="p">(</span><span class="n">asample</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">mean</span><span class="p">)</span>
 <span class="n">CI_mu_boot</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">ameans_boot</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span>
               <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">ameans_boot</span><span class="p">,</span><span class="mi">95</span><span class="p">)]</span>
 <span class="n">CI_mu_boot</span>
@@ -1146,7 +1245,7 @@ title="Print to PDF"
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">51</span><span class="p">)</span>
-<span class="n">avars_boot</span> <span class="o">=</span> <span class="n">bootstrap_stat</span><span class="p">(</span><span class="n">asample</span><span class="p">,</span> <span class="n">statfunc</span><span class="o">=</span><span class="n">var</span><span class="p">)</span>
+<span class="n">avars_boot</span> <span class="o">=</span> <span class="n">gen_boot_dist</span><span class="p">(</span><span class="n">asample</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">var</span><span class="p">)</span>
 <span class="n">CI_sigma2_boot</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">avars_boot</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span>
                   <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">avars_boot</span><span class="p">,</span><span class="mi">95</span><span class="p">)]</span>
 <span class="n">CI_sigma2_boot</span>
@@ -1171,14 +1270,6 @@ title="Print to PDF"
     <span class="n">vY</span> <span class="o">=</span> <span class="n">stdY</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">m</span>
     <span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">vX</span> <span class="o">+</span> <span class="n">vY</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">vX</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">vY</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="p">(</span><span class="n">m</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">df</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">pooled_var</span><span class="p">(</span><span class="n">sampleX</span><span class="p">,</span> <span class="n">sampleY</span><span class="p">):</span>
-    <span class="o">...</span>
 </pre></div>
 </div>
 </div>
@@ -1280,8 +1371,8 @@ title="Print to PDF"
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># compute bootstrap estimates for mean in each group</span>
-<span class="n">meanW_boot</span> <span class="o">=</span> <span class="n">bootstrap_stat</span><span class="p">(</span><span class="n">pricesW</span><span class="p">,</span> <span class="n">statfunc</span><span class="o">=</span><span class="n">mean</span><span class="p">)</span>
-<span class="n">meanE_boot</span> <span class="o">=</span> <span class="n">bootstrap_stat</span><span class="p">(</span><span class="n">pricesE</span><span class="p">,</span> <span class="n">statfunc</span><span class="o">=</span><span class="n">mean</span><span class="p">)</span>
+<span class="n">meanW_boot</span> <span class="o">=</span> <span class="n">gen_boot_dist</span><span class="p">(</span><span class="n">pricesW</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">mean</span><span class="p">)</span>
+<span class="n">meanE_boot</span> <span class="o">=</span> <span class="n">gen_boot_dist</span><span class="p">(</span><span class="n">pricesE</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">mean</span><span class="p">)</span>
 
 <span class="c1"># compute the difference between means from bootstrap samples</span>
 <span class="n">dmeans_boot</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1369,8 +1460,8 @@ title="Print to PDF"
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># compute bootstrap estimates for mean in each group</span>
-<span class="n">meansU_boot</span> <span class="o">=</span> <span class="n">bootstrap_stat</span><span class="p">(</span><span class="n">scoresU</span><span class="p">,</span> <span class="n">statfunc</span><span class="o">=</span><span class="n">mean</span><span class="p">)</span>
-<span class="n">meansR_boot</span> <span class="o">=</span> <span class="n">bootstrap_stat</span><span class="p">(</span><span class="n">scoresR</span><span class="p">,</span> <span class="n">statfunc</span><span class="o">=</span><span class="n">mean</span><span class="p">)</span>
+<span class="n">meansU_boot</span> <span class="o">=</span> <span class="n">gen_boot_dist</span><span class="p">(</span><span class="n">scoresU</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">mean</span><span class="p">)</span>
+<span class="n">meansR_boot</span> <span class="o">=</span> <span class="n">gen_boot_dist</span><span class="p">(</span><span class="n">scoresR</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">mean</span><span class="p">)</span>
 
 <span class="c1"># compute the difference between means in bootstrap samples</span>
 <span class="n">dmeans_boot</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1395,6 +1486,21 @@ title="Print to PDF"
 </section>
 <section id="explanations">
 <h2>Explanations<a class="headerlink" href="#explanations" title="Permalink to this heading">#</a></h2>
+<section id="frequentist-interpretation">
+<h3>Frequentist interpretation<a class="headerlink" href="#frequentist-interpretation" title="Permalink to this heading">#</a></h3>
+<p>Guarantees for confidence intervals given in terms of <span class="math notranslate nohighlight">\(\mathbb{E}_\mathbf{X}\)</span>, the expectation over a random sample \mathbf{X}. These guarantees can be interpreted as long-term average error rates if the statistical procedure were performed many times (frequentist paradigm).
+Note in the frequentist paradigm gives no guarantee about any specific confidence interval—only gives guarantee about the performance of the procedure we used for computing the CIs.</p>
+</section>
+<section id="assumptions">
+<h3>Assumptions<a class="headerlink" href="#assumptions" title="Permalink to this heading">#</a></h3>
+<p>condensed mention of:    (full discussion of assumptions in Sec 3.4)
+Parametric model assumption (conceptual)  cf. nonparametric methods</p>
+<ul class="simple">
+<li><p>(NORM): the population is normally distributed (normality test)</p></li>
+<li><p>(LARGEn): the sample size is “large enough” for approximate normality</p></li>
+<li><p>(EQVAR): the variance in two groups is the same</p></li>
+</ul>
+</section>
 </section>
 <section id="discussion">
 <h2>Discussion<a class="headerlink" href="#discussion" title="Permalink to this heading">#</a></h2>
@@ -1412,13 +1518,18 @@ title="Print to PDF"
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># simulation based sampling distributoin</span>
-<span class="k">def</span> <span class="nf">gen_sampling_dist</span><span class="p">(</span><span class="n">rv</span><span class="p">,</span> <span class="n">statfunc</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">10000</span><span class="p">):</span>
-    <span class="n">stats</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">def</span> <span class="nf">gen_sampling_dist</span><span class="p">(</span><span class="n">rv</span><span class="p">,</span> <span class="n">estfunc</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">10000</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Simulate `N` samples of size `n` from the random variable `rv` to</span>
+<span class="sd">    generate the sampling distribution of the estimator `estfunc`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">estimates</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
         <span class="n">sample</span> <span class="o">=</span> <span class="n">rv</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-        <span class="n">stat</span> <span class="o">=</span> <span class="n">statfunc</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
-        <span class="n">stats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">stat</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">stats</span>
+        <span class="n">estimate</span> <span class="o">=</span> <span class="n">estfunc</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+        <span class="n">estimates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">estimate</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">estimates</span>
 </pre></div>
 </div>
 </div>
@@ -1472,7 +1583,7 @@ title="Print to PDF"
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># # true sampling distribuiton (simulation)</span>
-<span class="c1"># kbars = gen_sampling_dist(rvK, statfunc=mean, n=20)</span>
+<span class="c1"># kbars = gen_sampling_dist(rvK, estfunc=mean, n=20)</span>
 <span class="c1"># [np.percentile(kbars,5),</span>
 <span class="c1">#  np.percentile(kbars,95)]</span>
 </pre></div>
@@ -1504,7 +1615,7 @@ title="Print to PDF"
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">48</span><span class="p">)</span>
-<span class="n">kvars_boot</span> <span class="o">=</span> <span class="n">bootstrap_stat</span><span class="p">(</span><span class="n">ksample02</span><span class="p">,</span> <span class="n">statfunc</span><span class="o">=</span><span class="n">var</span><span class="p">)</span>
+<span class="n">kvars_boot</span> <span class="o">=</span> <span class="n">gen_boot_dist</span><span class="p">(</span><span class="n">ksample02</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">var</span><span class="p">)</span>
 <span class="n">CI_sigma2_boot</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">kvars_boot</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span>
                   <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">kvars_boot</span><span class="p">,</span><span class="mi">95</span><span class="p">)]</span>
 <span class="n">CI_sigma2_boot</span>
@@ -1520,7 +1631,7 @@ title="Print to PDF"
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># true</span>
-<span class="n">kvars</span> <span class="o">=</span> <span class="n">gen_sampling_dist</span><span class="p">(</span><span class="n">rvK</span><span class="p">,</span> <span class="n">statfunc</span><span class="o">=</span><span class="n">var</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">kvars</span> <span class="o">=</span> <span class="n">gen_sampling_dist</span><span class="p">(</span><span class="n">rvK</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">var</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">kvars</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span>
  <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">kvars</span><span class="p">,</span><span class="mi">95</span><span class="p">)]</span>
 </pre></div>
@@ -1704,6 +1815,18 @@ title="Print to PDF"
     <a class="reference internal nav-link" href="#explanations">
      Explanations
     </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#frequentist-interpretation">
+       Frequentist interpretation
+      </a>
+     </li>
+     <li class="toc-h3 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#assumptions">
+       Assumptions
+      </a>
+     </li>
+    </ul>
    </li>
    <li class="toc-h2 nav-item toc-entry">
     <a class="reference internal nav-link" href="#discussion">
