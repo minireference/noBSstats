@@ -174,7 +174,7 @@ def simulation_test(sample, rvH0, estfunc, N=10000, alternative="two-sided"):
 # BOOTSTRAP TEST FOR THE MEAN
 ################################################################################
 
-def gen_boot_dist(sample, estfunc, B=10000):
+def gen_boot_dist(sample, estfunc, B=5000):
     """
     Generate estimates from the sampling distribiton of the estimator `estfunc`
     based on `B` bootstrap samples (sampling with replacement) from `sample`.
