@@ -471,11 +471,26 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#particular-sample-kombucha-batch-02">Particular sample: kombucha Batch 02</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#population">Population</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#true-sampling-distribution-of-the-mean">True sampling distribution of the mean</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analytical-approximation-from-ksample02">Analytical approximation from <code class="docutils literal notranslate"><span class="pre">ksample02</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bootstrap-estimate-based-on-ksample02">Bootstrap estimate based on <code class="docutils literal notranslate"><span class="pre">ksample02</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#picture-a-estimated-mean-and-std">Picture A: estimated mean and std</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#picture-b-centred-around-the-population-mean">Picture B: centred around the population mean</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#picture-c">Picture C</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#case-0-know-population-mean-and-variance">CASE 0: Know population mean and variance</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#can-i-haz-90-confidence-interval-plz">Can I haz 90% confidence interval plz</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#case-1-population-mean-is-known-but-variance-is-unknown">Case 1: Population mean is known, but variance is unknown</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#confidence-interval-of-sample-means-we-can-expect-to-observe">90% confidence interval of sample means we can expect to observe</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#case-2-both-population-mean-and-variance-are-unknown">Case 2: Both population mean and variance are unknown</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tool-1-analytical-approximations-based-on-sample-ksample02">Tool 1: Analytical approximations based on sample <code class="docutils literal notranslate"><span class="pre">ksample02</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#confidence-interval-for-the-population-mean">90% confidence interval for the population mean</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tool-2-bootstrap-estimate-based-on-sample-ksample02">Tool 2: Bootstrap estimate based on sample <code class="docutils literal notranslate"><span class="pre">ksample02</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">90% confidence interval for the population mean</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#combined-picture-for-case-2">Combined picture for CASE 2</a></li>
 </ul>
             </nav>
         </div>
@@ -490,41 +505,19 @@ document.write(`
   <section class="tex2jax_ignore mathjax_ignore" id="sample-mean-estimation-details">
 <h1>Sample mean estimation details<a class="headerlink" href="#sample-mean-estimation-details" title="Permalink to this heading">#</a></h1>
 <p>I find this is a very sneaky detail, and I have not seen anyone explain it in any other textbook.</p>
-<p>It seems to me there is a “slight of hand” when we switch from talking about:</p>
 <ul class="simple">
-<li><p>(A) the sampling distribution centred at the sample mean (which corresponds to the realistic, best effort scenario when we don’t know either the population mean or the population var)</p></li>
-<li><p>(B) the sampling distribution centred around the known population mean (as we can obtain from simulation when the population parameters are known)</p></li>
-</ul>
-<p>There are basically two possible pictures:</p>
-<ul class="simple">
-<li><p>Picture A: <code class="docutils literal notranslate"><span class="pre">norm(kbar,</span> <span class="pre">sehat)</span></code>:
-a realistic experimenter who only knows ksample
-will make their “best guess” of the population mean as <code class="docutils literal notranslate"><span class="pre">kbar</span> <span class="pre">=</span> <span class="pre">mean(ksample)</span></code>.
-We can plot the sampling distribution centered at kbar.
-I think nobody wants to shows this kind of figure because it looks really bad.
-Look how far off the CLT and bootstrap approximations are
-relative to the true population mean mu=1000.</p></li>
-<li><p>Picture B: <code class="docutils literal notranslate"><span class="pre">norm(mu_K,</span> <span class="pre">sehat)</span></code>:
+<li><p>CASE 1 <code class="docutils literal notranslate"><span class="pre">norm(mu,</span> <span class="pre">sehat)</span></code>: the sampling distribution centred around the known population mean (as we can obtain from simulation when the population parameters are known).
 a hypothetical distribution centered on true population mean.
 This plot describes some hypothetical half-knowledge scenario,
 where the experimenter knows population mean mu,
 but doesn’t know the variance,
 so we use CLT or BOOT for the estimated dispersion,
 but show dist. centered at muK (the population mean).</p></li>
+<li><p>CASE 2 <code class="docutils literal notranslate"><span class="pre">norm(xbar,</span> <span class="pre">sehat)</span></code>: the sampling distribution centred at the sample mean (which corresponds to the realistic, best effort scenario when we don’t know either the population mean or the population var)
+A realistic experimenter who only knows <code class="docutils literal notranslate"><span class="pre">sample</span></code>
+will make their “best guess” of the population mean as <code class="docutils literal notranslate"><span class="pre">xbar</span> <span class="pre">=</span> <span class="pre">mean(sample)</span></code>.
+We can plot the sampling distribution centered at xbar.</p></li>
 </ul>
-<p>It’s a tricky business… because Picture A is very ugly (reader might feel estimation process is hopeless), but it is real (shows how to calc. CI for population mean).</p>
-<p>On the other hand Picture B is nicer to see (yeeey look how nicely the fat tails of the t-distribution fit the histogram of kbars better), but doesn’t describe any realistic scenario, or calculation we actually do.</p>
-<p>Perhaps we need a third picture, to explain we’re really talking…</p>
-<ul class="simple">
-<li><p>Picture C: <code class="docutils literal notranslate"><span class="pre">norm(0,</span> <span class="pre">sehat)</span></code>: the distribution of ∆ = kbar - muK,
-which shows the deviation of the sample mean from the population mean.
-This way it becomes clear the symmetry of the situation:
-(1) if you know mu, then you have a distribution of where xbars might fall,
-and (2) if you know kbar, then you have a distribution for where the unknown mu might be.</p></li>
-</ul>
-<p>I might have to show Picture C because I’m ashamed of showing Picture A and I think Picture B is misleading…</p>
-<p>Question: If we’re going to discuss the distribution of <code class="docutils literal notranslate"><span class="pre">kbar</span> <span class="pre">-</span> <span class="pre">muK</span></code>,
-perhaps we might as well go all the way to a pivotal quantity  <code class="docutils literal notranslate"><span class="pre">t</span>&#160; <span class="pre">=</span> <span class="pre">(kbar</span> <span class="pre">-</span> <span class="pre">muK)/sehat</span></code>.</p>
 <section id="notebook-setup">
 <h2>Notebook setup<a class="headerlink" href="#notebook-setup" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
@@ -700,7 +693,8 @@ perhaps we might as well go all the way to a pivotal quantity  <code class="docu
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">stats_helpers</span> <span class="kn">import</span> <span class="n">gen_sampling_dist</span>
 
-<span class="n">kbars40</span> <span class="o">=</span> <span class="n">gen_sampling_dist</span><span class="p">(</span><span class="n">rvK</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">mean</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">kbars40</span> <span class="o">=</span> <span class="n">gen_sampling_dist</span><span class="p">(</span><span class="n">rvK</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">mean</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">kbars40</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="s2">&quot;density&quot;</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">orange</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;simulation&quot;</span><span class="p">)</span>
 <span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$\overline{\mathbf</span><span class="si">{k}</span><span class="s2">}$&quot;</span><span class="p">)</span>
 </pre></div>
@@ -710,10 +704,185 @@ perhaps we might as well go all the way to a pivotal quantity  <code class="docu
 <img alt="../_images/41892b35bacf79eb13d6a93ec2eeb84978d64ee2cd16fb7db61abc466aa92add.png" src="../_images/41892b35bacf79eb13d6a93ec2eeb84978d64ee2cd16fb7db61abc466aa92add.png" />
 </div>
 </div>
-<p>This is the ground truth…</p>
+<p>What we see above is the “ground truth” about the sampling distribution of the mean
+obtained through simulation.</p>
+<p>All subsequent cases will try to approximate this properties of this distribution in one way or another.</p>
 </section>
-<section id="analytical-approximation-from-ksample02">
-<h2>Analytical approximation from <code class="docutils literal notranslate"><span class="pre">ksample02</span></code><a class="headerlink" href="#analytical-approximation-from-ksample02" title="Permalink to this heading">#</a></h2>
+<section id="case-0-know-population-mean-and-variance">
+<h2>CASE 0: Know population mean and variance<a class="headerlink" href="#case-0-know-population-mean-and-variance" title="Permalink to this heading">#</a></h2>
+<p>If we know <span class="math notranslate nohighlight">\(\mu_K\)</span> and <span class="math notranslate nohighlight">\(\sigma_K\)</span> we can use the central limit theorem</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">muK</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1000
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">seCLT</span> <span class="o">=</span> <span class="n">sigmaK</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="n">seCLT</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.23606797749979
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
+<span class="n">rvKbarCLT</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">muK</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">seCLT</span><span class="p">)</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">kbars40</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="s2">&quot;density&quot;</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">orange</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;simulation&quot;</span><span class="p">)</span>
+<span class="n">plot_pdf</span><span class="p">(</span><span class="n">rvKbarCLT</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">xlims</span><span class="o">=</span><span class="p">[</span><span class="mi">985</span><span class="p">,</span><span class="mi">1015</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">purple</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Student&#39;s t approx.&quot;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$\overline{\mathbf</span><span class="si">{k}</span><span class="s2">}$&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/c1b0619f540af27e160346638e1cd88472f1edd8fd0e1b772eea87590bd50a45.png" src="../_images/c1b0619f540af27e160346638e1cd88472f1edd8fd0e1b772eea87590bd50a45.png" />
+</div>
+</div>
+<section id="can-i-haz-90-confidence-interval-plz">
+<h3>Can I haz 90% confidence interval plz<a class="headerlink" href="#can-i-haz-90-confidence-interval-plz" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
+
+<span class="c1"># for 90% confidence interval we&#39;ll need</span>
+<span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">quantiles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">alpha</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">alpha</span><span class="o">/</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">norm</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="n">quantiles</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">muK</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">sigmaK</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 996.32199548, 1003.67800452])
+</pre></div>
+</div>
+</div>
+</div>
+<p>The above interval tells us the range of sample means we can expect
+to observe 90% of the time.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># true 90% CI for sample mean</span>
+<span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">kbars40</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+ <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">kbars40</span><span class="p">,</span> <span class="mi">95</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[996.3769782356497, 1003.7065570446886]
+</pre></div>
+</div>
+</div>
+</div>
+<p>So far so good, the CLT is working.
+We can say “good job mate” to de Moivre, Laplace, and Lyapunov and move on to the next case.</p>
+</section>
+</section>
+<section id="case-1-population-mean-is-known-but-variance-is-unknown">
+<h2>Case 1: Population mean is known, but variance is unknown<a class="headerlink" href="#case-1-population-mean-is-known-but-variance-is-unknown" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># estimate for the standard deviation</span>
+<span class="n">std</span><span class="p">(</span><span class="n">ksample02</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>11.149780314097285
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># estimate for the standard error of the mean</span>
+<span class="n">sehat</span> <span class="o">=</span> <span class="n">std</span><span class="p">(</span><span class="n">ksample02</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="n">sehat</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.4931666716510485
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">t</span>
+<span class="n">rvKbar1</span> <span class="o">=</span> <span class="n">t</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">muK</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">sehat</span><span class="p">)</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">kbars40</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="s2">&quot;density&quot;</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">orange</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;simulation&quot;</span><span class="p">)</span>
+<span class="n">plot_pdf</span><span class="p">(</span><span class="n">rvKbar1</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">xlims</span><span class="o">=</span><span class="p">[</span><span class="mi">985</span><span class="p">,</span><span class="mi">1015</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">purple</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Student&#39;s t approx.&quot;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$\overline{\mathbf</span><span class="si">{k}</span><span class="s2">}$&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/a87c87391cdc679d0e0f2da910cde572c6a48720179e98e784d6e5aad0a10c7e.png" src="../_images/a87c87391cdc679d0e0f2da910cde572c6a48720179e98e784d6e5aad0a10c7e.png" />
+</div>
+</div>
+<section id="confidence-interval-of-sample-means-we-can-expect-to-observe">
+<h3>90% confidence interval of sample means we can expect to observe<a class="headerlink" href="#confidence-interval-of-sample-means-we-can-expect-to-observe" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">t</span>
+
+<span class="c1"># for 90% confidence interval we&#39;ll need</span>
+<span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">quantiles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">alpha</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">alpha</span><span class="o">/</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">t</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="n">quantiles</span><span class="p">,</span> <span class="n">df</span><span class="o">=</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">muK</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">sehat</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 995.6889837, 1004.3110163])
+</pre></div>
+</div>
+</div>
+</div>
+<p>The above interval tells us the range of sample means we can expect
+to observe 90% of the time.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># true 90% CI for sample mean</span>
+<span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">kbars40</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+ <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">kbars40</span><span class="p">,</span> <span class="mi">95</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[996.3769782356497, 1003.7065570446886]
+</pre></div>
+</div>
+</div>
+</div>
+<p>So far so good, Student’s <span class="math notranslate nohighlight">\(t\)</span>-distribution seems
+to be a bit conservative (giving a wider confidence interval than necessary),
+but hey if you’re getting the coverage you promised,
+then we can say “good job mate” to Gosset.</p>
+</section>
+</section>
+<section id="case-2-both-population-mean-and-variance-are-unknown">
+<h2>Case 2: Both population mean and variance are unknown<a class="headerlink" href="#case-2-both-population-mean-and-variance-are-unknown" title="Permalink to this heading">#</a></h2>
+<section id="tool-1-analytical-approximations-based-on-sample-ksample02">
+<h3>Tool 1: Analytical approximations based on sample <code class="docutils literal notranslate"><span class="pre">ksample02</span></code><a class="headerlink" href="#tool-1-analytical-approximations-based-on-sample-ksample02" title="Permalink to this heading">#</a></h3>
+<p>If we we plug in <span class="math notranslate nohighlight">\(\overline{\mathbf{x}}\)</span> for <span class="math notranslate nohighlight">\(\mu\)</span>
+and <span class="math notranslate nohighlight">\(s_{\mathbf{x}}\)</span> for <span class="math notranslate nohighlight">\(\sigma\)</span>,
+in Gosset’s
+what do we get?</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obsmean02</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">ksample02</span><span class="p">)</span>
@@ -757,10 +926,10 @@ perhaps we might as well go all the way to a pivotal quantity  <code class="docu
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">t</span> <span class="k">as</span> <span class="n">tdist</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">t</span>
 
 <span class="n">df</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span>  <span class="c1"># degrees of freedom</span>
-<span class="n">rvKbarA</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">obsmean02</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">seKhat02</span><span class="p">)</span>
+<span class="n">rvKbarA</span> <span class="o">=</span> <span class="n">t</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">obsmean02</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">seKhat02</span><span class="p">)</span>
 
 <span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">kbars40</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="s2">&quot;density&quot;</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">orange</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;simulation&quot;</span><span class="p">)</span>
 <span class="n">plot_pdf</span><span class="p">(</span><span class="n">rvKbarA</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">xlims</span><span class="o">=</span><span class="p">[</span><span class="mi">985</span><span class="p">,</span><span class="mi">1015</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">purple</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Student&#39;s t approx.&quot;</span><span class="p">)</span>
@@ -772,9 +941,28 @@ perhaps we might as well go all the way to a pivotal quantity  <code class="docu
 <img alt="../_images/1fee77ab20ad4a3e5adaaccbe1111d1a28f424be56496d6de301ee1dc7f72b21.png" src="../_images/1fee77ab20ad4a3e5adaaccbe1111d1a28f424be56496d6de301ee1dc7f72b21.png" />
 </div>
 </div>
+<section id="confidence-interval-for-the-population-mean">
+<h4>90% confidence interval for the population mean<a class="headerlink" href="#confidence-interval-for-the-population-mean" title="Permalink to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">t</span>
+
+<span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">quantiles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">alpha</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">alpha</span><span class="o">/</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">t</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="n">quantiles</span><span class="p">,</span> <span class="n">df</span><span class="o">=</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">obsmean02</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">sehat</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 993.5959837, 1002.2180163])
+</pre></div>
+</div>
+</div>
+</div>
 </section>
-<section id="bootstrap-estimate-based-on-ksample02">
-<h2>Bootstrap estimate based on <code class="docutils literal notranslate"><span class="pre">ksample02</span></code><a class="headerlink" href="#bootstrap-estimate-based-on-ksample02" title="Permalink to this heading">#</a></h2>
+</section>
+<section id="tool-2-bootstrap-estimate-based-on-sample-ksample02">
+<h3>Tool 2: Bootstrap estimate based on sample <code class="docutils literal notranslate"><span class="pre">ksample02</span></code><a class="headerlink" href="#tool-2-bootstrap-estimate-based-on-sample-ksample02" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">stats_helpers</span> <span class="kn">import</span> <span class="n">gen_boot_dist</span>
@@ -800,11 +988,27 @@ perhaps we might as well go all the way to a pivotal quantity  <code class="docu
 <img alt="../_images/0fdcd2c9482e85574d288ce52e0c9ebb01bda6c5a6a7395b0ca6857bdb1e53e1.png" src="../_images/0fdcd2c9482e85574d288ce52e0c9ebb01bda6c5a6a7395b0ca6857bdb1e53e1.png" />
 </div>
 </div>
+<section id="id1">
+<h4>90% confidence interval for the population mean<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">kbars02_boot</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+ <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">kbars02_boot</span><span class="p">,</span> <span class="mi">95</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[993.985925, 1001.9336249999998]
+</pre></div>
+</div>
+</div>
+</div>
 </section>
-<section id="picture-a-estimated-mean-and-std">
-<h2>Picture A: estimated mean and std<a class="headerlink" href="#picture-a-estimated-mean-and-std" title="Permalink to this heading">#</a></h2>
-<p>Picture A: norm(kbar, sehat) (the one nobody shows): a realistic experimenter who only knows ksample will make their “best guess” of the population mean as kbar = mean(ksample), then draw the sampling distribution centered at kbar, as in this figure:
-<a class="reference external" href="https://minireference.com/static/tmp/sampling_dist_mean_rvK_and_N_T_boot_approx_from_particualr_sample_n7.png">https://minireference.com/static/tmp/sampling_dist_mean_rvK_and_N_T_boot_approx_from_particualr_sample_n7.png</a></p>
+</section>
+</section>
+<section id="combined-picture-for-case-2">
+<h2>Combined picture for CASE 2<a class="headerlink" href="#combined-picture-for-case-2" title="Permalink to this heading">#</a></h2>
+<p>A realistic experimenter who only knows ksample will make their “best guess” of the population mean as kbar = mean(ksample), then draw the sampling distribution centered at kbar, as in this figure:</p>
 <p>I think nobody wants to shows this kind of figure because it looks really bad. Look how far off the CLT and bootstrap approximations are relative to the true population mean mu=1000.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -820,17 +1024,20 @@ perhaps we might as well go all the way to a pivotal quantity  <code class="docu
 
 <span class="c1"># particular sample</span>
 <span class="n">n</span> <span class="o">=</span> <span class="n">ksample02</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-<span class="n">obsmean02</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">ksample02</span><span class="p">)</span>
+
+<span class="n">obsmean02</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">ksample02</span><span class="p">)</span>  <span class="c1"># sample mean</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">obsmean02</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">)</span>
+
 <span class="n">obsvar02</span> <span class="o">=</span> <span class="n">var</span><span class="p">(</span><span class="n">ksample02</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;sample mean =&quot;</span><span class="p">,</span> <span class="n">obsmean02</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; sample var =&quot;</span><span class="p">,</span> <span class="n">obsvar02</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; sample std =&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">obsvar02</span><span class="p">))</span>
 
 <span class="c1"># analytical approximation based on `ksample02` mean and var</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">t</span> <span class="k">as</span> <span class="n">tdist</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">t</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span>  <span class="c1"># degrees of freedom</span>
 <span class="n">seKhat02</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span> <span class="n">obsvar02</span> <span class="o">/</span> <span class="n">n</span> <span class="p">)</span>
-<span class="n">rvKbarA</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">obsmean02</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">seKhat02</span><span class="p">)</span>
+<span class="n">rvKbarA</span> <span class="o">=</span> <span class="n">t</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">obsmean02</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">seKhat02</span><span class="p">)</span>
 <span class="n">plot_pdf</span><span class="p">(</span><span class="n">rvKbarA</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">xlims</span><span class="o">=</span><span class="p">[</span><span class="mi">985</span><span class="p">,</span><span class="mi">1015</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">blue</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Student&#39;s t approx.&quot;</span><span class="p">)</span>
 
 <span class="c1"># boostrap approx</span>
@@ -839,6 +1046,7 @@ perhaps we might as well go all the way to a pivotal quantity  <code class="docu
 
 <span class="c1"># add x-axis label and rm legend</span>
 <span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$\overline{\mathbf</span><span class="si">{k}</span><span class="s2">}$&quot;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$f_{\overline{\mathbf</span><span class="si">{K}</span><span class="s2">}}$&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">get_legend</span><span class="p">()</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -849,121 +1057,7 @@ perhaps we might as well go all the way to a pivotal quantity  <code class="docu
  sample std = 11.149780314097285
 </pre></div>
 </div>
-<img alt="../_images/85f7f10d18cc2b3dd8402d0697ed6cb1f93ee804ef81e9b5f91e8c88867e57f2.png" src="../_images/85f7f10d18cc2b3dd8402d0697ed6cb1f93ee804ef81e9b5f91e8c88867e57f2.png" />
-</div>
-</div>
-</section>
-<section id="picture-b-centred-around-the-population-mean">
-<h2>Picture B: centred around the population mean<a class="headerlink" href="#picture-b-centred-around-the-population-mean" title="Permalink to this heading">#</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">norm(mu_K,</span> <span class="pre">seKhat02)</span></code> (centered on true population mean):  this plot describes some hypothetical half-knowledge scenario, where the experimenter knows population mean mu, but doesn’t know the variance, so we use CLT or BOOT for the estimated dispersion, but show dist. centered at muK (the population mean).</p>
-<p>It’s a tricky business… because Picture A is very ugly (reader might feel estimation process is hopeless), but it is real (shows how to calc. CI for population mean).</p>
-<p>On the other hand Picture B is nicer to see (yeeey look how nicely the fat tails of the t-distribution fit the histogram of kbars better), but doesn’t describe any realistic scenario, or calculation we actually do.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-
-<span class="c1"># true sampling distribution</span>
-<span class="n">kbars40</span> <span class="o">=</span> <span class="n">gen_sampling_dist</span><span class="p">(</span><span class="n">rvK</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">mean</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">kbars40</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="s2">&quot;density&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-                  <span class="n">label</span><span class="o">=</span><span class="s2">&quot;simulation&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;m&quot;</span><span class="p">)</span>
-
-<span class="c1"># populatin mean</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">rvK</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;m&#39;</span><span class="p">)</span>
-
-<span class="c1"># particular sample</span>
-<span class="n">n</span> <span class="o">=</span> <span class="n">ksample02</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-<span class="n">obsmean02</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">ksample02</span><span class="p">)</span>
-<span class="n">obsvar02</span> <span class="o">=</span> <span class="n">var</span><span class="p">(</span><span class="n">ksample02</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;sample mean =&quot;</span><span class="p">,</span> <span class="n">obsmean02</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot; sample var =&quot;</span><span class="p">,</span> <span class="n">obsvar02</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot; sample std =&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">obsvar02</span><span class="p">))</span>
-
-<span class="c1"># analytical approximation based on estimated var from `ksample02`</span>
-<span class="c1">#   we draw the distribution centred around the true population mean</span>
-<span class="c1">#   to focus on the variance-estimation aspect...</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">t</span> <span class="k">as</span> <span class="n">tdist</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span>  <span class="c1"># degrees of freedom</span>
-<span class="n">seKhat02</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span> <span class="n">obsvar02</span> <span class="o">/</span> <span class="n">n</span> <span class="p">)</span>
-<span class="n">rvKbarB</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">rvK</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">scale</span><span class="o">=</span><span class="n">seKhat02</span><span class="p">)</span>
-<span class="n">plot_pdf</span><span class="p">(</span><span class="n">rvKbarB</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">blue</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Student&#39;s t approx.&quot;</span><span class="p">)</span>
-
-<span class="c1"># boostrap approx</span>
-<span class="n">kbars02_boot</span> <span class="o">=</span> <span class="n">gen_boot_dist</span><span class="p">(</span><span class="n">ksample02</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">mean</span><span class="p">)</span>
-<span class="n">kbars02_boot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">kbars02_boot</span><span class="p">)</span>
-<span class="n">kbars02_boot_shifted</span> <span class="o">=</span> <span class="n">kbars02_boot</span> <span class="o">-</span> <span class="n">obsmean02</span> <span class="o">+</span> <span class="n">rvK</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">kbars02_boot_shifted</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="s2">&quot;density&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;boostrap approx.&quot;</span><span class="p">)</span>
-
-<span class="c1"># add x-axis label and rm legend</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$\overline{\mathbf</span><span class="si">{k}</span><span class="s2">}$&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">get_legend</span><span class="p">()</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>sample mean = 997.9069999999999
- sample var = 124.31760105263136
- sample std = 11.149780314097285
-</pre></div>
-</div>
-<img alt="../_images/102f9e9405ece95b26c631a78d36e37dd9822f603c21915ef2a50fdc3eeb5c2e.png" src="../_images/102f9e9405ece95b26c631a78d36e37dd9822f603c21915ef2a50fdc3eeb5c2e.png" />
-</div>
-</div>
-</section>
-<section id="picture-c">
-<h2>Picture C<a class="headerlink" href="#picture-c" title="Permalink to this heading">#</a></h2>
-<p>Perhaps we need a third picture, to explain we’re really talking…</p>
-<p>Picture C: norm(0, sehat) = the distribution of ∆ = kbar - muK, which shows the deviation of the sample mean from the population mean. This way it becomes clear the symmetry of the situation:   (1) if you know mu, then you have a distribution of where xbars might fall, and (2) if you know kbar, then you have a distribution for where the unknown mu might be.</p>
-<p>I might have to show Picture C because I’m ashamed of showing Picture A and I think Picture B is misleading…</p>
-<p>… but if we’re doing kbar - muK, might as well go all the way to a pivotal quantity  t  = (kbar - muK)/sehat …</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-
-<span class="c1"># true sampling distribution</span>
-<span class="n">kbars40</span> <span class="o">=</span> <span class="n">gen_sampling_dist</span><span class="p">(</span><span class="n">rvK</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">mean</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
-<span class="n">kbars40</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">kbars40</span><span class="p">)</span>
-<span class="n">kbars40_devs</span> <span class="o">=</span>  <span class="n">kbars40</span> <span class="o">-</span> <span class="n">rvK</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">kbars40_devs</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="s2">&quot;density&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-                  <span class="n">label</span><span class="o">=</span><span class="s2">&quot;simulation&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;m&quot;</span><span class="p">)</span>
-
-<span class="c1"># zero deviation</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;m&#39;</span><span class="p">)</span>
-
-<span class="c1"># particular sample</span>
-<span class="n">n</span> <span class="o">=</span> <span class="n">ksample02</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-<span class="n">obsmean02</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">ksample02</span><span class="p">)</span>
-<span class="n">obsvar02</span> <span class="o">=</span> <span class="n">var</span><span class="p">(</span><span class="n">ksample02</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;sample mean =&quot;</span><span class="p">,</span> <span class="n">obsmean02</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot; sample var =&quot;</span><span class="p">,</span> <span class="n">obsvar02</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot; sample std =&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">obsvar02</span><span class="p">))</span>
-
-<span class="c1"># analytical approximation based on estimated var from `ksample02`</span>
-<span class="c1">#   we plot the distribution of the difference: mu_k - kbar</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">t</span> <span class="k">as</span> <span class="n">tdist</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span>  <span class="c1"># degrees of freedom</span>
-<span class="n">seKhat02</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span> <span class="n">obsvar02</span> <span class="o">/</span> <span class="n">n</span> <span class="p">)</span>
-<span class="n">rvKbarC</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">seKhat02</span><span class="p">)</span>
-<span class="n">plot_pdf</span><span class="p">(</span><span class="n">rvKbarC</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">blue</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Student&#39;s t approx.&quot;</span><span class="p">)</span>
-
-<span class="c1"># boostrap approx</span>
-<span class="n">kbars02_boot</span> <span class="o">=</span> <span class="n">gen_boot_dist</span><span class="p">(</span><span class="n">ksample02</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">mean</span><span class="p">)</span>
-<span class="n">kbars02_boot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">kbars02_boot</span><span class="p">)</span>
-<span class="n">kbars02_boot_shiftedC</span> <span class="o">=</span> <span class="n">kbars02_boot</span> <span class="o">-</span> <span class="n">obsmean02</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">kbars02_boot_shiftedC</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="s2">&quot;density&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;boostrap approx.&quot;</span><span class="p">)</span>
-
-<span class="c1"># add x-axis label and rm legend</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$\overline{\mathbf</span><span class="si">{k}</span><span class="s2">}$&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">get_legend</span><span class="p">()</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>sample mean = 997.9069999999999
- sample var = 124.31760105263136
- sample std = 11.149780314097285
-</pre></div>
-</div>
-<img alt="../_images/ffbc1196ef7926d29e677e7cc72431486bfff220d332cbe369f9d40825f53de6.png" src="../_images/ffbc1196ef7926d29e677e7cc72431486bfff220d332cbe369f9d40825f53de6.png" />
+<img alt="../_images/eb776a6b56681643bf1d1ddd8d919b6237c9d8fe78e0bc2076a5ced414656cdb.png" src="../_images/eb776a6b56681643bf1d1ddd8d919b6237c9d8fe78e0bc2076a5ced414656cdb.png" />
 </div>
 </div>
 </section>
@@ -1035,11 +1129,26 @@ perhaps we might as well go all the way to a pivotal quantity  <code class="docu
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#particular-sample-kombucha-batch-02">Particular sample: kombucha Batch 02</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#population">Population</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#true-sampling-distribution-of-the-mean">True sampling distribution of the mean</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analytical-approximation-from-ksample02">Analytical approximation from <code class="docutils literal notranslate"><span class="pre">ksample02</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bootstrap-estimate-based-on-ksample02">Bootstrap estimate based on <code class="docutils literal notranslate"><span class="pre">ksample02</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#picture-a-estimated-mean-and-std">Picture A: estimated mean and std</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#picture-b-centred-around-the-population-mean">Picture B: centred around the population mean</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#picture-c">Picture C</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#case-0-know-population-mean-and-variance">CASE 0: Know population mean and variance</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#can-i-haz-90-confidence-interval-plz">Can I haz 90% confidence interval plz</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#case-1-population-mean-is-known-but-variance-is-unknown">Case 1: Population mean is known, but variance is unknown</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#confidence-interval-of-sample-means-we-can-expect-to-observe">90% confidence interval of sample means we can expect to observe</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#case-2-both-population-mean-and-variance-are-unknown">Case 2: Both population mean and variance are unknown</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tool-1-analytical-approximations-based-on-sample-ksample02">Tool 1: Analytical approximations based on sample <code class="docutils literal notranslate"><span class="pre">ksample02</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#confidence-interval-for-the-population-mean">90% confidence interval for the population mean</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tool-2-bootstrap-estimate-based-on-sample-ksample02">Tool 2: Bootstrap estimate based on sample <code class="docutils literal notranslate"><span class="pre">ksample02</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">90% confidence interval for the population mean</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#combined-picture-for-case-2">Combined picture for CASE 2</a></li>
 </ul>
   </nav></div>
 
