@@ -640,7 +640,7 @@ def plot_samples(samples_df, ax=None, xlims=None, filename=None,
 
     # 2. Plot the samples as strip plot
     pal = "dark:b"
-    sns.stripplot(samples_df, orient="h", palette=pal, ax=ax)
+    sns.stripplot(samples_df, orient="h", s=3, palette=pal, ax=ax)
 
     # 3. Add annotations 
     for i in range(1, N+1):
