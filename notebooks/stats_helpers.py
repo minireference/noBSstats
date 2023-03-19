@@ -95,6 +95,7 @@ def ci_mean(sample, alpha=0.1, method="a"):
         t_u = tdist.ppf(1-alpha/2, df=n-1)
         return [xbar + t_l*sehat, xbar + t_u*sehat]
     elif method == "b":          # bootstrap estimation
+        from stats_helpers import gen_boot_dist
         xbars_boot = gen_boot_dist(sample, estfunc=mean)
         return [np.quantile(xbars_boot, alpha/2),
                 np.quantile(xbars_boot, 1-alpha/2)]
@@ -112,6 +113,7 @@ def ci_var(sample, alpha=0.1, method="a"):
         x2_u = chi2.ppf(1-alpha/2, df=n-1)
         return [(n-1)*s2/x2_u, (n-1)*s2/x2_l]
     elif method == "b":          # bootstrap estimation
+        from stats_helpers import gen_boot_dist
         vars_boot = gen_boot_dist(sample, estfunc=var)
         return [np.quantile(vars_boot, alpha/2),
                 np.quantile(vars_boot, 1-alpha/2)]
@@ -132,6 +134,7 @@ def ci_dmeans(xsample, ysample, alpha=0.1, method="a"):
         t_u = tdist.ppf(1-alpha/2, df=df)
         return [dhat + t_l*seD, dhat + t_u*seD]
     elif method == "b":          # bootstrap estimation
+        from stats_helpers import gen_boot_dist
         xbars_boot = gen_boot_dist(xsample, np.mean)
         ybars_boot = gen_boot_dist(ysample, np.mean)
         dmeans_boot = np.subtract(xbars_boot,ybars_boot)
