@@ -195,11 +195,8 @@ def ztest(sample, mu0, sigma0, alternative="two-sided"):
     n = len(sample)
     se = sigma0 / np.sqrt(n)
     obsz = (mean - mu0) / se
-    absz = abs(obsz)
-    if alternative == "two-sided":
-        pval = norm.cdf(-absz) + 1 - norm.cdf(absz)
-    else:
-        raise ValueError("Not implemented.")
+    rvZ = norm(0,1)
+    pval = tailprobs(rvZ, obsz, alternative=alternative)
     return obsz, pval
 
 
