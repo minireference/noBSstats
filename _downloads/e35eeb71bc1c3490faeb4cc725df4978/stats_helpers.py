@@ -1,7 +1,10 @@
 import numpy as np
+from scipy.stats import bootstrap
 from scipy.stats import chi2
 from scipy.stats import norm
 from scipy.stats import t as tdist
+
+
 
 #######################################################
 # max width that fits in the code blocks is 55 chars  #
@@ -77,6 +80,7 @@ def gen_boot_dist(sample, estfunc, B=5000):
 
 
 
+
 # CONFIDENCE INTERVALS
 ################################################################################
 
@@ -109,9 +113,9 @@ def ci_var(sample, alpha=0.1, method="a"):
     if method == "a":        # analytical approximation
         n = len(sample)
         s2 = np.var(sample, ddof=1)
-        x2_l = chi2.ppf(alpha/2, df=n-1)
-        x2_u = chi2.ppf(1-alpha/2, df=n-1)
-        return [(n-1)*s2/x2_u, (n-1)*s2/x2_l]
+        q_l = chi2.ppf(alpha/2, df=n-1)
+        q_u = chi2.ppf(1-alpha/2, df=n-1)
+        return [(n-1)*s2/q_u, (n-1)*s2/q_l]
     elif method == "b":          # bootstrap estimation
         from stats_helpers import gen_boot_dist
         vars_boot = gen_boot_dist(sample, estfunc=var)
@@ -141,6 +145,20 @@ def ci_dmeans(xsample, ysample, alpha=0.1, method="a"):
         return [np.quantile(dmeans_boot, alpha/2),
                 np.quantile(dmeans_boot, 1-alpha/2)]
 
+
+def boot_ci(sample, estfunc, alpha=0.1, method=None, B=5000):
+    """
+    An adaptor for calling the function `scipy.stats.bootstrap` without the need
+    to specify all all the optional keyword arguments.
+    """
+    res = bootstrap((sample,),
+                    statistic=estfunc,
+                    confidence_level=1-alpha,
+                    n_resamples=B,
+                    vectorized=False,
+                    method=method)
+    return [res.confidence_interval.low,
+            res.confidence_interval.high]
 
 
 

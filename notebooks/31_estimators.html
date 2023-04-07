@@ -19,12 +19,12 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
 
   
-  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
   <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
@@ -38,8 +38,8 @@
     <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=12da95d707ffb74b382d" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=12da95d707ffb74b382d" />
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
 
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
@@ -543,7 +543,11 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanations">Explanations</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#biased-and-unbiased-estimators-for-the-population-variance">Biased and unbiased estimators for the population variance</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pivotal-quantities">Pivotal quantities</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shifted-sampling-distributions">Shifted sampling distributions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shifted-sampling-distributions">Shifted sampling distributions</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#estimation-of-the-apples-weights">Estimation of the apples weights</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#kombucha-volume-probabilities">Kombucha volume probabilities</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a></li>
@@ -582,7 +586,6 @@ which are the math tools used for computing <strong>confidence intervals</strong
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot helper functions</span>
 <span class="kn">from</span> <span class="nn">plot_helpers</span> <span class="kn">import</span> <span class="n">plot_pdf</span>
-<span class="kn">from</span> <span class="nn">plot_helpers</span> <span class="kn">import</span> <span class="n">savefigure</span>
 </pre></div>
 </div>
 </div>
@@ -590,10 +593,9 @@ which are the math tools used for computing <strong>confidence intervals</strong
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Figures setup</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>  <span class="c1"># needed otherwise `sns.set_theme` doesn&#39;t work</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
 <span class="kn">from</span> <span class="nn">plot_helpers</span> <span class="kn">import</span> <span class="n">RCPARAMS</span>
-<span class="n">RCPARAMS</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">)})</span>   <span class="c1"># good for screen</span>
-<span class="c1"># RCPARAMS.update({&#39;figure.figsize&#39;: (5, 1.6)})  # good for print</span>
+<span class="n">RCPARAMS</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">)})</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">set_theme</span><span class="p">(</span>
     <span class="n">context</span><span class="o">=</span><span class="s2">&quot;paper&quot;</span><span class="p">,</span>
     <span class="n">style</span><span class="o">=</span><span class="s2">&quot;whitegrid&quot;</span><span class="p">,</span>
@@ -857,33 +859,27 @@ and the sample variance <span class="math notranslate nohighlight">\(s_{\mathbf{
 </div>
 </div>
 </div>
-<p>Next let’s calculate the mean of the sample:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">asample</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">asample</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: xlabel=&#39;weight&#39;, ylabel=&#39;Count&#39;&gt;
-</pre></div>
-</div>
 <img alt="../_images/43b57a8b2e1b88bb020b593c4924058a20aaca78f0cf603ff8cb459b4e99c443.png" src="../_images/43b57a8b2e1b88bb020b593c4924058a20aaca78f0cf603ff8cb459b4e99c443.png" />
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">kdeplot</span><span class="p">(</span><span class="n">asample</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">kdeplot</span><span class="p">(</span><span class="n">asample</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: xlabel=&#39;weight&#39;, ylabel=&#39;Density&#39;&gt;
-</pre></div>
-</div>
 <img alt="../_images/cbcc01cd9b04924ff2e3e3e2a8a69bac77d779abd7b8ba52fe48e5e50698c755.png" src="../_images/cbcc01cd9b04924ff2e3e3e2a8a69bac77d779abd7b8ba52fe48e5e50698c755.png" />
 </div>
 </div>
+<p>Next let’s calculate the mean of the sample:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mean</span><span class="p">(</span><span class="n">asample</span><span class="p">)</span>
@@ -974,14 +970,11 @@ Name: weight, dtype: float64
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">kdeplot</span><span class="p">(</span><span class="n">ksample01</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">kdeplot</span><span class="p">(</span><span class="n">ksample01</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: xlabel=&#39;volume&#39;, ylabel=&#39;Density&#39;&gt;
-</pre></div>
-</div>
 <img alt="../_images/930cc9028563893f97abdac6dad28012b4c886049e8d86f96b0e5cb061957142.png" src="../_images/930cc9028563893f97abdac6dad28012b4c886049e8d86f96b0e5cb061957142.png" />
 </div>
 </div>
@@ -1169,22 +1162,6 @@ instead of particular sample <span class="math notranslate nohighlight">\(\mathb
 <img alt="../_images/ee444b496a565d7fdff8339f6ba50ab8bcca0f447b5fe91be4cd45efbb0a6a65.png" src="../_images/ee444b496a565d7fdff8339f6ba50ab8bcca0f447b5fe91be4cd45efbb0a6a65.png" />
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;samples_from_rvZ_n20_w_means_n_stds.pdf&quot;</span><span class="p">)</span>
-<span class="n">savefigure</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/estimators/samples_from_rvZ_n20_w_means_n_stds.pdf
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/estimators/samples_from_rvZ_n20_w_means_n_stds.png
-</pre></div>
-</div>
-</div>
-</div>
 <p>Now imagine repeating this process for <span class="math notranslate nohighlight">\(N=1000\)</span> samples <span class="math notranslate nohighlight">\(\mathbf{z}_1, \mathbf{z}_2, \mathbf{z}_3, \ldots, \mathbf{z}_{1000}\)</span>.</p>
 <p>We can obtain an approximation of the sampling distribution of the mean,
 by plotting a histogram of the means we computed from the <span class="math notranslate nohighlight">\(1000\)</span> random samples:</p>
@@ -1202,31 +1179,12 @@ by plotting a histogram of the means we computed from the <span class="math notr
 <span class="n">plot_sampling_dist</span><span class="p">(</span><span class="n">zbars</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">binwidth</span><span class="o">=</span><span class="mf">0.06</span><span class="p">,</span> <span class="n">scatter</span><span class="o">=</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="o">-</span><span class="mf">2.5</span><span class="p">,</span><span class="mf">2.5</span><span class="p">])</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$\overline{\mathbf</span><span class="si">{z}</span><span class="s2">}$&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$f_{\overline{\mathbf</span><span class="si">{Z}</span><span class="s2">}}$&quot;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$f_{\overline{\mathbf</span><span class="si">{Z}</span><span class="s2">}}$&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0, 0.5, &#39;$f_{\\overline{\\mathbf{Z}}}$&#39;)
-</pre></div>
-</div>
 <img alt="../_images/74f7ac93add163b7230f63b99f4c64ccb7980d3a6d293ee3489163b2ea25d1a3.png" src="../_images/74f7ac93add163b7230f63b99f4c64ccb7980d3a6d293ee3489163b2ea25d1a3.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;sampling_dist_mean_hist_and_strip_rvZ_n20_N1000.pdf&quot;</span><span class="p">)</span>
-<span class="n">savefigure</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/estimators/sampling_dist_mean_hist_and_strip_rvZ_n20_N1000.pdf
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/estimators/sampling_dist_mean_hist_and_strip_rvZ_n20_N1000.png
-</pre></div>
-</div>
 </div>
 </div>
 <p>We can obtain an approximation of the sampling distribution
@@ -1245,31 +1203,12 @@ by plotting a histogram of the standard deviations we computed from the <span cl
 <span class="n">zstds</span> <span class="o">=</span> <span class="n">gen_sampling_dist</span><span class="p">(</span><span class="n">rvZ</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">std</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
 <span class="n">plot_sampling_dist</span><span class="p">(</span><span class="n">zstds</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">binwidth</span><span class="o">=</span><span class="mf">0.03</span><span class="p">,</span> <span class="n">scatter</span><span class="o">=</span><span class="s2">&quot;std&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$f_{S_{\mathbf</span><span class="si">{Z}</span><span class="s2">}}$&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$s_{\mathbf</span><span class="si">{z}</span><span class="s2">}$&quot;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$s_{\mathbf</span><span class="si">{z}</span><span class="s2">}$&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 0, &#39;$s_{\\mathbf{z}}$&#39;)
-</pre></div>
-</div>
 <img alt="../_images/68712a232cec8787963046d6383cd2eaa689b520c5225b78a116fed451f9876c.png" src="../_images/68712a232cec8787963046d6383cd2eaa689b520c5225b78a116fed451f9876c.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;sampling_dist_std_hist_and_strip_rvZ_n20_N1000.pdf&quot;</span><span class="p">)</span>
-<span class="n">savefigure</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/estimators/sampling_dist_std_hist_and_strip_rvZ_n20_N1000.pdf
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/estimators/sampling_dist_std_hist_and_strip_rvZ_n20_N1000.png
-</pre></div>
-</div>
 </div>
 </div>
 <section id="illustration">
@@ -1322,6 +1261,9 @@ are spread out, but mostly centred on the target.</p></li>
         <span class="n">estimate</span> <span class="o">=</span> <span class="n">estfunc</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
         <span class="n">estimates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">estimate</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">estimates</span>
+
+<span class="c1"># ALT.</span>
+<span class="c1"># from stats_helpers import gen_sampling_dist</span>
 </pre></div>
 </div>
 </div>
@@ -1346,23 +1288,6 @@ but we’ll investigate because it allows us to learn more about sampling distri
 <img alt="../_images/a9428cbc3f5375b699f747c5926e5f5a7d277ebe8ee941c1613c5e1be76fd52b.png" src="../_images/a9428cbc3f5375b699f747c5926e5f5a7d277ebe8ee941c1613c5e1be76fd52b.png" />
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO: add figure in text</span>
-<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;plot_pdf_normal_mu1000_sigma10.pdf&quot;</span><span class="p">)</span>
-<span class="n">savefigure</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/estimators/plot_pdf_normal_mu1000_sigma10.pdf
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/estimators/plot_pdf_normal_mu1000_sigma10.png
-</pre></div>
-</div>
-</div>
-</div>
 <section id="sampling-distribution-of-the-mean">
 <h5>Sampling distribution of the mean<a class="headerlink" href="#sampling-distribution-of-the-mean" title="Permalink to this heading">#</a></h5>
 <div class="cell docutils container">
@@ -1378,22 +1303,6 @@ but we’ll investigate because it allows us to learn more about sampling distri
 </div>
 <div class="cell_output docutils container">
 <img alt="../_images/66afb38bf63bd3ef8225e0b6dc3004d7cc48d632e7994eb20f92ca9887ca5f12.png" src="../_images/66afb38bf63bd3ef8225e0b6dc3004d7cc48d632e7994eb20f92ca9887ca5f12.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;sampling_dist_mean_rvK_n20.pdf&quot;</span><span class="p">)</span>
-<span class="n">savefigure</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/estimators/sampling_dist_mean_rvK_n20.pdf
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/estimators/sampling_dist_mean_rvK_n20.png
-</pre></div>
-</div>
 </div>
 </div>
 <p>We can verify the mean estimator is unbiased,
@@ -1453,22 +1362,6 @@ since the mean of the sampling distribution is very close to the population mean
 </div>
 <div class="cell_output docutils container">
 <img alt="../_images/99d9c2864559a3ec7a4102ad067012f7f0d2a88c49b181c6a0fb5a2eafd268bd.png" src="../_images/99d9c2864559a3ec7a4102ad067012f7f0d2a88c49b181c6a0fb5a2eafd268bd.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;sampling_dist_var_rvK_n20.pdf&quot;</span><span class="p">)</span>
-<span class="n">savefigure</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/estimators/sampling_dist_var_rvK_n20.pdf
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/estimators/sampling_dist_var_rvK_n20.png
-</pre></div>
-</div>
 </div>
 </div>
 <p>The sample variance estimator is unbiased</p>
@@ -1531,31 +1424,12 @@ since the mean of the sampling distribution is very close to the population mean
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">plot_pdf</span><span class="p">(</span><span class="n">rvK</span><span class="p">,</span> <span class="n">xlims</span><span class="o">=</span><span class="p">[</span><span class="mi">960</span><span class="p">,</span><span class="mi">1040</span><span class="p">],</span> <span class="n">rv_name</span><span class="o">=</span><span class="s2">&quot;K&quot;</span><span class="p">)</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">ksample02</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="s2">&quot;density&quot;</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">35</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">ksample02</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="s2">&quot;density&quot;</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">35</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: xlabel=&#39;k&#39;, ylabel=&#39;$f_{K}$&#39;&gt;
-</pre></div>
-</div>
 <img alt="../_images/f8e9c3d4f61797d9d4ed8c39d29820fb8c0728e4bc86da1dc47fdf37604f0311.png" src="../_images/f8e9c3d4f61797d9d4ed8c39d29820fb8c0728e4bc86da1dc47fdf37604f0311.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;pdf_rvK_and_hist_ksample02_n20.pdf&quot;</span><span class="p">)</span>
-<span class="n">savefigure</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/estimators/pdf_rvK_and_hist_ksample02_n20.pdf
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/estimators/pdf_rvK_and_hist_ksample02_n20.png
-</pre></div>
-</div>
 </div>
 </div>
 <div class="cell docutils container">
@@ -1612,7 +1486,7 @@ since the mean of the sampling distribution is very close to the population mean
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># boostrap sample</span>
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>  <span class="c1"># comment this line to generate new bootstrap samples</span>
 <span class="n">bsample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">xsample</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">xsample</span><span class="p">))</span>
 <span class="n">bsample</span>
 </pre></div>
@@ -1641,6 +1515,9 @@ since the mean of the sampling distribution is very close to the population mean
         <span class="n">bestimate</span> <span class="o">=</span> <span class="n">estfunc</span><span class="p">(</span><span class="n">bsample</span><span class="p">)</span>
         <span class="n">bestimates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bestimate</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">bestimates</span>
+
+<span class="c1"># ALT.</span>
+<span class="c1"># from stats_helpers import gen_boot_dist</span>
 </pre></div>
 </div>
 </div>
@@ -1661,22 +1538,6 @@ since the mean of the sampling distribution is very close to the population mean
 </div>
 <div class="cell_output docutils container">
 <img alt="../_images/2405bd8c790a699f154b0c3b812b4f2d590714a21cb6334ecc0188f33e85de66.png" src="../_images/2405bd8c790a699f154b0c3b812b4f2d590714a21cb6334ecc0188f33e85de66.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;kbars_boot_from_ksample02.pdf&quot;</span><span class="p">)</span>
-<span class="n">savefigure</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/estimators/kbars_boot_from_ksample02.pdf
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/estimators/kbars_boot_from_ksample02.png
-</pre></div>
-</div>
 </div>
 </div>
 <p>We can obtain an bootstrap estimate of standard error of the mean by computing the
@@ -1765,22 +1626,6 @@ for certain sampling distributions.</p>
 </div>
 <div class="cell_output docutils container">
 <img alt="../_images/03405ed1723780453cffcdc62aabc8e849bb820b827e3c4ad90fd37398ddc1d2.png" src="../_images/03405ed1723780453cffcdc62aabc8e849bb820b827e3c4ad90fd37398ddc1d2.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;sampling_dist_mean_rvK_and_CLT_n20.pdf&quot;</span><span class="p">)</span>
-<span class="n">savefigure</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/estimators/sampling_dist_mean_rvK_and_CLT_n20.pdf
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/estimators/sampling_dist_mean_rvK_and_CLT_n20.png
-</pre></div>
-</div>
 </div>
 </div>
 </section>
@@ -1874,22 +1719,6 @@ we obtain from the central limit theorem.</p>
 <img alt="../_images/34cc5e7f3d3a7b362e5af51362ff7ae58087191e96246971d5de93e35996cf7e.png" src="../_images/34cc5e7f3d3a7b362e5af51362ff7ae58087191e96246971d5de93e35996cf7e.png" />
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;sampling_dist_mean_rvK_simulation_and_CLT_n7.pdf&quot;</span><span class="p">)</span>
-<span class="n">savefigure</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/estimators/sampling_dist_mean_rvK_simulation_and_CLT_n7.pdf
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/estimators/sampling_dist_mean_rvK_simulation_and_CLT_n7.png
-</pre></div>
-</div>
-</div>
-</div>
 </section>
 <section id="the-plug-in-principle">
 <h3>The plug-in principle<a class="headerlink" href="#the-plug-in-principle" title="Permalink to this heading">#</a></h3>
@@ -1972,51 +1801,11 @@ that we computed from the data in <code class="docutils literal notranslate"><sp
 <span class="n">plot_pdf</span><span class="p">(</span><span class="n">rvNKbar</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">xlims</span><span class="o">=</span><span class="p">[</span><span class="mi">985</span><span class="p">,</span><span class="mi">1015</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;normal approx.&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$f_{\overline{\mathbf</span><span class="si">{K}</span><span class="s2">}}$&quot;</span><span class="p">)</span>
 <span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$\overline{\mathbf</span><span class="si">{k}</span><span class="s2">}$&quot;</span><span class="p">)</span>
-
-
-<span class="c1"># FIGURES ONLY</span>
-<span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">Ellipse</span>
-<span class="kn">import</span> <span class="nn">matplotlib.transforms</span> <span class="k">as</span> <span class="nn">transforms</span>
-
-<span class="n">hoffset</span> <span class="o">=</span> <span class="mi">9</span>
-<span class="n">voffset</span> <span class="o">=</span> <span class="mf">0.02</span>
-<span class="n">ewidth</span> <span class="o">=</span> <span class="mi">7</span>
-<span class="n">eheight</span> <span class="o">=</span> <span class="mf">0.04</span>
-<span class="n">ellipse1</span> <span class="o">=</span> <span class="n">Ellipse</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">width</span><span class="o">=</span><span class="n">ewidth</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">eheight</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-                   <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;m&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.2</span><span class="p">)</span>
-<span class="n">transf1</span> <span class="o">=</span> <span class="n">transforms</span><span class="o">.</span><span class="n">Affine2D</span><span class="p">()</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">1000</span><span class="o">-</span><span class="n">hoffset</span><span class="p">,</span> <span class="n">voffset</span><span class="p">)</span>
-<span class="n">ellipse1</span><span class="o">.</span><span class="n">set_transform</span><span class="p">(</span><span class="n">transf1</span> <span class="o">+</span> <span class="n">ax</span><span class="o">.</span><span class="n">transData</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">ellipse1</span><span class="p">)</span>
-
-<span class="n">ellipse2</span> <span class="o">=</span> <span class="n">Ellipse</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">width</span><span class="o">=</span><span class="n">ewidth</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">eheight</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-                   <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;m&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.2</span><span class="p">)</span>
-<span class="n">transf2</span> <span class="o">=</span> <span class="n">transforms</span><span class="o">.</span><span class="n">Affine2D</span><span class="p">()</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">1000</span><span class="o">+</span><span class="n">hoffset</span><span class="p">,</span> <span class="n">voffset</span><span class="p">)</span>
-<span class="n">ellipse2</span><span class="o">.</span><span class="n">set_transform</span><span class="p">(</span><span class="n">transf2</span> <span class="o">+</span> <span class="n">ax</span><span class="o">.</span><span class="n">transData</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">ellipse2</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.patches.Ellipse at 0x7fae646d8d30&gt;
-</pre></div>
-</div>
-<img alt="../_images/b36d28d652cb37690532bc67379a80770989425c1a49756ac7d090dc2e140279.png" src="../_images/b36d28d652cb37690532bc67379a80770989425c1a49756ac7d090dc2e140279.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;sampling_dist_mean_rvK_and_normal_approx_n7.pdf&quot;</span><span class="p">)</span>
-<span class="n">savefigure</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/estimators/sampling_dist_mean_rvK_and_normal_approx_n7.pdf
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/estimators/sampling_dist_mean_rvK_and_normal_approx_n7.png
-</pre></div>
-</div>
+<img alt="../_images/25ffa11a3608873be4a34a9034c04f87030cfdcf713fc4c924726cf515598458.png" src="../_images/25ffa11a3608873be4a34a9034c04f87030cfdcf713fc4c924726cf515598458.png" />
 </div>
 </div>
 </section>
@@ -2041,22 +1830,6 @@ that we computed from the data in <code class="docutils literal notranslate"><sp
 </div>
 <div class="cell_output docutils container">
 <img alt="../_images/9436d531583cc52dac8972277c4b62c5737f6b1091a9d862f087694b3f46a23e.png" src="../_images/9436d531583cc52dac8972277c4b62c5737f6b1091a9d862f087694b3f46a23e.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;sampling_dist_mean_rvK_and_T_approx_n7.pdf&quot;</span><span class="p">)</span>
-<span class="n">savefigure</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/estimators/sampling_dist_mean_rvK_and_T_approx_n7.pdf
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/estimators/sampling_dist_mean_rvK_and_T_approx_n7.png
-</pre></div>
-</div>
 </div>
 </div>
 <div class="cell docutils container">
@@ -2087,32 +1860,13 @@ that we computed from the data in <code class="docutils literal notranslate"><sp
 <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">kbars_boot03</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="s2">&quot;density&quot;</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
              <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;bootstrap estimates&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$f_{\overline{\mathbf</span><span class="si">{K}</span><span class="s2">}}$&quot;</span><span class="p">)</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$\overline{\mathbf</span><span class="si">{k}</span><span class="s2">}$&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$\overline{\mathbf</span><span class="si">{k}</span><span class="s2">}$&quot;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7fae644a65b0&gt;
-</pre></div>
-</div>
 <img alt="../_images/d2a31b8a7cc463e5ed65f69596dc589a0ce7e1a782b12189c5d7b19ee9ecf1f5.png" src="../_images/d2a31b8a7cc463e5ed65f69596dc589a0ce7e1a782b12189c5d7b19ee9ecf1f5.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;bootstrap_dist_mean_kombucha_ksample03.pdf&quot;</span><span class="p">)</span>
-<span class="n">savefigure</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/estimators/bootstrap_dist_mean_kombucha_ksample03.pdf
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/estimators/bootstrap_dist_mean_kombucha_ksample03.png
-</pre></div>
-</div>
 </div>
 </div>
 <p>The expected value of the sampling distribution
@@ -2182,12 +1936,11 @@ computed from samples of size <span class="math notranslate nohighlight">\(n=20\
 <span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">kvars20</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="s2">&quot;density&quot;</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">orange</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$f_{S^2_{\mathbf</span><span class="si">{K}</span><span class="s2">}}$&quot;</span><span class="p">)</span>
 <span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$s^2_{\mathbf</span><span class="si">{k}</span><span class="s2">}$&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_label_coords</span><span class="p">(</span><span class="mf">.4</span><span class="p">,</span> <span class="o">-</span><span class="mf">.12</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/3f997cf9fdfea2a53d92cd74d4d7dd97e5147b3b5954bade4d2afe9827d1ed15.png" src="../_images/3f997cf9fdfea2a53d92cd74d4d7dd97e5147b3b5954bade4d2afe9827d1ed15.png" />
+<img alt="../_images/c08ffa3debd7526ccad3c884b4cf2ccd4e46a6cc0268e8b4e5b889007a6f1c8c.png" src="../_images/c08ffa3debd7526ccad3c884b4cf2ccd4e46a6cc0268e8b4e5b889007a6f1c8c.png" />
 </div>
 </div>
 <p>Let’s now superimpose the chi-square distribution with <span class="math notranslate nohighlight">\(20-1=19\)</span> degrees of freedom,
@@ -2198,38 +1951,17 @@ with scale parameter set to <span class="math notranslate nohighlight">\(\sigma_
 
 <span class="n">df</span> <span class="o">=</span> <span class="mi">20</span> <span class="o">-</span> <span class="mi">1</span>
 <span class="n">scale</span> <span class="o">=</span> <span class="n">sigmaK</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="mi">20</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">scale</span><span class="p">)</span>
 <span class="n">rvS2</span> <span class="o">=</span> <span class="n">chi2</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">scale</span><span class="p">)</span>
 
 <span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">kvars20</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="s2">&quot;density&quot;</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">orange</span><span class="p">)</span>
 <span class="n">plot_pdf</span><span class="p">(</span><span class="n">rvS2</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;m&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$f_{S^2_{\mathbf</span><span class="si">{K}</span><span class="s2">}}$&quot;</span><span class="p">)</span>
 <span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$s^2_{\mathbf</span><span class="si">{k}</span><span class="s2">}$&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_label_coords</span><span class="p">(</span><span class="mf">.42</span><span class="p">,</span> <span class="o">-</span><span class="mf">.12</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5.2631578947368425
-</pre></div>
-</div>
-<img alt="../_images/8603e9ac1101d6c929f8253120c3d00b3b543121c5ff1878c8c82d8b2c0a5312.png" src="../_images/8603e9ac1101d6c929f8253120c3d00b3b543121c5ff1878c8c82d8b2c0a5312.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;sampling_dist_var_rvK_and_X2_approx_n20.pdf&quot;</span><span class="p">)</span>
-<span class="n">savefigure</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/estimators/sampling_dist_var_rvK_and_X2_approx_n20.pdf
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/estimators/sampling_dist_var_rvK_and_X2_approx_n20.png
-</pre></div>
-</div>
+<img alt="../_images/725780fd0e24583998d7c6beaabdb3efb6fea0e64b42ef396cbc183b0c46693b.png" src="../_images/725780fd0e24583998d7c6beaabdb3efb6fea0e64b42ef396cbc183b0c46693b.png" />
 </div>
 </div>
 </section>
@@ -2281,33 +2013,13 @@ by resampling from <code class="docutils literal notranslate"><span class="pre">
 <span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">kvars_boot02</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="s2">&quot;density&quot;</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
                   <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;bootstrap estimate&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$f_{S^2_{\mathbf</span><span class="si">{K}</span><span class="s2">}}$&quot;</span><span class="p">)</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$s^2_{\mathbf</span><span class="si">{k}</span><span class="s2">}$&quot;</span><span class="p">)</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_label_coords</span><span class="p">(</span><span class="mf">.4</span><span class="p">,</span> <span class="o">-</span><span class="mf">.12</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$s^2_{\mathbf</span><span class="si">{k}</span><span class="s2">}$&quot;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7fae645a9ee0&gt;
-</pre></div>
-</div>
-<img alt="../_images/801c1c02effbcd1aef58398ccaf58a706699b98adf1d9f87c3a7c2bf1f8c8242.png" src="../_images/801c1c02effbcd1aef58398ccaf58a706699b98adf1d9f87c3a7c2bf1f8c8242.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;bootstrap_dist_var_kombucha_ksample02.pdf&quot;</span><span class="p">)</span>
-<span class="n">savefigure</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/estimators/bootstrap_dist_var_kombucha_ksample02.pdf
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/estimators/bootstrap_dist_var_kombucha_ksample02.png
-</pre></div>
-</div>
+<img alt="../_images/52b496fe1c7cb900f0d8e2bea9814a29b889eb1063e6ebfc892cb8ffc900f713.png" src="../_images/52b496fe1c7cb900f0d8e2bea9814a29b889eb1063e6ebfc892cb8ffc900f713.png" />
 </div>
 </div>
 <p>The expected value the sampling distribution we obtained using bootstrap estimation is:</p>
@@ -2447,6 +2159,9 @@ $<span class="math notranslate nohighlight">\(
     <span class="n">vY</span> <span class="o">=</span> <span class="n">stdY</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">m</span>
     <span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">vX</span> <span class="o">+</span> <span class="n">vY</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">vX</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">vY</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="p">(</span><span class="n">m</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">df</span>
+
+<span class="c1"># ALT.</span>
+<span class="c1"># from stats_helpers import calcdf</span>
 </pre></div>
 </div>
 </div>
@@ -2554,22 +2269,6 @@ described by the models <span class="math notranslate nohighlight">\(X_W \sim \m
 <img alt="../_images/07096304d571fa6c6ac98f81268da64606a615096979b12c33d14c7d060fdd68.png" src="../_images/07096304d571fa6c6ac98f81268da64606a615096979b12c33d14c7d060fdd68.png" />
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;tdist_approx_for_eprices_dmeans.pdf&quot;</span><span class="p">)</span>
-<span class="n">savefigure</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/estimators/tdist_approx_for_eprices_dmeans.pdf
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/estimators/tdist_approx_for_eprices_dmeans.png
-</pre></div>
-</div>
-</div>
-</div>
 <section id="bootstrapped-sampling-distribution-of-the-difference-between-means">
 <h4>Bootstrapped sampling distribution of the difference between means<a class="headerlink" href="#bootstrapped-sampling-distribution-of-the-difference-between-means" title="Permalink to this heading">#</a></h4>
 <p>First compute bootstrap estimates for mean in each group</p>
@@ -2598,22 +2297,6 @@ described by the models <span class="math notranslate nohighlight">\(X_W \sim \m
 </pre></div>
 </div>
 <img alt="../_images/6f5b47dd38a1083f1e57ca20690602f9900c21e2e89da0055f64a169af03ac49.png" src="../_images/6f5b47dd38a1083f1e57ca20690602f9900c21e2e89da0055f64a169af03ac49.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;bootstrap_dist_eprices_dmeans.pdf&quot;</span><span class="p">)</span>
-<span class="n">savefigure</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/estimators/bootstrap_dist_eprices_dmeans.pdf
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/estimators/bootstrap_dist_eprices_dmeans.png
-</pre></div>
-</div>
 </div>
 </div>
 <p>We can obtain the bootstrap estimate of the standard error <span class="math notranslate nohighlight">\(\stderrhat{\hat{d}}^*\)</span>
@@ -2863,6 +2546,8 @@ $<span class="math notranslate nohighlight">\( T_A
 distribution of the deviations of the sample mean from the population
 mean: <span class="math notranslate nohighlight">\(\overline{\mathbf{x}} - \mu_X\)</span>, so this is why we can use the
 same distribution in both contexts.</p>
+<section id="estimation-of-the-apples-weights">
+<h4>Estimation of the apples weights<a class="headerlink" href="#estimation-of-the-apples-weights" title="Permalink to this heading">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">apples</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/apples.csv&quot;</span><span class="p">)</span>
@@ -2876,64 +2561,28 @@ same distribution in both contexts.</p>
 <span class="n">df</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span>
 <span class="n">rvTAbar</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">abar</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">asehat</span><span class="p">)</span>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_pdf</span><span class="p">(</span><span class="n">rvTAbar</span><span class="p">,</span> <span class="n">xlims</span><span class="o">=</span><span class="p">[</span><span class="mi">190</span><span class="p">,</span><span class="mi">215</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">orange</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="o">-</span><span class="mf">0.01</span><span class="p">,</span><span class="mf">0.18</span><span class="p">])</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$f_{\overline{\mathbf</span><span class="si">{A}</span><span class="s2">}}$&quot;</span><span class="p">)</span>
-<span class="c1"># _ = ax.set_xlabel(None)</span>
-<span class="c1"># _ = ax.set_xlabel(&quot;$\overline{\mathbf{a}}$&quot;)</span>
 <span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$\mu_A$&quot;</span><span class="p">)</span>
-
-<span class="c1"># # boostrap approx.</span>
-<span class="c1"># abars_boot = gen_boot_dist(asample, estfunc=mean)</span>
-<span class="c1"># sns.histplot(abars_boot, ax=ax, bins=30, stat=&quot;density&quot;, color=orange, alpha=0.5)</span>
 
 <span class="c1"># sample mean</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">abar</span><span class="p">,</span> <span class="n">ymin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="mf">0.86</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">orange</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">abar</span><span class="p">,</span> <span class="mf">0.157</span><span class="p">,</span> <span class="s2">&quot;$\overline{\mathbf</span><span class="si">{a}</span><span class="s2">}$&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">orange</span><span class="p">)</span>
 
 <span class="c1"># sample mean +/- se</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">abar</span><span class="o">+</span><span class="n">asehat</span><span class="p">,</span> <span class="n">ymin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="mf">0.86</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">orange</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">abar</span><span class="o">+</span><span class="n">asehat</span><span class="o">+</span><span class="mf">0.13</span><span class="p">,</span> <span class="mf">0.157</span><span class="p">,</span> 
-        <span class="s2">&quot;$\overline{\mathbf</span><span class="si">{a}</span><span class="s2">}\!+\!\widehat{\mathbf</span><span class="si">{se}</span><span class="s2">}_{\overline{\mathbf</span><span class="si">{a}</span><span class="s2">}}$&quot;</span><span class="p">,</span>
-        <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">orange</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">abar</span><span class="o">-</span><span class="n">asehat</span><span class="p">,</span> <span class="n">ymin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="mf">0.86</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">orange</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">abar</span><span class="o">-</span><span class="n">asehat</span><span class="p">,</span> <span class="mf">0.157</span><span class="p">,</span> 
-        <span class="s2">&quot;$\overline{\mathbf</span><span class="si">{a}</span><span class="s2">}\!-\!\widehat{\mathbf</span><span class="si">{se}</span><span class="s2">}_{\overline{\mathbf</span><span class="si">{a}</span><span class="s2">}}$&quot;</span><span class="p">,</span>
-        <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">orange</span><span class="p">)</span>
-
-
-<span class="c1"># 95% confidence interval</span>
-<span class="n">t_l</span> <span class="o">=</span> <span class="n">rvTAbar</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.025</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">t_l</span><span class="p">,</span> <span class="n">ymin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">t_l</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="s2">&quot;$\mathbf</span><span class="si">{l}</span><span class="s2">_{\mu_A}$&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
-<span class="n">t_u</span> <span class="o">=</span> <span class="n">rvTAbar</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.975</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">t_u</span><span class="p">,</span> <span class="n">ymin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">t_u</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="s2">&quot;$\mathbf</span><span class="si">{u}</span><span class="s2">_{\mu_A}$&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(209.54547874974753, 0.1, &#39;$\\mathbf{u}_{\\mu_A}$&#39;)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.lines.Line2D at 0x7f71be6f31f0&gt;
 </pre></div>
 </div>
-<img alt="../_images/666374df9273b6072581a40db6acc90be422a9308ddbd4c2f7a801aa744c0419.png" src="../_images/666374df9273b6072581a40db6acc90be422a9308ddbd4c2f7a801aa744c0419.png" />
+<img alt="../_images/24f8f32da53357a43dffeac75f4b68db6e7fd4a7826e55fabcb34f84b812d809.png" src="../_images/24f8f32da53357a43dffeac75f4b68db6e7fd4a7826e55fabcb34f84b812d809.png" />
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;task_E_apple_mean.pdf&quot;</span><span class="p">)</span>
-<span class="n">savefigure</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/estimators/task_E_apple_mean.pdf
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/estimators/task_E_apple_mean.png
-</pre></div>
-</div>
-</div>
-</div>
+</section>
+<section id="kombucha-volume-probabilities">
+<h4>Kombucha volume probabilities<a class="headerlink" href="#kombucha-volume-probabilities" title="Permalink to this heading">#</a></h4>
 <p>In <strong>Case P</strong> we know the population mean, and the random variable <span class="math notranslate nohighlight">\(T_B\)</span>
 describes what kind of sample means we can expect to observe.
 We’ll use this type of reasoning for hypothesis testing.</p>
@@ -2946,8 +2595,6 @@ We’ll use this type of reasoning for hypothesis testing.</p>
 <span class="n">kbar01</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">ksample01</span><span class="p">)</span>
 <span class="n">kbar06</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">ksample06</span><span class="p">)</span>
 <span class="n">n</span> <span class="o">=</span> <span class="n">ksample01</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-<span class="k">assert</span> <span class="n">ksample06</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="n">n</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">kbar01</span><span class="p">,</span> <span class="n">kbar06</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
 
 <span class="c1"># analytical approx.</span>
 <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">t</span> <span class="k">as</span> <span class="n">tdist</span>
@@ -2955,8 +2602,7 @@ We’ll use this type of reasoning for hypothesis testing.</p>
 <span class="n">rvTKbar</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">muK</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">sigmaK</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_pdf</span><span class="p">(</span><span class="n">rvTKbar</span><span class="p">,</span> <span class="n">xlims</span><span class="o">=</span><span class="p">[</span><span class="mi">993</span><span class="p">,</span><span class="mi">1007</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">blue</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$f_{\overline{\mathbf</span><span class="si">{K}</span><span class="s2">}}$&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="o">-</span><span class="mf">0.01</span><span class="p">,</span><span class="mf">0.36</span><span class="p">])</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$\overline{\mathbf</span><span class="si">{k}</span><span class="s2">}$&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$\overline{\mathbf</span><span class="si">{k}</span><span class="s2">}$&quot;</span><span class="p">)</span>
 
 <span class="c1"># sample mean ksample01</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">kbar01</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">)</span>
@@ -2969,84 +2615,13 @@ We’ll use this type of reasoning for hypothesis testing.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>999.10375 995.9955 40
-</pre></div>
-</div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(995.8955, 0.31, &#39;$\\overline{\\mathbf{k}}_{06}$&#39;)
 </pre></div>
 </div>
-<img alt="../_images/2535f21b9895cffe5732f675a9637b894b02036a0df30ba9aa595e4f72f7b11f.png" src="../_images/2535f21b9895cffe5732f675a9637b894b02036a0df30ba9aa595e4f72f7b11f.png" />
+<img alt="../_images/8a59499d3f8fdd9a582ecee68f05db99caffe4aca6449337f60d0f6282118afa.png" src="../_images/8a59499d3f8fdd9a582ecee68f05db99caffe4aca6449337f60d0f6282118afa.png" />
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;task_P_kombucha_means.pdf&quot;</span><span class="p">)</span>
-<span class="n">savefigure</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/estimators/task_P_kombucha_means.pdf
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/estimators/task_P_kombucha_means.png
-</pre></div>
-</div>
-</div>
-</div>
-<p>In <strong>Case 2</strong>, we know the sample mean, so we can use the approximation
-to build a distribution that describes our inference about what
-population mean <span class="math notranslate nohighlight">\(\mu_X\)</span> could have led to the observed sample.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">t</span> <span class="k">as</span> <span class="n">tdist</span>
-
-<span class="n">kbar02</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">ksample02</span><span class="p">)</span>
-<span class="n">n</span> <span class="o">=</span> <span class="n">ksample02</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-<span class="n">sehat02</span> <span class="o">=</span> <span class="n">std</span><span class="p">(</span><span class="n">ksample02</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-
-<span class="c1"># analytical approx.</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span>
-<span class="n">rvTA</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">kbar02</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">sehat02</span><span class="p">)</span>
-<span class="n">ax</span> <span class="o">=</span> <span class="n">plot_pdf</span><span class="p">(</span><span class="n">rvTA</span><span class="p">,</span> <span class="n">xlims</span><span class="o">=</span><span class="p">[</span><span class="mi">985</span><span class="p">,</span><span class="mi">1015</span><span class="p">])</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$L(\mu_K)$&quot;</span><span class="p">)</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$\mu_K$&quot;</span><span class="p">)</span>
-
-<span class="c1"># boostrap approx.</span>
-<span class="n">kbars02_boot</span> <span class="o">=</span> <span class="n">gen_boot_dist</span><span class="p">(</span><span class="n">ksample02</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">mean</span><span class="p">)</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">kbars02_boot</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="s2">&quot;density&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-
-<span class="c1"># population mean</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">muK</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;m&quot;</span><span class="p">)</span>
-
-<span class="c1"># sample mean</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">kbar02</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.lines.Line2D at 0x7fae6b9bd760&gt;
-</pre></div>
-</div>
-<img alt="../_images/e8a5e54599460e0783642fdb20a1a1f3a1f7aecea9ed3a48f89bc7281d121ac5.png" src="../_images/e8a5e54599460e0783642fdb20a1a1f3a1f7aecea9ed3a48f89bc7281d121ac5.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;contextA_rvTA_and_boot_from_ksample02.pdf&quot;</span><span class="p">)</span>
-<span class="n">savefigure</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/estimators/contextA_rvTA_and_boot_from_ksample02.pdf
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/estimators/contextA_rvTA_and_boot_from_ksample02.png
-</pre></div>
-</div>
-</div>
-</div>
+</section>
 </section>
 </section>
 <section id="discussion">
@@ -3086,7 +2661,10 @@ sampling distributions to calculate <a class="reference internal" href="32_confi
               
               
                 <footer class="bd-footer-article">
-                  <!-- Previous / next buttons -->
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
        href="30_STATS.html"
@@ -3106,7 +2684,10 @@ sampling distributions to calculate <a class="reference internal" href="32_confi
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
+</div></div>
+  
 </div>
+
                 </footer>
               
             </div>
@@ -3198,7 +2779,11 @@ sampling distributions to calculate <a class="reference internal" href="32_confi
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanations">Explanations</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#biased-and-unbiased-estimators-for-the-population-variance">Biased and unbiased estimators for the population variance</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pivotal-quantities">Pivotal quantities</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shifted-sampling-distributions">Shifted sampling distributions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shifted-sampling-distributions">Shifted sampling distributions</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#estimation-of-the-apples-weights">Estimation of the apples weights</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#kombucha-volume-probabilities">Kombucha volume probabilities</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a></li>
@@ -3210,7 +2795,7 @@ sampling distributions to calculate <a class="reference internal" href="32_confi
             
           </div>
           <footer class="bd-footer-content">
-            <div class="bd-footer-content__inner">
+            
 <div class="bd-footer-content__inner container">
   
   <div class="footer-item">
@@ -3240,7 +2825,7 @@ By Ivan Savov
     
   </div>
   
-</div></div>
+</div>
           </footer>
         
 
@@ -3249,8 +2834,8 @@ By Ivan Savov
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=12da95d707ffb74b382d"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=12da95d707ffb74b382d"></script>
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
 
   <footer class="bd-footer">
   </footer>
