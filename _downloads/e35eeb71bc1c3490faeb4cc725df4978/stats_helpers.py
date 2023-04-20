@@ -1,4 +1,8 @@
+from collections import defaultdict
+import os
+
 import numpy as np
+import pandas as pd
 from scipy.stats import bootstrap
 from scipy.stats import chi2
 from scipy.stats import norm
@@ -165,35 +169,35 @@ def boot_ci(sample, estfunc, alpha=0.1, method=None, B=5000):
 # TAIL CALCULATION UTILS
 ################################################################################
 
-def tailvalues(values, obs, alternative="two-sided"):
+def tailvalues(values, obs, alt="two-sided"):
     """
     Select the subset of the elements in list `values` that
     are equal or more extreme than the observed value `obs`.
     """
-    assert alternative in ["greater", "less", "two-sided"]
+    assert alt in ["greater", "less", "two-sided"]
     values = np.array(values)
-    if alternative == "greater":
+    if alt == "greater":
         tails = values[values >= obs]
-    elif alternative == "less":
+    elif alt == "less":
         tails = values[values <= obs]
-    elif alternative == "two-sided":
+    elif alt == "two-sided":
         mean = np.mean(values)
         dev = abs(mean - obs)
         tails = values[abs(values-mean) >= dev]
     return tails
 
 
-def tailprobs(rv, obs, alternative="two-sided"):
+def tailprobs(rv, obs, alt="two-sided"):
     """
     Calculate the probability of all outcomes of the random variable `rv`
     that are equal or more extreme than the observed value `obs`.
     """
-    assert alternative in ["greater", "less", "two-sided"]
-    if alternative == "greater":
+    assert alt in ["greater", "less", "two-sided"]
+    if alt == "greater":
         pvalue = 1 - rv.cdf(obs)
-    elif alternative == "less":
+    elif alt == "less":
         pvalue = rv.cdf(obs)
-    elif alternative == "two-sided":
+    elif alt == "two-sided":
         pleft = rv.cdf(obs)
         pright = 1 - rv.cdf(obs)
         pvalue = 2 * min(pleft, pright)
@@ -205,7 +209,7 @@ def tailprobs(rv, obs, alternative="two-sided"):
 # BASIC TESTS (used for kombucha data generation)
 ################################################################################
 
-def ztest(sample, mu0, sigma0, alternative="two-sided"):
+def ztest(sample, mu0, sigma0, alt="two-sided"):
     """
     Z-test to detect mean deviation from known normal population.
     """
@@ -214,11 +218,11 @@ def ztest(sample, mu0, sigma0, alternative="two-sided"):
     se = sigma0 / np.sqrt(n)
     obsz = (mean - mu0) / se
     rvZ = norm(0,1)
-    pval = tailprobs(rvZ, obsz, alternative=alternative)
+    pval = tailprobs(rvZ, obsz, alt=alt)
     return obsz, pval
 
 
-def chi2test_var(sample, sigma0, alternative="greater"):
+def chi2test_var(sample, sigma0, alt="greater"):
     """
     Run chi2 test to detect if a sample variance deviation
     from the known population variance `sigma0` exists.
@@ -228,7 +232,7 @@ def chi2test_var(sample, sigma0, alternative="greater"):
     obschi2 = (n - 1) * s2 / sigma0**2
     df = n - 1
     rvX2 = chi2(df)
-    pvalue = tailprobs(rvX2, obschi2, alternative=alternative)
+    pvalue = tailprobs(rvX2, obschi2, alt=alt)
     return obschi2, pvalue
 
 
@@ -256,7 +260,7 @@ def simulation_test_mean(sample, mu0, sigma0, N=10000):
     return xbars, pvalue
 
 
-def simulation_test(sample, rvH0, estfunc, N=10000, alternative="two-sided"):
+def simulation_test(sample, rvH0, estfunc, N=10000, alt="two-sided"):
     """
     Compute the p-value of the observed estimate `estfunc(sample)` under H0
     described by the random variable `rvH0`.
@@ -269,7 +273,7 @@ def simulation_test(sample, rvH0, estfunc, N=10000, alternative="two-sided"):
     sampl_dist_H0 = gen_sampling_dist(rvH0, estfunc=estfunc, n=n)
 
     # 3. Compute the p-value
-    tails = tailvalues(sampl_dist_H0, obsest, alternative=alternative)
+    tails = tailvalues(sampl_dist_H0, obsest, alt=alt)
     pvalue = len(tails) / len(sampl_dist_H0)
     return sampl_dist_H0, pvalue
 
@@ -371,22 +375,22 @@ def cohend2(sample1, sample2):
 # T-TESTS
 ################################################################################
 
-def ttest_mean(sample, mu0, alternative="two-sided"):
+def ttest_mean(sample, mu0, alt="two-sided"):
     """
     T-test to detect mean deviation from a population with known mean `mu0`.
     """
-    assert alternative in ["greater", "less", "two-sided"]
+    assert alt in ["greater", "less", "two-sided"]
     obsmean = np.mean(sample)
     n = len(sample)
     std = np.std(sample, ddof=1)
     sehat = std / np.sqrt(n)
     obst = (obsmean - mu0) / sehat
     rvT = tdist(n-1)
-    pvalue = tailprobs(rvT, obst, alternative=alternative)
+    pvalue = tailprobs(rvT, obst, alt=alt)
     return obst, pvalue
 
 
-def ttest_dmeans(sample1, sample2, equal_var=False, alternative="two-sided"):
+def ttest_dmeans(sample1, sample2, equal_var=False, alt="two-sided"):
     """
     T-test to detect difference between two groups based on their means.
     """
@@ -415,11 +419,11 @@ def ttest_dmeans(sample1, sample2, equal_var=False, alternative="two-sided"):
 
     # 5. Calculate the p-value from the t-distribution
     rvT = tdist(df)
-    pvalue = tailprobs(rvT, obst, alternative=alternative)
+    pvalue = tailprobs(rvT, obst, alt=alt)
     return obst, pvalue
 
 
-def ttest_paired(sample1, sample2, alternative="two-sided"):
+def ttest_paired(sample1, sample2, alt="two-sided"):
     """
     T-test for comparing relative change in a set of pairded measurements.
     """
@@ -433,6 +437,123 @@ def ttest_paired(sample1, sample2, alternative="two-sided"):
     df = n - 1
     obst = (meand - 0) / se
     rvT = tdist(df)
-    pvalue = tailprobs(rvT, obst, alternative=alternative)
+    pvalue = tailprobs(rvT, obst, alt=alt)
     return obst, pvalue
+
+
+
+# SIMULATION OF CONFIDENCE INTERVAL PROPERTIES
+################################################################################
+
+class mixnorms(object):
+    """
+    Custom class to represent mixture of normals.
+    """
+
+    def __init__(self, locs, scales, weights):
+        assert len(locs) == len(scales)
+        assert len(locs) == len(weights)
+        self.locs = locs
+        self.scales = scales
+        self.weights = weights
+
+    def pdf(self, x):
+        rvNs = [norm(loc, scale) for loc, scale in zip(self.locs, self.scales)]
+        terms = [w*rvN.pdf(x) for w, rvN in zip(self.weights, rvNs)]
+        return sum(terms)
+    
+    def mean(self):
+        return sum([w*loc for w, loc in zip(self.weights, self.locs)])
+
+    def var(self):
+        # via https://stats.stackexchange.com/a/604872/62481
+        assert len(self.weights) == 2
+        wA, wB = self.weights
+        muA, muB = self.locs
+        sigmaA, sigmaB = self.scales
+        return wA*sigmaA**2 + wB*sigmaB**2 + wA*wB*(muA-muB)**2
+
+    def rvs(self, n):
+        rvNs = [norm(loc, scale) for loc, scale in zip(self.locs, self.scales)]
+        ids = range(0,len(self.weights))
+        choices = np.random.choice(ids, n, p=self.weights)
+        values = np.zeros(n)
+        for i, choice in enumerate(choices):
+            rvN = rvNs[choice]
+            values[i] = rvN.rvs(1)
+        return values
+
+
+
+def simulate_ci_props(pops, methods=["a", "percentile", "bca"], ns=[20,40],
+                      param="mean", alpha=0.1, N=1000, B=5000, seed=42):
+    """
+    Runs a simulation of confidence intervals for `param` using `methods`
+    for sample sizes `ns` from populations `pops` (dict label: model).
+    Simulation parameters:
+        - pops          # populations
+        - methods       = ["a", "percentile", "bca"]
+        - ns = [20,40]  # sample sizes
+        - param         # population parameter
+        - alpha = 0.1   # target error level
+        - N = 1000      # number of simulations
+        - B = 5000      # number of bootstrap samples
+    """
+    assert param in ["mean", "var"]
+
+    # check if cached simulation data exists
+    filename = "simulate_ci_props_" + param + "__ns_" + "_".join(map(str,ns)) \
+                + "__alpha_" + str(alpha) + "__seed_" + str(seed) + ".csv"
+    filepath = os.path.join("simdata", filename)
+    if os.path.exists(filepath):  # load cached results
+        print("loaded cached results from ", filepath)
+        results = pd.read_csv(filepath, header=[0,1], index_col=[0,1])
+        return results
+
+    # simulation data structures
+    rowsindex = pd.MultiIndex.from_product((pops.keys(),ns), names=["population", "n"])
+    colindex = pd.MultiIndex.from_product((["wbar", "cov"], methods), names=["property", "method"])
+    widthscolindex = pd.MultiIndex.from_product((methods,ns), names=["method","n"])
+    results = pd.DataFrame(index=rowsindex, columns=colindex)
+
+    # run simulation
+    np.random.seed(seed)
+    print("Starting simulation for confidnece intervals of population {param} :::::::::::::")
+    for pop in pops.keys():
+        print(f"Evaluating rv{pop} ...")
+        rv = pops[pop]
+        if param == "mean":
+            pop_param = rv.mean()
+        elif param == "var":
+            pop_param = rv.var()
+        counts = defaultdict(int)  # keys are tuples (method,n)
+        widths = pd.DataFrame(index=range(0,N), columns=widthscolindex)
+        for n in ns:
+            print(f"  - running simulation with {n=} ...")
+            for j in range(0, N):
+                sample = rv.rvs(n)
+                for method in methods:
+                    if method == "a":
+                        if param == "mean":
+                            ci = ci_mean(sample, alpha=alpha, method="a")
+                        elif param == "var":
+                            ci = ci_var(sample, alpha=alpha, method="a")
+                    else:
+                        if param == "mean":
+                            ci = boot_ci(sample, estfunc=np.mean, alpha=alpha, method=method, B=B)
+                        elif param == "var":
+                            ci = boot_ci(sample, estfunc=var, alpha=alpha, method=method, B=B)
+                    # evaluate confidence interval parameters
+                    if ci[0] <= pop_param <= ci[1]:
+                        counts[(method,n)] += 1  # success
+                    # width
+                    widths.loc[j,(method,n)] = ci[1] - ci[0]
+        for method in methods:
+            for n in ns:
+                results.loc[(pop,n), ("cov",method)] = counts[(method,n)] / N
+                results.loc[(pop,n), ("wbar",method)] = widths.mean()[method,n]
+
+    results.to_csv(filepath)
+    print("Saved file to " + filepath)
+    return results
 

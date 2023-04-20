@@ -472,7 +472,11 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#probability-models-for-nhst">Probability models for NHST</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unique-value-proposition-of-nhst">Unique value proposition of NHST</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-sided-and-two-sided-rejection-regions">One-sided and two-sided rejection regions</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-the-design-formula">Understanding the design formula</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#statistical-design-calculations">Statistical design calculations</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#sample-size-calculation">Sample size calculation</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-the-design-formula">Understanding the design formula</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a><ul class="nav section-nav flex-column">
@@ -672,8 +676,68 @@ Saved figure to figures/stats/NHST/panel_rejection_regions_left_twotailed_right.
 </div>
 </div>
 </section>
+<section id="statistical-design-calculations">
+<h3>Statistical design calculations<a class="headerlink" href="#statistical-design-calculations" title="Permalink to this heading">#</a></h3>
+<section id="sample-size-calculation">
+<h4>Sample size calculation<a class="headerlink" href="#sample-size-calculation" title="Permalink to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pingouin</span> <span class="k">as</span> <span class="nn">pg</span>
+<span class="kn">from</span> <span class="nn">statsmodels.stats</span> <span class="kn">import</span> <span class="n">power</span>
+
+<span class="c1"># deisng parameters  </span>
+<span class="n">EFFECT_SIZE</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">ALPHA</span> <span class="o">=</span> <span class="mf">0.05</span> 
+<span class="n">POWER</span> <span class="o">=</span> <span class="mf">0.8</span>
+
+<span class="c1"># using statsmodels</span>
+<span class="n">power_analysis</span> <span class="o">=</span> <span class="n">power</span><span class="o">.</span><span class="n">TTestIndPower</span><span class="p">()</span>
+<span class="n">sample_size</span> <span class="o">=</span> <span class="n">power_analysis</span><span class="o">.</span><span class="n">solve_power</span><span class="p">(</span><span class="n">effect_size</span><span class="o">=</span><span class="n">EFFECT_SIZE</span><span class="p">,</span> 
+                                         <span class="n">power</span><span class="o">=</span><span class="n">POWER</span><span class="p">,</span> 
+                                         <span class="n">alpha</span><span class="o">=</span><span class="n">ALPHA</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Required sample size (statsmodels): </span><span class="si">{</span><span class="n">sample_size</span><span class="si">:</span><span class="s1">.0f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="c1"># using pingouin</span>
+<span class="n">sample_size</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">power_ttest</span><span class="p">(</span><span class="n">d</span><span class="o">=</span><span class="n">EFFECT_SIZE</span><span class="p">,</span> 
+                             <span class="n">alpha</span><span class="o">=</span><span class="n">ALPHA</span><span class="p">,</span> 
+                             <span class="n">power</span><span class="o">=</span><span class="n">POWER</span><span class="p">,</span> 
+                             <span class="n">n</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Required sample size (pingouin): </span><span class="si">{</span><span class="n">sample_size</span><span class="si">:</span><span class="s1">.0f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Required sample size (statsmodels): 64
+Required sample size (pingouin): 64
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/hostedtoolcache/Python/3.8.16/x64/lib/python3.8/site-packages/scipy/stats/_continuous_distns.py:6832: RuntimeWarning: invalid value encountered in _nct_sf
+  return np.clip(_boost._nct_sf(x, df, nc), 0, 1)
+/opt/hostedtoolcache/Python/3.8.16/x64/lib/python3.8/site-packages/scipy/stats/_continuous_distns.py:6826: RuntimeWarning: invalid value encountered in _nct_cdf
+  return np.clip(_boost._nct_cdf(x, df, nc), 0, 1)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
 <section id="understanding-the-design-formula">
-<h3>Understanding the design formula<a class="headerlink" href="#understanding-the-design-formula" title="Permalink to this heading">#</a></h3>
+<h4>Understanding the design formula<a class="headerlink" href="#understanding-the-design-formula" title="Permalink to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">statsmodels</span>
+<span class="n">statsmodels</span><span class="o">.</span><span class="n">__version__</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;0.13.5&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
 </section>
 </section>
 <section id="discussion">
@@ -758,7 +822,11 @@ Saved figure to figures/stats/NHST/panel_rejection_regions_left_twotailed_right.
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#probability-models-for-nhst">Probability models for NHST</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unique-value-proposition-of-nhst">Unique value proposition of NHST</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-sided-and-two-sided-rejection-regions">One-sided and two-sided rejection regions</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-the-design-formula">Understanding the design formula</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#statistical-design-calculations">Statistical design calculations</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#sample-size-calculation">Sample size calculation</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-the-design-formula">Understanding the design formula</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a><ul class="nav section-nav flex-column">

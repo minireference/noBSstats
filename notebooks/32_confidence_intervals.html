@@ -533,10 +533,6 @@ document.write(`
 </li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cut-material">CUT MATERIAL</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#factors-that-influence-confidence-intervals">Factors that influence confidence intervals</a></li>
-</ul>
-</li>
 </ul>
             </nav>
         </div>
@@ -1753,74 +1749,11 @@ in terms of the chi-square reference distribution <span class="math notranslate 
 </ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
-
-<span class="k">class</span> <span class="nc">mixnorms</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Custom class to represent mixture of normals.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">locs</span><span class="p">,</span> <span class="n">scales</span><span class="p">,</span> <span class="n">weights</span><span class="p">):</span>
-        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">locs</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">scales</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">locs</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">locs</span> <span class="o">=</span> <span class="n">locs</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">scales</span> <span class="o">=</span> <span class="n">scales</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span>
-
-    <span class="k">def</span> <span class="nf">pdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-        <span class="n">rvNs</span> <span class="o">=</span> <span class="p">[</span><span class="n">norm</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="n">scale</span><span class="p">)</span> <span class="k">for</span> <span class="n">loc</span><span class="p">,</span> <span class="n">scale</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">locs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scales</span><span class="p">)]</span>
-        <span class="n">terms</span> <span class="o">=</span> <span class="p">[</span><span class="n">w</span><span class="o">*</span><span class="n">rvN</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">w</span><span class="p">,</span> <span class="n">rvN</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="n">rvNs</span><span class="p">)]</span>
-        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">terms</span><span class="p">)</span>
-    
-    <span class="k">def</span> <span class="nf">mean</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">sum</span><span class="p">([</span><span class="n">w</span><span class="o">*</span><span class="n">loc</span> <span class="k">for</span> <span class="n">w</span><span class="p">,</span> <span class="n">loc</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">locs</span><span class="p">)])</span>
-
-    <span class="k">def</span> <span class="nf">var</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># via https://stats.stackexchange.com/a/604872/62481</span>
-        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
-        <span class="n">wA</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">muA</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">locs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">sigmaA</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scales</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">wB</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">muB</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">locs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">sigmaB</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scales</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">wA</span><span class="o">*</span><span class="n">sigmaA</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">wB</span><span class="o">*</span><span class="n">sigmaB</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">wA</span><span class="o">*</span><span class="n">wB</span><span class="o">*</span><span class="p">(</span><span class="n">muA</span><span class="o">-</span><span class="n">muB</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
-
-    <span class="k">def</span> <span class="nf">rvs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
-        <span class="n">rvNs</span> <span class="o">=</span> <span class="p">[</span><span class="n">norm</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="n">scale</span><span class="p">)</span> <span class="k">for</span> <span class="n">loc</span><span class="p">,</span> <span class="n">scale</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">locs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scales</span><span class="p">)]</span>
-        <span class="n">ids</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">))</span>
-        <span class="n">choices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">ids</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">)</span>
-        <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">choice</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">choices</span><span class="p">):</span>
-            <span class="n">rvN</span> <span class="o">=</span> <span class="n">rvNs</span><span class="p">[</span><span class="n">choice</span><span class="p">]</span>
-            <span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">rvN</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">values</span>
-
-
-<span class="n">rvB</span> <span class="o">=</span> <span class="n">mixnorms</span><span class="p">(</span><span class="n">locs</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mf">6.2</span><span class="p">],</span> <span class="n">scales</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">weights</span><span class="o">=</span><span class="p">[</span><span class="mf">0.4</span><span class="p">,</span><span class="mf">0.6</span><span class="p">])</span>
-<span class="n">plot_pdf</span><span class="p">(</span><span class="n">rvB</span><span class="p">,</span> <span class="n">xlims</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">])</span>
-<span class="c1"># var(rvB.rvs(30000)), rvB.var()</span>
-
-<span class="c1"># rvS = lognorm(0.3)</span>
-<span class="c1"># plot_pdf(rvS)</span>
-
-<span class="c1"># rvE = expon(loc=0, scale=1/5)</span>
-<span class="c1"># plot_pdf(rvE)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: xlabel=&#39;x&#39;, ylabel=&#39;$f_{X}$&#39;&gt;
-</pre></div>
-</div>
-<img alt="../_images/b0a82ee9d4c35b9b463ced1bdb1a7f7c4c65009f3f73bdb02550a8168e98688f.png" src="../_images/b0a82ee9d4c35b9b463ced1bdb1a7f7c4c65009f3f73bdb02550a8168e98688f.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">uniform</span><span class="p">,</span> <span class="n">norm</span><span class="p">,</span> <span class="n">lognorm</span><span class="p">,</span> <span class="n">expon</span>
+<span class="kn">from</span> <span class="nn">stats_helpers</span> <span class="kn">import</span> <span class="n">mixnorms</span>
 
-<span class="n">pops</span> <span class="o">=</span> <span class="p">{</span>
+<span class="c1"># different populations to use for simulation</span>
+<span class="n">POPULATIONS</span> <span class="o">=</span> <span class="p">{</span>      
     <span class="s2">&quot;U&quot;</span><span class="p">:</span> <span class="n">uniform</span><span class="p">(),</span>
     <span class="s2">&quot;Z&quot;</span><span class="p">:</span> <span class="n">norm</span><span class="p">(),</span>
     <span class="s2">&quot;S&quot;</span><span class="p">:</span> <span class="n">lognorm</span><span class="p">(</span><span class="mf">0.3</span><span class="p">),</span>
@@ -1828,12 +1761,11 @@ in terms of the chi-square reference distribution <span class="math notranslate 
     <span class="s2">&quot;B&quot;</span><span class="p">:</span> <span class="n">mixnorms</span><span class="p">(</span><span class="n">locs</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mf">6.2</span><span class="p">],</span> <span class="n">scales</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">weights</span><span class="o">=</span><span class="p">[</span><span class="mf">0.4</span><span class="p">,</span><span class="mf">0.6</span><span class="p">]),</span>
 <span class="p">}</span>
 
-<span class="n">cols</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="s2">&quot;analytical approx.&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;percentile&quot;</span><span class="p">:</span> <span class="s2">&quot;percentile bootstrap&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;basic&quot;</span><span class="p">:</span> <span class="s2">&quot;basic bootstrap&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;bca&quot;</span><span class="p">:</span> <span class="s2">&quot;BCA&quot;</span><span class="p">,</span>
-<span class="p">}</span>
+<span class="n">METHODS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;a&quot;</span><span class="p">,</span>           <span class="c1"># analytical approximation</span>
+    <span class="s2">&quot;percentile&quot;</span><span class="p">,</span>  <span class="c1"># percentile bootstrap</span>
+    <span class="s2">&quot;bca&quot;</span><span class="p">,</span>         <span class="c1"># bias-corrected accelerated bootstrap</span>
+<span class="p">]</span>
 </pre></div>
 </div>
 </div>
@@ -1842,44 +1774,18 @@ in terms of the chi-square reference distribution <span class="math notranslate 
 <h4>Coverage probabilities for population mean<a class="headerlink" href="#coverage-probabilities-for-population-mean" title="Permalink to this heading">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;mydataset&quot;</span><span class="p">,</span> <span class="s2">&quot;results_mean_n20.csv&quot;</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">stats_helpers</span> <span class="kn">import</span> <span class="n">boot_ci</span><span class="p">,</span> <span class="n">ci_mean</span>
-
-<span class="c1"># simulation parameters</span>
-<span class="n">N</span> <span class="o">=</span> <span class="mi">1000</span>       <span class="c1"># number of simulations</span>
-<span class="n">n</span> <span class="o">=</span> <span class="mi">20</span>        <span class="c1"># sample size</span>
-<span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.1</span>   <span class="c1"># target error level</span>
-<span class="n">B</span> <span class="o">=</span> <span class="mi">5000</span>      <span class="c1"># number of bootstrap samples</span>
-
-<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-    <span class="c1"># load simulation results</span>
-    <span class="n">results_mean_n20</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="c1"># run simulation</span>
-    <span class="n">results_mean_n20</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">pops</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">columns</span><span class="o">=</span><span class="n">cols</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
-    <span class="k">for</span> <span class="n">pop</span> <span class="ow">in</span> <span class="n">pops</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Evaluating rv</span><span class="si">{</span><span class="n">pop</span><span class="si">}</span><span class="s2"> ...&quot;</span><span class="p">)</span>
-        <span class="n">rv</span> <span class="o">=</span> <span class="n">pops</span><span class="p">[</span><span class="n">pop</span><span class="p">]</span>
-        <span class="n">pop_mean</span> <span class="o">=</span> <span class="n">rv</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-        <span class="n">counts</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;percentile&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;basic&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;bca&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span>
-        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
-            <span class="n">sample</span> <span class="o">=</span> <span class="n">rv</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">cols</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-                <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;a&quot;</span><span class="p">:</span>
-                    <span class="n">ci</span> <span class="o">=</span> <span class="n">ci_mean</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">ci</span> <span class="o">=</span> <span class="n">boot_ci</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span> <span class="n">B</span><span class="o">=</span><span class="n">B</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">ci</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">pop_mean</span> <span class="o">&lt;=</span> <span class="n">ci</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
-                    <span class="n">counts</span><span class="p">[</span><span class="n">method</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">counts</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-            <span class="n">results_mean_n20</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">pop</span><span class="p">,</span> <span class="n">cols</span><span class="p">[</span><span class="n">method</span><span class="p">]]</span> <span class="o">=</span> <span class="n">counts</span><span class="p">[</span><span class="n">method</span><span class="p">]</span> <span class="o">/</span> <span class="n">N</span>
-    <span class="n">results_mean_n20</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-
-<span class="n">results_mean_n20</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">stats_helpers</span> <span class="kn">import</span> <span class="n">simulate_ci_props</span>
+<span class="n">restults_mean</span> <span class="o">=</span> <span class="n">simulate_ci_props</span><span class="p">(</span><span class="n">POPULATIONS</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="n">METHODS</span><span class="p">,</span>
+                                  <span class="n">ns</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">,</span><span class="mi">40</span><span class="p">],</span> <span class="n">param</span><span class="o">=</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span>
+                                  <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">restults_mean</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>loaded cached results from  simdata/simulate_ci_props_mean__ns_20_40__alpha_0.1__seed_42.csv
+</pre></div>
+</div>
 <div class="output text_html"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -1890,179 +1796,138 @@ in terms of the chi-square reference distribution <span class="math notranslate 
         vertical-align: top;
     }
 
-    .dataframe thead th {
+    .dataframe thead tr th {
+        text-align: left;
+    }
+
+    .dataframe thead tr:last-of-type th {
         text-align: right;
     }
 </style>
 <table border="1" class="dataframe">
   <thead>
-    <tr style="text-align: right;">
+    <tr>
       <th></th>
-      <th>Unnamed: 0</th>
-      <th>analytical approx.</th>
-      <th>percentile bootstrap</th>
-      <th>basic bootstrap</th>
-      <th>BCA</th>
+      <th>property</th>
+      <th colspan="3" halign="left">wbar</th>
+      <th colspan="3" halign="left">cov</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th>method</th>
+      <th>a</th>
+      <th>percentile</th>
+      <th>bca</th>
+      <th>a</th>
+      <th>percentile</th>
+      <th>bca</th>
+    </tr>
+    <tr>
+      <th>population</th>
+      <th>n</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>0</th>
-      <td>U</td>
-      <td>0.886</td>
-      <td>0.852</td>
-      <td>0.839</td>
-      <td>0.872</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>Z</td>
-      <td>0.905</td>
-      <td>0.874</td>
-      <td>0.873</td>
-      <td>0.874</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>S</td>
-      <td>0.906</td>
+      <th rowspan="2" valign="top">U</th>
+      <th>20</th>
+      <td>0.220841</td>
+      <td>0.204631</td>
+      <td>0.205162</td>
+      <td>0.893</td>
+      <td>0.867</td>
       <td>0.885</td>
-      <td>0.891</td>
-      <td>0.880</td>
     </tr>
     <tr>
-      <th>3</th>
-      <td>E</td>
-      <td>0.884</td>
-      <td>0.866</td>
-      <td>0.858</td>
-      <td>0.869</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>B</td>
-      <td>0.876</td>
-      <td>0.851</td>
-      <td>0.837</td>
-      <td>0.863</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># print(results_mean_n20.to_latex())</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;mydataset&quot;</span><span class="p">,</span> <span class="s2">&quot;results_mean_n40.csv&quot;</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">stats_helpers</span> <span class="kn">import</span> <span class="n">boot_ci</span><span class="p">,</span> <span class="n">ci_mean</span>
-
-<span class="c1"># simulation parameters</span>
-<span class="n">N</span> <span class="o">=</span> <span class="mi">1000</span>      <span class="c1"># number of simulations</span>
-<span class="n">n</span> <span class="o">=</span> <span class="mi">40</span>        <span class="c1"># sample size</span>
-<span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.1</span>   <span class="c1"># target error level</span>
-<span class="n">B</span> <span class="o">=</span> <span class="mi">5000</span>      <span class="c1"># number of bootstrap samples</span>
-
-<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-    <span class="c1"># load simulation results</span>
-    <span class="n">results_mean_n40</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="c1"># run simulation</span>
-    <span class="n">results_mean_n40</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">pops</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">columns</span><span class="o">=</span><span class="n">cols</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
-    <span class="k">for</span> <span class="n">pop</span> <span class="ow">in</span> <span class="n">pops</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Evaluating rv</span><span class="si">{</span><span class="n">pop</span><span class="si">}</span><span class="s2"> ...&quot;</span><span class="p">)</span>
-        <span class="n">rv</span> <span class="o">=</span> <span class="n">pops</span><span class="p">[</span><span class="n">pop</span><span class="p">]</span>
-        <span class="n">pop_mean</span> <span class="o">=</span> <span class="n">rv</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-        <span class="n">counts</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;percentile&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;basic&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;bca&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span>
-        <span class="c1"># TODO widths</span>
-        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
-            <span class="n">sample</span> <span class="o">=</span> <span class="n">rv</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">cols</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-                <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;a&quot;</span><span class="p">:</span>
-                    <span class="n">ci</span> <span class="o">=</span> <span class="n">ci_mean</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">ci</span> <span class="o">=</span> <span class="n">boot_ci</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span> <span class="n">B</span><span class="o">=</span><span class="n">B</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">ci</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">pop_mean</span> <span class="o">&lt;=</span> <span class="n">ci</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
-                    <span class="n">counts</span><span class="p">[</span><span class="n">method</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">counts</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-            <span class="n">results_mean_n40</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">pop</span><span class="p">,</span> <span class="n">cols</span><span class="p">[</span><span class="n">method</span><span class="p">]]</span> <span class="o">=</span> <span class="n">counts</span><span class="p">[</span><span class="n">method</span><span class="p">]</span> <span class="o">/</span> <span class="n">N</span>
-    <span class="n">results_mean_n40</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-
-<span class="n">results_mean_n40</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Unnamed: 0</th>
-      <th>analytical approx.</th>
-      <th>percentile bootstrap</th>
-      <th>basic bootstrap</th>
-      <th>BCA</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>U</td>
-      <td>0.903</td>
-      <td>0.894</td>
-      <td>0.890</td>
-      <td>0.899</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>Z</td>
-      <td>0.911</td>
-      <td>0.901</td>
-      <td>0.905</td>
-      <td>0.905</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>S</td>
-      <td>0.895</td>
-      <td>0.878</td>
-      <td>0.882</td>
-      <td>0.884</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>E</td>
-      <td>0.880</td>
-      <td>0.870</td>
-      <td>0.862</td>
-      <td>0.876</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>B</td>
-      <td>0.907</td>
-      <td>0.889</td>
-      <td>0.882</td>
+      <th>40</th>
+      <td>0.153680</td>
+      <td>0.148055</td>
+      <td>0.148230</td>
       <td>0.900</td>
+      <td>0.888</td>
+      <td>0.896</td>
+    </tr>
+    <tr>
+      <th rowspan="2" valign="top">Z</th>
+      <th>20</th>
+      <td>0.770453</td>
+      <td>0.714570</td>
+      <td>0.716912</td>
+      <td>0.884</td>
+      <td>0.851</td>
+      <td>0.855</td>
+    </tr>
+    <tr>
+      <th>40</th>
+      <td>0.526034</td>
+      <td>0.506770</td>
+      <td>0.507304</td>
+      <td>0.905</td>
+      <td>0.899</td>
+      <td>0.887</td>
+    </tr>
+    <tr>
+      <th rowspan="2" valign="top">S</th>
+      <th>20</th>
+      <td>0.243806</td>
+      <td>0.225700</td>
+      <td>0.229662</td>
+      <td>0.886</td>
+      <td>0.868</td>
+      <td>0.859</td>
+    </tr>
+    <tr>
+      <th>40</th>
+      <td>0.169247</td>
+      <td>0.163001</td>
+      <td>0.164269</td>
+      <td>0.902</td>
+      <td>0.890</td>
+      <td>0.892</td>
+    </tr>
+    <tr>
+      <th rowspan="2" valign="top">E</th>
+      <th>20</th>
+      <td>0.148030</td>
+      <td>0.136761</td>
+      <td>0.144141</td>
+      <td>0.874</td>
+      <td>0.849</td>
+      <td>0.858</td>
+    </tr>
+    <tr>
+      <th>40</th>
+      <td>0.104478</td>
+      <td>0.100534</td>
+      <td>0.103630</td>
+      <td>0.877</td>
+      <td>0.866</td>
+      <td>0.862</td>
+    </tr>
+    <tr>
+      <th rowspan="2" valign="top">B</th>
+      <th>20</th>
+      <td>1.419609</td>
+      <td>1.316295</td>
+      <td>1.320754</td>
+      <td>0.902</td>
+      <td>0.884</td>
+      <td>0.903</td>
+    </tr>
+    <tr>
+      <th>40</th>
+      <td>0.983444</td>
+      <td>0.947381</td>
+      <td>0.948994</td>
+      <td>0.908</td>
+      <td>0.902</td>
+      <td>0.905</td>
     </tr>
   </tbody>
 </table>
@@ -2070,22 +1935,7 @@ in terms of the chi-square reference distribution <span class="math notranslate 
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># print(results_mean_n40.to_latex())</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">widths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
-<span class="n">widths</span> 
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[0., 0.],
-       [0., 0.],
-       [0., 0.]])
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># print(restults_mean.to_latex(float_format=&quot;{:0.3f}&quot;.format))</span>
 </pre></div>
 </div>
 </div>
@@ -2095,45 +1945,18 @@ in terms of the chi-square reference distribution <span class="math notranslate 
 <h4>Coverage probabilities for population variance<a class="headerlink" href="#coverage-probabilities-for-population-variance" title="Permalink to this heading">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;mydataset&quot;</span><span class="p">,</span> <span class="s2">&quot;results_var_n20.csv&quot;</span><span class="p">)</span>
-
-<span class="kn">from</span> <span class="nn">stats_helpers</span> <span class="kn">import</span> <span class="n">boot_ci</span><span class="p">,</span> <span class="n">ci_var</span>
-
-<span class="c1"># simulation parameters</span>
-<span class="n">N</span> <span class="o">=</span> <span class="mi">1000</span>      <span class="c1"># number of simulations</span>
-<span class="n">n</span> <span class="o">=</span> <span class="mi">20</span>        <span class="c1"># sample size</span>
-<span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.1</span>   <span class="c1"># target error level</span>
-<span class="n">B</span> <span class="o">=</span> <span class="mi">5000</span>      <span class="c1"># number of bootstrap samples</span>
-
-<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-    <span class="c1"># load simulation results</span>
-    <span class="n">results_var_n20</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="c1"># run simulation</span>
-    <span class="n">results_var_n20</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">pops</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">columns</span><span class="o">=</span><span class="n">cols</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
-    <span class="k">for</span> <span class="n">pop</span> <span class="ow">in</span> <span class="n">pops</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Evaluating rv</span><span class="si">{</span><span class="n">pop</span><span class="si">}</span><span class="s2"> ...&quot;</span><span class="p">)</span>
-        <span class="n">rv</span> <span class="o">=</span> <span class="n">pops</span><span class="p">[</span><span class="n">pop</span><span class="p">]</span>
-        <span class="n">pop_var</span> <span class="o">=</span> <span class="n">rv</span><span class="o">.</span><span class="n">var</span><span class="p">()</span>
-        <span class="n">counts</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;percentile&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;basic&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;bca&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span>
-        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
-            <span class="n">sample</span> <span class="o">=</span> <span class="n">rv</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">cols</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-                <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;a&quot;</span><span class="p">:</span>
-                    <span class="n">ci</span> <span class="o">=</span> <span class="n">ci_var</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">ci</span> <span class="o">=</span> <span class="n">boot_ci</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">var</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span> <span class="n">B</span><span class="o">=</span><span class="n">B</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">ci</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">pop_var</span> <span class="o">&lt;=</span> <span class="n">ci</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
-                    <span class="n">counts</span><span class="p">[</span><span class="n">method</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">counts</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-            <span class="n">results_var_n20</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">pop</span><span class="p">,</span> <span class="n">cols</span><span class="p">[</span><span class="n">method</span><span class="p">]]</span> <span class="o">=</span> <span class="n">counts</span><span class="p">[</span><span class="n">method</span><span class="p">]</span> <span class="o">/</span> <span class="n">N</span>
-    <span class="n">results_var_n20</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-
-<span class="n">results_var_n20</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">stats_helpers</span> <span class="kn">import</span> <span class="n">simulate_ci_props</span>
+<span class="n">restults_var</span> <span class="o">=</span> <span class="n">simulate_ci_props</span><span class="p">(</span><span class="n">POPULATIONS</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="n">METHODS</span><span class="p">,</span>
+                                 <span class="n">ns</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">,</span><span class="mi">40</span><span class="p">],</span> <span class="n">param</span><span class="o">=</span><span class="s2">&quot;var&quot;</span><span class="p">,</span>
+                                 <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">43</span><span class="p">)</span>
+<span class="n">restults_var</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>loaded cached results from  simdata/simulate_ci_props_var__ns_20_40__alpha_0.1__seed_43.csv
+</pre></div>
+</div>
 <div class="output text_html"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -2144,177 +1967,138 @@ in terms of the chi-square reference distribution <span class="math notranslate 
         vertical-align: top;
     }
 
-    .dataframe thead th {
+    .dataframe thead tr th {
+        text-align: left;
+    }
+
+    .dataframe thead tr:last-of-type th {
         text-align: right;
     }
 </style>
 <table border="1" class="dataframe">
   <thead>
-    <tr style="text-align: right;">
+    <tr>
       <th></th>
-      <th>Unnamed: 0</th>
-      <th>analytical approx.</th>
-      <th>percentile bootstrap</th>
-      <th>basic bootstrap</th>
-      <th>BCA</th>
+      <th>property</th>
+      <th colspan="3" halign="left">wbar</th>
+      <th colspan="3" halign="left">cov</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th>method</th>
+      <th>a</th>
+      <th>percentile</th>
+      <th>bca</th>
+      <th>a</th>
+      <th>percentile</th>
+      <th>bca</th>
+    </tr>
+    <tr>
+      <th>population</th>
+      <th>n</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>0</th>
-      <td>U</td>
-      <td>0.982</td>
-      <td>0.861</td>
-      <td>0.848</td>
-      <td>0.881</td>
+      <th rowspan="2" valign="top">U</th>
+      <th>20</th>
+      <td>0.103879</td>
+      <td>0.056794</td>
+      <td>0.058629</td>
+      <td>0.983</td>
+      <td>0.855</td>
+      <td>0.857</td>
     </tr>
     <tr>
-      <th>1</th>
-      <td>Z</td>
-      <td>0.917</td>
-      <td>0.809</td>
-      <td>0.813</td>
-      <td>0.833</td>
+      <th>40</th>
+      <td>0.066634</td>
+      <td>0.039478</td>
+      <td>0.040195</td>
+      <td>0.993</td>
+      <td>0.884</td>
+      <td>0.889</td>
     </tr>
     <tr>
-      <th>2</th>
-      <td>S</td>
-      <td>0.828</td>
-      <td>0.747</td>
-      <td>0.748</td>
-      <td>0.788</td>
+      <th rowspan="2" valign="top">Z</th>
+      <th>20</th>
+      <td>1.270557</td>
+      <td>0.938189</td>
+      <td>1.052797</td>
+      <td>0.898</td>
+      <td>0.825</td>
+      <td>0.840</td>
     </tr>
     <tr>
-      <th>3</th>
-      <td>E</td>
-      <td>0.623</td>
-      <td>0.656</td>
-      <td>0.663</td>
-      <td>0.710</td>
+      <th>40</th>
+      <td>0.805057</td>
+      <td>0.696148</td>
+      <td>0.757683</td>
+      <td>0.893</td>
+      <td>0.845</td>
+      <td>0.865</td>
     </tr>
     <tr>
-      <th>4</th>
-      <td>B</td>
-      <td>0.970</td>
-      <td>0.873</td>
-      <td>0.852</td>
-      <td>0.858</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># print(results_var_n20.to_latex())</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;mydataset&quot;</span><span class="p">,</span> <span class="s2">&quot;results_var_n40.csv&quot;</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">stats_helpers</span> <span class="kn">import</span> <span class="n">boot_ci</span><span class="p">,</span> <span class="n">ci_var</span>
-
-<span class="c1"># simulation parameters</span>
-<span class="n">N</span> <span class="o">=</span> <span class="mi">1000</span>      <span class="c1"># number of simulations</span>
-<span class="n">n</span> <span class="o">=</span> <span class="mi">40</span>        <span class="c1"># sample size</span>
-<span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.1</span>   <span class="c1"># target error level</span>
-<span class="n">B</span> <span class="o">=</span> <span class="mi">5000</span>      <span class="c1"># number of bootstrap samples</span>
-<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-    <span class="n">results_var_n40</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="c1"># run simulation</span>
-    <span class="n">results_var_n40</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">pops</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">columns</span><span class="o">=</span><span class="n">cols</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
-    <span class="k">for</span> <span class="n">pop</span> <span class="ow">in</span> <span class="n">pops</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Evaluating rv</span><span class="si">{</span><span class="n">pop</span><span class="si">}</span><span class="s2"> ...&quot;</span><span class="p">)</span>
-        <span class="n">rv</span> <span class="o">=</span> <span class="n">pops</span><span class="p">[</span><span class="n">pop</span><span class="p">]</span>
-        <span class="n">pop_var</span> <span class="o">=</span> <span class="n">rv</span><span class="o">.</span><span class="n">var</span><span class="p">()</span>
-        <span class="n">counts</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;percentile&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;basic&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;bca&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span>
-        <span class="n">widths</span>
-        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
-            <span class="n">sample</span> <span class="o">=</span> <span class="n">rv</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">cols</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-                <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;a&quot;</span><span class="p">:</span>
-                    <span class="n">ci</span> <span class="o">=</span> <span class="n">ci_var</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">ci</span> <span class="o">=</span> <span class="n">boot_ci</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">var</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span> <span class="n">B</span><span class="o">=</span><span class="n">B</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">ci</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">pop_var</span> <span class="o">&lt;=</span> <span class="n">ci</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
-                    <span class="n">counts</span><span class="p">[</span><span class="n">method</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">counts</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-            <span class="n">results_var_n40</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">pop</span><span class="p">,</span> <span class="n">cols</span><span class="p">[</span><span class="n">method</span><span class="p">]]</span> <span class="o">=</span> <span class="n">counts</span><span class="p">[</span><span class="n">method</span><span class="p">]</span> <span class="o">/</span> <span class="n">N</span>
-    <span class="n">results_var_n40</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-
-<span class="n">results_var_n40</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Unnamed: 0</th>
-      <th>analytical approx.</th>
-      <th>percentile bootstrap</th>
-      <th>basic bootstrap</th>
-      <th>BCA</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>U</td>
-      <td>0.985</td>
-      <td>0.878</td>
-      <td>0.860</td>
-      <td>0.883</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>Z</td>
-      <td>0.873</td>
-      <td>0.836</td>
-      <td>0.839</td>
-      <td>0.849</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>S</td>
-      <td>0.806</td>
-      <td>0.800</td>
-      <td>0.802</td>
-      <td>0.832</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>E</td>
-      <td>0.633</td>
+      <th rowspan="2" valign="top">S</th>
+      <th>20</th>
+      <td>0.128223</td>
+      <td>0.106803</td>
+      <td>0.122465</td>
+      <td>0.795</td>
       <td>0.730</td>
-      <td>0.731</td>
-      <td>0.777</td>
+      <td>0.757</td>
     </tr>
     <tr>
-      <th>4</th>
-      <td>B</td>
-      <td>0.974</td>
-      <td>0.873</td>
-      <td>0.871</td>
-      <td>0.876</td>
+      <th>40</th>
+      <td>0.084739</td>
+      <td>0.087967</td>
+      <td>0.100327</td>
+      <td>0.804</td>
+      <td>0.828</td>
+      <td>0.826</td>
+    </tr>
+    <tr>
+      <th rowspan="2" valign="top">E</th>
+      <th>20</th>
+      <td>0.050138</td>
+      <td>0.054894</td>
+      <td>0.064792</td>
+      <td>0.625</td>
+      <td>0.661</td>
+      <td>0.711</td>
+    </tr>
+    <tr>
+      <th>40</th>
+      <td>0.032610</td>
+      <td>0.045849</td>
+      <td>0.054231</td>
+      <td>0.640</td>
+      <td>0.756</td>
+      <td>0.804</td>
+    </tr>
+    <tr>
+      <th rowspan="2" valign="top">B</th>
+      <th>20</th>
+      <td>4.332483</td>
+      <td>2.601501</td>
+      <td>2.774900</td>
+      <td>0.961</td>
+      <td>0.846</td>
+      <td>0.861</td>
+    </tr>
+    <tr>
+      <th>40</th>
+      <td>2.824281</td>
+      <td>1.862927</td>
+      <td>1.947506</td>
+      <td>0.976</td>
+      <td>0.893</td>
+      <td>0.872</td>
     </tr>
   </tbody>
 </table>
@@ -2322,42 +2106,12 @@ in terms of the chi-square reference distribution <span class="math notranslate 
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># print(results_var_n40.to_latex())</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># print(restults_var.to_latex(float_format=&quot;{:0.3f}&quot;.format))</span>
 </pre></div>
 </div>
 </div>
 </div>
 </section>
-</section>
-</section>
-<section id="cut-material">
-<h2>CUT MATERIAL<a class="headerlink" href="#cut-material" title="Permalink to this heading">#</a></h2>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xsample</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">]</span>
-<span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">xsample</span><span class="p">)</span>
-<span class="n">xbar</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">xsample</span><span class="p">)</span> 
-<span class="n">sehat</span> <span class="o">=</span> <span class="n">std</span><span class="p">(</span><span class="n">xsample</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">t</span> <span class="k">as</span> <span class="n">tdist</span>
-<span class="n">rvTXbar</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">xbar</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">sehat</span><span class="p">)</span>
-<span class="p">[</span><span class="n">rvTXbar</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.05</span><span class="p">),</span> <span class="n">rvTXbar</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.95</span><span class="p">)]</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[2.4133999449331136, 5.586600055066886]
-</pre></div>
-</div>
-</div>
-</div>
-<section id="factors-that-influence-confidence-intervals">
-<h3>Factors that influence confidence intervals<a class="headerlink" href="#factors-that-influence-confidence-intervals" title="Permalink to this heading">#</a></h3>
-<ul class="simple">
-<li><p>n</p></li>
-<li><p>model</p></li>
-<li><p>estimator</p></li>
-</ul>
 </section>
 </section>
 </section>
@@ -2494,10 +2248,6 @@ in terms of the chi-square reference distribution <span class="math notranslate 
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#coverage-probabilities-for-population-variance">Coverage probabilities for population variance</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cut-material">CUT MATERIAL</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#factors-that-influence-confidence-intervals">Factors that influence confidence intervals</a></li>
 </ul>
 </li>
 </ul>
