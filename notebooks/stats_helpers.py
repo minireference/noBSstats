@@ -169,35 +169,35 @@ def boot_ci(sample, estfunc, alpha=0.1, method=None, B=5000):
 # TAIL CALCULATION UTILS
 ################################################################################
 
-def tailvalues(values, obs, alternative="two-sided"):
+def tailvalues(values, obs, alt="two-sided"):
     """
     Select the subset of the elements in list `values` that
     are equal or more extreme than the observed value `obs`.
     """
-    assert alternative in ["greater", "less", "two-sided"]
+    assert alt in ["greater", "less", "two-sided"]
     values = np.array(values)
-    if alternative == "greater":
+    if alt == "greater":
         tails = values[values >= obs]
-    elif alternative == "less":
+    elif alt == "less":
         tails = values[values <= obs]
-    elif alternative == "two-sided":
+    elif alt == "two-sided":
         mean = np.mean(values)
         dev = abs(mean - obs)
         tails = values[abs(values-mean) >= dev]
     return tails
 
 
-def tailprobs(rv, obs, alternative="two-sided"):
+def tailprobs(rv, obs, alt="two-sided"):
     """
     Calculate the probability of all outcomes of the random variable `rv`
     that are equal or more extreme than the observed value `obs`.
     """
-    assert alternative in ["greater", "less", "two-sided"]
-    if alternative == "greater":
+    assert alt in ["greater", "less", "two-sided"]
+    if alt == "greater":
         pvalue = 1 - rv.cdf(obs)
-    elif alternative == "less":
+    elif alt == "less":
         pvalue = rv.cdf(obs)
-    elif alternative == "two-sided":
+    elif alt == "two-sided":
         pleft = rv.cdf(obs)
         pright = 1 - rv.cdf(obs)
         pvalue = 2 * min(pleft, pright)
@@ -209,7 +209,7 @@ def tailprobs(rv, obs, alternative="two-sided"):
 # BASIC TESTS (used for kombucha data generation)
 ################################################################################
 
-def ztest(sample, mu0, sigma0, alternative="two-sided"):
+def ztest(sample, mu0, sigma0, alt="two-sided"):
     """
     Z-test to detect mean deviation from known normal population.
     """
@@ -218,11 +218,11 @@ def ztest(sample, mu0, sigma0, alternative="two-sided"):
     se = sigma0 / np.sqrt(n)
     obsz = (mean - mu0) / se
     rvZ = norm(0,1)
-    pval = tailprobs(rvZ, obsz, alternative=alternative)
+    pval = tailprobs(rvZ, obsz, alt=alt)
     return obsz, pval
 
 
-def chi2test_var(sample, sigma0, alternative="greater"):
+def chi2test_var(sample, sigma0, alt="greater"):
     """
     Run chi2 test to detect if a sample variance deviation
     from the known population variance `sigma0` exists.
@@ -232,7 +232,7 @@ def chi2test_var(sample, sigma0, alternative="greater"):
     obschi2 = (n - 1) * s2 / sigma0**2
     df = n - 1
     rvX2 = chi2(df)
-    pvalue = tailprobs(rvX2, obschi2, alternative=alternative)
+    pvalue = tailprobs(rvX2, obschi2, alt=alt)
     return obschi2, pvalue
 
 
@@ -260,7 +260,7 @@ def simulation_test_mean(sample, mu0, sigma0, N=10000):
     return xbars, pvalue
 
 
-def simulation_test(sample, rvH0, estfunc, N=10000, alternative="two-sided"):
+def simulation_test(sample, rvH0, estfunc, N=10000, alt="two-sided"):
     """
     Compute the p-value of the observed estimate `estfunc(sample)` under H0
     described by the random variable `rvH0`.
@@ -273,7 +273,7 @@ def simulation_test(sample, rvH0, estfunc, N=10000, alternative="two-sided"):
     sampl_dist_H0 = gen_sampling_dist(rvH0, estfunc=estfunc, n=n)
 
     # 3. Compute the p-value
-    tails = tailvalues(sampl_dist_H0, obsest, alternative=alternative)
+    tails = tailvalues(sampl_dist_H0, obsest, alt=alt)
     pvalue = len(tails) / len(sampl_dist_H0)
     return sampl_dist_H0, pvalue
 
@@ -375,22 +375,22 @@ def cohend2(sample1, sample2):
 # T-TESTS
 ################################################################################
 
-def ttest_mean(sample, mu0, alternative="two-sided"):
+def ttest_mean(sample, mu0, alt="two-sided"):
     """
     T-test to detect mean deviation from a population with known mean `mu0`.
     """
-    assert alternative in ["greater", "less", "two-sided"]
+    assert alt in ["greater", "less", "two-sided"]
     obsmean = np.mean(sample)
     n = len(sample)
     std = np.std(sample, ddof=1)
     sehat = std / np.sqrt(n)
     obst = (obsmean - mu0) / sehat
     rvT = tdist(n-1)
-    pvalue = tailprobs(rvT, obst, alternative=alternative)
+    pvalue = tailprobs(rvT, obst, alt=alt)
     return obst, pvalue
 
 
-def ttest_dmeans(sample1, sample2, equal_var=False, alternative="two-sided"):
+def ttest_dmeans(sample1, sample2, equal_var=False, alt="two-sided"):
     """
     T-test to detect difference between two groups based on their means.
     """
@@ -419,11 +419,11 @@ def ttest_dmeans(sample1, sample2, equal_var=False, alternative="two-sided"):
 
     # 5. Calculate the p-value from the t-distribution
     rvT = tdist(df)
-    pvalue = tailprobs(rvT, obst, alternative=alternative)
+    pvalue = tailprobs(rvT, obst, alt=alt)
     return obst, pvalue
 
 
-def ttest_paired(sample1, sample2, alternative="two-sided"):
+def ttest_paired(sample1, sample2, alt="two-sided"):
     """
     T-test for comparing relative change in a set of pairded measurements.
     """
@@ -437,7 +437,7 @@ def ttest_paired(sample1, sample2, alternative="two-sided"):
     df = n - 1
     obst = (meand - 0) / se
     rvT = tdist(df)
-    pvalue = tailprobs(rvT, obst, alternative=alternative)
+    pvalue = tailprobs(rvT, obst, alt=alt)
     return obst, pvalue
 
 
