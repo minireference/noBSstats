@@ -327,32 +327,32 @@ def bootstrap_test_mean(sample, mu0, B=10000):
 # PERMUTATION TEST DMEANS
 ################################################################################
 
-def resample_under_H0(sample1, sample2):
+def resample_under_H0(xsample, ysample):
     """
     Generate new samples from a random permutation of
-    the values in the samples `sample1` and `sample2`.
+    the values in the samples `xsample` and `ysample`.
     """
-    values = np.concatenate((sample1, sample2))
+    values = np.concatenate((xsample, ysample))
     shuffled_values = np.random.permutation(values)
-    resample1 = shuffled_values[0:len(sample1)]
-    resample2 = shuffled_values[len(sample1):]
-    return resample1, resample2
+    xresample = shuffled_values[0:len(xsample)]
+    yresample = shuffled_values[len(xsample):]
+    return xresample, yresample
 
 
-def permutation_test_dmeans(sample1, sample2, P=10000):
+def permutation_test_dmeans(xsample, ysample, P=10000):
     """
     Compute the p-value of the observed difference between means
     `dmeans(sample1,sample2)` under the null hypothesis where
     the group membership is randomized.
     """
     # 1. Compute the observed difference between means
-    obsdhat = dmeans(sample1, sample2)
+    obsdhat = dmeans(xsample, ysample)
 
     # 2. Get sampling dist. of `dmeans` under H0
     pdhats = []
     for i in range(0, P):
-        rs1, rs2 = resample_under_H0(sample1, sample2)
-        pdhat = dmeans(rs1, rs2)
+        rsx, rsy = resample_under_H0(xsample, ysample)
+        pdhat = dmeans(rsx, rsy)
         pdhats.append(pdhat)
 
     # 3. Compute the p-value
@@ -361,19 +361,19 @@ def permutation_test_dmeans(sample1, sample2, P=10000):
     return pvalue
 
 
-def permutation_test(sample1, sample2, estfunc, P=10000):
+def permutation_test(xsample, ysample, estfunc, P=10000):
     """
-    Compute the p-value of the observed estimate `estfunc(sample1,sample2)`
+    Compute the p-value of the observed estimate `estfunc(xsample,ysample)`
     under the null hypothesis where the group membership is randomized.
     """
     # 1. Compute the observed value of `estfunc`
-    obsest = estfunc(sample1, sample2)
+    obsest = estfunc(xsample, ysample)
 
     # 2. Get sampling dist. of `estfunc` under H0
     pestimates = []
     for i in range(0, P):
-        rs1, rs2 = resample_under_H0(sample1, sample2)
-        pestimate = estfunc(rs1, rs2)
+        rsx, rsy = resample_under_H0(xsample, ysample)
+        pestimate = estfunc(rsx, rsy)
         pestimates.append(pestimate)
 
     # 3. Compute the p-value
