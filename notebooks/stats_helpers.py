@@ -219,7 +219,7 @@ def ztest(sample, mu0, sigma0, alt="two-sided"):
     obsz = (mean - mu0) / se
     rvZ = norm(0,1)
     pval = tailprobs(rvZ, obsz, alt=alt)
-    return obsz, pval
+    return pval
 
 
 def chi2test_var(sample, sigma0, alt="greater"):
@@ -233,54 +233,73 @@ def chi2test_var(sample, sigma0, alt="greater"):
     df = n - 1
     rvX2 = chi2(df)
     pvalue = tailprobs(rvX2, obschi2, alt=alt)
-    return obschi2, pvalue
+    return pvalue
 
 
 
 
-# SIMULATION TEST (Section 3.3)
+# SIMULATION TESTS (Section 3.3)
 ################################################################################
 
-def simulation_test_mean(sample, mu0, sigma0, N=10000):
+def simulation_test_mean(sample, mu0, sigma0, alt="two-sided"):
     """
     Compute the p-value of the observed mean of `sample`
     under H0 of a normal distribution `norm(mu0,sigma0)`.
     """
-    # 1. Compute the observed value of the mean
+    # 1. Compute the sample mean
     obsmean = mean(sample)
     n = len(sample)
 
-    # 2. Get sampling distribution of mean under H0
+    # 2. Get sampling distribution of the mean under H0
     rvXH0 = norm(mu0, sigma0)
     xbars = gen_sampling_dist(rvXH0, estfunc=mean, n=n)
 
     # 3. Compute the p-value
-    tails = tailvalues(xbars, obsmean)
+    tails = tailvalues(xbars, obsmean, alt=alt)
     pvalue = len(tails) / len(xbars)
-    return xbars, pvalue
+    return pvalue
 
 
-def simulation_test(sample, rvH0, estfunc, N=10000, alt="two-sided"):
+def simulation_test_var(sample, mu0, sigma0, alt="greater"):
+    """
+    Compute the p-value of the observed variance of `sample`
+    under H0 of a normal distribution `norm(mu0,sigma0)`.
+    """
+    # 1. Compute the sample variance
+    obsvar = var(sample)
+    n = len(sample)
+
+    # 2. Get sampling distribution of variance under H0
+    rvXH0 = norm(mu0, sigma0)
+    xvars = gen_sampling_dist(rvXH0, estfunc=var, n=n)
+
+    # 3. Compute the p-value
+    tails = tailvalues(xvars, obsvar, alt=alt)
+    pvalue = len(tails) / len(xvars)
+    return pvalue
+
+
+def simulation_test(sample, rvH0, estfunc, alt="two-sided"):
     """
     Compute the p-value of the observed estimate `estfunc(sample)` under H0
     described by the random variable `rvH0`.
     """
-    # 1. Compute the observed value of the mean for the sample
+    # 1. Compute the observed value of `estfunc`
     obsest = estfunc(sample)
     n = len(sample)
 
-    # 2. Obtain the sampling distribution of the mean under H0
-    sampl_dist_H0 = gen_sampling_dist(rvH0, estfunc=estfunc, n=n)
+    # 2. Get sampling distribution of `estfunc` under H0
+    sampl_dist_H0 = gen_sampling_dist(rvH0, estfunc, n)
 
     # 3. Compute the p-value
     tails = tailvalues(sampl_dist_H0, obsest, alt=alt)
     pvalue = len(tails) / len(sampl_dist_H0)
-    return sampl_dist_H0, pvalue
+    return pvalue
 
 
 
 
-# BOOTSTRAP TEST FOR THE MEAN
+# BOOTSTRAP TEST FOR THE MEAN (cut material)
 ################################################################################
 
 def bootstrap_test_mean(sample, mu0, B=10000):
@@ -300,11 +319,12 @@ def bootstrap_test_mean(sample, mu0, B=10000):
     # 3. Compute the p-value
     tails = tailvalues(bmeans, obsmean)
     pvalue = len(tails) / len(bmeans)
-    return bmeans, pvalue
+    return pvalue
 
 
 
-# PERMUTATION TEST
+
+# PERMUTATION TEST DMEANS
 ################################################################################
 
 def resample_under_H0(sample1, sample2):
@@ -317,6 +337,28 @@ def resample_under_H0(sample1, sample2):
     resample1 = shuffled_values[0:len(sample1)]
     resample2 = shuffled_values[len(sample1):]
     return resample1, resample2
+
+
+def permutation_test_dmeans(sample1, sample2, P=10000):
+    """
+    Compute the p-value of the observed difference between means
+    `dmeans(sample1,sample2)` under the null hypothesis where
+    the group membership is randomized.
+    """
+    # 1. Compute the observed difference between means
+    obsdhat = dmeans(sample1, sample2)
+
+    # 2. Get sampling dist. of `dmeans` under H0
+    pdhats = []
+    for i in range(0, P):
+        rs1, rs2 = resample_under_H0(sample1, sample2)
+        pdhat = dmeans(rs1, rs2)
+        pdhats.append(pdhat)
+
+    # 3. Compute the p-value
+    tails = tailvalues(pdhats, obsdhat)
+    pvalue = len(tails) / len(pdhats)
+    return pvalue
 
 
 def permutation_test(sample1, sample2, estfunc, P=10000):
@@ -337,8 +379,7 @@ def permutation_test(sample1, sample2, estfunc, P=10000):
     # 3. Compute the p-value
     tails = tailvalues(pestimates, obsest)
     pvalue = len(tails) / len(pestimates)
-
-    return pestimates, pvalue
+    return pvalue
 
 
 
@@ -387,7 +428,7 @@ def ttest_mean(sample, mu0, alt="two-sided"):
     obst = (obsmean - mu0) / sehat
     rvT = tdist(n-1)
     pvalue = tailprobs(rvT, obst, alt=alt)
-    return obst, pvalue
+    return pvalue
 
 
 def ttest_dmeans(sample1, sample2, equal_var=False, alt="two-sided"):
@@ -420,7 +461,7 @@ def ttest_dmeans(sample1, sample2, equal_var=False, alt="two-sided"):
     # 5. Calculate the p-value from the t-distribution
     rvT = tdist(df)
     pvalue = tailprobs(rvT, obst, alt=alt)
-    return obst, pvalue
+    return pvalue
 
 
 def ttest_paired(sample1, sample2, alt="two-sided"):
@@ -438,7 +479,7 @@ def ttest_paired(sample1, sample2, alt="two-sided"):
     obst = (meand - 0) / se
     rvT = tdist(df)
     pvalue = tailprobs(rvT, obst, alt=alt)
-    return obst, pvalue
+    return pvalue
 
 
 
