@@ -198,10 +198,13 @@ def tailprobs(rv, obs, alt="two-sided"):
     elif alt == "less":
         pvalue = rv.cdf(obs)
     elif alt == "two-sided":
-        pleft = rv.cdf(obs)
-        pright = 1 - rv.cdf(obs)
+        mean = rv.mean()
+        dev = abs(mean - obs)
+        pleft = rv.cdf(mean - dev)
+        pright = 1 - rv.cdf(mean + dev)
         pvalue = 2 * min(pleft, pright)
     return pvalue
+
 
 
 
