@@ -481,6 +481,7 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simulation-tests">Simulation tests</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sampling-distribution-under-the-null">Sampling distribution under the null</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-the-tails-of-a-distribution">Selecting the tails of a distribution</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#right-tail-of-the-distribution">Right tail of the distribution</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#left-tail-of-the-distribution">Left tail of the distribution</a></li>
@@ -519,13 +520,17 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-3x-test-for-the-variance-of-batch-02">Example 3X: test for the variance of Batch 02</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-4x-test-for-the-variance-of-batch-08">Example 4X: test for the variance of Batch 08</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-4x-test-for-the-variance-of-batch-08">Example 4X: test for the variance of Batch 08</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Effect size estimates</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tests-with-estimated-population-variance">Tests with estimated population variance</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#analytical-approximation-based-on-student-s-t-distribution">Analytical approximation based on Student’s <span class="math notranslate nohighlight">\(t\)</span>-distribution</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1t-test-for-the-mean-of-batch-04">Example 1T: test for the mean of Batch 04</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#assume-we-know-mean-but-not-variance">Assume we know mean, but not variance</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Effect size estimates</a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2t-test-for-the-mean-of-batch-01">Example 2T: test for the mean of Batch 01</a></li>
@@ -535,7 +540,7 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanations">Explanations</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#summary-and-review-of-new-ideas">Summary and review of new ideas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#summary-of-the-hypothesis-testing-procedure">Summary of the hypothesis testing procedure</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#statistical-modelling-and-assumptions">Statistical modelling and assumptions</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#two-different-probability-models">Two different probability models</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-sided-and-two-sided-tests">One-sided and two-sided tests</a></li>
@@ -765,6 +770,109 @@ The confidence interval that tells us a range of values where we believe the tru
 <section id="simulation-tests">
 <h2>Simulation tests<a class="headerlink" href="#simulation-tests" title="Permalink to this heading">#</a></h2>
 <p>Description of the problem: compare simple of obs. to an known population model</p>
+<section id="sampling-distribution-under-the-null">
+<h3>Sampling distribution under the null<a class="headerlink" href="#sampling-distribution-under-the-null" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
+
+<span class="c1"># theoretical model for the kombucha volumes</span>
+<span class="n">muK0</span> <span class="o">=</span> <span class="mi">1000</span>   <span class="c1"># population mean (expected kombucha volume)</span>
+<span class="n">sigmaK0</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># population variance</span>
+
+<span class="n">rvK0</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">muK0</span><span class="p">,</span> <span class="n">sigmaK0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">rvK0</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([1004.97,  998.62, 1006.48, 1015.23,  997.66,  997.66, 1015.79,
+       1007.67,  995.31, 1005.43,  995.37,  995.34, 1002.42,  980.87,
+        982.75,  994.38,  989.87, 1003.14,  990.92,  985.88])
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can now generate the sampling distribution using simulation…</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">stats_helpers</span> <span class="kn">import</span> <span class="n">gen_sampling_dist</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">kbars0</span> <span class="o">=</span> <span class="n">gen_sampling_dist</span><span class="p">(</span><span class="n">rvK0</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">mean</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">kvars0</span> <span class="o">=</span> <span class="n">gen_sampling_dist</span><span class="p">(</span><span class="n">rvK0</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">var</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">kbars0</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="s2">&quot;density&quot;</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: ylabel=&#39;Density&#39;&gt;
+</pre></div>
+</div>
+<img alt="../_images/80588723862e73be88ba98e09c9f849d619f271b45f9e8d119f2249c071b26e6.png" src="../_images/80588723862e73be88ba98e09c9f849d619f271b45f9e8d119f2249c071b26e6.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">kvars0</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="s2">&quot;density&quot;</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: ylabel=&#39;Density&#39;&gt;
+</pre></div>
+</div>
+<img alt="../_images/f381be500413fff66ea344bf7756adcc924ea7d2f50a6bfa591aa5c5861a9ab7.png" src="../_images/f381be500413fff66ea344bf7756adcc924ea7d2f50a6bfa591aa5c5861a9ab7.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;panel_hist_kbars0_kvars0_n20.pdf&quot;</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">plt</span><span class="o">.</span><span class="n">rc_context</span><span class="p">({</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:(</span><span class="mi">7</span><span class="p">,</span><span class="mi">2</span><span class="p">)}),</span> <span class="n">sns</span><span class="o">.</span><span class="n">axes_style</span><span class="p">(</span><span class="s2">&quot;ticks&quot;</span><span class="p">):</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="c1"># MEAN</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;(a) sampling distribution of the mean&#39;</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">kbars0</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="s2">&quot;density&quot;</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$\overline{\mathbf</span><span class="si">{k}</span><span class="s2">}_0$&quot;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$f_{\overline{\mathbf</span><span class="si">{K}</span><span class="s2">}_0}$&quot;</span><span class="p">)</span>
+
+    <span class="c1"># VARIANCE</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;(b) sampling distribution of the variance&#39;</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">kvars0</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="s2">&quot;density&quot;</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$s_{{\mathbf</span><span class="si">{k}</span><span class="s2">}_0}^2}$&quot;</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$f_{S_{{\mathbf</span><span class="si">{K}</span><span class="s2">}_0}^2}$&quot;</span><span class="p">)</span>
+
+<span class="n">savefigure</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/intro_to_NHST/panel_hist_kbars0_kvars0_n20.pdf
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/intro_to_NHST/panel_hist_kbars0_kvars0_n20.png
+</pre></div>
+</div>
+<img alt="../_images/6f36f8746d78b2c06d325d66f1ba1fef9ac64ed69d6bdbd3191a2cadf3255c1e.png" src="../_images/6f36f8746d78b2c06d325d66f1ba1fef9ac64ed69d6bdbd3191a2cadf3255c1e.png" />
+</div>
+</div>
+</section>
 <section id="selecting-the-tails-of-a-distribution">
 <h3>Selecting the tails of a distribution<a class="headerlink" href="#selecting-the-tails-of-a-distribution" title="Permalink to this heading">#</a></h3>
 <p>The concept of statistics that are “equal or more extreme than” the observed statistic <span class="math notranslate nohighlight">\(\hat{\theta}=g(\mathbf{x})\)</span>
@@ -996,9 +1104,9 @@ which describes the variability of the kombucha volumes when the factory is oper
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
 
 <span class="c1"># theoretical model for the kombucha volumes</span>
-<span class="n">muK</span> <span class="o">=</span> <span class="mi">1000</span>   <span class="c1"># population mean (expected kombucha volume)</span>
-<span class="n">sigmaK</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># population variance</span>
-<span class="n">rvK</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">muK</span><span class="p">,</span> <span class="n">sigmaK</span><span class="p">)</span>
+<span class="n">muK0</span> <span class="o">=</span> <span class="mi">1000</span>   <span class="c1"># population mean (expected kombucha volume)</span>
+<span class="n">sigmaK0</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># population variance</span>
+<span class="n">rvK</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">muK0</span><span class="p">,</span> <span class="n">sigmaK0</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1097,7 +1205,7 @@ but how big is this deviation?
 We can use the deviation from the expected mean as measure of the effect size <span class="math notranslate nohighlight">\(\Delta = \overline{\mathbf{k}} - \mu_K\)</span> in this situation.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mean</span><span class="p">(</span><span class="n">ksample04</span><span class="p">)</span> <span class="o">-</span> <span class="n">muK</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mean</span><span class="p">(</span><span class="n">ksample04</span><span class="p">)</span> <span class="o">-</span> <span class="n">muK0</span>
 </pre></div>
 </div>
 </div>
@@ -1117,7 +1225,7 @@ but doesn’t tell us the uncertainty in this estimate.</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">stats_helpers</span> <span class="kn">import</span> <span class="n">gen_boot_dist</span>
 
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">48</span><span class="p">)</span>
-<span class="n">D_boot</span> <span class="o">=</span> <span class="n">gen_boot_dist</span><span class="p">(</span><span class="n">ksample04</span><span class="o">-</span><span class="n">muK</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">mean</span><span class="p">)</span>
+<span class="n">D_boot</span> <span class="o">=</span> <span class="n">gen_boot_dist</span><span class="p">(</span><span class="n">ksample04</span><span class="o">-</span><span class="n">muK0</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">mean</span><span class="p">)</span>
 <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">D_boot</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
  <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">D_boot</span><span class="p">,</span> <span class="mi">95</span><span class="p">)]</span>
 </pre></div>
@@ -1134,7 +1242,7 @@ when called with the argument <code class="docutils literal notranslate"><span c
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">48</span><span class="p">)</span>
-<span class="n">ci_mean</span><span class="p">(</span><span class="n">ksample04</span><span class="o">-</span><span class="n">muK</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">)</span>
+<span class="n">ci_mean</span><span class="p">(</span><span class="n">ksample04</span><span class="o">-</span><span class="n">muK0</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1262,7 +1370,7 @@ which sample <code class="docutils literal notranslate"><span class="pre">ksampl
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## TEST 1 (Do we get the same answer for Batch 04?)</span>
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
-<span class="n">simulation_test_mean</span><span class="p">(</span><span class="n">ksample04</span><span class="p">,</span> <span class="n">mu0</span><span class="o">=</span><span class="n">muK</span><span class="p">,</span> <span class="n">sigma0</span><span class="o">=</span><span class="n">sigmaK</span><span class="p">)</span>
+<span class="n">simulation_test_mean</span><span class="p">(</span><span class="n">ksample04</span><span class="p">,</span> <span class="n">mu0</span><span class="o">=</span><span class="n">muK0</span><span class="p">,</span> <span class="n">sigma0</span><span class="o">=</span><span class="n">sigmaK0</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1276,7 +1384,7 @@ which sample <code class="docutils literal notranslate"><span class="pre">ksampl
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## TEST 2 (Do we get the same answer for Batch 01?)</span>
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
-<span class="n">simulation_test_mean</span><span class="p">(</span><span class="n">ksample01</span><span class="p">,</span> <span class="n">mu0</span><span class="o">=</span><span class="n">muK</span><span class="p">,</span> <span class="n">sigma0</span><span class="o">=</span><span class="n">sigmaK</span><span class="p">)</span>
+<span class="n">simulation_test_mean</span><span class="p">(</span><span class="n">ksample01</span><span class="p">,</span> <span class="n">mu0</span><span class="o">=</span><span class="n">muK0</span><span class="p">,</span> <span class="n">sigma0</span><span class="o">=</span><span class="n">sigmaK0</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1462,7 +1570,7 @@ since we don’t mind batches with very low variance.</p>
 Now let’s estimate the effect size <span class="math notranslate nohighlight">\(\Delta = s^2_{\mathbf{k}_{08}} - \sigma_K^2\)</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">var</span><span class="p">(</span><span class="n">ksample08</span><span class="p">)</span> <span class="o">-</span> <span class="n">sigmaK</span><span class="o">**</span><span class="mi">2</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">var</span><span class="p">(</span><span class="n">ksample08</span><span class="p">)</span> <span class="o">-</span> <span class="n">sigmaK0</span><span class="o">**</span><span class="mi">2</span>
 </pre></div>
 </div>
 </div>
@@ -1480,7 +1588,7 @@ Now let’s estimate the effect size <span class="math notranslate nohighlight">
 
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">48</span><span class="p">)</span>
 <span class="n">kvars40_boot</span> <span class="o">=</span> <span class="n">gen_boot_dist</span><span class="p">(</span><span class="n">ksample08</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">var</span><span class="p">)</span>
-<span class="n">D_boot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">kvars40_boot</span><span class="p">,</span> <span class="n">sigmaK</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">D_boot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">kvars40_boot</span><span class="p">,</span> <span class="n">sigmaK0</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
 <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">D_boot</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
  <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">D_boot</span><span class="p">,</span> <span class="mi">95</span><span class="p">)]</span>
 </pre></div>
@@ -1527,7 +1635,7 @@ in the variance of Batch 08 from the expected variance is somewhere between 17 a
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># reproduce the results from Example 3</span>
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
-<span class="n">simulation_test_var</span><span class="p">(</span><span class="n">ksample02</span><span class="p">,</span> <span class="n">muK</span><span class="p">,</span> <span class="n">sigmaK</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;greater&quot;</span><span class="p">)</span>
+<span class="n">simulation_test_var</span><span class="p">(</span><span class="n">ksample02</span><span class="p">,</span> <span class="n">muK0</span><span class="p">,</span> <span class="n">sigmaK0</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;greater&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1541,7 +1649,7 @@ in the variance of Batch 08 from the expected variance is somewhere between 17 a
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># reproduce the results from Example 4</span>
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">43</span><span class="p">)</span>
-<span class="n">simulation_test_var</span><span class="p">(</span><span class="n">ksample08</span><span class="p">,</span> <span class="n">muK</span><span class="p">,</span> <span class="n">sigmaK</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;greater&quot;</span><span class="p">)</span>
+<span class="n">simulation_test_var</span><span class="p">(</span><span class="n">ksample08</span><span class="p">,</span> <span class="n">muK0</span><span class="p">,</span> <span class="n">sigmaK0</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;greater&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1757,8 +1865,8 @@ theory: <span class="math notranslate nohighlight">\(K \sim \mathcal{N}(1000,10)
 samples: ⑤ kombucha</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">muK</span> <span class="o">=</span> <span class="mi">1000</span>
-<span class="n">sigmaK</span> <span class="o">=</span> <span class="mi">10</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">muK0</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">sigmaK0</span> <span class="o">=</span> <span class="mi">10</span>
 </pre></div>
 </div>
 </div>
@@ -1812,7 +1920,7 @@ samples: ⑤ kombucha</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
 
 <span class="c1"># standard error of the mean</span>
-<span class="n">se04</span> <span class="o">=</span> <span class="n">sigmaK</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n04</span><span class="p">)</span>
+<span class="n">se04</span> <span class="o">=</span> <span class="n">sigmaK0</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n04</span><span class="p">)</span>
 <span class="n">se04</span>
 </pre></div>
 </div>
@@ -1825,7 +1933,7 @@ samples: ⑤ kombucha</p>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rvKbar0</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">muK</span><span class="p">,</span> <span class="n">se04</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rvKbar0</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">muK0</span><span class="p">,</span> <span class="n">se04</span><span class="p">)</span>
 <span class="n">tailprobs</span><span class="p">(</span><span class="n">rvKbar0</span><span class="p">,</span> <span class="n">obsmean04</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1838,7 +1946,7 @@ samples: ⑤ kombucha</p>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dev</span> <span class="o">=</span> <span class="n">obsmean04</span> <span class="o">-</span> <span class="n">muK</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dev</span> <span class="o">=</span> <span class="n">obsmean04</span> <span class="o">-</span> <span class="n">muK0</span>
 <span class="n">dev</span>
 </pre></div>
 </div>
@@ -1851,7 +1959,7 @@ samples: ⑤ kombucha</p>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">muK</span><span class="o">-</span><span class="n">dev</span><span class="p">,</span> <span class="n">muK</span><span class="o">+</span><span class="n">dev</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">muK0</span><span class="o">-</span><span class="n">dev</span><span class="p">,</span> <span class="n">muK0</span><span class="o">+</span><span class="n">dev</span>
 </pre></div>
 </div>
 </div>
@@ -1865,7 +1973,7 @@ samples: ⑤ kombucha</p>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;p-value_tails_Example1N_Kbar0.pdf&quot;</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">plot_helpers</span> <span class="kn">import</span> <span class="n">calc_prob_and_plot_tails</span>
-<span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">calc_prob_and_plot_tails</span><span class="p">(</span><span class="n">rvKbar0</span><span class="p">,</span> <span class="n">muK</span><span class="o">-</span><span class="n">dev</span><span class="p">,</span> <span class="n">muK</span><span class="o">+</span><span class="n">dev</span><span class="p">)</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">calc_prob_and_plot_tails</span><span class="p">(</span><span class="n">rvKbar0</span><span class="p">,</span> <span class="n">muK0</span><span class="o">-</span><span class="n">dev</span><span class="p">,</span> <span class="n">muK0</span><span class="o">+</span><span class="n">dev</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$\overline</span><span class="si">{k}</span><span class="s2">$&quot;</span><span class="p">)</span>
 <span class="n">savefigure</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
@@ -1883,7 +1991,7 @@ Saved figure to figures/stats/intro_to_NHST/p-value_tails_Example1N_Kbar0.png
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># compute the z statistic </span>
-<span class="n">obsz04</span> <span class="o">=</span> <span class="p">(</span><span class="n">obsmean04</span> <span class="o">-</span> <span class="n">muK</span><span class="p">)</span> <span class="o">/</span> <span class="n">se04</span>
+<span class="n">obsz04</span> <span class="o">=</span> <span class="p">(</span><span class="n">obsmean04</span> <span class="o">-</span> <span class="n">muK0</span><span class="p">)</span> <span class="o">/</span> <span class="n">se04</span>
 <span class="n">obsz04</span>
 </pre></div>
 </div>
@@ -1972,8 +2080,19 @@ Saved figure to figures/stats/intro_to_NHST/p-value_tails_kombucha_obsz04.png
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kombucha</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/kombucha.csv&quot;</span><span class="p">)</span>
 <span class="n">ksample01</span> <span class="o">=</span> <span class="n">kombucha</span><span class="p">[</span><span class="n">kombucha</span><span class="p">[</span><span class="s2">&quot;batch&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;volume&quot;</span><span class="p">]</span>
 <span class="n">n01</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ksample01</span><span class="p">)</span>
-
-<span class="c1"># observed mean</span>
+<span class="n">n01</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>40
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># observed mean</span>
 <span class="n">obsmean01</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">ksample01</span><span class="p">)</span>
 <span class="n">obsmean01</span>
 </pre></div>
@@ -1988,10 +2107,21 @@ Saved figure to figures/stats/intro_to_NHST/p-value_tails_kombucha_obsz04.png
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># standard error of the mean</span>
-<span class="n">se01</span> <span class="o">=</span> <span class="n">sigmaK</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n01</span><span class="p">)</span>
-
-<span class="c1"># compute the z statistic </span>
-<span class="n">obsz01</span> <span class="o">=</span> <span class="p">(</span><span class="n">obsmean01</span> <span class="o">-</span> <span class="n">muK</span><span class="p">)</span> <span class="o">/</span> <span class="n">se01</span>
+<span class="n">se01</span> <span class="o">=</span> <span class="n">sigmaK0</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n01</span><span class="p">)</span>
+<span class="n">se01</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.5811388300841895
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># compute the z statistic </span>
+<span class="n">obsz01</span> <span class="o">=</span> <span class="p">(</span><span class="n">obsmean01</span> <span class="o">-</span> <span class="n">muK0</span><span class="p">)</span> <span class="o">/</span> <span class="n">se01</span>
 <span class="n">obsz01</span>
 </pre></div>
 </div>
@@ -2019,6 +2149,9 @@ Saved figure to figures/stats/intro_to_NHST/p-value_tails_kombucha_obsz04.png
 </div>
 </div>
 </div>
+<p>The <span class="math notranslate nohighlight">\(p\)</span>-value is large,
+so there is no reason to reject <span class="math notranslate nohighlight">\(H_0\)</span>.
+We conclude that Batch 01 must be regular.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;p-value_tails_kombucha_obsz01.pdf&quot;</span><span class="p">)</span>
@@ -2083,7 +2216,7 @@ Saved figure to figures/stats/intro_to_NHST/p-value_tails_kombucha_obsz01.png
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obsq02</span> <span class="o">=</span> <span class="p">(</span><span class="n">n02</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">obsvar02</span> <span class="o">/</span> <span class="n">sigmaK</span><span class="o">**</span><span class="mi">2</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obsq02</span> <span class="o">=</span> <span class="p">(</span><span class="n">n02</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">obsvar02</span> <span class="o">/</span> <span class="n">sigmaK0</span><span class="o">**</span><span class="mi">2</span>
 <span class="n">obsq02</span>
 </pre></div>
 </div>
@@ -2164,7 +2297,7 @@ so there is no reason to reject <span class="math notranslate nohighlight">\(H_0
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obsq08</span> <span class="o">=</span> <span class="p">(</span><span class="n">n08</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">obsvar08</span> <span class="o">/</span> <span class="n">sigmaK</span><span class="o">**</span><span class="mi">2</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obsq08</span> <span class="o">=</span> <span class="p">(</span><span class="n">n08</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">obsvar08</span> <span class="o">/</span> <span class="n">sigmaK0</span><span class="o">**</span><span class="mi">2</span>
 <span class="n">obsq08</span>
 </pre></div>
 </div>
@@ -2191,19 +2324,54 @@ so there is no reason to reject <span class="math notranslate nohighlight">\(H_0
 </div>
 </div>
 </div>
+<p>The <span class="math notranslate nohighlight">\(p\)</span>-value is vary small,
+so we reject <span class="math notranslate nohighlight">\(H_0\)</span>.</p>
+<p>According to our analysis based on the sample variance from Batch 08,
+this batch seems to be irregular: it has an abnormally large variance.</p>
+<section id="id5">
+<h4>Effect size estimates<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Skipping because too small to see...</span>
-<span class="c1"># filename = os.path.join(DESTDIR, &quot;p-value_right_tail_kombucha_obsq08.pdf&quot;)</span>
-<span class="c1"># _, ax = calc_prob_and_plot_tails(rvX2, 0, obsq08, xlims=[0,80])</span>
-<span class="c1"># ax.set_title(None)</span>
-<span class="c1"># ax.set_xlabel(&quot;$q$&quot;)</span>
-<span class="c1"># ax.set_ylabel(&quot;$f_{\chi^2}$&quot;)</span>
-<span class="c1"># savefigure(ax, filename)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obsvar08</span> <span class="o">-</span> <span class="n">sigmaK0</span><span class="o">**</span><span class="mi">2</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>69.99792205128239
 </pre></div>
 </div>
 </div>
 </div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">stats_helpers</span> <span class="kn">import</span> <span class="n">ci_var</span>
+
+<span class="n">civar08</span> <span class="o">=</span> <span class="n">ci_var</span><span class="p">(</span><span class="n">ksample08</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
+<span class="n">civar08</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[121.48888239061654, 258.019779302895]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">civar08</span><span class="p">,</span> <span class="n">sigmaK0</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 21.48888239, 158.0197793 ])
+</pre></div>
+</div>
+</div>
+</div>
+<p>Recall the bootstrap confidence interval for the effect size we
+obtained earlier is <span class="math notranslate nohighlight">\(\ci{\Delta,0.9}^* = [17.37,117.99]\)</span>.</p>
+</section>
 </section>
 </section>
 <section id="tests-with-estimated-population-variance">
@@ -2217,10 +2385,36 @@ so there is no reason to reject <span class="math notranslate nohighlight">\(H_0
 <h4>Assume we know mean, but not variance<a class="headerlink" href="#assume-we-know-mean-but-not-variance" title="Permalink to this heading">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kombucha</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/kombucha.csv&quot;</span><span class="p">)</span>
+<span class="n">ksample04</span> <span class="o">=</span> <span class="n">kombucha</span><span class="p">[</span><span class="n">kombucha</span><span class="p">[</span><span class="s2">&quot;batch&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">4</span><span class="p">][</span><span class="s2">&quot;volume&quot;</span><span class="p">]</span>
+<span class="n">n04</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ksample04</span><span class="p">)</span>
+<span class="n">n04</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>40
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># estimated standard error of the mean</span>
 <span class="n">s04</span> <span class="o">=</span> <span class="n">std</span><span class="p">(</span><span class="n">ksample04</span><span class="p">)</span>
-<span class="n">n04</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ksample04</span><span class="p">)</span>
-<span class="n">sehat04</span> <span class="o">=</span> <span class="n">s04</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n04</span><span class="p">)</span>
+<span class="n">s04</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>7.85217413955834
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sehat04</span> <span class="o">=</span> <span class="n">s04</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n04</span><span class="p">)</span>
 <span class="n">sehat04</span>
 </pre></div>
 </div>
@@ -2233,8 +2427,22 @@ so there is no reason to reject <span class="math notranslate nohighlight">\(H_0
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># observed sample mean</span>
+<span class="n">obsmean04</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">ksample04</span><span class="p">)</span>
+<span class="n">obsmean04</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1003.8335
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># compute the t statistic </span>
-<span class="n">obst04</span> <span class="o">=</span> <span class="p">(</span><span class="n">obsmean04</span> <span class="o">-</span> <span class="n">muK</span><span class="p">)</span> <span class="o">/</span> <span class="n">sehat04</span>
+<span class="n">obst04</span> <span class="o">=</span> <span class="p">(</span><span class="n">obsmean04</span> <span class="o">-</span> <span class="n">muK0</span><span class="p">)</span> <span class="o">/</span> <span class="n">sehat04</span>
 <span class="n">obst04</span>
 </pre></div>
 </div>
@@ -2262,11 +2470,26 @@ so there is no reason to reject <span class="math notranslate nohighlight">\(H_0
 </div>
 </div>
 </div>
+</section>
+<section id="id6">
+<h4>Effect size estimates<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obsmean04</span> <span class="o">-</span> <span class="n">muK0</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>3.833499999999958
+</pre></div>
+</div>
+</div>
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">stats_helpers</span> <span class="kn">import</span> <span class="n">ci_mean</span>
 
-<span class="n">ci_mean</span><span class="p">(</span><span class="n">ksample04</span><span class="o">-</span><span class="n">muK</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
+<span class="n">ci_mean</span><span class="p">(</span><span class="n">ksample04</span><span class="o">-</span><span class="n">muK0</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2303,11 +2526,19 @@ so there is no reason to reject <span class="math notranslate nohighlight">\(H_0
 <h3>Example 2T: test for the mean of Batch 01<a class="headerlink" href="#example-2t-test-for-the-mean-of-batch-01" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kombucha</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/kombucha.csv&quot;</span><span class="p">)</span>
+<span class="n">ksample01</span> <span class="o">=</span> <span class="n">kombucha</span><span class="p">[</span><span class="n">kombucha</span><span class="p">[</span><span class="s2">&quot;batch&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;volume&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># estimated standard error of the mean</span>
 <span class="n">s01</span> <span class="o">=</span> <span class="n">std</span><span class="p">(</span><span class="n">ksample01</span><span class="p">)</span>
 <span class="n">n01</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ksample01</span><span class="p">)</span>
-<span class="n">sehat01t</span> <span class="o">=</span> <span class="n">s01</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n01</span><span class="p">)</span>
-<span class="n">sehat01t</span>
+<span class="n">sehat01</span> <span class="o">=</span> <span class="n">s01</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n01</span><span class="p">)</span>
+<span class="n">sehat01</span>
 </pre></div>
 </div>
 </div>
@@ -2319,8 +2550,22 @@ so there is no reason to reject <span class="math notranslate nohighlight">\(H_0
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># observed sample mean</span>
+<span class="n">obsmean01</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">ksample01</span><span class="p">)</span>
+<span class="n">obsmean01</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>999.10375
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># compute the t statistic </span>
-<span class="n">obst01</span> <span class="o">=</span> <span class="p">(</span><span class="n">obsmean01</span> <span class="o">-</span> <span class="n">muK</span><span class="p">)</span> <span class="o">/</span> <span class="n">sehat01t</span>
+<span class="n">obst01</span> <span class="o">=</span> <span class="p">(</span><span class="n">obsmean01</span> <span class="o">-</span> <span class="n">muK0</span><span class="p">)</span> <span class="o">/</span> <span class="n">sehat01</span>
 <span class="n">obst01</span>
 </pre></div>
 </div>
@@ -2337,8 +2582,8 @@ so there is no reason to reject <span class="math notranslate nohighlight">\(H_0
 
 <span class="n">df01</span> <span class="o">=</span> <span class="n">n01</span> <span class="o">-</span> <span class="mi">1</span>  <span class="c1"># n-1 degrees of freedom</span>
 <span class="n">rvT01</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">df01</span><span class="p">)</span>
-<span class="n">pvalue01</span> <span class="o">=</span> <span class="n">tailprobs</span><span class="p">(</span><span class="n">rvT01</span><span class="p">,</span> <span class="n">obst01</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;two-sided&quot;</span><span class="p">)</span>
-<span class="n">pvalue01</span>
+<span class="n">pvalue01t</span> <span class="o">=</span> <span class="n">tailprobs</span><span class="p">(</span><span class="n">rvT01</span><span class="p">,</span> <span class="n">obst01</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;two-sided&quot;</span><span class="p">)</span>
+<span class="n">pvalue01t</span>
 </pre></div>
 </div>
 </div>
@@ -2351,6 +2596,7 @@ so there is no reason to reject <span class="math notranslate nohighlight">\(H_0
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;p-value_tails_kombucha_obst01.pdf&quot;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">plot_helpers</span> <span class="kn">import</span> <span class="n">calc_prob_and_plot_tails</span>
 <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">calc_prob_and_plot_tails</span><span class="p">(</span><span class="n">rvT01</span><span class="p">,</span> <span class="n">obst01</span><span class="p">,</span> <span class="o">-</span><span class="n">obst01</span><span class="p">,</span> <span class="n">xlims</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$t$&quot;</span><span class="p">)</span>
@@ -2394,6 +2640,7 @@ is to use the bootstrap approach.</p>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kombucha</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/kombucha.csv&quot;</span><span class="p">)</span>
 <span class="n">ksample04</span> <span class="o">=</span> <span class="n">kombucha</span><span class="p">[</span><span class="n">kombucha</span><span class="p">[</span><span class="s2">&quot;batch&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">4</span><span class="p">][</span><span class="s2">&quot;volume&quot;</span><span class="p">]</span>
+<span class="n">n04</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ksample04</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2416,9 +2663,9 @@ is to use the bootstrap approach.</p>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># compute the t statistic using boostrap se</span>
-<span class="n">obst04b</span> <span class="o">=</span> <span class="p">(</span><span class="n">obsmean04</span> <span class="o">-</span> <span class="n">muK</span><span class="p">)</span> <span class="o">/</span> <span class="n">sehat_boot04</span>
-<span class="n">obst04b</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># compute the t statistic using bootstrap se</span>
+<span class="n">obst04bt</span> <span class="o">=</span> <span class="p">(</span><span class="n">obsmean04</span> <span class="o">-</span> <span class="n">muK0</span><span class="p">)</span> <span class="o">/</span> <span class="n">sehat_boot04</span>
+<span class="n">obst04bt</span>
 </pre></div>
 </div>
 </div>
@@ -2431,12 +2678,9 @@ is to use the bootstrap approach.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">t</span> <span class="k">as</span> <span class="n">tdist</span>
-
-<span class="n">df04</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ksample04</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>  <span class="c1"># n-1 degrees of freedom</span>
-<span class="n">rvT04</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">df04</span><span class="p">)</span>
-<span class="c1">#######################################################</span>
-<span class="n">pvalue04b</span> <span class="o">=</span> <span class="n">tailprobs</span><span class="p">(</span><span class="n">rvT</span><span class="p">,</span> <span class="n">obst04b</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;two-sided&quot;</span><span class="p">)</span>
-<span class="n">pvalue04b</span>
+<span class="n">rvT04</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">n04</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">pvalue04bt</span> <span class="o">=</span> <span class="n">tailprobs</span><span class="p">(</span><span class="n">rvT</span><span class="p">,</span> <span class="n">obst04bt</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;two-sided&quot;</span><span class="p">)</span>
+<span class="n">pvalue04bt</span>
 </pre></div>
 </div>
 </div>
@@ -2455,6 +2699,7 @@ so our decision is to reject <span class="math notranslate nohighlight">\(H_0\)<
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kombucha</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/kombucha.csv&quot;</span><span class="p">)</span>
 <span class="n">ksample01</span> <span class="o">=</span> <span class="n">kombucha</span><span class="p">[</span><span class="n">kombucha</span><span class="p">[</span><span class="s2">&quot;batch&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;volume&quot;</span><span class="p">]</span>
+<span class="n">n01</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ksample01</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2477,9 +2722,9 @@ so our decision is to reject <span class="math notranslate nohighlight">\(H_0\)<
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># compute the t statistic using boostrap se</span>
-<span class="n">obst01b</span> <span class="o">=</span> <span class="p">(</span><span class="n">obsmean01</span> <span class="o">-</span> <span class="n">muK</span><span class="p">)</span> <span class="o">/</span> <span class="n">sehat_boot01</span>
-<span class="n">obst01b</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># compute the t statistic using bootstrap se</span>
+<span class="n">obst01bt</span> <span class="o">=</span> <span class="p">(</span><span class="n">obsmean01</span> <span class="o">-</span> <span class="n">muK0</span><span class="p">)</span> <span class="o">/</span> <span class="n">sehat_boot01</span>
+<span class="n">obst01bt</span>
 </pre></div>
 </div>
 </div>
@@ -2493,11 +2738,10 @@ so our decision is to reject <span class="math notranslate nohighlight">\(H_0\)<
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">t</span> <span class="k">as</span> <span class="n">tdist</span>
 
-<span class="n">df01</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ksample01</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
-<span class="n">rvT01b</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">df01</span><span class="p">)</span>
+<span class="n">rvT01</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">n01</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 <span class="c1">#######################################################</span>
-<span class="n">pvalue01b</span> <span class="o">=</span> <span class="n">tailprobs</span><span class="p">(</span><span class="n">rvT01b</span><span class="p">,</span> <span class="n">obst01b</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;two-sided&quot;</span><span class="p">)</span>
-<span class="n">pvalue01b</span>
+<span class="n">pvalue01bt</span> <span class="o">=</span> <span class="n">tailprobs</span><span class="p">(</span><span class="n">rvT01</span><span class="p">,</span> <span class="n">obst01bt</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;two-sided&quot;</span><span class="p">)</span>
+<span class="n">pvalue01bt</span>
 </pre></div>
 </div>
 </div>
@@ -2513,8 +2757,8 @@ so we have no reason to reject <span class="math notranslate nohighlight">\(H_0\
 </section>
 <section id="explanations">
 <h2>Explanations<a class="headerlink" href="#explanations" title="Permalink to this heading">#</a></h2>
-<section id="summary-and-review-of-new-ideas">
-<h3>Summary and review of new ideas<a class="headerlink" href="#summary-and-review-of-new-ideas" title="Permalink to this heading">#</a></h3>
+<section id="summary-of-the-hypothesis-testing-procedure">
+<h3>Summary of the hypothesis testing procedure<a class="headerlink" href="#summary-of-the-hypothesis-testing-procedure" title="Permalink to this heading">#</a></h3>
 </section>
 <section id="statistical-modelling-and-assumptions">
 <h3>Statistical modelling and assumptions<a class="headerlink" href="#statistical-modelling-and-assumptions" title="Permalink to this heading">#</a></h3>
@@ -2723,6 +2967,7 @@ via <a class="reference external" href="https://en.wikipedia.org/wiki/Permutatio
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simulation-tests">Simulation tests</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sampling-distribution-under-the-null">Sampling distribution under the null</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-the-tails-of-a-distribution">Selecting the tails of a distribution</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#right-tail-of-the-distribution">Right tail of the distribution</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#left-tail-of-the-distribution">Left tail of the distribution</a></li>
@@ -2761,13 +3006,17 @@ via <a class="reference external" href="https://en.wikipedia.org/wiki/Permutatio
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-3x-test-for-the-variance-of-batch-02">Example 3X: test for the variance of Batch 02</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-4x-test-for-the-variance-of-batch-08">Example 4X: test for the variance of Batch 08</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-4x-test-for-the-variance-of-batch-08">Example 4X: test for the variance of Batch 08</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Effect size estimates</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tests-with-estimated-population-variance">Tests with estimated population variance</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#analytical-approximation-based-on-student-s-t-distribution">Analytical approximation based on Student’s <span class="math notranslate nohighlight">\(t\)</span>-distribution</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1t-test-for-the-mean-of-batch-04">Example 1T: test for the mean of Batch 04</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#assume-we-know-mean-but-not-variance">Assume we know mean, but not variance</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Effect size estimates</a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2t-test-for-the-mean-of-batch-01">Example 2T: test for the mean of Batch 01</a></li>
@@ -2777,7 +3026,7 @@ via <a class="reference external" href="https://en.wikipedia.org/wiki/Permutatio
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanations">Explanations</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#summary-and-review-of-new-ideas">Summary and review of new ideas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#summary-of-the-hypothesis-testing-procedure">Summary of the hypothesis testing procedure</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#statistical-modelling-and-assumptions">Statistical modelling and assumptions</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#two-different-probability-models">Two different probability models</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-sided-and-two-sided-tests">One-sided and two-sided tests</a></li>

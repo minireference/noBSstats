@@ -197,7 +197,7 @@ def tailprobs(rv, obs, alt="two-sided"):
         pvalue = 1 - rv.cdf(obs)
     elif alt == "less":
         pvalue = rv.cdf(obs)
-    elif alt == "two-sided":
+    elif alt == "two-sided":  # assumes symmetric dist.
         mean = rv.mean()
         dev = abs(mean - obs)
         pleft = rv.cdf(mean - dev)
