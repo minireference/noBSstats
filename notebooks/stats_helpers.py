@@ -433,39 +433,37 @@ def ttest_mean(sample, mu0, alt="two-sided"):
     pvalue = tailprobs(rvT, obst, alt=alt)
     return pvalue
 
-#######################################################
 
 def ttest_dmeans(xsample, ysample, equal_var=False, alt="two-sided"):
     """
     T-test to detect difference between two populations means
     based on the difference between sample means.
     """
-    # 1. Calculate the observed mean difference between means
+    # Calculate the observed difference between means
     obsdhat = mean(xsample) - mean(ysample)
 
-    # 2. Calculate the sample size and the standard deviation for each group
+    # Calculate the sample sizes and the stds
     n, m = len(xsample), len(xsample)
     sx, sy = std(xsample), std(ysample)
 
-    # 3. Calculate the standard error and degrees of f.
-    if not equal_var:
-        # Compute the standard error using general formula (Welch's t-test)
+    # Calculate the standard error, the degrees of
+    # freedom, the null model, and the t-statistic
+    if not equal_var:  # Welch's t-test (default)
         seD = np.sqrt(sx**2/n + sy**2/m)
-        # Use Welch's formula for degrees of freedom
         df = calcdf(sx, n, sy, m)
-    else:
-        # Use pooled variance
-        pooled_var = ((n-1)*sx**2 + (m-1)*sy**2) / (n + m - 2)
-        pooled_std = np.sqrt(pooled_var)
-        seD = pooled_std * np.sqrt(1/n + 1/m)
-        df = n + m - 2
+        rvT0 = tdist(df)
+        obst = (obsdhat - 0) / seD
+    else:              # Use pooled variance
+        varp = ((n-1)*sx**2 + (m-1)*sy**2) / (n+m-2)
+        stdp = np.sqrt(varp)
+        seDp = stdp * np.sqrt(1/n + 1/m)
+        dfp = n + m - 2
+        rvT0 = tdist(dfp)
+        obst = (obsdhat - 0) / seDp
 
-    # 4. Compute the value of the t-statistic
-    obst = (obsdhat - 0) / seD
-
-    # 5. Calculate the p-value from the t-distribution
-    rvT = tdist(df)
-    pvalue = tailprobs(rvT, obst, alt=alt)
+    # Calculate the p-value from the t-distribution
+    rvT0 = tdist(df)
+    pvalue = tailprobs(rvT0, obst, alt=alt)
     return pvalue
 
 
