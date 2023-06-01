@@ -433,33 +433,35 @@ def ttest_mean(sample, mu0, alt="two-sided"):
     pvalue = tailprobs(rvT, obst, alt=alt)
     return pvalue
 
+#######################################################
 
-def ttest_dmeans(sample1, sample2, equal_var=False, alt="two-sided"):
+def ttest_dmeans(xsample, ysample, equal_var=False, alt="two-sided"):
     """
-    T-test to detect difference between two groups based on their means.
+    T-test to detect difference between two populations means
+    based on the difference between sample means.
     """
     # 1. Calculate the observed mean difference between means
-    obsd = np.mean(sample1) - np.mean(sample2)
+    obsdhat = mean(xsample) - mean(ysample)
 
     # 2. Calculate the sample size and the standard deviation for each group
-    n1, n2 = len(sample1), len(sample1)
-    std1, std2 = np.std(sample1, ddof=1), np.std(sample2, ddof=1)
+    n, m = len(xsample), len(xsample)
+    sx, sy = std(xsample), std(ysample)
 
     # 3. Calculate the standard error and degrees of f.
-    if equal_var:
-        # Use pooled variance
-        pooled_var = ((n1-1)*std1**2 + (n2-1)*std2**2) / (n1 + n2 - 2)
-        pooled_std = np.sqrt(pooled_var)
-        seD = pooled_std * np.sqrt(1/n1 + 1/n2)
-        df = n1 + n2 - 2
-    else:
+    if not equal_var:
         # Compute the standard error using general formula (Welch's t-test)
-        seD = np.sqrt(std1**2/n1 + std2**2/n2)
+        seD = np.sqrt(sx**2/n + sy**2/m)
         # Use Welch's formula for degrees of freedom
-        df = calcdf(std1, n1, std2, n2)
+        df = calcdf(sx, n, sy, m)
+    else:
+        # Use pooled variance
+        pooled_var = ((n-1)*sx**2 + (m-1)*sy**2) / (n + m - 2)
+        pooled_std = np.sqrt(pooled_var)
+        seD = pooled_std * np.sqrt(1/n + 1/m)
+        df = n + m - 2
 
     # 4. Compute the value of the t-statistic
-    obst = (obsd - 0) / seD
+    obst = (obsdhat - 0) / seD
 
     # 5. Calculate the p-value from the t-distribution
     rvT = tdist(df)
