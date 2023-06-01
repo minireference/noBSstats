@@ -443,7 +443,7 @@ def ttest_dmeans(xsample, ysample, equal_var=False, alt="two-sided"):
     obsdhat = mean(xsample) - mean(ysample)
 
     # Calculate the sample sizes and the stds
-    n, m = len(xsample), len(xsample)
+    n, m = len(xsample), len(ysample)
     sx, sy = std(xsample), std(ysample)
 
     # Calculate the standard error, the degrees of
