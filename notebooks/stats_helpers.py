@@ -387,7 +387,7 @@ def permutation_test(xsample, ysample, estfunc, P=10000):
 
 
 
-# STANDARDIZED EFFECT SIZE
+# STANDARDIZED EFFECT SIZE MEASURES
 ################################################################################
 
 def cohend(sample, mu):
