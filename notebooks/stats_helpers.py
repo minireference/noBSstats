@@ -408,12 +408,10 @@ def cohend2(sample1, sample2):
     mean1, mean2 = np.mean(sample1), np.mean(sample2)
     var1, var2 = np.var(sample1, ddof=1), np.var(sample2, ddof=1)
     # calculate the pooled variance and standard deviaiton
-    pooled_var = ((n1-1)*var1 + (n2-1)*var2) / (n1 + n2 - 2)
-    pooled_std = np.sqrt(pooled_var)
-    cohend = (mean1 - mean2) / pooled_std
+    varp = ((n1-1)*var1 + (n2-1)*var2) / (n1 + n2 - 2)
+    stdp = np.sqrt(varp)
+    cohend = (mean1 - mean2) / stdp
     return cohend
-
-
 
 
 # T-TESTS
@@ -450,19 +448,18 @@ def ttest_dmeans(xsample, ysample, equal_var=False, alt="two-sided"):
     # freedom, the null model, and the t-statistic
     if not equal_var:  # Welch's t-test (default)
         seD = np.sqrt(sx**2/n + sy**2/m)
+        obst = (obsdhat - 0) / seD
         df = calcdf(sx, n, sy, m)
         rvT0 = tdist(df)
-        obst = (obsdhat - 0) / seD
     else:              # Use pooled variance
         varp = ((n-1)*sx**2 + (m-1)*sy**2) / (n+m-2)
         stdp = np.sqrt(varp)
         seDp = stdp * np.sqrt(1/n + 1/m)
+        obst = (obsdhat - 0) / seDp
         dfp = n + m - 2
         rvT0 = tdist(dfp)
-        obst = (obsdhat - 0) / seDp
 
     # Calculate the p-value from the t-distribution
-    rvT0 = tdist(df)
     pvalue = tailprobs(rvT0, obst, alt=alt)
     return pvalue
 
@@ -478,8 +475,8 @@ def ttest_paired(sample1, sample2, alt="two-sided"):
     std = np.std(ds, ddof=1)
     meand  = np.mean(ds)
     se = std / np.sqrt(n)
-    df = n - 1
     obst = (meand - 0) / se
+    df = n - 1
     rvT = tdist(df)
     pvalue = tailprobs(rvT, obst, alt=alt)
     return pvalue
