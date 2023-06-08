@@ -467,20 +467,18 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebook-setup">Notebook setup</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definitions">Definitions</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-two-groups">Comparing two groups</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#permutation-test">Permutation test</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#permutations">Permutations</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#resampling-under-the-null-hypothesis">Resampling under the null hypothesis</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-two-groups">Comparing two groups</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#permutation-test-for-comparing-two-populations">Permutation test for comparing two populations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#permutations">Permutations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#resampling-under-the-null-hypothesis">Resampling under the null hypothesis</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-5-electricity-prices">Example 5: electricity prices</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#running-a-permutation-test">Running a permutation test</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#effect-size-estimates">Effect size estimates</a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reusable-function">Reusable function</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-existing-scipy-functions-optional">Using existing SciPy functions (optional)</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#permutations-test-using-ttest-ind">Permutations test using <code class="docutils literal notranslate"><span class="pre">ttest_ind</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#bootstrap-difference-between-means">Bootstrap difference between means</a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-6-lecture-and-debate-curriculums">Example 6: lecture and debate curriculums</a></li>
@@ -490,8 +488,10 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-5t-comparing-east-and-west-electricity-prices">Example 5T: comparing East and West electricity prices</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#welch-s-t-test-unpooled-variances">Welch’s t-test (unpooled variances)</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#t-test-with-pooled-variances">T-test with pooled variances</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Effect size estimates</a></li>
 </ul>
 </li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reusable-procedure-for-two-sample-t-test">Reusable procedure for two-sample <span class="math notranslate nohighlight">\(t\)</span>-test</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-6t-comparing-rural-and-urban-sleep-scores">Example 6T: comparing rural and urban sleep scores</a></li>
 </ul>
 </li>
@@ -507,7 +507,10 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#other-statistical-methods">Other statistical methods</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#e3-x-pooled-variance">E3.X Pooled variance</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#links">Links</a></li>
 </ul>
             </nav>
@@ -615,18 +618,27 @@ document.write(`
 </section>
 <section id="definitions">
 <h2>Definitions<a class="headerlink" href="#definitions" title="Permalink to this heading">#</a></h2>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;indistinguishability&quot;</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;INDISTINGUISHABILITY&#39;
-</pre></div>
-</div>
-</div>
-</div>
+<ul class="simple">
+<li><p><strong>Populations</strong>.
+We’ll label the two unknown populations <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span>.
+and assume the arbitrary model family <span class="math notranslate nohighlight">\(\mathcal{M}\)</span> with mean parameter
+<span class="math notranslate nohighlight">\(X \sim \mathcal{M}(\mu_X)\)</span> and <span class="math notranslate nohighlight">\(Y \sim \mathcal{M}(\mu_Y)\)</span>.</p></li>
+<li><p><strong>Parameters</strong>.
+The means of the two populations <span class="math notranslate nohighlight">\(\mu_X\)</span> and <span class="math notranslate nohighlight">\(\mu_Y\)</span> are unknown,
+and what we want to study…</p></li>
+<li><p><strong>Samples</strong>.
+We assume the two samples <span class="math notranslate nohighlight">\(\mathbf{x} = (x_1, x_2, \ldots, x_n)\)</span>
+and <span class="math notranslate nohighlight">\(\mathbf{y} = (y_1, y_2, \ldots, y_m)\)</span>
+are randomly selected from the populations <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span>.</p></li>
+<li><p><strong>Estimate</strong> (statistic) <span class="math notranslate nohighlight">\(\hat{d} = \overline{\mathbf{x}} - \overline{\mathbf{y}}\)</span>:
+the difference between means of the two samples <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> and <span class="math notranslate nohighlight">\(\mathbf{y}\)</span>.</p></li>
+<li><p><strong>Estimator</strong> <span class="math notranslate nohighlight">\(\DMeans\)</span>:
+the function  that computes the difference between means from two samples,
+<span class="math notranslate nohighlight">\(\hat{d} = \DMeans(\mathbf{x},\mathbf{y}) =  \overline{\mathbf{x}} - \overline{\mathbf{y}}\)</span>.
+the function we use to compute the estimate <span class="math notranslate nohighlight">\(\hat{d}\)</span>.</p></li>
+<li><p><strong>Sampling distribution</strong> <span class="math notranslate nohighlight">\(\hat{D} = \DMeans(\mathbf{X}, \mathbf{Y})\)</span>:
+the difference between means computed from two random samples <span class="math notranslate nohighlight">\(\mathbf{X}\)</span> and <span class="math notranslate nohighlight">\(\mathbf{Y}\)</span>.</p></li>
+</ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">mean</span><span class="p">(</span><span class="n">sample</span><span class="p">):</span>
@@ -652,14 +664,15 @@ document.write(`
 <section id="comparing-two-groups">
 <h2>Comparing two groups<a class="headerlink" href="#comparing-two-groups" title="Permalink to this heading">#</a></h2>
 <p>Description of the problem: compare two group based on sample means computed from each group.</p>
-<section id="permutation-test">
-<h3>Permutation test<a class="headerlink" href="#permutation-test" title="Permalink to this heading">#</a></h3>
+</section>
+<section id="permutation-test-for-comparing-two-populations">
+<h2>Permutation test for comparing two populations<a class="headerlink" href="#permutation-test-for-comparing-two-populations" title="Permalink to this heading">#</a></h2>
 <p>The <strong>permutations test</strong> is a computational approach for comparing two group.
 The permutation test takes it’s name from the action of mixing up the group-membership labels
 and computing a statistic which is a way to generate samples from the null hypothesis
 in situations where the null hypothesis states there is no difference between two groups.</p>
 <section id="permutations">
-<h4>Permutations<a class="headerlink" href="#permutations" title="Permalink to this heading">#</a></h4>
+<h3>Permutations<a class="headerlink" href="#permutations" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">43</span><span class="p">)</span>
@@ -688,7 +701,7 @@ in situations where the null hypothesis states there is no difference between tw
 </div>
 </section>
 <section id="resampling-under-the-null-hypothesis">
-<h4>Resampling under the null hypothesis<a class="headerlink" href="#resampling-under-the-null-hypothesis" title="Permalink to this heading">#</a></h4>
+<h3>Resampling under the null hypothesis<a class="headerlink" href="#resampling-under-the-null-hypothesis" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">resample_under_H0</span><span class="p">(</span><span class="n">xsample</span><span class="p">,</span> <span class="n">ysample</span><span class="p">):</span>
@@ -736,21 +749,21 @@ in situations where the null hypothesis states there is no difference between tw
 <p>The function <code class="docutils literal notranslate"><span class="pre">resample_under_H0</span></code> gives us a way to generate samples from the null hypothesis.
 We can then compute the value of the <code class="docutils literal notranslate"><span class="pre">dmeans</span></code> statistic for these samples. We used the assumption of “no difference” under the null hypothesis, and translated this to the “forget the labels” interpretation.</p>
 </section>
-</section>
 <section id="example-5-electricity-prices">
 <h3>Example 5: electricity prices<a class="headerlink" href="#example-5-electricity-prices" title="Permalink to this heading">#</a></h3>
-<div class="math notranslate nohighlight">
-\[ 
+<p>The probability model under the alternative hypothesis
+describes two populations with different parameters:
+$<span class="math notranslate nohighlight">\( 
    H_A: \qquad X_W = \mathcal{N}(\color{blue}{\mu_W}, \sigma_W)
    \quad \textrm{and} \quad
    X_{E} = \mathcal{N}(\color{orange}{\mu_{E}}, \sigma_{E})
-\]</div>
-<div class="math notranslate nohighlight">
-\[ 
+\)</span>$</p>
+<p>Under the null hypothesis the populations have the same mean:
+$<span class="math notranslate nohighlight">\( 
    H_0: \qquad X_W = \mathcal{N}(\color{red}{\mu_0}, \sigma_W)
    \quad \textrm{and} \quad
    X_{E} = \mathcal{N}(\color{red}{\mu_0}, \sigma_{E})
-\]</div>
+\)</span>$</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">eprices</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/eprices.csv&quot;</span><span class="p">)</span>
@@ -838,8 +851,8 @@ We can then compute the value of the <code class="docutils literal notranslate">
 <span class="n">pricesE</span> <span class="o">=</span> <span class="n">eprices</span><span class="p">[</span><span class="n">eprices</span><span class="p">[</span><span class="s2">&quot;end&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;East&quot;</span><span class="p">][</span><span class="s2">&quot;price&quot;</span><span class="p">]</span>
 
 <span class="c1"># 1. Calculate the observed difference between means</span>
-<span class="n">obsdhat</span> <span class="o">=</span> <span class="n">dmeans</span><span class="p">(</span><span class="n">pricesW</span><span class="p">,</span> <span class="n">pricesE</span><span class="p">)</span>
-<span class="n">obsdhat</span>
+<span class="n">dprice</span> <span class="o">=</span> <span class="n">dmeans</span><span class="p">(</span><span class="n">pricesW</span><span class="p">,</span> <span class="n">pricesE</span><span class="p">)</span>
+<span class="n">dprice</span>
 </pre></div>
 </div>
 </div>
@@ -862,8 +875,8 @@ which we can do using the permutation test.</p>
 <span class="n">ppricesW</span><span class="p">,</span> <span class="n">ppricesE</span> <span class="o">=</span> <span class="n">resample_under_H0</span><span class="p">(</span><span class="n">pricesW</span><span class="p">,</span> <span class="n">pricesE</span><span class="p">)</span>
 
 <span class="c1"># Compute the difference in means for the bootstrap samples</span>
-<span class="n">pdhat</span> <span class="o">=</span> <span class="n">dmeans</span><span class="p">(</span><span class="n">ppricesW</span><span class="p">,</span> <span class="n">ppricesE</span><span class="p">)</span>
-<span class="n">pdhat</span>
+<span class="n">pdhat0</span> <span class="o">=</span> <span class="n">dmeans</span><span class="p">(</span><span class="n">ppricesW</span><span class="p">,</span> <span class="n">ppricesE</span><span class="p">)</span>
+<span class="n">pdhat0</span>
 </pre></div>
 </div>
 </div>
@@ -873,36 +886,33 @@ which we can do using the permutation test.</p>
 </div>
 </div>
 </div>
-<p>EDITME #### Running a permutation test</p>
-<p>We can repeat the resampling procedure <code class="docutils literal notranslate"><span class="pre">10000</span></code> times to get the sampling distribution of <span class="math notranslate nohighlight">\(D\)</span> under <span class="math notranslate nohighlight">\(H_0\)</span>,
+<section id="running-a-permutation-test">
+<h4>Running a permutation test<a class="headerlink" href="#running-a-permutation-test" title="Permalink to this heading">#</a></h4>
+<p>We can repeat the resampling procedure <code class="docutils literal notranslate"><span class="pre">10000</span></code> times to get the sampling distribution of <span class="math notranslate nohighlight">\(\widehat{D}_0\)</span> under <span class="math notranslate nohighlight">\(H_0\)</span>,
 as illustrated in the code procedure below.</p>
-<p>EDITME</p>
-<ul class="simple">
-<li><p>Once we have the sampling distribution of <code class="docutils literal notranslate"><span class="pre">D</span></code> under <span class="math notranslate nohighlight">\(H_0\)</span>,
-we can see where the observed value <span class="math notranslate nohighlight">\(d=130\)</span>
-falls within this distribution.</p></li>
-<li><p>p-value: the probability of observing value <span class="math notranslate nohighlight">\(d=130\)</span> or more extreme under the null hypothesis</p></li>
-</ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
 
 <span class="c1"># 2. Obtain the sampling distribution under H0</span>
 <span class="n">P</span> <span class="o">=</span> <span class="mi">10000</span>
-<span class="n">pdhats</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">pdhats0</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">P</span><span class="p">):</span>
     <span class="n">ps1</span><span class="p">,</span> <span class="n">ps2</span> <span class="o">=</span> <span class="n">resample_under_H0</span><span class="p">(</span><span class="n">pricesW</span><span class="p">,</span> <span class="n">pricesE</span><span class="p">)</span>
-    <span class="n">pdhat</span> <span class="o">=</span> <span class="n">dmeans</span><span class="p">(</span><span class="n">ps1</span><span class="p">,</span> <span class="n">ps2</span><span class="p">)</span>
-    <span class="n">pdhats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pdhat</span><span class="p">)</span>
+    <span class="n">pdhat0</span> <span class="o">=</span> <span class="n">dmeans</span><span class="p">(</span><span class="n">ps1</span><span class="p">,</span> <span class="n">ps2</span><span class="p">)</span>
+    <span class="n">pdhats0</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pdhat0</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
+<p>Now that we have the sampling distribution <span class="math notranslate nohighlight">\(\widehat{D}_0\)</span>,
+we can see where the observed value <span class="math notranslate nohighlight">\(\hat{d}= 3\)</span> <code class="docutils literal notranslate"><span class="pre">=dprice</span></code> falls within this distribution.
+The <span class="math notranslate nohighlight">\(p\)</span>-value is the probability of observing value <code class="docutils literal notranslate"><span class="pre">dprice=3</span></code> or more extreme under the null hypothesis.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 3. Compute the p-value </span>
-<span class="n">tails</span> <span class="o">=</span> <span class="n">tailvalues</span><span class="p">(</span><span class="n">pdhats</span><span class="p">,</span> <span class="n">obsdhat</span><span class="p">)</span>
-<span class="n">pvalue</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tails</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">pdhats</span><span class="p">)</span>
+<span class="n">tails</span> <span class="o">=</span> <span class="n">tailvalues</span><span class="p">(</span><span class="n">pdhats0</span><span class="p">,</span> <span class="n">dprice</span><span class="p">)</span>
+<span class="n">pvalue</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tails</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">pdhats0</span><span class="p">)</span>
 <span class="n">pvalue</span>
 </pre></div>
 </div>
@@ -918,11 +928,11 @@ falls within this distribution.</p></li>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;hist_p-value_dmeans_eprices.pdf&quot;</span><span class="p">)</span>
 
 <span class="c1"># plot the sampling distribution in blue</span>
-<span class="n">bins</span> <span class="o">=</span> <span class="n">nicebins</span><span class="p">(</span><span class="n">pdhats</span><span class="p">,</span> <span class="n">obsdhat</span><span class="p">)</span>
-<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">pdhats</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">)</span>
+<span class="n">bins</span> <span class="o">=</span> <span class="n">nicebins</span><span class="p">(</span><span class="n">pdhats0</span><span class="p">,</span> <span class="n">dprice</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">pdhats0</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">)</span>
 
 <span class="c1"># plot red line for the observed statistic</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">obsdhat</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">dprice</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
 
 <span class="c1"># plot the values that are equal or more extreme in red</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">tails</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
@@ -942,8 +952,22 @@ falls within this distribution.</p></li>
 <img alt="../_images/64972fcd13b04db5da20cf403f0361a45b1e8486d26518d4ed49b1b09042dee0.png" src="../_images/64972fcd13b04db5da20cf403f0361a45b1e8486d26518d4ed49b1b09042dee0.png" />
 </div>
 </div>
+</section>
 <section id="effect-size-estimates">
 <h4>Effect size estimates<a class="headerlink" href="#effect-size-estimates" title="Permalink to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dprice</span> <span class="o">=</span> <span class="n">dmeans</span><span class="p">(</span><span class="n">pricesW</span><span class="p">,</span> <span class="n">pricesE</span><span class="p">)</span>
+<span class="n">dprice</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>3.0
+</pre></div>
+</div>
+</div>
+</div>
 <p>The bootstrap confidence interval for the effect size
 <span class="math notranslate nohighlight">\(\ci{\Delta,0.9}^*\)</span> tells us a range of plausible values for the effect size.</p>
 <div class="cell docutils container">
@@ -978,15 +1002,15 @@ that should contain the difference between group means <span class="math notrans
     <span class="n">obsdhat</span> <span class="o">=</span> <span class="n">dmeans</span><span class="p">(</span><span class="n">xsample</span><span class="p">,</span> <span class="n">ysample</span><span class="p">)</span>
 
     <span class="c1"># 2. Get sampling dist. of `dmeans` under H0</span>
-    <span class="n">pdhats</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">pdhats0</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">P</span><span class="p">):</span>
         <span class="n">psx</span><span class="p">,</span> <span class="n">psy</span> <span class="o">=</span> <span class="n">resample_under_H0</span><span class="p">(</span><span class="n">xsample</span><span class="p">,</span> <span class="n">ysample</span><span class="p">)</span>
-        <span class="n">pdhat</span> <span class="o">=</span> <span class="n">dmeans</span><span class="p">(</span><span class="n">psx</span><span class="p">,</span> <span class="n">psy</span><span class="p">)</span>
-        <span class="n">pdhats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pdhat</span><span class="p">)</span>
+        <span class="n">pdhat0</span> <span class="o">=</span> <span class="n">dmeans</span><span class="p">(</span><span class="n">psx</span><span class="p">,</span> <span class="n">psy</span><span class="p">)</span>
+        <span class="n">pdhats0</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pdhat0</span><span class="p">)</span>
 
     <span class="c1"># 3. Compute the p-value</span>
-    <span class="n">tails</span> <span class="o">=</span> <span class="n">tailvalues</span><span class="p">(</span><span class="n">pdhats</span><span class="p">,</span> <span class="n">obsdhat</span><span class="p">)</span>
-    <span class="n">pvalue</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tails</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">pdhats</span><span class="p">)</span>
+    <span class="n">tails</span> <span class="o">=</span> <span class="n">tailvalues</span><span class="p">(</span><span class="n">pdhats0</span><span class="p">,</span> <span class="n">obsdhat</span><span class="p">)</span>
+    <span class="n">pvalue</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tails</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">pdhats0</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">pvalue</span>
 </pre></div>
 </div>
@@ -1031,29 +1055,6 @@ by calling <code class="docutils literal notranslate"><span class="pre">ttest_in
 <p>Note the <span class="math notranslate nohighlight">\(p\)</span>-value we obtained form the two methods may be different.
 This can happen when using the permutations test,
 because we use randomness as part of the calculation.</p>
-</section>
-<section id="bootstrap-difference-between-means">
-<h4>Bootstrap difference between means<a class="headerlink" href="#bootstrap-difference-between-means" title="Permalink to this heading">#</a></h4>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">bootstrap</span>
-
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">45</span><span class="p">)</span>
-<span class="n">res</span> <span class="o">=</span> <span class="n">bootstrap</span><span class="p">((</span><span class="n">pricesW</span><span class="p">,</span> <span class="n">pricesE</span><span class="p">),</span> <span class="n">statistic</span><span class="o">=</span><span class="n">dmeans</span><span class="p">,</span>
-                <span class="n">vectorized</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">confidence_level</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span>
-                <span class="n">n_resamples</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;percentile&#39;</span><span class="p">)</span>
-
-<span class="p">[</span><span class="n">res</span><span class="o">.</span><span class="n">confidence_interval</span><span class="o">.</span><span class="n">low</span><span class="p">,</span>
- <span class="n">res</span><span class="o">.</span><span class="n">confidence_interval</span><span class="o">.</span><span class="n">high</span><span class="p">]</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[2.0777777777777775, 3.9222222222222225]
-</pre></div>
-</div>
-</div>
-</div>
 </section>
 </section>
 <section id="example-6-lecture-and-debate-curriculums">
@@ -1141,12 +1142,14 @@ because we use randomness as part of the calculation.</p>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scoresD</span> <span class="o">=</span> <span class="n">students</span><span class="p">[</span><span class="n">students</span><span class="p">[</span><span class="s2">&quot;curriculum&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;debate&quot;</span><span class="p">][</span><span class="s2">&quot;score&quot;</span><span class="p">]</span>
-<span class="n">scoresL</span> <span class="o">=</span> <span class="n">students</span><span class="p">[</span><span class="n">students</span><span class="p">[</span><span class="s2">&quot;curriculum&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;lecture&quot;</span><span class="p">][</span><span class="s2">&quot;score&quot;</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">studentsD</span> <span class="o">=</span> <span class="n">students</span><span class="p">[</span><span class="n">students</span><span class="p">[</span><span class="s2">&quot;curriculum&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;debate&quot;</span><span class="p">]</span>
+<span class="n">studentsL</span> <span class="o">=</span> <span class="n">students</span><span class="p">[</span><span class="n">students</span><span class="p">[</span><span class="s2">&quot;curriculum&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;lecture&quot;</span><span class="p">]</span>
+<span class="n">scoresD</span> <span class="o">=</span> <span class="n">studentsD</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">]</span>
+<span class="n">scoresL</span> <span class="o">=</span> <span class="n">studentsL</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">]</span>
 
 <span class="c1"># observed difference between score means</span>
-<span class="n">dhat</span> <span class="o">=</span> <span class="n">dmeans</span><span class="p">(</span><span class="n">scoresD</span><span class="p">,</span> <span class="n">scoresL</span><span class="p">)</span>
-<span class="n">dhat</span>
+<span class="n">dscore</span> <span class="o">=</span> <span class="n">dmeans</span><span class="p">(</span><span class="n">scoresD</span><span class="p">,</span> <span class="n">scoresL</span><span class="p">)</span>
+<span class="n">dscore</span>
 </pre></div>
 </div>
 </div>
@@ -1173,7 +1176,8 @@ because we use randomness as part of the calculation.</p>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;hist_p-value_dmeans_students.pdf&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># FIGURES ONLY</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;hist_p-value_dmeans_students.pdf&quot;</span><span class="p">)</span>
 
 <span class="c1"># generate sampling distribution under H0</span>
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">43</span><span class="p">)</span>
@@ -1185,14 +1189,14 @@ because we use randomness as part of the calculation.</p>
     <span class="n">pdhats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pdhat</span><span class="p">)</span>
     
 <span class="c1"># plot the sampling distribution in blue</span>
-<span class="n">bins</span> <span class="o">=</span> <span class="n">nicebins</span><span class="p">(</span><span class="n">pdhats</span><span class="p">,</span> <span class="n">dhat</span><span class="p">)</span>
+<span class="n">bins</span> <span class="o">=</span> <span class="n">nicebins</span><span class="p">(</span><span class="n">pdhats</span><span class="p">,</span> <span class="n">dscore</span><span class="p">)</span>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">pdhats</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">)</span>
 
 <span class="c1"># plot red line for the observed statistic</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">dhat</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">dscore</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
 
 <span class="c1"># plot the values that are equal or more extreme in red</span>
-<span class="n">tails</span> <span class="o">=</span> <span class="n">tailvalues</span><span class="p">(</span><span class="n">pdhats</span><span class="p">,</span> <span class="n">dhat</span><span class="p">)</span>
+<span class="n">tails</span> <span class="o">=</span> <span class="n">tailvalues</span><span class="p">(</span><span class="n">pdhats</span><span class="p">,</span> <span class="n">dscore</span><span class="p">)</span>
 <span class="c1"># print( len(tails) / len(pdhats) )</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">tails</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$f_{\widehat</span><span class="si">{D}</span><span class="s2">_0}$&quot;</span><span class="p">)</span>
@@ -1231,37 +1235,98 @@ that we developed earlier, we can obtain a <strong>closed form expression</stron
 <li><p>In particular, the probability model for the two groups under <span class="math notranslate nohighlight">\(H_0\)</span> are:</p>
 <div class="math notranslate nohighlight">
 \[ 
-       H_0: \qquad X_S = \mathcal{N}(\color{red}{\mu_0}, \sigma_S)
+       H_0: \qquad X = \mathcal{N}(\color{red}{\mu_0}, \sigma_X)
        \quad \textrm{and} \quad
-       X_{NS} = \mathcal{N}(\color{red}{\mu_0}, \sigma_{NS}), \quad
+       Y = \mathcal{N}(\color{red}{\mu_0}, \sigma_Y), \quad
   \]</div>
-<p>from which we can derive the model for <span class="math notranslate nohighlight">\(D = \overline{\mathbf{X}}_S - \overline{\mathbf{X}}_{NS}\)</span>:</p>
+<p>from which we can derive the model for <span class="math notranslate nohighlight">\(D = \overline{\mathbf{X}} - \overline{\mathbf{Y}}\)</span>:</p>
 <div class="math notranslate nohighlight">
 \[ 
-     D  \sim \mathcal{N}\!\left( \color{red}{0}, \  \sqrt{ \tfrac{\sigma^2_S}{n_S} + \tfrac{\sigma^2_{NS}}{n_{NS}} } \right)
+     D  \sim \mathcal{N}\!\left( \color{red}{0}, \  \sqrt{ \tfrac{\sigma^2_X}{n} + \tfrac{\sigma^2_Y}{m} } \right)
   \]</div>
-<p>In words, the sampling distribution of the difference between group means is
-normally distributed with mean <span class="math notranslate nohighlight">\(\mu_D = 0\)</span> and standard deviation <span class="math notranslate nohighlight">\(\sigma_D\)</span>,
-which depends on the variance of the two groups <span class="math notranslate nohighlight">\(\sigma^2_S\)</span> and <span class="math notranslate nohighlight">\(\sigma^2_{NS}\)</span>.
-Recall we obtained this expression earlier when we discussed difference of means between groups A and B.</p>
 </li>
-<li><p>However, the population variances <span class="math notranslate nohighlight">\(\sigma^2_S\)</span> and <span class="math notranslate nohighlight">\(\sigma^2_{NS}\)</span> are unknown,
-and we only have the estimated variances <span class="math notranslate nohighlight">\(s_S^2\)</span> and <span class="math notranslate nohighlight">\(s_{NS}^2\)</span>,
-which we calculated from the sample.</p></li>
-<li><p>That’s OK though, since the sample variances are estimates for the population variances.
-There are two common ways to obtain an approximation for <span class="math notranslate nohighlight">\(\sigma^2_D\)</span>:</p>
-<ul class="simple">
-<li><p>Unpooled variance: <span class="math notranslate nohighlight">\(\sigma^2_D \approx s^2_u = \tfrac{s^2_S}{n_S} + \tfrac{s^2_{NS}}{n_{NS}}\)</span>
-(follows from the general rule of probability theory)</p></li>
-<li><p>Pooled variance: <span class="math notranslate nohighlight">\(\sigma^2_D \approx s^2_p =  \frac{(n_S-1)s_S^2 \; + \; (n_{NS}-1)s_{NS}^2}{n_S + n_{NS} - 2}\)</span>
-(takes advantage of assumption that both samples come from the same population under <span class="math notranslate nohighlight">\(H_0\)</span>)</p></li>
 </ul>
-</li>
-<li><p>NEW CONCEPT: <strong>Student’s <span class="math notranslate nohighlight">\(t\)</span>-distribution</strong> is a model for <span class="math notranslate nohighlight">\(D\)</span> which takes into account
-we are using <span class="math notranslate nohighlight">\(s_S^2\)</span> and <span class="math notranslate nohighlight">\(s_{NS}^2\)</span> instead of <span class="math notranslate nohighlight">\(\sigma_S^2\)</span> and <span class="math notranslate nohighlight">\(\sigma_{NS}^2\)</span>.</p></li>
-<li><p>NEW CONCEPT: <strong>degrees of freedom</strong>, denoted <code class="docutils literal notranslate"><span class="pre">df</span></code> in code or <span class="math notranslate nohighlight">\(\nu\)</span> (Greek letter <em>nu</em>) in equations,
-is the parameter of Student’s <span class="math notranslate nohighlight">\(t\)</span>-distribution dependent on the sample size used to estimate quantities.</p></li>
-</ul>
+<p>TODO finish importing S and NS narrative (commented out in this cell)</p>
+<!-- 
+  In words, the sampling distribution of the difference between group means is
+  normally distributed with mean $\mu_D = 0$ and standard deviation $\sigma_D$,
+  which depends on the variance of the two groups $\sigma^2_S$ and $\sigma^2_{NS}$.
+  Recall we obtained this expression earlier when we discussed difference of means between groups A and B.
+- However, the population variances $\sigma^2_S$ and $\sigma^2_{NS}$ are unknown,
+  and we only have the estimated variances $s_S^2$ and $s_{NS}^2$,
+  which we calculated from the sample.
+- That's OK though, since the sample variances are estimates for the population variances.
+  There are two common ways to obtain an approximation for $\sigma^2_D$:
+  - Unpooled variance: $\sigma^2_D \approx s^2_u = \tfrac{s^2_S}{n_S} + \tfrac{s^2_{NS}}{n_{NS}}$
+    (follows from the general rule of probability theory)
+  - Pooled variance: $\sigma^2_D \approx s^2_p =  \frac{(n_S-1)s_S^2 \; + \; (n_{NS}-1)s_{NS}^2}{n_S + n_{NS} - 2}$
+    (takes advantage of assumption that both samples come from the same population under $H_0$)
+- NEW CONCEPT: **Student's $t$-distribution** is a model for $D$ which takes into account
+  we are using $s_S^2$ and $s_{NS}^2$ instead of $\sigma_S^2$ and $\sigma_{NS}^2$.
+- NEW CONCEPT: **degrees of freedom**, denoted `df` in code or $\nu$ (Greek letter *nu*) in equations,
+  is the parameter of Student's $t$-distribution dependent on the sample size used to estimate quantities.
+
+--><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;panel_D0_and_T0_twosided_pvalues.pdf&quot;</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">t</span> <span class="k">as</span> <span class="n">tdist</span>
+<span class="n">rvT</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>
+<span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="n">ys</span> <span class="o">=</span> <span class="n">rvT</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">plt</span><span class="o">.</span><span class="n">rc_context</span><span class="p">({</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:(</span><span class="mi">7</span><span class="p">,</span><span class="mi">2</span><span class="p">)}),</span> <span class="n">sns</span><span class="o">.</span><span class="n">axes_style</span><span class="p">(</span><span class="s2">&quot;ticks&quot;</span><span class="p">):</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="c1"># D0</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">xs</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">ys</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">)</span>
+    <span class="c1"># ax1.set_xlabel(&quot;$\hat{d}$&quot;)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.42</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$f_{\widehat</span><span class="si">{D}</span><span class="s2">_0}$&quot;</span><span class="p">)</span>
+    <span class="c1"># highlight the left and right tails</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">xs</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">xs</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">y1</span><span class="o">=</span><span class="n">ys</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.03</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$-|\hat</span><span class="si">{d}</span><span class="s2">|$&quot;</span><span class="p">,</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">xs</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">xs</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">y1</span><span class="o">=</span><span class="n">ys</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.03</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$|\hat</span><span class="si">{d}</span><span class="s2">|$&quot;</span><span class="p">,</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+
+    <span class="c1"># T0</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">xs</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">ys</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.42</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$f_</span><span class="si">{T_0}</span><span class="s2">$&quot;</span><span class="p">)</span>
+    <span class="c1"># highlight the left and right tails</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">xs</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">xs</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">y1</span><span class="o">=</span><span class="n">ys</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.03</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$-|t|$&quot;</span><span class="p">,</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">xs</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">xs</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">y1</span><span class="o">=</span><span class="n">ys</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.03</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$|t|$&quot;</span><span class="p">,</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+
+    <span class="c1"># TODO: add h-space between the two subplots</span>
+
+<span class="n">savefigure</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/two_sample_tests/panel_D0_and_T0_twosided_pvalues.pdf
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/two_sample_tests/panel_D0_and_T0_twosided_pvalues.png
+</pre></div>
+</div>
+<img alt="../_images/486d4836f87588d37e48ee9a0404d223b5d7806e9bf5785e2f79310c1229dfc2.png" src="../_images/486d4836f87588d37e48ee9a0404d223b5d7806e9bf5785e2f79310c1229dfc2.png" />
+</div>
+</div>
 <section id="example-5t-comparing-east-and-west-electricity-prices">
 <h3>Example 5T: comparing East and West electricity prices<a class="headerlink" href="#example-5t-comparing-east-and-west-electricity-prices" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
@@ -1271,8 +1336,8 @@ is the parameter of Student’s <span class="math notranslate nohighlight">\(t\)
 <span class="n">pricesE</span> <span class="o">=</span> <span class="n">eprices</span><span class="p">[</span><span class="n">eprices</span><span class="p">[</span><span class="s2">&quot;end&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;East&quot;</span><span class="p">][</span><span class="s2">&quot;price&quot;</span><span class="p">]</span>
 
 <span class="c1"># Calculate the observed difference between means</span>
-<span class="n">dprices</span> <span class="o">=</span> <span class="n">dmeans</span><span class="p">(</span><span class="n">pricesW</span><span class="p">,</span> <span class="n">pricesE</span><span class="p">)</span>
-<span class="n">dprices</span>
+<span class="n">dprice</span> <span class="o">=</span> <span class="n">dmeans</span><span class="p">(</span><span class="n">pricesW</span><span class="p">,</span> <span class="n">pricesE</span><span class="p">)</span>
+<span class="n">dprice</span>
 </pre></div>
 </div>
 </div>
@@ -1301,8 +1366,8 @@ which allows the variances in the two groups to be different.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute the standard error of the estimator D (Welch&#39;s t-test)</span>
-<span class="n">seDprices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">stdW</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">nW</span> <span class="o">+</span> <span class="n">stdE</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">nE</span><span class="p">)</span>
-<span class="n">seDprices</span>
+<span class="n">seD</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">stdW</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">nW</span> <span class="o">+</span> <span class="n">stdE</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">nE</span><span class="p">)</span>
+<span class="n">seD</span>
 </pre></div>
 </div>
 </div>
@@ -1314,11 +1379,21 @@ which allows the variances in the two groups to be different.</p>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">calcdf</span><span class="p">(</span><span class="n">stdX</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">stdY</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
-    <span class="n">vX</span> <span class="o">=</span> <span class="n">stdX</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">n</span>
-    <span class="n">vY</span> <span class="o">=</span> <span class="n">stdY</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">m</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">vX</span> <span class="o">+</span> <span class="n">vY</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">vX</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">vY</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="p">(</span><span class="n">m</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">df</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute the value of the t-statistic</span>
+<span class="n">obst</span> <span class="o">=</span> <span class="p">(</span><span class="n">dprice</span> <span class="o">-</span> <span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">seD</span>
+<span class="n">obst</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5.022875513276463
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">stats_helpers</span> <span class="kn">import</span> <span class="n">calcdf</span>
     
 <span class="c1"># Obtain the degrees of freedom from the crazy formula</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">calcdf</span><span class="p">(</span><span class="n">stdW</span><span class="p">,</span> <span class="n">nW</span><span class="p">,</span> <span class="n">stdE</span><span class="p">,</span> <span class="n">nE</span><span class="p">)</span>
@@ -1334,20 +1409,12 @@ which allows the variances in the two groups to be different.</p>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute the value of the t-statistic</span>
-<span class="n">obst</span> <span class="o">=</span> <span class="p">(</span><span class="n">dprices</span> <span class="o">-</span> <span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">seDprices</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">stats_helpers</span> <span class="kn">import</span> <span class="n">tailprobs</span>
 <span class="c1"># Calculate the p-value</span>
 
 <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">t</span> <span class="k">as</span> <span class="n">tdist</span>
-<span class="n">rvT</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-<span class="n">pvalue</span> <span class="o">=</span> <span class="n">tailprobs</span><span class="p">(</span><span class="n">rvT</span><span class="p">,</span> <span class="n">obst</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;two-sided&quot;</span><span class="p">)</span>
+<span class="n">rvT0</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="n">pvalue</span> <span class="o">=</span> <span class="n">tailprobs</span><span class="p">(</span><span class="n">rvT0</span><span class="p">,</span> <span class="n">obst</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;two-sided&quot;</span><span class="p">)</span>
 <span class="n">pvalue</span>
 </pre></div>
 </div>
@@ -1360,15 +1427,14 @@ which allows the variances in the two groups to be different.</p>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ALT. compute using existing function in `scipy.stats`</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">ttest_ind</span>
-<span class="n">result1</span> <span class="o">=</span> <span class="n">ttest_ind</span><span class="p">(</span><span class="n">pricesW</span><span class="p">,</span> <span class="n">pricesE</span><span class="p">,</span> <span class="n">equal_var</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">result1</span><span class="o">.</span><span class="n">pvalue</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.0002570338337217609
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># # SKIP BECAUSE TOO SMALL</span>
+<span class="c1"># filename = os.path.join(DESTDIR, &quot;rvT0_p-value_dmeans_eprices.pdf&quot;)</span>
+<span class="c1"># from plot_helpers import calc_prob_and_plot_tails</span>
+<span class="c1"># _, ax = calc_prob_and_plot_tails(rvT0, -obst, obst, xlims=[-4,4])</span>
+<span class="c1"># ax.set_title(None)</span>
+<span class="c1"># ax.set_xlabel(&quot;$t$&quot;)</span>
+<span class="c1"># ax.set_ylabel(&quot;$f_{T_0}$&quot;)</span>
+<span class="c1"># savefigure(ax, filename)</span>
 </pre></div>
 </div>
 </div>
@@ -1379,9 +1445,29 @@ which allows the variances in the two groups to be different.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute the pooled variance and standard error of estimator D</span>
-<span class="n">pooled_var</span> <span class="o">=</span> <span class="p">((</span><span class="n">nW</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">stdW</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">nE</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">stdE</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">nW</span> <span class="o">+</span> <span class="n">nE</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
-<span class="n">pooled_std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">pooled_var</span><span class="p">)</span>
-<span class="n">pooled_seDprices</span> <span class="o">=</span> <span class="n">pooled_std</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">nW</span> <span class="o">+</span> <span class="mi">1</span><span class="o">/</span><span class="n">nE</span><span class="p">)</span>
+<span class="n">varp</span> <span class="o">=</span> <span class="p">((</span><span class="n">nW</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">stdW</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">nE</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">stdE</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">nW</span> <span class="o">+</span> <span class="n">nE</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">stdp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">varp</span><span class="p">)</span>
+<span class="n">seDp</span> <span class="o">=</span> <span class="n">stdp</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">nW</span> <span class="o">+</span> <span class="mi">1</span><span class="o">/</span><span class="n">nE</span><span class="p">)</span>
+<span class="n">seDp</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.5972674401486561
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute the value of the t-statistic</span>
+<span class="n">obstp</span> <span class="o">=</span> <span class="p">(</span><span class="n">dprice</span> <span class="o">-</span> <span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">seDp</span>
+<span class="n">obstp</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5.022875513276463
 </pre></div>
 </div>
 </div>
@@ -1389,8 +1475,8 @@ which allows the variances in the two groups to be different.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Obtain the degrees of freedom</span>
-<span class="n">df2</span> <span class="o">=</span> <span class="n">nW</span> <span class="o">+</span> <span class="n">nW</span> <span class="o">-</span> <span class="mi">2</span>
-<span class="n">df2</span>
+<span class="n">dfp</span> <span class="o">=</span> <span class="n">nW</span> <span class="o">+</span> <span class="n">nW</span> <span class="o">-</span> <span class="mi">2</span>
+<span class="n">dfp</span>
 </pre></div>
 </div>
 </div>
@@ -1402,20 +1488,13 @@ which allows the variances in the two groups to be different.</p>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute the value of the t-statistic</span>
-<span class="n">obst2</span> <span class="o">=</span> <span class="p">(</span><span class="n">dprices</span> <span class="o">-</span> <span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">pooled_seDprices</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">stats_helpers</span> <span class="kn">import</span> <span class="n">tailprobs</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">t</span> <span class="k">as</span> <span class="n">tdist</span>
+<span class="kn">from</span> <span class="nn">stats_helpers</span> <span class="kn">import</span> <span class="n">tailprobs</span>
 
 <span class="c1"># Calculate the p-value</span>
-<span class="n">rvT2</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">df2</span><span class="p">)</span>
-<span class="n">pvalue2</span> <span class="o">=</span> <span class="n">tailprobs</span><span class="p">(</span><span class="n">rvT2</span><span class="p">,</span> <span class="n">obst2</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;two-sided&quot;</span><span class="p">)</span>
-<span class="n">pvalue2</span>
+<span class="n">rvT0p</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">dfp</span><span class="p">)</span>
+<span class="n">pvaluep</span> <span class="o">=</span> <span class="n">tailprobs</span><span class="p">(</span><span class="n">rvT0p</span><span class="p">,</span> <span class="n">obstp</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;two-sided&quot;</span><span class="p">)</span>
+<span class="n">pvaluep</span>
 </pre></div>
 </div>
 </div>
@@ -1425,12 +1504,135 @@ which allows the variances in the two groups to be different.</p>
 </div>
 </div>
 </div>
+</section>
+<section id="id1">
+<h4>Effect size estimates<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dprice</span> <span class="o">=</span> <span class="n">dmeans</span><span class="p">(</span><span class="n">pricesW</span><span class="p">,</span> <span class="n">pricesE</span><span class="p">)</span>
+<span class="n">dprice</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>3.0
+</pre></div>
+</div>
+</div>
+</div>
+<p>The confidence interval for the effect size
+<span class="math notranslate nohighlight">\(\ci{\Delta,0.9}\)</span> tells us a range of plausible values for the effect size.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">stats_helpers</span> <span class="kn">import</span> <span class="n">ci_dmeans</span>
+
+<span class="n">ci_dmeans</span><span class="p">(</span><span class="n">pricesW</span><span class="p">,</span> <span class="n">pricesE</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[1.9396575883681466, 4.060342411631854]
+</pre></div>
+</div>
+</div>
+</div>
+<p>The 90% confidence interval <span class="math notranslate nohighlight">\(\ci{\Delta,0.9} = [1.94, 4.06]\)</span> describes an interval of numbers
+that should contain the difference between group means <span class="math notranslate nohighlight">\(\Delta\)</span> at least 90% of the time:</p>
+<div class="math notranslate nohighlight">
+\[
+    \textrm{Pr}_{\mathbf{X}}\big(\{ \Delta \in \ci{\Delta,0.9} \}\big) \geq 0.9.
+\]</div>
+</section>
+</section>
+<section id="reusable-procedure-for-two-sample-t-test">
+<h3>Reusable procedure for two-sample <span class="math notranslate nohighlight">\(t\)</span>-test<a class="headerlink" href="#reusable-procedure-for-two-sample-t-test" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#######################################################</span>
+
+<span class="k">def</span> <span class="nf">ttest_dmeans</span><span class="p">(</span><span class="n">xsample</span><span class="p">,</span> <span class="n">ysample</span><span class="p">,</span> <span class="n">equal_var</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="c1"># Calculate the observed difference between means</span>
+    <span class="n">obsdhat</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">xsample</span><span class="p">)</span> <span class="o">-</span> <span class="n">mean</span><span class="p">(</span><span class="n">ysample</span><span class="p">)</span>
+
+    <span class="c1"># Calculate the sample sizes and the stds</span>
+    <span class="n">n</span><span class="p">,</span> <span class="n">m</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">xsample</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">ysample</span><span class="p">)</span>
+    <span class="n">sx</span><span class="p">,</span> <span class="n">sy</span> <span class="o">=</span> <span class="n">std</span><span class="p">(</span><span class="n">xsample</span><span class="p">),</span> <span class="n">std</span><span class="p">(</span><span class="n">ysample</span><span class="p">)</span>
+
+    <span class="c1"># Calculate the standard error, the degrees of</span>
+    <span class="c1"># freedom, the null model, and the t-statistic</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">equal_var</span><span class="p">:</span>  <span class="c1"># Welch&#39;s t-test (default)</span>
+        <span class="n">seD</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sx</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">n</span> <span class="o">+</span> <span class="n">sy</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">m</span><span class="p">)</span>
+        <span class="n">obst</span> <span class="o">=</span> <span class="p">(</span><span class="n">obsdhat</span> <span class="o">-</span> <span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">seD</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">calcdf</span><span class="p">(</span><span class="n">sx</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">sy</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
+        <span class="n">rvT0</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>              <span class="c1"># Use pooled variance</span>
+        <span class="n">varp</span> <span class="o">=</span> <span class="p">((</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">sx</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">m</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">sy</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="n">m</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">stdp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">varp</span><span class="p">)</span>
+        <span class="n">seDp</span> <span class="o">=</span> <span class="n">stdp</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="o">/</span><span class="n">m</span><span class="p">)</span>
+        <span class="n">obst</span> <span class="o">=</span> <span class="p">(</span><span class="n">obsdhat</span> <span class="o">-</span> <span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">seDp</span>
+        <span class="n">dfp</span> <span class="o">=</span> <span class="n">n</span> <span class="o">+</span> <span class="n">m</span> <span class="o">-</span> <span class="mi">2</span>
+        <span class="n">rvT0</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">dfp</span><span class="p">)</span>
+
+    <span class="c1"># Calculate the p-value from the t-distribution</span>
+    <span class="n">pvalue</span> <span class="o">=</span> <span class="n">tailprobs</span><span class="p">(</span><span class="n">rvT0</span><span class="p">,</span> <span class="n">obst</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;two-sided&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pvalue</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Verify we get the same <span class="math notranslate nohighlight">\(p\)</span>-value
+when using the standard error formula.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ttest_dmeans</span><span class="p">(</span><span class="n">pricesW</span><span class="p">,</span> <span class="n">pricesE</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.0002570338337217614
+</pre></div>
+</div>
+</div>
+</div>
+<p>Verify we get the same <span class="math notranslate nohighlight">\(p\)</span>-value
+when using the pooled variance formula.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ttest_dmeans</span><span class="p">(</span><span class="n">pricesW</span><span class="p">,</span> <span class="n">pricesE</span><span class="p">,</span> <span class="n">equal_var</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.0001249706798767125
+</pre></div>
+</div>
+</div>
+</div>
+<p>Alternatively,
+we can use <code class="docutils literal notranslate"><span class="pre">scipy.stats.ttest_ind</span></code> to obtain the <span class="math notranslate nohighlight">\(p\)</span>-value.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">equal_var=False</span></code> to obtain the Welsh value.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ALT. compute using existing function in `scipy.stats`</span>
 <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">ttest_ind</span>
-<span class="n">result2</span> <span class="o">=</span> <span class="n">ttest_ind</span><span class="p">(</span><span class="n">pricesW</span><span class="p">,</span> <span class="n">pricesE</span><span class="p">,</span> <span class="n">equal_var</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">result2</span><span class="o">.</span><span class="n">pvalue</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">ttest_ind</span><span class="p">(</span><span class="n">pricesW</span><span class="p">,</span> <span class="n">pricesE</span><span class="p">,</span> <span class="n">equal_var</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">result</span><span class="o">.</span><span class="n">pvalue</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.0002570338337217609
+</pre></div>
+</div>
+</div>
+</div>
+<p>Use <code class="docutils literal notranslate"><span class="pre">equal_var=True</span></code> to obtain the pooled variance value.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ALT. compute using existing function in `scipy.stats`</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">ttest_ind</span>
+<span class="n">resultp</span> <span class="o">=</span> <span class="n">ttest_ind</span><span class="p">(</span><span class="n">pricesW</span><span class="p">,</span> <span class="n">pricesE</span><span class="p">,</span> <span class="n">equal_var</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">resultp</span><span class="o">.</span><span class="n">pvalue</span>
 </pre></div>
 </div>
 </div>
@@ -1440,7 +1642,6 @@ which allows the variances in the two groups to be different.</p>
 </div>
 </div>
 </div>
-</section>
 </section>
 <section id="example-6t-comparing-rural-and-urban-sleep-scores">
 <h3>Example 6T: comparing rural and urban sleep scores<a class="headerlink" href="#example-6t-comparing-rural-and-urban-sleep-scores" title="Permalink to this heading">#</a></h3>
@@ -1454,8 +1655,8 @@ which allows the variances in the two groups to be different.</p>
 <span class="n">scoresL</span> <span class="o">=</span> <span class="n">students</span><span class="p">[</span><span class="n">students</span><span class="p">[</span><span class="s2">&quot;curriculum&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;lecture&quot;</span><span class="p">][</span><span class="s2">&quot;score&quot;</span><span class="p">]</span>
 
 <span class="c1"># observed difference between score means</span>
-<span class="n">dhat</span> <span class="o">=</span> <span class="n">dmeans</span><span class="p">(</span><span class="n">scoresD</span><span class="p">,</span> <span class="n">scoresL</span><span class="p">)</span>
-<span class="n">dhat</span>
+<span class="n">dscores</span> <span class="o">=</span> <span class="n">dmeans</span><span class="p">(</span><span class="n">scoresD</span><span class="p">,</span> <span class="n">scoresL</span><span class="p">)</span>
+<span class="n">dscores</span>
 </pre></div>
 </div>
 </div>
@@ -1467,24 +1668,53 @@ which allows the variances in the two groups to be different.</p>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ALT. compute using existing function in `scipy.stats`</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">ttest_ind</span>
-<span class="n">result3</span> <span class="o">=</span> <span class="n">ttest_ind</span><span class="p">(</span><span class="n">scoresD</span><span class="p">,</span> <span class="n">scoresL</span><span class="p">,</span> <span class="n">equal_var</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">result3</span><span class="o">.</span><span class="n">pvalue</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ttest_dmeans</span><span class="p">(</span><span class="n">scoresD</span><span class="p">,</span> <span class="n">scoresL</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.10917234443214315
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.10307495448387442
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># FIGURES ONLY</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;rvT0_p-value_dmeans_student_scores.pdf&quot;</span><span class="p">)</span>
+
+<span class="c1"># T-TEST ANALYSIS</span>
+<span class="n">nD</span><span class="p">,</span> <span class="n">nL</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">scoresD</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">scoresL</span><span class="p">)</span>
+<span class="n">stdD</span><span class="p">,</span> <span class="n">stdL</span> <span class="o">=</span> <span class="n">std</span><span class="p">(</span><span class="n">scoresD</span><span class="p">),</span> <span class="n">std</span><span class="p">(</span><span class="n">scoresL</span><span class="p">)</span>
+<span class="n">seDDL</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">stdD</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">nD</span> <span class="o">+</span> <span class="n">stdL</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">nL</span><span class="p">)</span>
+
+<span class="n">obstDL</span> <span class="o">=</span> <span class="p">(</span><span class="n">dscores</span> <span class="o">-</span> <span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">seDDL</span>
+
+<span class="kn">from</span> <span class="nn">stats_helpers</span> <span class="kn">import</span> <span class="n">calcdf</span>
+<span class="n">dfDL</span> <span class="o">=</span> <span class="n">calcdf</span><span class="p">(</span><span class="n">stdD</span><span class="p">,</span> <span class="n">nD</span><span class="p">,</span> <span class="n">stdL</span><span class="p">,</span> <span class="n">nL</span><span class="p">)</span>
+<span class="n">rvT0DL</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">dfDL</span><span class="p">)</span>
+<span class="n">pvalueDL</span> <span class="o">=</span> <span class="n">tailprobs</span><span class="p">(</span><span class="n">rvT0DL</span><span class="p">,</span> <span class="n">obstDL</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;two-sided&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pvalueDL</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">plot_helpers</span> <span class="kn">import</span> <span class="n">calc_prob_and_plot_tails</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">calc_prob_and_plot_tails</span><span class="p">(</span><span class="n">rvT0DL</span><span class="p">,</span> <span class="o">-</span><span class="n">obstDL</span><span class="p">,</span> <span class="n">obstDL</span><span class="p">,</span> <span class="n">xlims</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$t$&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$f_</span><span class="si">{T_0}</span><span class="s2">$&quot;</span><span class="p">)</span>
+
+<span class="n">savefigure</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.10307495448387442
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/two_sample_tests/rvT0_p-value_dmeans_student_scores.pdf
+Saved figure to figures/stats/two_sample_tests/rvT0_p-value_dmeans_student_scores.png
+</pre></div>
+</div>
+<img alt="../_images/cfbf307914bbdecb4735cc4376f186ad75c2e7faa903883f30a2cbe8216c7be2.png" src="../_images/cfbf307914bbdecb4735cc4376f186ad75c2e7faa903883f30a2cbe8216c7be2.png" />
 </div>
 </div>
 </section>
@@ -1493,49 +1723,6 @@ which allows the variances in the two groups to be different.</p>
 <h2>Explanations<a class="headerlink" href="#explanations" title="Permalink to this heading">#</a></h2>
 <section id="two-sided-tests">
 <h3>Two-sided tests<a class="headerlink" href="#two-sided-tests" title="Permalink to this heading">#</a></h3>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;hist_p-value_right_tail_test.pdf&quot;</span><span class="p">)</span>
-
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">t</span> <span class="k">as</span> <span class="n">tdist</span>
-<span class="n">rvT</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>
-
-<span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
-<span class="n">ys</span> <span class="o">=</span> <span class="n">rvT</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>
-
-<span class="n">N</span> <span class="o">=</span> <span class="mi">100000</span>
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
-<span class="n">ts</span> <span class="o">=</span> <span class="n">rvT</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
-
-<span class="n">bins</span> <span class="o">=</span> <span class="n">nicebins</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">nbins</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
-
-<span class="k">with</span> <span class="n">sns</span><span class="o">.</span><span class="n">axes_style</span><span class="p">(</span><span class="s2">&quot;ticks&quot;</span><span class="p">):</span>
-    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-    <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">ts</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$\hat</span><span class="si">{d}</span><span class="s2">$&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="mi">2</span><span class="p">])</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$f_{\widehat</span><span class="si">{D}</span><span class="s2">_0}$&quot;</span><span class="p">)</span>
-    <span class="c1"># highlight the right tail</span>
-    <span class="n">tailvaluesa</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">ts</span> <span class="k">if</span> <span class="n">t</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">]</span>
-    <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">tailvaluesa</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">300</span><span class="p">,</span> <span class="s2">&quot;$\hat</span><span class="si">{d}</span><span class="s2">_{\mathbf</span><span class="si">{x}</span><span class="s2">,\mathbf</span><span class="si">{y}</span><span class="s2">}$&quot;</span><span class="p">,</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
-
-<span class="n">savefigure</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/two_sample_tests/hist_p-value_right_tail_test.pdf
-Saved figure to figures/stats/two_sample_tests/hist_p-value_right_tail_test.png
-</pre></div>
-</div>
-<img alt="../_images/da4ea083f5f4b5cb59a10d43fccacf87cb072df036dbf9aa69f9436ad68c5a5e.png" src="../_images/da4ea083f5f4b5cb59a10d43fccacf87cb072df036dbf9aa69f9436ad68c5a5e.png" />
-</div>
-</div>
 </section>
 <section id="statistical-modelling-assumptions">
 <h3>Statistical modelling assumptions<a class="headerlink" href="#statistical-modelling-assumptions" title="Permalink to this heading">#</a></h3>
@@ -1602,6 +1789,14 @@ Saved figure to figures/stats/two_sample_tests/hist_p-value_right_tail_test.png
 </div>
 </div>
 </div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># not relevant because p value was not significant</span>
+<span class="c1"># cohend2(scoresD, scoresL)</span>
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 </section>
 <section id="discussion">
@@ -1618,6 +1813,40 @@ Saved figure to figures/stats/two_sample_tests/hist_p-value_right_tail_test.png
 </section>
 <section id="exercises">
 <h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this heading">#</a></h2>
+<section id="e3-x-pooled-variance">
+<h3>E3.X Pooled variance<a class="headerlink" href="#e3-x-pooled-variance" title="Permalink to this heading">#</a></h3>
+<p>Redo Example 6T but this time run the two-sample <span class="math notranslate nohighlight">\(t\)</span>-test with pooled variance.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">students</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/students.csv&quot;</span><span class="p">)</span>
+<span class="n">scoresD</span> <span class="o">=</span> <span class="n">students</span><span class="p">[</span><span class="n">students</span><span class="p">[</span><span class="s2">&quot;curriculum&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;debate&quot;</span><span class="p">][</span><span class="s2">&quot;score&quot;</span><span class="p">]</span>
+<span class="n">scoresL</span> <span class="o">=</span> <span class="n">students</span><span class="p">[</span><span class="n">students</span><span class="p">[</span><span class="s2">&quot;curriculum&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;lecture&quot;</span><span class="p">][</span><span class="s2">&quot;score&quot;</span><span class="p">]</span>
+<span class="n">ttest_dmeans</span><span class="p">(</span><span class="n">scoresD</span><span class="p">,</span> <span class="n">scoresL</span><span class="p">,</span> <span class="n">equal_var</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.10917234443214374
+</pre></div>
+</div>
+</div>
+</div>
+<p>Compute using existing function in <code class="docutils literal notranslate"><span class="pre">scipy.stats.ttest_ind</span></code></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">ttest_ind</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">ttest_ind</span><span class="p">(</span><span class="n">scoresD</span><span class="p">,</span> <span class="n">scoresL</span><span class="p">,</span> <span class="n">equal_var</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">result</span><span class="o">.</span><span class="n">pvalue</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.10307495448387395
+</pre></div>
+</div>
+</div>
+</div>
+</section>
 </section>
 <section id="links">
 <h2>Links<a class="headerlink" href="#links" title="Permalink to this heading">#</a></h2>
@@ -1693,20 +1922,18 @@ Saved figure to figures/stats/two_sample_tests/hist_p-value_right_tail_test.png
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebook-setup">Notebook setup</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definitions">Definitions</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-two-groups">Comparing two groups</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#permutation-test">Permutation test</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#permutations">Permutations</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#resampling-under-the-null-hypothesis">Resampling under the null hypothesis</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-two-groups">Comparing two groups</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#permutation-test-for-comparing-two-populations">Permutation test for comparing two populations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#permutations">Permutations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#resampling-under-the-null-hypothesis">Resampling under the null hypothesis</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-5-electricity-prices">Example 5: electricity prices</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#running-a-permutation-test">Running a permutation test</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#effect-size-estimates">Effect size estimates</a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reusable-function">Reusable function</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-existing-scipy-functions-optional">Using existing SciPy functions (optional)</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#permutations-test-using-ttest-ind">Permutations test using <code class="docutils literal notranslate"><span class="pre">ttest_ind</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#bootstrap-difference-between-means">Bootstrap difference between means</a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-6-lecture-and-debate-curriculums">Example 6: lecture and debate curriculums</a></li>
@@ -1716,8 +1943,10 @@ Saved figure to figures/stats/two_sample_tests/hist_p-value_right_tail_test.png
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-5t-comparing-east-and-west-electricity-prices">Example 5T: comparing East and West electricity prices</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#welch-s-t-test-unpooled-variances">Welch’s t-test (unpooled variances)</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#t-test-with-pooled-variances">T-test with pooled variances</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Effect size estimates</a></li>
 </ul>
 </li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reusable-procedure-for-two-sample-t-test">Reusable procedure for two-sample <span class="math notranslate nohighlight">\(t\)</span>-test</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-6t-comparing-rural-and-urban-sleep-scores">Example 6T: comparing rural and urban sleep scores</a></li>
 </ul>
 </li>
@@ -1733,7 +1962,10 @@ Saved figure to figures/stats/two_sample_tests/hist_p-value_right_tail_test.png
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#other-statistical-methods">Other statistical methods</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#e3-x-pooled-variance">E3.X Pooled variance</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#links">Links</a></li>
 </ul>
   </nav></div>

@@ -387,7 +387,7 @@ def permutation_test(xsample, ysample, estfunc, P=10000):
 
 
 
-# STANDARDIZED EFFECT SIZE
+# STANDARDIZED EFFECT SIZE MEASURES
 ################################################################################
 
 def cohend(sample, mu):
@@ -408,12 +408,10 @@ def cohend2(sample1, sample2):
     mean1, mean2 = np.mean(sample1), np.mean(sample2)
     var1, var2 = np.var(sample1, ddof=1), np.var(sample2, ddof=1)
     # calculate the pooled variance and standard deviaiton
-    pooled_var = ((n1-1)*var1 + (n2-1)*var2) / (n1 + n2 - 2)
-    pooled_std = np.sqrt(pooled_var)
-    cohend = (mean1 - mean2) / pooled_std
+    varp = ((n1-1)*var1 + (n2-1)*var2) / (n1 + n2 - 2)
+    stdp = np.sqrt(varp)
+    cohend = (mean1 - mean2) / stdp
     return cohend
-
-
 
 
 # T-TESTS
@@ -434,36 +432,35 @@ def ttest_mean(sample, mu0, alt="two-sided"):
     return pvalue
 
 
-def ttest_dmeans(sample1, sample2, equal_var=False, alt="two-sided"):
+def ttest_dmeans(xsample, ysample, equal_var=False, alt="two-sided"):
     """
-    T-test to detect difference between two groups based on their means.
+    T-test to detect difference between two populations means
+    based on the difference between sample means.
     """
-    # 1. Calculate the observed mean difference between means
-    obsd = np.mean(sample1) - np.mean(sample2)
+    # Calculate the observed difference between means
+    obsdhat = mean(xsample) - mean(ysample)
 
-    # 2. Calculate the sample size and the standard deviation for each group
-    n1, n2 = len(sample1), len(sample1)
-    std1, std2 = np.std(sample1, ddof=1), np.std(sample2, ddof=1)
+    # Calculate the sample sizes and the stds
+    n, m = len(xsample), len(ysample)
+    sx, sy = std(xsample), std(ysample)
 
-    # 3. Calculate the standard error and degrees of f.
-    if equal_var:
-        # Use pooled variance
-        pooled_var = ((n1-1)*std1**2 + (n2-1)*std2**2) / (n1 + n2 - 2)
-        pooled_std = np.sqrt(pooled_var)
-        seD = pooled_std * np.sqrt(1/n1 + 1/n2)
-        df = n1 + n2 - 2
-    else:
-        # Compute the standard error using general formula (Welch's t-test)
-        seD = np.sqrt(std1**2/n1 + std2**2/n2)
-        # Use Welch's formula for degrees of freedom
-        df = calcdf(std1, n1, std2, n2)
+    # Calculate the standard error, the degrees of
+    # freedom, the null model, and the t-statistic
+    if not equal_var:  # Welch's t-test (default)
+        seD = np.sqrt(sx**2/n + sy**2/m)
+        obst = (obsdhat - 0) / seD
+        df = calcdf(sx, n, sy, m)
+        rvT0 = tdist(df)
+    else:              # Use pooled variance
+        varp = ((n-1)*sx**2 + (m-1)*sy**2) / (n+m-2)
+        stdp = np.sqrt(varp)
+        seDp = stdp * np.sqrt(1/n + 1/m)
+        obst = (obsdhat - 0) / seDp
+        dfp = n + m - 2
+        rvT0 = tdist(dfp)
 
-    # 4. Compute the value of the t-statistic
-    obst = (obsd - 0) / seD
-
-    # 5. Calculate the p-value from the t-distribution
-    rvT = tdist(df)
-    pvalue = tailprobs(rvT, obst, alt=alt)
+    # Calculate the p-value from the t-distribution
+    pvalue = tailprobs(rvT0, obst, alt=alt)
     return pvalue
 
 
@@ -478,8 +475,8 @@ def ttest_paired(sample1, sample2, alt="two-sided"):
     std = np.std(ds, ddof=1)
     meand  = np.mean(ds)
     se = std / np.sqrt(n)
-    df = n - 1
     obst = (meand - 0) / se
+    df = n - 1
     rvT = tdist(df)
     pvalue = tailprobs(rvT, obst, alt=alt)
     return pvalue

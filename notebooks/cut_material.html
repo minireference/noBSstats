@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Combined picture for CASE 1: centred around the population mean &#8212; No BS Stats Notebooks</title>
+    <title>Computing two-sample t-test \(p\)-values (generic) &#8212; No BS Stats Notebooks</title>
   
   
   
@@ -453,7 +453,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Combined picture for CASE 1: centred around the population mean</h1>
+    <h1>Computing two-sample t-test p-values (generic)</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -463,7 +463,11 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Combined picture for CASE 1: centred around the population mean</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Computing two-sample t-test <span class="math notranslate nohighlight">\(p\)</span>-values (generic)</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pooled-variance-calculations">Pooled variance calculations</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#combined-picture-for-case-1-centred-around-the-population-mean">Combined picture for CASE 1: centred around the population mean</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bootstrapped-sampling-distribution-of-the-sample-median-optional">Bootstrapped sampling distribution of the sample median (optional)</a></li>
 </ul>
 </li>
@@ -606,6 +610,113 @@ document.write(`
 </div>
 </div>
 </div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## Bootstrap difference between means under the hood</span>
+<span class="c1"># from scipy.stats import bootstrap</span>
+<span class="c1"># np.random.seed(45)</span>
+<span class="c1"># res = bootstrap((pricesW, pricesE), statistic=dmeans,</span>
+<span class="c1">#                 vectorized=False, confidence_level=0.9,</span>
+<span class="c1">#                 n_resamples=10000, method=&#39;percentile&#39;)</span>
+<span class="c1"># [res.confidence_interval.low,</span>
+<span class="c1">#  res.confidence_interval.high]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="computing-two-sample-t-test-p-values-generic">
+<h1>Computing two-sample t-test <span class="math notranslate nohighlight">\(p\)</span>-values (generic)<a class="headerlink" href="#computing-two-sample-t-test-p-values-generic" title="Permalink to this heading">#</a></h1>
+<p>CUT in favour of showing details in examples</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># FOR TESTING PURPOSES</span>
+<span class="n">eprices</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/eprices.csv&quot;</span><span class="p">)</span>
+<span class="n">pricesW</span> <span class="o">=</span> <span class="n">eprices</span><span class="p">[</span><span class="n">eprices</span><span class="p">[</span><span class="s2">&quot;end&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;West&quot;</span><span class="p">][</span><span class="s2">&quot;price&quot;</span><span class="p">]</span>
+<span class="n">pricesE</span> <span class="o">=</span> <span class="n">eprices</span><span class="p">[</span><span class="n">eprices</span><span class="p">[</span><span class="s2">&quot;end&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;East&quot;</span><span class="p">][</span><span class="s2">&quot;price&quot;</span><span class="p">]</span>
+<span class="n">xsample</span><span class="p">,</span> <span class="n">ysample</span> <span class="o">=</span> <span class="n">pricesW</span><span class="p">,</span> <span class="n">pricesE</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">stats_helpers</span> <span class="kn">import</span> <span class="n">calcdf</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">t</span> <span class="k">as</span> <span class="n">tdist</span>
+
+<span class="n">n</span><span class="p">,</span> <span class="n">m</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">xsample</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">ysample</span><span class="p">)</span>
+<span class="n">xbar</span><span class="p">,</span> <span class="n">ybar</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">xsample</span><span class="p">),</span> <span class="n">mean</span><span class="p">(</span><span class="n">ysample</span><span class="p">)</span>
+<span class="n">sx</span><span class="p">,</span> <span class="n">sy</span> <span class="o">=</span> <span class="n">std</span><span class="p">(</span><span class="n">xsample</span><span class="p">),</span> <span class="n">std</span><span class="p">(</span><span class="n">ysample</span><span class="p">)</span>
+<span class="n">obsdhat</span> <span class="o">=</span> <span class="n">dmeans</span><span class="p">(</span><span class="n">xsample</span><span class="p">,</span> <span class="n">ysample</span><span class="p">)</span>
+<span class="n">seD</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sx</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">n</span> <span class="o">+</span> <span class="n">sy</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">m</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">calcdf</span><span class="p">(</span><span class="n">sx</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">sy</span><span class="p">,</span><span class="n">m</span><span class="p">)</span>
+<span class="n">rvTDhat0</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">seD</span><span class="p">)</span>
+
+<span class="n">pvalue</span> <span class="o">=</span> <span class="n">tailprobs</span><span class="p">(</span><span class="n">rvTDhat0</span><span class="p">,</span> <span class="n">obsdhat</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;two-sided&quot;</span><span class="p">)</span>
+    
+<span class="n">pvalue</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="n">line</span> <span class="mi">12</span>
+<span class="g g-Whitespace">      </span><span class="mi">9</span> <span class="n">df</span> <span class="o">=</span> <span class="n">calcdf</span><span class="p">(</span><span class="n">sx</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">sy</span><span class="p">,</span><span class="n">m</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">10</span> <span class="n">rvTDhat0</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">seD</span><span class="p">)</span>
+<span class="ne">---&gt; </span><span class="mi">12</span> <span class="n">pvalue</span> <span class="o">=</span> <span class="n">tailprobs</span><span class="p">(</span><span class="n">rvTDhat0</span><span class="p">,</span> <span class="n">obsdhat</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;two-sided&quot;</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">14</span> <span class="n">pvalue</span>
+
+<span class="ne">NameError</span>: name &#39;tailprobs&#39; is not defined
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obst</span> <span class="o">=</span> <span class="p">(</span><span class="n">obsdhat</span> <span class="o">-</span> <span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">seD</span>
+<span class="n">rvT0</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">pvalue</span> <span class="o">=</span> <span class="n">tailprobs</span><span class="p">(</span><span class="n">rvT0</span><span class="p">,</span> <span class="n">obst</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;two-sided&quot;</span><span class="p">)</span>
+<span class="n">pvalue</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">obst</span> <span class="o">=</span> <span class="p">(</span><span class="n">obsdhat</span> <span class="o">-</span> <span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">seD</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="n">rvT0</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="n">pvalue</span> <span class="o">=</span> <span class="n">tailprobs</span><span class="p">(</span><span class="n">rvT0</span><span class="p">,</span> <span class="n">obst</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;two-sided&quot;</span><span class="p">)</span>
+
+<span class="ne">NameError</span>: name &#39;obsdhat&#39; is not defined
+</pre></div>
+</div>
+</div>
+</div>
+<section id="pooled-variance-calculations">
+<h2>Pooled variance calculations<a class="headerlink" href="#pooled-variance-calculations" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">varp</span> <span class="o">=</span> <span class="p">((</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">sx</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">m</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">sy</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="n">m</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">stdp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">varp</span><span class="p">)</span>
+<span class="n">seDp</span> <span class="o">=</span> <span class="n">stdp</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="o">/</span><span class="n">m</span><span class="p">)</span>
+
+<span class="n">obstp</span> <span class="o">=</span> <span class="p">(</span><span class="n">obsdhat</span> <span class="o">-</span> <span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">seDp</span>
+<span class="n">dfp</span> <span class="o">=</span> <span class="n">n</span> <span class="o">+</span> <span class="n">m</span> <span class="o">-</span> <span class="mi">2</span>
+<span class="n">rvT0p</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">dfp</span><span class="p">)</span>
+<span class="n">pvalue</span> <span class="o">=</span> <span class="n">tailprobs</span><span class="p">(</span><span class="n">rvT0p</span><span class="p">,</span> <span class="n">obstp</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;two-sided&quot;</span><span class="p">)</span>
+<span class="n">pvalue</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.0001249706798767125
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
 <section id="combined-picture-for-case-1-centred-around-the-population-mean">
 <h1>Combined picture for CASE 1: centred around the population mean<a class="headerlink" href="#combined-picture-for-case-1-centred-around-the-population-mean" title="Permalink to this heading">#</a></h1>
 <p><code class="docutils literal notranslate"><span class="pre">norm(mu_K,</span> <span class="pre">seKhat02)</span></code> (centered on true population mean):  this plot describes some hypothetical half-knowledge scenario, where the experimenter knows population mean mu, but doesn’t know the variance, so we use CLT or BOOT for the estimated dispersion, but show dist. centered at muK (the population mean).</p>
@@ -668,7 +779,7 @@ document.write(`
  sample std = 11.149780314097285
 </pre></div>
 </div>
-<img alt="../_images/c689459186debefe62ca65b4ec6069bd005ea0ad6d8a328ca8109244a75857ac.png" src="../_images/c689459186debefe62ca65b4ec6069bd005ea0ad6d8a328ca8109244a75857ac.png" />
+<img alt="../_images/557d11ac2119733ed6fc3d140027747e58736217719269a567133c5e123c7c94.png" src="../_images/557d11ac2119733ed6fc3d140027747e58736217719269a567133c5e123c7c94.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -695,10 +806,10 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: xlabel=&#39;value&#39;, ylabel=&#39;Density&#39;&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot: xlabel=&#39;value&#39;, ylabel=&#39;Density&#39;&gt;
 </pre></div>
 </div>
-<img alt="../_images/4a237948980fb8fccb998f4804b2efb550ba3a70c0608a3ea364f633dbc7ca5b.png" src="../_images/4a237948980fb8fccb998f4804b2efb550ba3a70c0608a3ea364f633dbc7ca5b.png" />
+<img alt="../_images/8f08c6934befe164632bf848ef5b89737fdfb1b04764d431dd2eb7362e6c69ef.png" src="../_images/8f08c6934befe164632bf848ef5b89737fdfb1b04764d431dd2eb7362e6c69ef.png" />
 </div>
 </div>
 <section id="bootstrapped-sampling-distribution-of-the-sample-median-optional">
@@ -712,10 +823,10 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: ylabel=&#39;Count&#39;&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot: ylabel=&#39;Count&#39;&gt;
 </pre></div>
 </div>
-<img alt="../_images/564abc3414ffc6bc2ecf9a3b35f23f23d681dcecc07c8f1df44ee5d5b6bc6b18.png" src="../_images/564abc3414ffc6bc2ecf9a3b35f23f23d681dcecc07c8f1df44ee5d5b6bc6b18.png" />
+<img alt="../_images/c0c649e4270d97f21272f7f559019f45f693ac2802b1efc5beaa5f36eb1b5fea.png" src="../_images/c0c649e4270d97f21272f7f559019f45f693ac2802b1efc5beaa5f36eb1b5fea.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -725,7 +836,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(997.0427, 3.3097219565999905)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(996.980743, 3.3038099813625883)
 </pre></div>
 </div>
 </div>
@@ -755,7 +866,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[995.5571171626327, 1004.4306640813979]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[995.5339175170992, 1004.5206798298357]
 </pre></div>
 </div>
 </div>
@@ -776,7 +887,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/4f61183a6208c7655cea5bc7b46421c32ac6ea0c4ddc6cce7533d7d568a15206.png" src="../_images/4f61183a6208c7655cea5bc7b46421c32ac6ea0c4ddc6cce7533d7d568a15206.png" />
+<img alt="../_images/147102df22d4c0b05cc749666487a5d079230522a70b0e2cd00608abf7e18d45.png" src="../_images/147102df22d4c0b05cc749666487a5d079230522a70b0e2cd00608abf7e18d45.png" />
 </div>
 </div>
 </section>
@@ -793,7 +904,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/797ea151d35b901670588cf060acd7734abbae54d47540f1b97a3646ec9fc962.png" src="../_images/797ea151d35b901670588cf060acd7734abbae54d47540f1b97a3646ec9fc962.png" />
+<img alt="../_images/b30066f3948bd98222fc8e84038f02eb0306b73333939a988d1052ec5a7c0edb.png" src="../_images/b30066f3948bd98222fc8e84038f02eb0306b73333939a988d1052ec5a7c0edb.png" />
 </div>
 </div>
 </section>
@@ -913,7 +1024,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/b85e2f9739537fb951aea3d1e1d7bbbb22ac39cfa80972e9aa357ddbf0e50761.png" src="../_images/b85e2f9739537fb951aea3d1e1d7bbbb22ac39cfa80972e9aa357ddbf0e50761.png" />
+<img alt="../_images/6208541b332ca9a88c63793f083d29fa4743e428006d6cd1185e6d4ae49640b8.png" src="../_images/6208541b332ca9a88c63793f083d29fa4743e428006d6cd1185e6d4ae49640b8.png" />
 </div>
 </div>
 </section>
@@ -948,7 +1059,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/aee1f2306475feb59b6415b56fa294fb6619f8e1dc7c8f37679ab0bd5aa294d1.png" src="../_images/aee1f2306475feb59b6415b56fa294fb6619f8e1dc7c8f37679ab0bd5aa294d1.png" />
+<img alt="../_images/a4e52cd11c9c5aae1764ad2f61b08e99f018b837861262a3508f65a3e87336bb.png" src="../_images/a4e52cd11c9c5aae1764ad2f61b08e99f018b837861262a3508f65a3e87336bb.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -977,7 +1088,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/93581986b199c138dc750b83099048218f1bf735a33b832660d0338be58c436d.png" src="../_images/93581986b199c138dc750b83099048218f1bf735a33b832660d0338be58c436d.png" />
+<img alt="../_images/8c774eb3754e318166d828deacf4e10e63ea1d8eb5a4f1467281e2dc6aa014c4.png" src="../_images/8c774eb3754e318166d828deacf4e10e63ea1d8eb5a4f1467281e2dc6aa014c4.png" />
 </div>
 </div>
 </section>
@@ -1014,7 +1125,7 @@ we simply need to call the function <code class="docutils literal notranslate"><
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>7
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1
 </pre></div>
 </div>
 </div>
@@ -1030,10 +1141,10 @@ we simply need to call the function <code class="docutils literal notranslate"><
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: ylabel=&#39;Count&#39;&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot: ylabel=&#39;Count&#39;&gt;
 </pre></div>
 </div>
-<img alt="../_images/ad3693d8397d900c7606fcb025dff53353dbfe8c241ea7f17f7b241e18b915f5.png" src="../_images/ad3693d8397d900c7606fcb025dff53353dbfe8c241ea7f17f7b241e18b915f5.png" />
+<img alt="../_images/c57c48a39deb1a7202bafde3090e37cf0775b4407d23e45849e2ac66451f6921.png" src="../_images/c57c48a39deb1a7202bafde3090e37cf0775b4407d23e45849e2ac66451f6921.png" />
 </div>
 </div>
 </section>
@@ -1063,7 +1174,7 @@ we simply need to call the function <code class="docutils literal notranslate"><
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.1, 0.5, &#39;Saturday\nMean&#39;)
 </pre></div>
 </div>
-<img alt="../_images/0b8e3ec625cdd1affb7b3a7428a3a82b6ce2226c771fe83139744f00abcdd7b5.png" src="../_images/0b8e3ec625cdd1affb7b3a7428a3a82b6ce2226c771fe83139744f00abcdd7b5.png" />
+<img alt="../_images/42645048eb7828a700113eb3647396512ee6bd75daa7f3432c1f380bf7ac054c.png" src="../_images/42645048eb7828a700113eb3647396512ee6bd75daa7f3432c1f380bf7ac054c.png" />
 </div>
 </div>
 </section>
@@ -1089,7 +1200,7 @@ we simply need to call the function <code class="docutils literal notranslate"><
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/ef13447833711ee1587ff3cad60207f34c0b441ca2afa4483da8f4079d76d40a.png" src="../_images/ef13447833711ee1587ff3cad60207f34c0b441ca2afa4483da8f4079d76d40a.png" />
+<img alt="../_images/eef523c915a17982f1d45e34928bb80219fbc90b693efad0ef3925d227c1b218.png" src="../_images/eef523c915a17982f1d45e34928bb80219fbc90b693efad0ef3925d227c1b218.png" />
 </div>
 </div>
 <section id="sampling-distribution-of-the-mean">
@@ -1111,7 +1222,7 @@ we simply need to call the function <code class="docutils literal notranslate"><
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/58c788ce41c6edd595d76eb05c96e0170fb4a3e4392ccad26c9f23c9c6497b1f.png" src="../_images/58c788ce41c6edd595d76eb05c96e0170fb4a3e4392ccad26c9f23c9c6497b1f.png" />
+<img alt="../_images/b73969fe629138be6985f24b2b8af6b87efdca45c572a4d363b1ca722abc4f0d.png" src="../_images/b73969fe629138be6985f24b2b8af6b87efdca45c572a4d363b1ca722abc4f0d.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1167,7 +1278,7 @@ and the standard error is 0.09149
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/bb8a275b1bc69c43ccf80c617f00d1757621b35e2323a1c935dd8db31cb7a9cd.png" src="../_images/bb8a275b1bc69c43ccf80c617f00d1757621b35e2323a1c935dd8db31cb7a9cd.png" />
+<img alt="../_images/c8ccb2a4debf6521e759dc72d36d50250578e7b61f76c35db4255aa75cbc8f10.png" src="../_images/c8ccb2a4debf6521e759dc72d36d50250578e7b61f76c35db4255aa75cbc8f10.png" />
 </div>
 </div>
 <section id="id1">
@@ -1187,7 +1298,7 @@ and the standard error is 0.09149
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/2f19ebf743601a2c219472fc8eaef67343aa6d95d215f45dfb826889a4ade463.png" src="../_images/2f19ebf743601a2c219472fc8eaef67343aa6d95d215f45dfb826889a4ade463.png" />
+<img alt="../_images/6301729d4d09cbcb6cc83d5ca62b7638dd222751c9aa912e829d3c38553ef42b.png" src="../_images/6301729d4d09cbcb6cc83d5ca62b7638dd222751c9aa912e829d3c38553ef42b.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1238,7 +1349,7 @@ and the standard error is 31.92
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/3e32dcfce3c76e75eacb3b2a7a33e12ba34815816ed2dd5146b131d2b98c46fe.png" src="../_images/3e32dcfce3c76e75eacb3b2a7a33e12ba34815816ed2dd5146b131d2b98c46fe.png" />
+<img alt="../_images/91dde4e875994fb7c2b799f6667cc008ed14a7447e2cf6dbaecbf48366e5f443.png" src="../_images/91dde4e875994fb7c2b799f6667cc008ed14a7447e2cf6dbaecbf48366e5f443.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1263,7 +1374,7 @@ and the standard error is 31.92
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;Default negative contours&#39;)
 </pre></div>
 </div>
-<img alt="../_images/b3e43ec261ae944599a5c88bca41530e612bb4786cb934ef232bc8bfdab61534.png" src="../_images/b3e43ec261ae944599a5c88bca41530e612bb4786cb934ef232bc8bfdab61534.png" />
+<img alt="../_images/036fca467cfebdca44aaf3118ae0f71f75be39b33032d2ccaca892bbaef92ef4.png" src="../_images/036fca467cfebdca44aaf3118ae0f71f75be39b33032d2ccaca892bbaef92ef4.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1469,7 +1580,7 @@ We’ll use the Python module <code class="docutils literal notranslate"><span c
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.2797634627641633
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.43978308942595656
 </pre></div>
 </div>
 </div>
@@ -1491,7 +1602,7 @@ We’ll use the Python module <code class="docutils literal notranslate"><span c
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;heads&#39;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;tails&#39;
 </pre></div>
 </div>
 </div>
@@ -1514,15 +1625,15 @@ We’ll use the Python module <code class="docutils literal notranslate"><span c
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>heads    1010
-tails     990
-Name: count, dtype: int64
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>heads     990
+tails    1010
+dtype: int64
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: &gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot: &gt;
 </pre></div>
 </div>
-<img alt="../_images/0e7975771376189b1303320b7afe70245c752b9874d0463418a4b2efcaa10d77.png" src="../_images/0e7975771376189b1303320b7afe70245c752b9874d0463418a4b2efcaa10d77.png" />
+<img alt="../_images/95a1de931f960505dc414302a4d87d8f76a00471b6a8e7f3386dbdc59a750ce1.png" src="../_images/95a1de931f960505dc414302a4d87d8f76a00471b6a8e7f3386dbdc59a750ce1.png" />
 </div>
 </div>
 </section>
@@ -1558,19 +1669,19 @@ Name: count, dtype: int64
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1     990
-2     943
-3    1048
-4    1004
-5    1001
-6    1014
-Name: count, dtype: int64
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1    1019
+2     964
+3    1007
+4    1050
+5     982
+6     978
+dtype: int64
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: &gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot: &gt;
 </pre></div>
 </div>
-<img alt="../_images/2dbb40860bf23a8c168bfe8e99f389cf9c547703b56faf6ff5bd0662e3b9abd8.png" src="../_images/2dbb40860bf23a8c168bfe8e99f389cf9c547703b56faf6ff5bd0662e3b9abd8.png" />
+<img alt="../_images/d82bb6a4406e1582beffcb6034522523c54a187da84af11e4339eae665d6c355.png" src="../_images/d82bb6a4406e1582beffcb6034522523c54a187da84af11e4339eae665d6c355.png" />
 </div>
 </div>
 <section id="example-3-coin-flip">
@@ -1703,7 +1814,7 @@ so the probability mass function <span class="math notranslate nohighlight">\(f_
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/d3dcc16e7b0d6f9b1a7bd7f74ec2cc305f1aa8ce3f5175a8ab1435ed9283365e.png" src="../_images/d3dcc16e7b0d6f9b1a7bd7f74ec2cc305f1aa8ce3f5175a8ab1435ed9283365e.png" />
+<img alt="../_images/ba9a217104feba0257b50d922808360cadd79c4c721b061b8a2be6a9f1ee44d0.png" src="../_images/ba9a217104feba0257b50d922808360cadd79c4c721b061b8a2be6a9f1ee44d0.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1894,11 +2005,11 @@ so the probability mass function <span class="math notranslate nohighlight">\(f_
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(0.499968328758167,
- &lt;Axes: title={&#39;center&#39;: &#39;Probability density for the random variable norm(1000, 100) between 600 and 1000&#39;}&gt;)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(0.49996832875816705,
+ &lt;AxesSubplot: title={&#39;center&#39;: &#39;Probability density for the random variable norm(1000, 100) between 600 and 1000&#39;}&gt;)
 </pre></div>
 </div>
-<img alt="../_images/95681a48cc9664caa0cf570605244a544ca661657e70f649e0ef8a0b7952996e.png" src="../_images/95681a48cc9664caa0cf570605244a544ca661657e70f649e0ef8a0b7952996e.png" />
+<img alt="../_images/cfceaa9212787d5bf60b52ad19e32e0cd5e9783797072ccedae3b9b3a5f8bc79.png" src="../_images/cfceaa9212787d5bf60b52ad19e32e0cd5e9783797072ccedae3b9b3a5f8bc79.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2034,10 +2145,10 @@ and the current bottling process only produces “up to spec” bottles only …
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.FacetGrid at 0x7ff7337ad3d0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.FacetGrid at 0x12ec93eb0&gt;
 </pre></div>
 </div>
-<img alt="../_images/781e5e0cdb9aa6ffb538b268568e63d6b7b5164afa790812c2647f2a5c8f2444.png" src="../_images/781e5e0cdb9aa6ffb538b268568e63d6b7b5164afa790812c2647f2a5c8f2444.png" />
+<img alt="../_images/b83bace04f173bf91eec3ed5cc9cbe59cf9ccfb71c2969504925adb1a48fefcd.png" src="../_images/b83bace04f173bf91eec3ed5cc9cbe59cf9ccfb71c2969504925adb1a48fefcd.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2286,10 +2397,10 @@ and the current bottling process only produces “up to spec” bottles only …
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.FacetGrid at 0x7ff72a28a7c0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.FacetGrid at 0x1302a5f40&gt;
 </pre></div>
 </div>
-<img alt="../_images/51643787c191926d942c26a5723d7fa7538687aabc67545c18b47ad519a6b27f.png" src="../_images/51643787c191926d942c26a5723d7fa7538687aabc67545c18b47ad519a6b27f.png" />
+<img alt="../_images/29a5ce90f4f8da094128fc56ecda0875ea1c9a315984b8fca091f8b38e997b7a.png" src="../_images/29a5ce90f4f8da094128fc56ecda0875ea1c9a315984b8fca091f8b38e997b7a.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2299,10 +2410,10 @@ and the current bottling process only produces “up to spec” bottles only …
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.FacetGrid at 0x7ff72a242250&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.FacetGrid at 0x130318ac0&gt;
 </pre></div>
 </div>
-<img alt="../_images/c8eaed187ee0a8b41f5bba0bb32d5ff44ab6aad142a0ae76e2e1e9a9064c2479.png" src="../_images/c8eaed187ee0a8b41f5bba0bb32d5ff44ab6aad142a0ae76e2e1e9a9064c2479.png" />
+<img alt="../_images/ba95e47a726da763043558790c3c760949fad7379fe17826b38e288f9269ddb4.png" src="../_images/ba95e47a726da763043558790c3c760949fad7379fe17826b38e288f9269ddb4.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2328,10 +2439,10 @@ and the current bottling process only produces “up to spec” bottles only …
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.JointGrid at 0x7ff72a273df0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.JointGrid at 0x130373250&gt;
 </pre></div>
 </div>
-<img alt="../_images/ff375b364036e94b4ce4413839d10bbdb2896b941924b580de4d9450a1232e04.png" src="../_images/ff375b364036e94b4ce4413839d10bbdb2896b941924b580de4d9450a1232e04.png" />
+<img alt="../_images/7ead2e34b3526048f9394b74def3b47075d6301ee5f9078bb4e95501c9ea9e8f.png" src="../_images/7ead2e34b3526048f9394b74def3b47075d6301ee5f9078bb4e95501c9ea9e8f.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2343,10 +2454,10 @@ and the current bottling process only produces “up to spec” bottles only …
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.JointGrid at 0x7ff72803ac10&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.JointGrid at 0x13254c940&gt;
 </pre></div>
 </div>
-<img alt="../_images/562f7db24d17330c85cc392d616896ae774c1355a50c2fe670ec7fa500ffd910.png" src="../_images/562f7db24d17330c85cc392d616896ae774c1355a50c2fe670ec7fa500ffd910.png" />
+<img alt="../_images/5f19ce97fbf8f5fad683ac2fae56b83f070c5181ed6a400e43251b43e6d7f920.png" src="../_images/5f19ce97fbf8f5fad683ac2fae56b83f070c5181ed6a400e43251b43e6d7f920.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2357,10 +2468,10 @@ and the current bottling process only produces “up to spec” bottles only …
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.FacetGrid at 0x7ff733714880&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.FacetGrid at 0x1326a6640&gt;
 </pre></div>
 </div>
-<img alt="../_images/ca9de425ce7f617b9da0dd6f03c02f6fa1d0c5cc5e3c3a2f6033c42fc1519c31.png" src="../_images/ca9de425ce7f617b9da0dd6f03c02f6fa1d0c5cc5e3c3a2f6033c42fc1519c31.png" />
+<img alt="../_images/5db7050ffe62058ebc6d158305f09043763e41334a279ad7f3f51feaf4812980.png" src="../_images/5db7050ffe62058ebc6d158305f09043763e41334a279ad7f3f51feaf4812980.png" />
 </div>
 </div>
 </section>
@@ -2407,7 +2518,7 @@ and the current bottling process only produces “up to spec” bottles only …
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/f45c5f33476cb0f80ee27dcf85a4330112fe8f0668fa2efa9d63caacf8f0cd4a.png" src="../_images/f45c5f33476cb0f80ee27dcf85a4330112fe8f0668fa2efa9d63caacf8f0cd4a.png" />
+<img alt="../_images/43c61e7158557fa1579cea6c0d4bc22ac42118598ea3d8cbe9ccbfd4164cb680.png" src="../_images/43c61e7158557fa1579cea6c0d4bc22ac42118598ea3d8cbe9ccbfd4164cb680.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2450,7 +2561,7 @@ and the current bottling process only produces “up to spec” bottles only …
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/b96e00e809e3aaa3463b67a89aac57c6654e81b689179390e1545c0288725e9d.png" src="../_images/b96e00e809e3aaa3463b67a89aac57c6654e81b689179390e1545c0288725e9d.png" />
+<img alt="../_images/39c81209f9e6c380067ac58dbbff42429dfd9f00f2044cb620f5fc61b67d6010.png" src="../_images/39c81209f9e6c380067ac58dbbff42429dfd9f00f2044cb620f5fc61b67d6010.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2480,7 +2591,7 @@ and the current bottling process only produces “up to spec” bottles only …
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/d62742692ff8a4fd264d007728177b3ae906e7c431ca2b7d6ea6bdd3b0c30da3.png" src="../_images/d62742692ff8a4fd264d007728177b3ae906e7c431ca2b7d6ea6bdd3b0c30da3.png" />
+<img alt="../_images/b31d3ceb9cf4cac27474164ed5fed09d87604d444ee216d9ea69779febcbae66.png" src="../_images/b31d3ceb9cf4cac27474164ed5fed09d87604d444ee216d9ea69779febcbae66.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2536,7 +2647,7 @@ and the current bottling process only produces “up to spec” bottles only …
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/d58a9d90ccbcb4d6820dee015f6c77ed5a4f981413597bb500430118754526d0.png" src="../_images/d58a9d90ccbcb4d6820dee015f6c77ed5a4f981413597bb500430118754526d0.png" />
+<img alt="../_images/d2e0f67f4228e44c0412aac606a13c4307c31c938d6a3feeee24f6433c0ccd17.png" src="../_images/d2e0f67f4228e44c0412aac606a13c4307c31c938d6a3feeee24f6433c0ccd17.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2564,7 +2675,7 @@ and the current bottling process only produces “up to spec” bottles only …
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/2d0850f406b451bc647aac21d0322c93e92366f51431c801e21f66f592b62ab1.png" src="../_images/2d0850f406b451bc647aac21d0322c93e92366f51431c801e21f66f592b62ab1.png" />
+<img alt="../_images/bf7b6b35b23bb44787cbbd5215c950c97d4bfc57dc7b19ba5fd2706a8f26fa4a.png" src="../_images/bf7b6b35b23bb44787cbbd5215c950c97d4bfc57dc7b19ba5fd2706a8f26fa4a.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2597,7 +2708,7 @@ and the current bottling process only produces “up to spec” bottles only …
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/5145ce77ab8e61ff122e17bfba238b89f187a217247116334c71f5e184b3627d.png" src="../_images/5145ce77ab8e61ff122e17bfba238b89f187a217247116334c71f5e184b3627d.png" />
+<img alt="../_images/fa23149d204c420f3efaf77447596215d8fd7ed42daf90a61cef838ec9ad2a24.png" src="../_images/fa23149d204c420f3efaf77447596215d8fd7ed42daf90a61cef838ec9ad2a24.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2636,7 +2747,7 @@ and the current bottling process only produces “up to spec” bottles only …
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/fc4e984d1ffb6a0fc90e92e5158dcd6f58597b0668896af0571e7e30fa7e9eb3.png" src="../_images/fc4e984d1ffb6a0fc90e92e5158dcd6f58597b0668896af0571e7e30fa7e9eb3.png" />
+<img alt="../_images/c440c04a046cdfceab2c594eb0039b71fc8e1e7d0efef264d7734ef961c592b9.png" src="../_images/c440c04a046cdfceab2c594eb0039b71fc8e1e7d0efef264d7734ef961c592b9.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2682,10 +2793,10 @@ and the current bottling process only produces “up to spec” bottles only …
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7ff7276778b0&gt;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x132bc6940&gt;]
 </pre></div>
 </div>
-<img alt="../_images/1998fdcc03dd44ad6948620ff91e769f218e20848b30154c043c5ebc743b7ae1.png" src="../_images/1998fdcc03dd44ad6948620ff91e769f218e20848b30154c043c5ebc743b7ae1.png" />
+<img alt="../_images/b1b7fed058433790372f2befccb409116e1777f49a1412a860e1813630e25f12.png" src="../_images/b1b7fed058433790372f2befccb409116e1777f49a1412a860e1813630e25f12.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2706,10 +2817,10 @@ and the current bottling process only produces “up to spec” bottles only …
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.contour.QuadContourSet at 0x7ff727906130&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.contour.QuadContourSet at 0x132c652e0&gt;
 </pre></div>
 </div>
-<img alt="../_images/e03a11bd26fa73c9c13715ea953dcaa2fd20bb13ac8d65816cd02bc6b402bac0.png" src="../_images/e03a11bd26fa73c9c13715ea953dcaa2fd20bb13ac8d65816cd02bc6b402bac0.png" />
+<img alt="../_images/52299c6b591e027eaaacf86805d26af580a74f86ddaab635bf8152a51dc26eb4.png" src="../_images/52299c6b591e027eaaacf86805d26af580a74f86ddaab635bf8152a51dc26eb4.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2743,10 +2854,10 @@ and the current bottling process only produces “up to spec” bottles only …
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: &gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot: &gt;
 </pre></div>
 </div>
-<img alt="../_images/18b1d17a0c0e016fc0280d45a7056e8d1cf45a4e2306afb707161a99bdc514f1.png" src="../_images/18b1d17a0c0e016fc0280d45a7056e8d1cf45a4e2306afb707161a99bdc514f1.png" />
+<img alt="../_images/1582c001942e8c47e79516d77ee4f20f57b3ff822006fbfe20e3586112b485b1.png" src="../_images/1582c001942e8c47e79516d77ee4f20f57b3ff822006fbfe20e3586112b485b1.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2811,7 +2922,7 @@ and the current bottling process only produces “up to spec” bottles only …
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/8c648d5e5b357ee0ef3dcb2cc1c638c4435ff24c5e535c61d47c48a5c308044e.png" src="../_images/8c648d5e5b357ee0ef3dcb2cc1c638c4435ff24c5e535c61d47c48a5c308044e.png" />
+<img alt="../_images/324349ef5379be32f04d81342ca986c7539a9a9cd9bfdb24ec4158b6629c4924.png" src="../_images/324349ef5379be32f04d81342ca986c7539a9a9cd9bfdb24ec4158b6629c4924.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2882,7 +2993,7 @@ and the current bottling process only produces “up to spec” bottles only …
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/021bf1a7a2849d4820d719f3ef8654b61f4144958782265a8526429d44fdb5be.png" src="../_images/021bf1a7a2849d4820d719f3ef8654b61f4144958782265a8526429d44fdb5be.png" />
+<img alt="../_images/13cec238fe9834f9a3e86678837ded3335dfd12b3fe4ef6f97c0e85de34af42f.png" src="../_images/13cec238fe9834f9a3e86678837ded3335dfd12b3fe4ef6f97c0e85de34af42f.png" />
 </div>
 </div>
 <section id="coin-tosses-for-n-100-n-1000-and-n-10000">
@@ -2942,7 +3053,7 @@ and the current bottling process only produces “up to spec” bottles only …
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/9900138a00813011c0b7d3081c16ba5737a289f911358e68b869e6d7fdfe6f12.png" src="../_images/9900138a00813011c0b7d3081c16ba5737a289f911358e68b869e6d7fdfe6f12.png" />
+<img alt="../_images/8e91658bfd0ea00a893cec678a3b871326dab7e6526859aa51016799d1243e3a.png" src="../_images/8e91658bfd0ea00a893cec678a3b871326dab7e6526859aa51016799d1243e3a.png" />
 </div>
 </div>
 </section>
@@ -3003,7 +3114,7 @@ and the current bottling process only produces “up to spec” bottles only …
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/0ce3935762d5134ad7690660ea8dc1259d58b1d3bfdcd9a109768b2e58595976.png" src="../_images/0ce3935762d5134ad7690660ea8dc1259d58b1d3bfdcd9a109768b2e58595976.png" />
+<img alt="../_images/ed4d3cb8b4436d1d4167ec6e2415164a004defbea9d28d6c810bc78483ae7ab5.png" src="../_images/ed4d3cb8b4436d1d4167ec6e2415164a004defbea9d28d6c810bc78483ae7ab5.png" />
 </div>
 </div>
 </section>
@@ -3039,7 +3150,7 @@ and the current bottling process only produces “up to spec” bottles only …
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/fa91d698f07934921240808b8aa694f2314459e92f77d51703278e08456e49a2.png" src="../_images/fa91d698f07934921240808b8aa694f2314459e92f77d51703278e08456e49a2.png" />
+<img alt="../_images/a59dd303391c3afd305e15eff6570c75007ae89ddb8093203de18570b03f6bda.png" src="../_images/a59dd303391c3afd305e15eff6570c75007ae89ddb8093203de18570b03f6bda.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -3142,7 +3253,11 @@ and the current bottling process only produces “up to spec” bottles only …
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Combined picture for CASE 1: centred around the population mean</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Computing two-sample t-test <span class="math notranslate nohighlight">\(p\)</span>-values (generic)</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pooled-variance-calculations">Pooled variance calculations</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#combined-picture-for-case-1-centred-around-the-population-mean">Combined picture for CASE 1: centred around the population mean</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bootstrapped-sampling-distribution-of-the-sample-median-optional">Bootstrapped sampling distribution of the sample median (optional)</a></li>
 </ul>
 </li>
