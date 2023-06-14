@@ -82,13 +82,23 @@ This is why these notebooks exist—so you can try things for yourself.
 Book details
 ------------
 These notebooks are part of the support materials for the upcoming book titled
-**No Bullshit Guide to Statistics** by Ivan Savov  (Minireference Publishing).
-Click on the links below to learn more about the book:
+**No Bullshit Guide to Statistics** by Ivan Savov (Minireference Publishing).
+Check on the links below to learn more about the book:
 
-- [Detailed book outline](https://docs.google.com/document/d/1fwep23-95U-w1QMPU31nOvUnUXE2X3s_Dbk5JuLlKAY/edit#) (continuously updated)
 - [Concept map](https://minireference.com/static/excerpts/noBSstats/conceptmaps/BookSubjectsOverview.pdf) from the book
-- [Sign up to the mailing list](https://confirmsubscription.com/h/t/A17516BF2FCB41B2)
-  to receive preview PDFs of the chapters as they are developed, or follow this
-  repository on GitHub so you'll know when new notebooks are added.
-- The target release date (digital pre-orders) is April 2023.
+- [Detailed book outline](https://docs.google.com/document/d/1fwep23-95U-w1QMPU31nOvUnUXE2X3s_Dbk5JuLlKAY/edit#) (continuously updated)
+- The target release date (digital pre-orders) is Sept 2023.
+  Subscribe to the [mailing list](https://confirmsubscription.com/h/t/A17516BF2FCB41B2)
+  for progress updates on the book.
 
+
+
+Test readers wanted
+-------------------
+I'm looking for test readers to provide feedback on the chapter/section drafts as they are developed.
+If you think you'll have time (a few hours every couple of weeks) to read PDF drafts of excerpts
+from the book and provide comments on the material, please sign up to become a 
+[noBSstats reviewer](https://confirmsubscription.com/h/t/D888A09EC6B90D10).
+Every two weeks or so, I'll send you a PDF of a draft section (and a notebook) for you to read.
+You don't need to write a long review—just reply to the email to say if the explanations worked for you,
+or if you found some parts confusing. Your feedback will help me ship this faster!

@@ -117,6 +117,15 @@ Notebook: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/
 
 - The **No Bullshit Guide to Statistics** [book outline](https://docs.google.com/document/d/1fwep23-95U-w1QMPU31nOvUnUXE2X3s_Dbk5JuLlKAY/edit)
 - The statistics [concept map](https://minireference.com/static/excerpts/noBSstats/conceptmaps/BookSubjectsOverview.pdf)
-- Read the blog posts about the [statistics curriculum](https://minireference.com/blog/fixing-the-introductory-statistics-curriculum/) and the [book proposal](https://minireference.com/blog/no-bullshit-guide-to-statistics-progress-update/)
-- Sign up for the [stats reviewers mailing list](https://confirmsubscription.com/h/t/A17516BF2FCB41B2) to receive chapter drafts as they are being prepared (Nov+Dec 2021, Jan-Feb 2022). The goal is to have the book finished by Spring 2022. Your feedback and "user testing" on the draft chapters and notebooks will be very helpful.
-
+- Read the blog posts about the
+  [statistics curriculum](https://minireference.com/blog/fixing-the-introductory-statistics-curriculum/)
+  and the
+  [book proposal](https://minireference.com/blog/no-bullshit-guide-to-statistics-progress-update/)
+- Subscribe to the [mailing list](https://confirmsubscription.com/h/t/A17516BF2FCB41B2)
+  for progress updates on the book.
+- If you want to be involved in the writing process, you can sign up to become a
+  [noBSstats test reader](https://confirmsubscription.com/h/t/D888A09EC6B90D10).
+  Every two weeks, you'll receive a section draft and a link to the related notebook.
+  The required time commitment is a few hours of reading, and a few minutes to send me an email
+  highlighting any parts you found confusing, or if some explanations were missing.
+  Your feedback and "user testing" on the draft chapters and notebooks will help me ship this faster!
