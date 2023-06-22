@@ -14,11 +14,9 @@ to check all the probability calculations for yourself.
 - Confidence intervals [32_confidence_intervals.ipynb](./32_confidence_intervals.ipynb)
 - Introduction to hypothesis testing [33_intro_to_NHST.ipynb](./33_intro_to_NHST.ipynb)
 - Analytical approximations [34_analytical_approximation.ipynb](./34_analytical_approximation.ipynb)
-- Null Hypothesis Significnace Testing procedure [35_NHST.ipynb](./35_NHST.ipynb)
-- COMING SOON
-  - Inventory of statistical tests
-  - Stats practice
-  - Bayesian
-  
+- Statistical design and error analysis [35_design.ipynb](./35_design.ipynb)
+- Inventory of statistical tests [36_inventory_stats_tests.ipynb](./36_inventory_stats_tests.ipynb)
+- COMING SOON: **Sec 3.7 Stats practice**
+
 
 

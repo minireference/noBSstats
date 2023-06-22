@@ -65,12 +65,12 @@ def gen_sampling_dist(rv, estfunc, n, N=10000):
 
 
 
-# BOOTSTAP
+# BOOTSTRAP
 ################################################################################
 
 def gen_boot_dist(sample, estfunc, B=5000):
     """
-    Generate estimates from the sampling distribiton of the estimator `estfunc`
+    Generate estimates from the sampling distribution of the estimator `estfunc`
     based on `B` bootstrap samples (sampling with replacement) from `sample`.
     """
     n = len(sample)
@@ -103,7 +103,6 @@ def ci_mean(sample, alpha=0.1, method="a"):
         t_u = tdist.ppf(1-alpha/2, df=n-1)
         return [xbar + t_l*sehat, xbar + t_u*sehat]
     elif method == "b":          # bootstrap estimation
-        from stats_helpers import gen_boot_dist
         xbars_boot = gen_boot_dist(sample, estfunc=mean)
         return [np.quantile(xbars_boot, alpha/2),
                 np.quantile(xbars_boot, 1-alpha/2)]
@@ -121,7 +120,6 @@ def ci_var(sample, alpha=0.1, method="a"):
         q_u = chi2.ppf(1-alpha/2, df=n-1)
         return [(n-1)*s2/q_u, (n-1)*s2/q_l]
     elif method == "b":          # bootstrap estimation
-        from stats_helpers import gen_boot_dist
         vars_boot = gen_boot_dist(sample, estfunc=var)
         return [np.quantile(vars_boot, alpha/2),
                 np.quantile(vars_boot, 1-alpha/2)]
@@ -142,7 +140,6 @@ def ci_dmeans(xsample, ysample, alpha=0.1, method="a"):
         t_u = tdist.ppf(1-alpha/2, df=df)
         return [dhat + t_l*seD, dhat + t_u*seD]
     elif method == "b":          # bootstrap estimation
-        from stats_helpers import gen_boot_dist
         xbars_boot = gen_boot_dist(xsample, np.mean)
         ybars_boot = gen_boot_dist(ysample, np.mean)
         dmeans_boot = np.subtract(xbars_boot,ybars_boot)
@@ -345,7 +342,7 @@ def resample_under_H0(xsample, ysample):
 def permutation_test_dmeans(xsample, ysample, P=10000):
     """
     Compute the p-value of the observed difference between means
-    `dmeans(sample1,sample2)` under the null hypothesis where
+    `dmeans(xsample,ysample)` under the null hypothesis where
     the group membership is randomized.
     """
     # 1. Compute the observed difference between means
@@ -405,9 +402,9 @@ def cohend2(sample1, sample2):
     Compute Cohen's d measure of effect size for two independent samples.
     """
     n1, n2 = len(sample1), len(sample2)
-    mean1, mean2 = np.mean(sample1), np.mean(sample2)
-    var1, var2 = np.var(sample1, ddof=1), np.var(sample2, ddof=1)
-    # calculate the pooled variance and standard deviaiton
+    mean1, mean2 = mean(sample1), mean(sample2)
+    var1, var2 = var(sample1), var(sample2)
+    # calculate the pooled variance and standard deviation
     varp = ((n1-1)*var1 + (n2-1)*var2) / (n1 + n2 - 2)
     stdp = np.sqrt(varp)
     cohend = (mean1 - mean2) / stdp
@@ -466,7 +463,7 @@ def ttest_dmeans(xsample, ysample, equal_var=False, alt="two-sided"):
 
 def ttest_paired(sample1, sample2, alt="two-sided"):
     """
-    T-test for comparing relative change in a set of pairded measurements.
+    T-test for comparing relative change in a set of paired measurements.
     """
     n = len(sample1)
     n2 = len(sample2)
@@ -559,7 +556,7 @@ def simulate_ci_props(pops, methods=["a", "percentile", "bca"], ns=[20,40],
 
     # run simulation
     np.random.seed(seed)
-    print("Starting simulation for confidnece intervals of population {param} :::::::::::::")
+    print("Starting simulation for confidence intervals of population {param} :::::::::::::")
     for pop in pops.keys():
         print(f"Evaluating rv{pop} ...")
         rv = pops[pop]
