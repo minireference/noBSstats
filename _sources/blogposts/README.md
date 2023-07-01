@@ -12,7 +12,8 @@ List of blog posts about the No Bullshit Guide to Statistics.
 3. Survey results  
    https://minireference.com/blog/what-stats-do-people-want-to-learn/
 
-3. Using Python to teach stats  
-   [python_for_stats.ipynb](./python_for_stats.ipynb).
+4. Using Python to teach stats  
+   blog post: COMING SOON  
+   notebook: [python_for_stats.ipynb](./python_for_stats.ipynb).
 
-
+5. 
