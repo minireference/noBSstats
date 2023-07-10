@@ -179,7 +179,7 @@ def tailvalues(values, obs, alt="two-sided"):
         tails = values[values <= obs]
     elif alt == "two-sided":
         mean = np.mean(values)
-        dev = abs(mean - obs)
+        dev = abs(obs - mean)
         tails = values[abs(values-mean) >= dev]
     return tails
 
@@ -196,7 +196,7 @@ def tailprobs(rv, obs, alt="two-sided"):
         pvalue = rv.cdf(obs)
     elif alt == "two-sided":  # assumes symmetric dist.
         mean = rv.mean()
-        dev = abs(mean - obs)
+        dev = abs(obs - mean)
         pleft = rv.cdf(mean - dev)
         pright = 1 - rv.cdf(mean + dev)
         pvalue = 2 * min(pleft, pright)
@@ -387,13 +387,13 @@ def permutation_test(xsample, ysample, estfunc, P=10000):
 # STANDARDIZED EFFECT SIZE MEASURES
 ################################################################################
 
-def cohend(sample, mu):
+def cohend(sample, mu0):
     """
-    Compute Cohen's d for one group compared to the theoretical mean `mu`.
+    Compute Cohen's d for one group compared to the theoretical mean `mu0`.
     """
     mean = np.mean(sample)
     std = np.std(sample, ddof=1)
-    cohend = (mean - mu) / std
+    cohend = (mean - mu0) / std
     return cohend
 
 
