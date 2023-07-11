@@ -13,10 +13,11 @@ to check all the probability calculations for yourself.
 - Estimates and estimators [31_estimators.ipynb](./31_estimators.ipynb)
 - Confidence intervals [32_confidence_intervals.ipynb](./32_confidence_intervals.ipynb)
 - Introduction to hypothesis testing [33_intro_to_NHST.ipynb](./33_intro_to_NHST.ipynb)
-- Analytical approximations [34_analytical_approximation.ipynb](./34_analytical_approximation.ipynb)
-- Statistical design and error analysis [35_design.ipynb](./35_design.ipynb)
-- Inventory of statistical tests [36_inventory_stats_tests.ipynb](./36_inventory_stats_tests.ipynb)
-- COMING SOON: **Sec 3.7 Stats practice**
+- Analytical approximations [34_analytical_approx.ipynb](./34_analytical_approx.ipynb)
+- Two-sample tests [35_two_sample_tests.ipynb](./35_two_sample_tests.ipynb)
+- Statistical design and error analysis [36_design.ipynb](./36_design.ipynb)
+- Inventory of statistical tests [37_inventory_stats_tests.ipynb](./37_inventory_stats_tests.ipynb)
+- COMING SOON: **Sec 3.8 Stats practice**
 
 
 
