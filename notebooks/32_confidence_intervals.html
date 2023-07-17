@@ -495,7 +495,6 @@ document.write(`
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reusable-procedure">Reusable procedure</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#verify-coverage-probability">Verify coverage probability</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#alternative-computations-optional">Alternative computations (optional)</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#confidence-interval-for-the-population-variance">Confidence interval for the population variance</a><ul class="nav section-nav flex-column">
@@ -505,7 +504,6 @@ document.write(`
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Reusable procedure</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Verify coverage probability</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Alternative computations (optional)</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#confidence-interval-for-the-difference-between-means">Confidence interval for the difference between means</a><ul class="nav section-nav flex-column">
@@ -513,9 +511,21 @@ document.write(`
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#bootstrap-confidence-interval">Bootstrap confidence interval</a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Reusable procedure</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Reusable procedure</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#verify-the-coverage-probability">Verify the coverage probability</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Alternative computations (optional)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#alternative-calculation-methods">Alternative calculation methods</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-scipy-stats-bootstrap-for-confidence-intervals">Using <code class="docutils literal notranslate"><span class="pre">scipy.stats.bootstrap</span></code> for confidence intervals</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#one-sample-bootstrap-confidence-interval">One-sample bootstrap confidence interval</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#two-sample-bootstrap-confidence-interval">Two-sample bootstrap confidence interval?</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-statsmodels-for-confidence-intervals">Using <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code> for confidence intervals</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#two-sample-confidence-intervals">Two-sample confidence intervals</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-pingouin-for-confidence-intervals">Using <code class="docutils literal notranslate"><span class="pre">pingouin</span></code> for confidence intervals</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanations">Explanations</a><ul class="nav section-nav flex-column">
@@ -1101,85 +1111,6 @@ Coverage proportion of bootstrap CIs: 0.86
 </div>
 </div>
 </section>
-<section id="alternative-computations-optional">
-<h3>Alternative computations (optional)<a class="headerlink" href="#alternative-computations-optional" title="Permalink to this heading">#</a></h3>
-<p>The Python libraries <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code>, <code class="docutils literal notranslate"><span class="pre">scipy.stats</span></code>, and <code class="docutils literal notranslate"><span class="pre">pingouin</span></code>
-provide predefined functions for computing confidence intervals.
-We’ll now show some of these “alternative computations”
-based on predefined functions so you’ll learn a little bit
-about the tools for statistical analysis that are available to you.</p>
-<p>We’ll also use these alternative computations to confirm
-that the calculations we did from first principles are correct.</p>
-<p>Note however these are “optional” reading materials, and you can skip
-any code cells that start with an <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">ALT</span></code> comment without loss of generality.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ALT1. use the statsmodels function</span>
-<span class="kn">import</span> <span class="nn">statsmodels.stats.api</span> <span class="k">as</span> <span class="nn">sms</span>
-<span class="n">sms</span><span class="o">.</span><span class="n">DescrStatsW</span><span class="p">(</span><span class="n">asample</span><span class="p">)</span><span class="o">.</span><span class="n">tconfint_mean</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(196.82986523723363, 208.37013476276636)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ALT2. use the `bootstrap` function from `scipy.stats`</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">bootstrap</span>
-
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
-<span class="n">res</span> <span class="o">=</span> <span class="n">bootstrap</span><span class="p">((</span><span class="n">asample</span><span class="p">,),</span> <span class="n">statistic</span><span class="o">=</span><span class="n">mean</span><span class="p">,</span>
-                <span class="n">confidence_level</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">n_resamples</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
-                <span class="n">vectorized</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;percentile&quot;</span><span class="p">)</span>
-<span class="p">[</span><span class="n">res</span><span class="o">.</span><span class="n">confidence_interval</span><span class="o">.</span><span class="n">low</span><span class="p">,</span>
- <span class="n">res</span><span class="o">.</span><span class="n">confidence_interval</span><span class="o">.</span><span class="n">high</span><span class="p">]</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[197.23333333333332, 208.26666666666668]
-</pre></div>
-</div>
-</div>
-</div>
-<p>Using the function <code class="docutils literal notranslate"><span class="pre">scipy.stats.bootstrap</span></code> requires lots of keyword arguments,
-because it is a very powerful tool you can use for all kinds of bootstrap calculations.
-Let’s go over the arguments one by one:</p>
-<ul class="simple">
-<li><p>Instead of giving the input <code class="docutils literal notranslate"><span class="pre">asample</span></code> directly as the first argument,
-we pass in a tuple of length one <code class="docutils literal notranslate"><span class="pre">(asample,)</span></code>
-which tells the function that we want a single-sample calculation</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">statistic</span></code>: specify the estimator we want to compute confidence interval for</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">confidence_level</span></code>: the confidence level <span class="math notranslate nohighlight">\((1-\alpha)\)</span></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">n_resamples</span></code>: the number of bootstrap samples we want to generate</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">vectorized=False</span></code>: turns off vectorized inputs,
-which is a performance optimization that we don’t need for this calculation</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">method=&quot;percentile&quot;</span></code>: select the percentile bootstrap method,
-as opposed to one of the other bootstrap methods that are available</p></li>
-</ul>
-<p>The <code class="docutils literal notranslate"><span class="pre">bootstrap</span></code> function returns a result object. We can access the attributes of this object to obtain the limits of the confidence interval. Note the result is identical to the bootstrap estimate we obtained from the function <code class="docutils literal notranslate"><span class="pre">gen_boot_dist</span></code> followed by <code class="docutils literal notranslate"><span class="pre">np.percentile</span></code> calculations.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ALT3. use the `compute_bootci` function from `pingouin`</span>
-<span class="kn">from</span> <span class="nn">pingouin</span> <span class="kn">import</span> <span class="n">compute_bootci</span>
-
-<span class="n">compute_bootci</span><span class="p">(</span><span class="n">asample</span><span class="p">,</span> <span class="n">func</span><span class="o">=</span><span class="n">mean</span><span class="p">,</span>
-               <span class="n">confidence</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">n_boot</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
-               <span class="n">method</span><span class="o">=</span><span class="s2">&quot;per&quot;</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([197.27, 208.3 ])
-</pre></div>
-</div>
-</div>
-</div>
-</section>
 </section>
 <section id="confidence-interval-for-the-population-variance">
 <h2>Confidence interval for the population variance<a class="headerlink" href="#confidence-interval-for-the-population-variance" title="Permalink to this heading">#</a></h2>
@@ -1300,47 +1231,6 @@ Coverage proportion of bootstrap CIs: 0.81
 </div>
 </div>
 </section>
-<section id="id3">
-<h3>Alternative computations (optional)<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h3>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ALT1. use the `bootstrap` function from `scipy.stats`</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">bootstrap</span>
-
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">53</span><span class="p">)</span>
-<span class="n">res</span> <span class="o">=</span> <span class="n">bootstrap</span><span class="p">((</span><span class="n">asample</span><span class="p">,),</span> <span class="n">statistic</span><span class="o">=</span><span class="n">var</span><span class="p">,</span>
-                <span class="n">confidence_level</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">n_resamples</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
-                <span class="n">vectorized</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;percentile&quot;</span><span class="p">)</span>
-<span class="p">[</span><span class="n">res</span><span class="o">.</span><span class="n">confidence_interval</span><span class="o">.</span><span class="n">low</span><span class="p">,</span>
- <span class="n">res</span><span class="o">.</span><span class="n">confidence_interval</span><span class="o">.</span><span class="n">high</span><span class="p">]</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[196.387816091954, 480.82183908046]
-</pre></div>
-</div>
-</div>
-</div>
-<p>Note we just changed the argument <code class="docutils literal notranslate"><span class="pre">statistic</span></code> to the function <code class="docutils literal notranslate"><span class="pre">bootstrap</span></code>.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ALT2. use the `compute_bootci` function from `pingouin`</span>
-<span class="kn">from</span> <span class="nn">pingouin</span> <span class="kn">import</span> <span class="n">compute_bootci</span>
-
-<span class="n">compute_bootci</span><span class="p">(</span><span class="n">asample</span><span class="p">,</span> <span class="n">func</span><span class="o">=</span><span class="n">var</span><span class="p">,</span>
-               <span class="n">confidence</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">n_boot</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
-               <span class="n">method</span><span class="o">=</span><span class="s2">&quot;per&quot;</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">53</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([193.13, 487.84])
-</pre></div>
-</div>
-</div>
-</div>
-</section>
 </section>
 <section id="confidence-interval-for-the-difference-between-means">
 <h2>Confidence interval for the difference between means<a class="headerlink" href="#confidence-interval-for-the-difference-between-means" title="Permalink to this heading">#</a></h2>
@@ -1455,8 +1345,8 @@ Coverage proportion of bootstrap CIs: 0.81
 </div>
 </section>
 </section>
-<section id="id4">
-<h3>Reusable procedure<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h3>
+<section id="id3">
+<h3>Reusable procedure<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">ci_dmeans</span><span class="p">(</span><span class="n">xsample</span><span class="p">,</span> <span class="n">ysample</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;a&quot;</span><span class="p">):</span>
@@ -1519,63 +1409,109 @@ Coverage proportion of bootstrap CIs: 0.81
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">KeyboardInterrupt</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">44</span><span class="p">],</span> <span class="n">line</span> <span class="mi">19</span>
-<span class="g g-Whitespace">     </span><span class="mi">17</span> <span class="k">if</span> <span class="n">cia</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">muX</span> <span class="o">-</span> <span class="n">muY</span> <span class="o">&lt;=</span> <span class="n">cia</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
-<span class="g g-Whitespace">     </span><span class="mi">18</span>     <span class="n">acount</span> <span class="o">+=</span> <span class="mi">1</span>
-<span class="ne">---&gt; </span><span class="mi">19</span> <span class="n">cib</span> <span class="o">=</span> <span class="n">ci_dmeans</span><span class="p">(</span><span class="n">xsample</span><span class="p">,</span> <span class="n">ysample</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">20</span> <span class="k">if</span> <span class="n">cib</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">muX</span> <span class="o">-</span> <span class="n">muY</span> <span class="o">&lt;=</span> <span class="n">cib</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
-<span class="g g-Whitespace">     </span><span class="mi">21</span>     <span class="n">bcount</span> <span class="o">+=</span> <span class="mi">1</span>
-
-<span class="nn">Cell In[43], line 16,</span> in <span class="ni">ci_dmeans</span><span class="nt">(xsample, ysample, alpha, method)</span>
-<span class="g g-Whitespace">     </span><span class="mi">14</span>     <span class="k">return</span> <span class="p">[</span><span class="n">dhat</span> <span class="o">+</span> <span class="n">t_l</span><span class="o">*</span><span class="n">seD</span><span class="p">,</span> <span class="n">dhat</span> <span class="o">+</span> <span class="n">t_u</span><span class="o">*</span><span class="n">seD</span><span class="p">]</span>
-<span class="g g-Whitespace">     </span><span class="mi">15</span> <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;b&quot;</span><span class="p">:</span>          <span class="c1"># bootstrap estimation</span>
-<span class="ne">---&gt; </span><span class="mi">16</span>     <span class="n">xbars_boot</span> <span class="o">=</span> <span class="n">gen_boot_dist</span><span class="p">(</span><span class="n">xsample</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">17</span>     <span class="n">ybars_boot</span> <span class="o">=</span> <span class="n">gen_boot_dist</span><span class="p">(</span><span class="n">ysample</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">18</span>     <span class="n">dmeans_boot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">xbars_boot</span><span class="p">,</span> <span class="n">ybars_boot</span><span class="p">)</span>
-
-<span class="nn">File ~/work/noBSstatsnotebooks/noBSstatsnotebooks/notebooks/stats_helpers.py:79,</span> in <span class="ni">gen_boot_dist</span><span class="nt">(sample, estfunc, B)</span>
-<span class="g g-Whitespace">     </span><span class="mi">77</span> <span class="n">bestimates</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="g g-Whitespace">     </span><span class="mi">78</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span>
-<span class="ne">---&gt; </span><span class="mi">79</span>     <span class="n">bsample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">80</span>     <span class="n">bestimate</span> <span class="o">=</span> <span class="n">estfunc</span><span class="p">(</span><span class="n">bsample</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">81</span>     <span class="n">bestimates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bestimate</span><span class="p">)</span>
-
-<span class="nn">File mtrand.pyx:981,</span> in <span class="ni">numpy.random.mtrand.RandomState.choice</span><span class="nt">()</span>
-
-<span class="nn">File mtrand.pyx:765,</span> in <span class="ni">numpy.random.mtrand.RandomState.randint</span><span class="nt">()</span>
-
-<span class="nn">File _bounded_integers.pyx:1228,</span> in <span class="ni">numpy.random._bounded_integers._rand_int64</span><span class="nt">()</span>
-
-<span class="nn">File &lt;__array_function__ internals&gt;:200,</span> in <span class="ni">prod</span><span class="nt">(*args, **kwargs)</span>
-
-<span class="nn">File /opt/hostedtoolcache/Python/3.8.17/x64/lib/python3.8/site-packages/numpy/core/fromnumeric.py:3076,</span> in <span class="ni">prod</span><span class="nt">(a, axis, dtype, out, keepdims, initial, where)</span>
-<span class="g g-Whitespace">   </span><span class="mi">2955</span> <span class="nd">@array_function_dispatch</span><span class="p">(</span><span class="n">_prod_dispatcher</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">2956</span> <span class="k">def</span> <span class="nf">prod</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">_NoValue</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">2957</span>          <span class="n">initial</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">_NoValue</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">_NoValue</span><span class="p">):</span>
-<span class="g g-Whitespace">   </span><span class="mi">2958</span><span class="w">     </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="g g-Whitespace">   </span><span class="mi">2959</span><span class="sd">     Return the product of array elements over a given axis.</span>
-<span class="g g-Whitespace">   </span><span class="mi">2960</span><span class="sd"> </span>
-<span class="sd">   (...)</span>
-<span class="g g-Whitespace">   </span><span class="mi">3074</span><span class="sd">     10</span>
-<span class="g g-Whitespace">   </span><span class="mi">3075</span><span class="sd">     &quot;&quot;&quot;</span>
-<span class="ne">-&gt; </span><span class="mi">3076</span>     <span class="k">return</span> <span class="n">_wrapreduction</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">,</span> <span class="s1">&#39;prod&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">3077</span>                           <span class="n">keepdims</span><span class="o">=</span><span class="n">keepdims</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="n">initial</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="n">where</span><span class="p">)</span>
-
-<span class="nn">File /opt/hostedtoolcache/Python/3.8.17/x64/lib/python3.8/site-packages/numpy/core/fromnumeric.py:86,</span> in <span class="ni">_wrapreduction</span><span class="nt">(obj, ufunc, method, axis, dtype, out, **kwargs)</span>
-<span class="g g-Whitespace">     </span><span class="mi">83</span>         <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">     </span><span class="mi">84</span>             <span class="k">return</span> <span class="n">reduction</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">out</span><span class="p">,</span> <span class="o">**</span><span class="n">passkwargs</span><span class="p">)</span>
-<span class="ne">---&gt; </span><span class="mi">86</span> <span class="k">return</span> <span class="n">ufunc</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="o">**</span><span class="n">passkwargs</span><span class="p">)</span>
-
-<span class="ne">KeyboardInterrupt</span>: 
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Coverage proportion of analytical approx. CIs: 0.85
+Coverage proportion of bootstrap CIs: 0.84
 </pre></div>
 </div>
 </div>
 </div>
 </section>
-<section id="id5">
-<h3>Alternative computations (optional)<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h3>
+</section>
+<section id="alternative-calculation-methods">
+<h2>Alternative calculation methods<a class="headerlink" href="#alternative-calculation-methods" title="Permalink to this heading">#</a></h2>
+<section id="using-scipy-stats-bootstrap-for-confidence-intervals">
+<h3>Using <code class="docutils literal notranslate"><span class="pre">scipy.stats.bootstrap</span></code> for confidence intervals<a class="headerlink" href="#using-scipy-stats-bootstrap-for-confidence-intervals" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ALT2. use the `bootstrap` function from `scipy.stats`</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">bootstrap</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">bootstrap</span><span class="p">((</span><span class="n">asample</span><span class="p">,),</span> <span class="n">statistic</span><span class="o">=</span><span class="n">mean</span><span class="p">,</span>
+                <span class="n">confidence_level</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">n_resamples</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
+                <span class="n">vectorized</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;percentile&quot;</span><span class="p">)</span>
+<span class="p">[</span><span class="n">res</span><span class="o">.</span><span class="n">confidence_interval</span><span class="o">.</span><span class="n">low</span><span class="p">,</span>
+ <span class="n">res</span><span class="o">.</span><span class="n">confidence_interval</span><span class="o">.</span><span class="n">high</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[197.23333333333332, 208.26666666666668]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Using the function <code class="docutils literal notranslate"><span class="pre">scipy.stats.bootstrap</span></code> requires lots of keyword arguments,
+because it is a very powerful tool you can use for all kinds of bootstrap calculations.
+Let’s go over the arguments one by one:</p>
+<ul class="simple">
+<li><p>Instead of giving the input <code class="docutils literal notranslate"><span class="pre">asample</span></code> directly as the first argument,
+we pass in a tuple of length one <code class="docutils literal notranslate"><span class="pre">(asample,)</span></code>
+which tells the function that we want a single-sample calculation</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">statistic</span></code>: specify the estimator we want to compute confidence interval for</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">confidence_level</span></code>: the confidence level <span class="math notranslate nohighlight">\((1-\alpha)\)</span></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">n_resamples</span></code>: the number of bootstrap samples we want to generate</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vectorized=False</span></code>: turns off vectorized inputs,
+which is a performance optimization that we don’t need for this calculation</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">method=&quot;percentile&quot;</span></code>: select the percentile bootstrap method,
+as opposed to one of the other bootstrap methods that are available</p></li>
+</ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">bootstrap</span></code> function returns a result object. We can access the attributes of this object to obtain the limits of the confidence interval. Note the result is identical to the bootstrap estimate we obtained from the function <code class="docutils literal notranslate"><span class="pre">gen_boot_dist</span></code> followed by <code class="docutils literal notranslate"><span class="pre">np.percentile</span></code> calculations.</p>
+<section id="one-sample-bootstrap-confidence-interval">
+<h4>One-sample bootstrap confidence interval<a class="headerlink" href="#one-sample-bootstrap-confidence-interval" title="Permalink to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ALT1. use the `bootstrap` function from `scipy.stats`</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">bootstrap</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">53</span><span class="p">)</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">bootstrap</span><span class="p">((</span><span class="n">asample</span><span class="p">,),</span> <span class="n">statistic</span><span class="o">=</span><span class="n">var</span><span class="p">,</span>
+                <span class="n">confidence_level</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">n_resamples</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
+                <span class="n">vectorized</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;percentile&quot;</span><span class="p">)</span>
+<span class="p">[</span><span class="n">res</span><span class="o">.</span><span class="n">confidence_interval</span><span class="o">.</span><span class="n">low</span><span class="p">,</span>
+ <span class="n">res</span><span class="o">.</span><span class="n">confidence_interval</span><span class="o">.</span><span class="n">high</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[196.387816091954, 480.82183908046]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Note we just changed the argument <code class="docutils literal notranslate"><span class="pre">statistic</span></code> to the function <code class="docutils literal notranslate"><span class="pre">bootstrap</span></code>.</p>
+</section>
+<section id="two-sample-bootstrap-confidence-interval">
+<h4>Two-sample bootstrap confidence interval?<a class="headerlink" href="#two-sample-bootstrap-confidence-interval" title="Permalink to this heading">#</a></h4>
+</section>
+</section>
+<section id="using-statsmodels-for-confidence-intervals">
+<h3>Using <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code> for confidence intervals<a class="headerlink" href="#using-statsmodels-for-confidence-intervals" title="Permalink to this heading">#</a></h3>
+<p>The Python libraries <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code>, <code class="docutils literal notranslate"><span class="pre">scipy.stats</span></code>, and <code class="docutils literal notranslate"><span class="pre">pingouin</span></code>
+provide predefined functions for computing confidence intervals.
+We’ll now show some of these “alternative computations”
+based on predefined functions so you’ll learn a little bit
+about the tools for statistical analysis that are available to you.</p>
+<p>We’ll also use these alternative computations to confirm
+that the calculations we did from first principles are correct.</p>
+<p>Note however these are “optional” reading materials, and you can skip
+any code cells that start with an <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">ALT</span></code> comment without loss of generality.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ALT1. use the statsmodels function</span>
+<span class="kn">import</span> <span class="nn">statsmodels.stats.api</span> <span class="k">as</span> <span class="nn">sms</span>
+<span class="n">sms</span><span class="o">.</span><span class="n">DescrStatsW</span><span class="p">(</span><span class="n">asample</span><span class="p">)</span><span class="o">.</span><span class="n">tconfint_mean</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(196.82986523723363, 208.37013476276636)
+</pre></div>
+</div>
+</div>
+</div>
+<section id="two-sample-confidence-intervals">
+<h4>Two-sample confidence intervals<a class="headerlink" href="#two-sample-confidence-intervals" title="Permalink to this heading">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ALT1. using `statsmodels`</span>
@@ -1632,6 +1568,44 @@ are exactly the same as the confidence interval we computed manually.</p>
 </div>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[2.0666666666666664, 3.933888888888892]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="using-pingouin-for-confidence-intervals">
+<h3>Using <code class="docutils literal notranslate"><span class="pre">pingouin</span></code> for confidence intervals<a class="headerlink" href="#using-pingouin-for-confidence-intervals" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ALT3. use the `compute_bootci` function from `pingouin`</span>
+<span class="kn">from</span> <span class="nn">pingouin</span> <span class="kn">import</span> <span class="n">compute_bootci</span>
+
+<span class="n">compute_bootci</span><span class="p">(</span><span class="n">asample</span><span class="p">,</span> <span class="n">func</span><span class="o">=</span><span class="n">mean</span><span class="p">,</span>
+               <span class="n">confidence</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">n_boot</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
+               <span class="n">method</span><span class="o">=</span><span class="s2">&quot;per&quot;</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([197.27, 208.3 ])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ALT2. use the `compute_bootci` function from `pingouin`</span>
+<span class="kn">from</span> <span class="nn">pingouin</span> <span class="kn">import</span> <span class="n">compute_bootci</span>
+
+<span class="n">compute_bootci</span><span class="p">(</span><span class="n">asample</span><span class="p">,</span> <span class="n">func</span><span class="o">=</span><span class="n">var</span><span class="p">,</span>
+               <span class="n">confidence</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">n_boot</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
+               <span class="n">method</span><span class="o">=</span><span class="s2">&quot;per&quot;</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">53</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([193.13, 487.84])
 </pre></div>
 </div>
 </div>
@@ -1699,7 +1673,7 @@ Parametric model assumption (conceptual)  cf. nonparametric methods</p>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[211.43896604814086, 506.76570124346426]
 </pre></div>
 </div>
-<img alt="../_images/0bbc81824518026e83f00dd44f431101feedd72f23fd3239dbd3e4ca9994f408.png" src="../_images/0bbc81824518026e83f00dd44f431101feedd72f23fd3239dbd3e4ca9994f408.png" />
+<img alt="../_images/8536f42e2e1d41c72ea5322974aac738833ad320ad2fe66126e792ca905d1c61.png" src="../_images/8536f42e2e1d41c72ea5322974aac738833ad320ad2fe66126e792ca905d1c61.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1729,7 +1703,7 @@ Parametric model assumption (conceptual)  cf. nonparametric methods</p>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[212.76908831801552, 511.8854254249474]
 </pre></div>
 </div>
-<img alt="../_images/414b40d9977f58365a0c52e74e5c6ad06c4e5ce0de10b89bb31cb163ee8ea080.png" src="../_images/414b40d9977f58365a0c52e74e5c6ad06c4e5ce0de10b89bb31cb163ee8ea080.png" />
+<img alt="../_images/90dde318e3d1e593dd541eb6797ae5449835c146d2cb28fda31480972052b7e9.png" src="../_images/90dde318e3d1e593dd541eb6797ae5449835c146d2cb28fda31480972052b7e9.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1834,7 +1808,7 @@ in terms of the chi-square reference distribution <span class="math notranslate 
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>loaded results from  simdata/simulate_ci_props_mean__ns_20_40__alpha_0.1__seed_42.csv
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>loaded cached results from  simdata/simulate_ci_props_mean__ns_20_40__alpha_0.1__seed_42.csv
 </pre></div>
 </div>
 <div class="output text_html"><div>
@@ -2005,7 +1979,7 @@ in terms of the chi-square reference distribution <span class="math notranslate 
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>loaded results from  simdata/simulate_ci_props_var__ns_20_40__alpha_0.1__seed_43.csv
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>loaded cached results from  simdata/simulate_ci_props_var__ns_20_40__alpha_0.1__seed_43.csv
 </pre></div>
 </div>
 <div class="output text_html"><div>
@@ -2260,7 +2234,6 @@ in terms of the chi-square reference distribution <span class="math notranslate 
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reusable-procedure">Reusable procedure</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#verify-coverage-probability">Verify coverage probability</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#alternative-computations-optional">Alternative computations (optional)</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#confidence-interval-for-the-population-variance">Confidence interval for the population variance</a><ul class="nav section-nav flex-column">
@@ -2270,7 +2243,6 @@ in terms of the chi-square reference distribution <span class="math notranslate 
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Reusable procedure</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Verify coverage probability</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Alternative computations (optional)</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#confidence-interval-for-the-difference-between-means">Confidence interval for the difference between means</a><ul class="nav section-nav flex-column">
@@ -2278,9 +2250,21 @@ in terms of the chi-square reference distribution <span class="math notranslate 
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#bootstrap-confidence-interval">Bootstrap confidence interval</a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Reusable procedure</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Reusable procedure</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#verify-the-coverage-probability">Verify the coverage probability</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Alternative computations (optional)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#alternative-calculation-methods">Alternative calculation methods</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-scipy-stats-bootstrap-for-confidence-intervals">Using <code class="docutils literal notranslate"><span class="pre">scipy.stats.bootstrap</span></code> for confidence intervals</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#one-sample-bootstrap-confidence-interval">One-sample bootstrap confidence interval</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#two-sample-bootstrap-confidence-interval">Two-sample bootstrap confidence interval?</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-statsmodels-for-confidence-intervals">Using <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code> for confidence intervals</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#two-sample-confidence-intervals">Two-sample confidence intervals</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-pingouin-for-confidence-intervals">Using <code class="docutils literal notranslate"><span class="pre">pingouin</span></code> for confidence intervals</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanations">Explanations</a><ul class="nav section-nav flex-column">
