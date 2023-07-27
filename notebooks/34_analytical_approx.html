@@ -515,11 +515,7 @@ document.write(`
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#alternative-calculation-methods">Alternative calculation methods</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-scipy-stats-ttest-1samp-for-one-sample-t-test">Using <code class="docutils literal notranslate"><span class="pre">scipy.stats.ttest_1samp</span></code> for one-sample <span class="math notranslate nohighlight">\(t\)</span>-test</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bootstrap-estimate-of-the-standard-error">Bootstrap estimate of the standard error</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1bt-test-for-the-mean-of-batch-04">Example 1BT: test for the mean of Batch 04</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2bt-test-for-the-mean-of-batch-01">Example 2BT: test for the mean of Batch 01</a></li>
-</ul>
-</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bootstrap-estimate-of-the-standard-error">Bootstrap estimate of the standard error</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanations">Explanations</a></li>
@@ -1663,129 +1659,9 @@ this batch seems to be irregular: it has an abnormally large variance.</p>
 <section id="bootstrap-estimate-of-the-standard-error">
 <h3>Bootstrap estimate of the standard error<a class="headerlink" href="#bootstrap-estimate-of-the-standard-error" title="Permalink to this heading">#</a></h3>
 <p>Another way to obtain the standard error of the mean
-(the standard deviation sampling distribution of the mean)
-is to use the bootstrap approach.</p>
-<p>TODO: import formulas</p>
-<section id="example-1bt-test-for-the-mean-of-batch-04">
-<h4>Example 1BT: test for the mean of Batch 04<a class="headerlink" href="#example-1bt-test-for-the-mean-of-batch-04" title="Permalink to this heading">#</a></h4>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kombucha</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/kombucha.csv&quot;</span><span class="p">)</span>
-<span class="n">ksample04</span> <span class="o">=</span> <span class="n">kombucha</span><span class="p">[</span><span class="n">kombucha</span><span class="p">[</span><span class="s2">&quot;batch&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">4</span><span class="p">][</span><span class="s2">&quot;volume&quot;</span><span class="p">]</span>
-<span class="n">n04</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ksample04</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># bootstrap estimate for standard error of the mean</span>
-<span class="kn">from</span> <span class="nn">stats_helpers</span> <span class="kn">import</span> <span class="n">gen_boot_dist</span>
-<span class="n">kbars_boot04</span> <span class="o">=</span> <span class="n">gen_boot_dist</span><span class="p">(</span><span class="n">ksample04</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">mean</span><span class="p">)</span>
-<span class="n">sehat_boot04</span> <span class="o">=</span> <span class="n">std</span><span class="p">(</span><span class="n">kbars_boot04</span><span class="p">)</span>
-<span class="n">sehat_boot04</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.2252842390160474
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># compute the t statistic using bootstrap se</span>
-<span class="n">obst04bt</span> <span class="o">=</span> <span class="p">(</span><span class="n">obsmean04</span> <span class="o">-</span> <span class="n">muK0</span><span class="p">)</span> <span class="o">/</span> <span class="n">sehat_boot04</span>
-<span class="n">obst04bt</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>3.128661805915673
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">t</span> <span class="k">as</span> <span class="n">tdist</span>
-<span class="n">rvT04</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">n04</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">pvalue04bt</span> <span class="o">=</span> <span class="n">tailprobs</span><span class="p">(</span><span class="n">rvT</span><span class="p">,</span> <span class="n">obst04bt</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;two-sided&quot;</span><span class="p">)</span>
-<span class="n">pvalue04bt</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.012147863549560177
-</pre></div>
-</div>
-</div>
-</div>
-<p>The <span class="math notranslate nohighlight">\(p\)</span>-value is very small,
-so our decision is to reject <span class="math notranslate nohighlight">\(H_0\)</span>.</p>
-</section>
-<section id="example-2bt-test-for-the-mean-of-batch-01">
-<h4>Example 2BT: test for the mean of Batch 01<a class="headerlink" href="#example-2bt-test-for-the-mean-of-batch-01" title="Permalink to this heading">#</a></h4>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kombucha</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/kombucha.csv&quot;</span><span class="p">)</span>
-<span class="n">ksample01</span> <span class="o">=</span> <span class="n">kombucha</span><span class="p">[</span><span class="n">kombucha</span><span class="p">[</span><span class="s2">&quot;batch&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;volume&quot;</span><span class="p">]</span>
-<span class="n">n01</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ksample01</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># bootstrap estimate for standard error of the mean</span>
-<span class="kn">from</span> <span class="nn">stats_helpers</span> <span class="kn">import</span> <span class="n">gen_boot_dist</span>
-<span class="n">kbars_boot01</span> <span class="o">=</span> <span class="n">gen_boot_dist</span><span class="p">(</span><span class="n">ksample01</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">mean</span><span class="p">)</span>
-<span class="n">sehat_boot01</span> <span class="o">=</span> <span class="n">std</span><span class="p">(</span><span class="n">kbars_boot01</span><span class="p">)</span>
-<span class="n">sehat_boot01</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.5501517384893604
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># compute the t statistic using bootstrap se</span>
-<span class="n">obst01bt</span> <span class="o">=</span> <span class="p">(</span><span class="n">obsmean01</span> <span class="o">-</span> <span class="n">muK0</span><span class="p">)</span> <span class="o">/</span> <span class="n">sehat_boot01</span>
-<span class="n">obst01bt</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-0.5781692061148894
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">t</span> <span class="k">as</span> <span class="n">tdist</span>
-
-<span class="n">rvT01</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">n01</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-<span class="c1">#######################################################</span>
-<span class="n">pvalue01bt</span> <span class="o">=</span> <span class="n">tailprobs</span><span class="p">(</span><span class="n">rvT01</span><span class="p">,</span> <span class="n">obst01bt</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;two-sided&quot;</span><span class="p">)</span>
-<span class="n">pvalue01bt</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.5664736858023267
-</pre></div>
-</div>
-</div>
-</div>
-<p>The <span class="math notranslate nohighlight">\(p\)</span>-value is very large,
-so we have no reason to reject <span class="math notranslate nohighlight">\(H_0\)</span>.</p>
-</section>
+(the standard deviation of the sampling distribution of the mean)
+is to use the bootstrap estimate.</p>
+<p>See problems…</p>
 </section>
 </section>
 <section id="explanations">
@@ -1934,11 +1810,7 @@ so we have no reason to reject <span class="math notranslate nohighlight">\(H_0\
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#alternative-calculation-methods">Alternative calculation methods</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-scipy-stats-ttest-1samp-for-one-sample-t-test">Using <code class="docutils literal notranslate"><span class="pre">scipy.stats.ttest_1samp</span></code> for one-sample <span class="math notranslate nohighlight">\(t\)</span>-test</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bootstrap-estimate-of-the-standard-error">Bootstrap estimate of the standard error</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1bt-test-for-the-mean-of-batch-04">Example 1BT: test for the mean of Batch 04</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2bt-test-for-the-mean-of-batch-01">Example 2BT: test for the mean of Batch 01</a></li>
-</ul>
-</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bootstrap-estimate-of-the-standard-error">Bootstrap estimate of the standard error</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanations">Explanations</a></li>
