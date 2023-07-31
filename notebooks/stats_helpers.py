@@ -166,39 +166,39 @@ def boot_ci(sample, estfunc, alpha=0.1, method=None, B=5000):
 # TAIL CALCULATION UTILS
 ################################################################################
 
-def tailvalues(values, obs, alt="two-sided"):
+def tailvalues(valuesH0, obs, alt="two-sided"):
     """
-    Select the subset of the elements in list `values` that
+    Select the subset of the elements in list `valuesH0` that
     are equal or more extreme than the observed value `obs`.
     """
     assert alt in ["greater", "less", "two-sided"]
-    values = np.array(values)
+    valuesH0 = np.array(valuesH0)
     if alt == "greater":
-        tails = values[values >= obs]
+        tails = valuesH0[valuesH0 >= obs]
     elif alt == "less":
-        tails = values[values <= obs]
+        tails = valuesH0[valuesH0 <= obs]
     elif alt == "two-sided":
-        mean = np.mean(values)
-        dev = abs(obs - mean)
-        tails = values[abs(values-mean) >= dev]
+        meanH0 = np.mean(valuesH0)
+        dev = abs(obs - meanH0)
+        tails = valuesH0[abs(valuesH0-meanH0) >= dev]
     return tails
 
 
-def tailprobs(rv, obs, alt="two-sided"):
+def tailprobs(rvH0, obs, alt="two-sided"):
     """
-    Calculate the probability of all outcomes of the random variable `rv`
+    Calculate the probability of all outcomes of the random variable `rvH0`
     that are equal or more extreme than the observed value `obs`.
     """
     assert alt in ["greater", "less", "two-sided"]
     if alt == "greater":
-        pvalue = 1 - rv.cdf(obs)
+        pvalue = 1 - rvH0.cdf(obs)
     elif alt == "less":
-        pvalue = rv.cdf(obs)
-    elif alt == "two-sided":  # assumes symmetric dist.
-        mean = rv.mean()
-        dev = abs(obs - mean)
-        pleft = rv.cdf(mean - dev)
-        pright = 1 - rv.cdf(mean + dev)
+        pvalue = rvH0.cdf(obs)
+    elif alt == "two-sided":  # assumes distribution is symmetric
+        mean0 = rvH0.mean()
+        dev = abs(obs - mean0)
+        pleft = rvH0.cdf(mean0 - dev)
+        pright = 1 - rvH0.cdf(mean0 + dev)
         pvalue = 2 * min(pleft, pright)
     return pvalue
 
