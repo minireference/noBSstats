@@ -246,7 +246,8 @@ def calc_prob_and_plot(rv, a, b, xlims=None, ax=None, title=None):
 
 
 
-def calc_prob_and_plot_tails(rv, x_l, x_r, xlims=None, ax=None, title=None):
+def calc_prob_and_plot_tails(rv, x_l, x_r, xlims=None, ax=None, title=None,
+                             color="blue", facecolor="red", alpha=0.3):
     """
     Plot the area-under-the-curve visualization for the distribution's tails and
     calculate their combined probability mass: Pr({X < x_l}) + Pr({X > x_r}).
@@ -263,7 +264,7 @@ def calc_prob_and_plot_tails(rv, x_l, x_r, xlims=None, ax=None, title=None):
         xmin, xmax = rv.ppf(0.001), rv.ppf(0.999)
     x = np.linspace(xmin, xmax, 10000)
     pX = rv.pdf(x)
-    ax = sns.lineplot(x=x, y=pX, ax=ax)
+    ax = sns.lineplot(x=x, y=pX, ax=ax, color=color)
     if title is None:
         title = "Tails of the random variable " + rv.dist.name + str(rv.args)
     ax.set_title(title, y=0, pad=-30)
@@ -271,10 +272,10 @@ def calc_prob_and_plot_tails(rv, x_l, x_r, xlims=None, ax=None, title=None):
     # 3. highlight the area under pX for the tails
     mask_l = x < x_l   # left tail
     mask_u = x > x_r   # right tail
-    ax.fill_between(x[mask_l], y1=pX[mask_l], alpha=0.3, facecolor="red")
-    ax.fill_between(x[mask_u], y1=pX[mask_u], alpha=0.3, facecolor="red")
-    ax.vlines([x_l], ymin=0, ymax=rv.pdf(x_l), linestyle="-", alpha=0.5, color="red")
-    ax.vlines([x_r], ymin=0, ymax=rv.pdf(x_r), linestyle="-", alpha=0.5, color="red")
+    ax.fill_between(x[mask_l], y1=pX[mask_l], alpha=alpha, facecolor=facecolor)
+    ax.fill_between(x[mask_u], y1=pX[mask_u], alpha=alpha, facecolor=facecolor)
+    ax.vlines([x_l], ymin=0, ymax=rv.pdf(x_l), linestyle="-", alpha=alpha+0.2, color=facecolor)
+    ax.vlines([x_r], ymin=0, ymax=rv.pdf(x_r), linestyle="-", alpha=alpha+0.2, color=facecolor)
 
     # return prob and figure axes
     return p_tails, ax
@@ -709,7 +710,6 @@ def plot_sampling_dist(stats, label=None, xlims=None, ax=None,
     elif scatter == "std":
         sns.scatterplot(x=[0.0], y=-y_offset, color=orange, marker="D", s=30, alpha=0.9)
         sns.scatterplot(x=stats, y=-y_offset, ax=ax, color=orange, marker="|", s=30, alpha=0.1)
-        
 
     # 4. Handle keyword arguments
     if xlims:
@@ -778,4 +778,101 @@ def plot_sampling_dists_panel(rv, xlims, N=1000, ns=[10,30,100], binwidth=None, 
 
 
 
+# Illustrating Type I and Type II error rates
+################################################################################
+
+
+def plot_alpha_beta_errors(cohend, ax=None, xlims=None, n=9,
+                           show_alt=True, show_concl=False, show_dist_labels=False, fontsize=14, alpha_offset=0):
+    """
+    Plot sampling distribution under H0 and HA on the same graph,
+    with Type I and Type II error probabilities highlighted.
+    """
+
+    if ax is None:
+        fig, ax = plt.subplots()
+
+    if xlims:
+        xmin, xmax = xlims
+    else:
+        xmin, xmax = -3, 5
+
+    # design choices
+    transp = 0.1
+    alpha_color = "#4A25FF"
+    beta_color = "#0cb0d6"
+
+    # sample design 
+    # n = 9
+    alpha = 0.05
+
+    # populations
+    muH0 = 0
+    sigma = 2
+    muHA = muH0 + cohend*sigma
+
+
+    # sampling distributions
+    se = np.sqrt(sigma**2/n)
+    rvXbarH0 = norm(muH0, se)
+    rvXbarHA = norm(muHA, se)
+
+    # cutoff value
+    CV = norm.ppf(1-alpha) * se
+
+    # generate data (pd = plot data)
+    xs = np.linspace(xmin, xmax, 1000)
+
+    # plot sampling distributions
+    calc_prob_and_plot_tails(rvXbarH0, x_l=xmin, x_r=CV, xlims=[xmin,xmax],
+                                ax=ax, color="black", alpha=transp, facecolor=alpha_color)
+    if show_alt:
+        calc_prob_and_plot_tails(rvXbarHA, x_l=CV, x_r=xmax, xlims=[xmin,xmax],
+                                    ax=ax, color="black", alpha=transp, facecolor=beta_color)
+        ax.lines[1].set_linestyle("--")
+    ax.set_title(None)
+    ax.spines[['left', 'right', 'top']].set_visible(False)
+
+    # cutoff line
+    ax.vlines([CV], ymin=0, ymax=ax.get_ylim()[1], linestyle="-", color="red")
+
+    # errors
+    alpha_x = (CV + rvXbarH0.ppf(0.94)) / 2  + alpha_offset
+    ax.annotate(r' $\alpha$', xy=(alpha_x, rvXbarH0.pdf(alpha_x)/5), fontsize=fontsize, va="center", color=alpha_color)
+    if show_alt:
+        beta_x = (CV + rvXbarHA.ppf(0.1)) / 2
+        ax.annotate(r'$\beta$  ', xy=(beta_x, rvXbarH0.pdf(beta_x)/5), fontsize=fontsize, color=beta_color, va="center", ha="right")
+
+    # distribution annotations
+    if show_dist_labels:
+        arrowprops = dict(facecolor='black', shrink=0.05, width=2, headwidth=6, headlength=8)
+        H0_x = rvXbarH0.ppf(0.1)
+        H0_y = rvXbarH0.pdf(H0_x)
+        ax.annotate('$\overline{\mathbf{X}}_0$', xy=(H0_x, H0_y), xytext=(H0_x-1, H0_y+0.1), ha="right", arrowprops=arrowprops)
+        if show_alt:
+            HA_x = rvXbarHA.ppf(0.90)
+            HA_y = rvXbarHA.pdf(HA_x)
+            ax.annotate('$\overline{\mathbf{X}}_A$', xy=(HA_x, HA_y), xytext=(HA_x+1, HA_y+0.1), arrowprops=arrowprops)
+
+    # x-axis ticks and labels
+    ax.set_yticks([])
+    if show_alt:
+        ax.set_xticks([0,CV,muHA])
+        ax.set_xticklabels(["0","CV", "$\Delta$"])        
+    else:
+        ax.set_xticks([0,CV])
+        ax.set_xticklabels(["0","CV"])
+    # ax.vlines([0,muHA], ymin=0, ymax=rvXbarH0.pdf(0), linestyle="dotted", color="k", linewidth=1)
+
+    # decision annotations
+    if show_concl:
+        offset2 = 0.15
+        offset3 = 0.11
+        arrowprops2 = dict(facecolor='black', shrink=0.005, width=4, headwidth=10, headlength=12)
+        ax.annotate("", xy=(xmax, -offset2), xytext=(CV, -offset2), arrowprops=arrowprops2, annotation_clip=False)
+        ax.annotate('Reject $H_0$', xy=(xmax-0.1, -offset3), ha="right", annotation_clip=False, )
+        ax.annotate("", xy=(xmin, -offset2), xytext=(CV, -offset2), arrowprops=arrowprops2, annotation_clip=False)
+        ax.annotate('Fail to reject $H_0$', xy=(xmin+0.1, -offset3), ha="left", annotation_clip=False)
+
+    return ax
 
