@@ -34,6 +34,7 @@ def dmeans(xsample, ysample):
     return dhat
 
 
+
 # UTILS
 ################################################################################
 
@@ -195,13 +196,12 @@ def tailprobs(rvH0, obs, alt="two-sided"):
     elif alt == "less":
         pvalue = rvH0.cdf(obs)
     elif alt == "two-sided":  # assumes distribution is symmetric
-        mean0 = rvH0.mean()
-        dev = abs(obs - mean0)
-        pleft = rvH0.cdf(mean0 - dev)
-        pright = 1 - rvH0.cdf(mean0 + dev)
-        pvalue = 2 * min(pleft, pright)
+        meanH0 = rvH0.mean()
+        dev = abs(obs - meanH0)
+        pleft = rvH0.cdf(meanH0 - dev)
+        pright = 1 - rvH0.cdf(meanH0 + dev)
+        pvalue = pleft + pright
     return pvalue
-
 
 
 
