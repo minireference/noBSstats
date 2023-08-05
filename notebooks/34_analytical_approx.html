@@ -513,8 +513,9 @@ document.write(`
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanations">Explanations</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-sided-and-two-sided-hypothesis-tests">One-sided and two-sided hypothesis tests</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#right-tail-p-value-calculation">Right tail <span class="math notranslate nohighlight">\(p\)</span>-value calculation</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#two-sided-p-value-calculation">Two-sided <span class="math notranslate nohighlight">\(p\)</span>-value calculation</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#helper-function-for-calculating-p-values">Helper function for calculating <span class="math notranslate nohighlight">\(p\)</span>-values</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#one-sided-p-value-calculation-example">One-sided <span class="math notranslate nohighlight">\(p\)</span>-value calculation example</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#two-sided-p-value-calculation-example">Two-sided <span class="math notranslate nohighlight">\(p\)</span>-value calculation example</a></li>
 </ul>
 </li>
 </ul>
@@ -773,15 +774,6 @@ when the production line is working as expected.</p>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># # OLD</span>
-<span class="c1"># pvalue04 = tailprobs(rvZ, obsz04, alt=&quot;two-sided&quot;)</span>
-<span class="c1"># pvalue04</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;p-value_tails_kombucha_obsz04.pdf&quot;</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">plot_helpers</span> <span class="kn">import</span> <span class="n">calc_prob_and_plot_tails</span>
 <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">calc_prob_and_plot_tails</span><span class="p">(</span><span class="n">rvZ</span><span class="p">,</span> <span class="o">-</span><span class="n">obsz04</span><span class="p">,</span> <span class="n">obsz04</span><span class="p">,</span> <span class="n">xlims</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
@@ -840,23 +832,6 @@ which is described by a non-standard normal distribution:</p>
 </div>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.015328711497996476
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># p_right = 1 - rvKbar0.cdf(obsmean04)</span>
-<span class="c1"># 2 * p_right</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># # OLD</span>
-<span class="c1"># from stats_helpers import tailprobs</span>
-<span class="c1"># tailprobs(rvKbar0, obsmean04, alt=&quot;two-sided&quot;)</span>
 </pre></div>
 </div>
 </div>
@@ -966,15 +941,6 @@ and we’re relying on the same assumptions about the standard deviation of the 
 </div>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.5708240666473916
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># OLD</span>
-<span class="c1"># pvalue01 = tailprobs(rvZ, obsz01, alt=&quot;two-sided&quot;)</span>
-<span class="c1"># pvalue01</span>
 </pre></div>
 </div>
 </div>
@@ -1104,24 +1070,15 @@ We see that <code class="docutils literal notranslate"><span class="pre">sehat04
 
 <span class="n">df04</span> <span class="o">=</span> <span class="n">n04</span> <span class="o">-</span> <span class="mi">1</span>  <span class="c1"># n-1 degrees of freedom</span>
 <span class="n">rvT04</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">df04</span><span class="p">)</span>
+
 <span class="c1">#           left tail          +  right tail </span>
 <span class="n">pvalue04t</span> <span class="o">=</span> <span class="n">rvT04</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="o">-</span><span class="n">obst04</span><span class="p">)</span> <span class="o">+</span>  <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">rvT04</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">obst04</span><span class="p">))</span>
 <span class="n">pvalue04t</span>
-<span class="c1">#######################################################</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.00370566535033293
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># # OLD</span>
-<span class="c1"># pvalue04t = tailprobs(rvT04, obst04, alt=&quot;two-sided&quot;)</span>
-<span class="c1"># pvalue04t</span>
 </pre></div>
 </div>
 </div>
@@ -1246,23 +1203,9 @@ We see that <code class="docutils literal notranslate"><span class="pre">sehat04
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#######################################################</span>
-<span class="n">p_right</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">rvT01</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">obst01</span><span class="p">))</span>
-<span class="n">pvalue01t</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">p_right</span> 
-<span class="n">pvalue01t</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.5650956637295477
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># # OLD</span>
-<span class="c1"># pvalue01t = tailprobs(rvT01, obst01, alt=&quot;two-sided&quot;)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># # ALT. compute right tail and double the value</span>
+<span class="c1"># p_right = 1 - rvT01.cdf(abs(obst01))</span>
+<span class="c1"># pvalue01t = 2 * p_right </span>
 <span class="c1"># pvalue01t</span>
 </pre></div>
 </div>
@@ -1373,15 +1316,6 @@ divided by the scale factor <span class="math notranslate nohighlight">\(\tfrac{
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># # OLD</span>
-<span class="c1"># pvalue02 = tailprobs(rvX2, obsq02, alt=&quot;greater&quot;)</span>
-<span class="c1"># pvalue02</span>
-</pre></div>
-</div>
-</div>
-</div>
 <p>The <span class="math notranslate nohighlight">\(p\)</span>-value is large,
 so there is no reason to reject <span class="math notranslate nohighlight">\(H_0\)</span>.</p>
 <div class="cell docutils container">
@@ -1459,15 +1393,6 @@ Saved figure to figures/stats/intro_to_NHST/p-value_right_tail_kombucha_obsq02.p
 </div>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.0041211873587608805
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># # OLD</span>
-<span class="c1"># pvalue08 = tailprobs(rvX2, obsq08, alt=&quot;greater&quot;)</span>
-<span class="c1"># pvalue08</span>
 </pre></div>
 </div>
 </div>
@@ -1576,116 +1501,6 @@ is to use the bootstrap estimate.</p>
 <h3>One-sided and two-sided hypothesis tests<a class="headerlink" href="#one-sided-and-two-sided-hypothesis-tests" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">tailprobs</span><span class="p">(</span><span class="n">rv</span><span class="p">,</span> <span class="n">obs</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;two-sided&quot;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Calculate the probability of all outcomes of the random variable `rv`</span>
-<span class="sd">    that are equal or more extreme than the observed value `obs`.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">alt</span> <span class="o">==</span> <span class="s2">&quot;greater&quot;</span><span class="p">:</span>
-        <span class="n">pvalue</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">rv</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">alt</span> <span class="o">==</span> <span class="s2">&quot;less&quot;</span><span class="p">:</span>
-        <span class="n">pvalue</span> <span class="o">=</span> <span class="n">rv</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">alt</span> <span class="o">==</span> <span class="s2">&quot;two-sided&quot;</span><span class="p">:</span>
-        <span class="n">mean0</span> <span class="o">=</span> <span class="n">rv</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-        <span class="n">dev</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">obs</span> <span class="o">-</span> <span class="n">mean0</span><span class="p">)</span>
-        <span class="n">pleft</span> <span class="o">=</span> <span class="n">rv</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">mean0</span> <span class="o">-</span> <span class="n">dev</span><span class="p">)</span>
-        <span class="n">pright</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">rv</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">mean0</span> <span class="o">+</span> <span class="n">dev</span><span class="p">)</span>
-        <span class="n">pvalue</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="nb">min</span><span class="p">(</span><span class="n">pleft</span><span class="p">,</span> <span class="n">pright</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">pvalue</span>
-</pre></div>
-</div>
-</div>
-</div>
-<section id="right-tail-p-value-calculation">
-<h4>Right tail <span class="math notranslate nohighlight">\(p\)</span>-value calculation<a class="headerlink" href="#right-tail-p-value-calculation" title="Permalink to this heading">#</a></h4>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
-<span class="n">rvZ</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
-
-<span class="n">tailprobs</span><span class="p">(</span><span class="n">rvZ</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;greater&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.02275013194817921
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="o">-</span> <span class="n">rvZ</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.02275013194817921
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">quad</span>
-<span class="n">quad</span><span class="p">(</span><span class="n">rvZ</span><span class="o">.</span><span class="n">pdf</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">infty</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.02275013194817598
-</pre></div>
-</div>
-</div>
-</div>
-</section>
-<section id="two-sided-p-value-calculation">
-<h4>Two-sided <span class="math notranslate nohighlight">\(p\)</span>-value calculation<a class="headerlink" href="#two-sided-p-value-calculation" title="Permalink to this heading">#</a></h4>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
-<span class="n">rvZ</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
-
-<span class="n">tailprobs</span><span class="p">(</span><span class="n">rvZ</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.04550026389635839
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># left tail       # right tail</span>
-<span class="n">rvZ</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>   <span class="o">+</span>   <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">rvZ</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.0455002638963584
-</pre></div>
-</div>
-</div>
-</div>
-<p>(CUTTABLE) Note the function <code class="docutils literal notranslate"><span class="pre">tailprobs</span></code> computes the answer the question “values of <code class="docutils literal notranslate"><span class="pre">rv</span></code> that deviate from the mean as much as <code class="docutils literal notranslate"><span class="pre">obs</span></code> or more,” which we can illustrate with “two standard deviations away from the mean” calculations when the sampling distribution is a normal centred at 3.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rvZ3</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-
-<span class="n">tailprobs</span><span class="p">(</span><span class="n">rvZ3</span><span class="p">,</span> <span class="mi">3</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.04550026389635839
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># FIGURES ONLY</span>
 <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;panel_p-values_z_left_twotailed_right_tests.pdf&quot;</span><span class="p">)</span>
     
@@ -1697,6 +1512,7 @@ is to use the bootstrap estimate.</p>
 
 <span class="k">with</span> <span class="n">plt</span><span class="o">.</span><span class="n">rc_context</span><span class="p">({</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:(</span><span class="mi">7</span><span class="p">,</span><span class="mi">2</span><span class="p">)}),</span> <span class="n">sns</span><span class="o">.</span><span class="n">axes_style</span><span class="p">(</span><span class="s2">&quot;ticks&quot;</span><span class="p">):</span>
     <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax3</span><span class="p">,</span> <span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$f_</span><span class="si">{Z_0}</span><span class="s2">$&quot;</span><span class="p">)</span>
 
     <span class="c1"># RIGHT</span>
     <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;(a) right-tailed test&#39;</span>
@@ -1707,11 +1523,12 @@ is to use the bootstrap estimate.</p>
     <span class="n">ax3</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="mi">2</span><span class="p">])</span>
     <span class="n">ax3</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
     <span class="n">ax3</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">spines</span><span class="p">[[</span><span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="s1">&#39;top&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="c1"># highlight the right tail</span>
     <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">xs</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">)</span>
     <span class="n">ax3</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">xs</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">y1</span><span class="o">=</span><span class="n">ys</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
-    <span class="n">ax3</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.03</span><span class="p">,</span> <span class="s2">&quot;$z$&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.03</span><span class="p">,</span> <span class="s2">&quot;$z_{\mathbf</span><span class="si">{x}</span><span class="s2">}$&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
 
 
     <span class="c1"># LEFT</span>
@@ -1723,12 +1540,12 @@ is to use the bootstrap estimate.</p>
     <span class="n">ax1</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
     <span class="n">ax1</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
     <span class="n">ax1</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">spines</span><span class="p">[[</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="s1">&#39;top&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="c1"># highlight the left tail</span>
     <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">xs</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span>
     <span class="n">ax1</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">xs</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">y1</span><span class="o">=</span><span class="n">ys</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
-    <span class="n">ax1</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.03</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$z$&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
-
+    <span class="n">ax1</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.03</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$z_{\mathbf</span><span class="si">{x}</span><span class="s2">}$&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
 
 
     <span class="c1"># TWO-TAILED</span>
@@ -1740,14 +1557,15 @@ is to use the bootstrap estimate.</p>
     <span class="n">ax2</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
     <span class="n">ax2</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
     <span class="n">ax2</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">spines</span><span class="p">[[</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="s1">&#39;top&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="c1"># highlight the left and right tails</span>
     <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">xs</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span>
     <span class="n">ax2</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">xs</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">y1</span><span class="o">=</span><span class="n">ys</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
-    <span class="n">ax2</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.03</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$-|z|$&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.03</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$-|z_{\mathbf</span><span class="si">{x}</span><span class="s2">}|$&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
     <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">xs</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">)</span>
     <span class="n">ax2</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">xs</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">y1</span><span class="o">=</span><span class="n">ys</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
-    <span class="n">ax2</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.03</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$|z|$&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.03</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$|z_{\mathbf</span><span class="si">{x}</span><span class="s2">}|$&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
 
 <span class="n">savefigure</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
 </pre></div>
@@ -1755,14 +1573,81 @@ is to use the bootstrap estimate.</p>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/intro_to_NHST/panel_p-values_z_left_twotailed_right_tests.pdf
+Saved figure to figures/stats/intro_to_NHST/panel_p-values_z_left_twotailed_right_tests.png
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/intro_to_NHST/panel_p-values_z_left_twotailed_right_tests.png
+<img alt="../_images/cc83335e261ea449252bee8c4283392e967ae486587d338b02ceb31052b9e298.png" src="../_images/cc83335e261ea449252bee8c4283392e967ae486587d338b02ceb31052b9e298.png" />
+</div>
+</div>
+<section id="helper-function-for-calculating-p-values">
+<h4>Helper function for calculating <span class="math notranslate nohighlight">\(p\)</span>-values<a class="headerlink" href="#helper-function-for-calculating-p-values" title="Permalink to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">tailprobs</span><span class="p">(</span><span class="n">rvH0</span><span class="p">,</span> <span class="n">obs</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;two-sided&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate the probability of all outcomes of the random variable `rvH0`</span>
+<span class="sd">    that are equal or more extreme than the observed value `obs`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">alt</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;greater&quot;</span><span class="p">,</span> <span class="s2">&quot;less&quot;</span><span class="p">,</span> <span class="s2">&quot;two-sided&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">alt</span> <span class="o">==</span> <span class="s2">&quot;greater&quot;</span><span class="p">:</span>
+        <span class="n">pvalue</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">rvH0</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">alt</span> <span class="o">==</span> <span class="s2">&quot;less&quot;</span><span class="p">:</span>
+        <span class="n">pvalue</span> <span class="o">=</span> <span class="n">rvH0</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">alt</span> <span class="o">==</span> <span class="s2">&quot;two-sided&quot;</span><span class="p">:</span>  <span class="c1"># assumes distribution is symmetric</span>
+        <span class="n">meanH0</span> <span class="o">=</span> <span class="n">rvH0</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="n">dev</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">obs</span> <span class="o">-</span> <span class="n">meanH0</span><span class="p">)</span>
+        <span class="n">pleft</span> <span class="o">=</span> <span class="n">rvH0</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">meanH0</span> <span class="o">-</span> <span class="n">dev</span><span class="p">)</span>
+        <span class="n">pright</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">rvH0</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">meanH0</span> <span class="o">+</span> <span class="n">dev</span><span class="p">)</span>
+        <span class="n">pvalue</span> <span class="o">=</span> <span class="n">pleft</span> <span class="o">+</span> <span class="n">pright</span>
+    <span class="k">return</span> <span class="n">pvalue</span>
 </pre></div>
 </div>
-<img alt="../_images/c102ab75fe2e80d284d8647091426899bd7231bf0010815edcb2caef99969aaa.png" src="../_images/c102ab75fe2e80d284d8647091426899bd7231bf0010815edcb2caef99969aaa.png" />
 </div>
 </div>
+</section>
+<section id="one-sided-p-value-calculation-example">
+<h4>One-sided <span class="math notranslate nohighlight">\(p\)</span>-value calculation example<a class="headerlink" href="#one-sided-p-value-calculation-example" title="Permalink to this heading">#</a></h4>
+<p>Reusing the variables <code class="docutils literal notranslate"><span class="pre">n02=20</span></code> and <code class="docutils literal notranslate"><span class="pre">obsq02=23.62</span></code> we calculated in Example 3X above,
+we can calculate the <span class="math notranslate nohighlight">\(p\)</span>-value by calling the helper function <code class="docutils literal notranslate"><span class="pre">tailprobs</span></code>
+with the option <code class="docutils literal notranslate"><span class="pre">alt=&quot;greater&quot;</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rvX2</span> <span class="o">=</span> <span class="n">chi2</span><span class="p">(</span><span class="n">n02</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">tailprobs</span><span class="p">(</span><span class="n">rvX2</span><span class="p">,</span> <span class="n">obsq02</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;greater&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.2111207328360385
+</pre></div>
+</div>
+</div>
+</div>
+<p>The value we obtained is identical to the value <code class="docutils literal notranslate"><span class="pre">pvalue02</span></code> we obtained in Example 3X,
+so we know the function <code class="docutils literal notranslate"><span class="pre">tailprobs</span></code> works as expected for <span class="math notranslate nohighlight">\(p\)</span>-value calculations of type (a),
+where we want to detect only positive deviations from the expected distribution under <span class="math notranslate nohighlight">\(H_0\)</span>.</p>
+</section>
+<section id="two-sided-p-value-calculation-example">
+<h4>Two-sided <span class="math notranslate nohighlight">\(p\)</span>-value calculation example<a class="headerlink" href="#two-sided-p-value-calculation-example" title="Permalink to this heading">#</a></h4>
+<p>Reusing the variable <code class="docutils literal notranslate"><span class="pre">obsz04</span></code> we calculated in Example 1N above,
+we can calculate the <span class="math notranslate nohighlight">\(p\)</span>-value by calling the function <code class="docutils literal notranslate"><span class="pre">tailprobs</span></code>
+with the option <code class="docutils literal notranslate"><span class="pre">alt=&quot;two-sided&quot;</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rvZ</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">tailprobs</span><span class="p">(</span><span class="n">rvZ</span><span class="p">,</span> <span class="n">obsz04</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;two-sided&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.015328711497996476
+</pre></div>
+</div>
+</div>
+</div>
+<p>The value we obtained is identical to the value <code class="docutils literal notranslate"><span class="pre">pvalue04</span></code> we obtained in Example 1N,
+so we know the function <code class="docutils literal notranslate"><span class="pre">tailprobs</span></code> works as expected for <span class="math notranslate nohighlight">\(p\)</span>-value calculations of type (c),
+where we want to detect both positive and negative deviations from the expected distribution under <span class="math notranslate nohighlight">\(H_0\)</span>.</p>
 </section>
 </section>
 </section>
@@ -1907,8 +1792,9 @@ is to use the bootstrap estimate.</p>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanations">Explanations</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-sided-and-two-sided-hypothesis-tests">One-sided and two-sided hypothesis tests</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#right-tail-p-value-calculation">Right tail <span class="math notranslate nohighlight">\(p\)</span>-value calculation</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#two-sided-p-value-calculation">Two-sided <span class="math notranslate nohighlight">\(p\)</span>-value calculation</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#helper-function-for-calculating-p-values">Helper function for calculating <span class="math notranslate nohighlight">\(p\)</span>-values</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#one-sided-p-value-calculation-example">One-sided <span class="math notranslate nohighlight">\(p\)</span>-value calculation example</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#two-sided-p-value-calculation-example">Two-sided <span class="math notranslate nohighlight">\(p\)</span>-value calculation example</a></li>
 </ul>
 </li>
 </ul>
