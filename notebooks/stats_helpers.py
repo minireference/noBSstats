@@ -393,8 +393,8 @@ def cohend(sample, mu0):
     """
     mean = np.mean(sample)
     std = np.std(sample, ddof=1)
-    cohend = (mean - mu0) / std
-    return cohend
+    d = (mean - mu0) / std
+    return d
 
 
 def cohend2(sample1, sample2):
@@ -407,8 +407,9 @@ def cohend2(sample1, sample2):
     # calculate the pooled variance and standard deviation
     varp = ((n1-1)*var1 + (n2-1)*var2) / (n1 + n2 - 2)
     stdp = np.sqrt(varp)
-    cohend = (mean1 - mean2) / stdp
-    return cohend
+    d = (mean1 - mean2) / stdp
+    return d
+
 
 
 # T-TESTS
