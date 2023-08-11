@@ -495,7 +495,6 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2s-test-for-the-mean-of-batch-01">Example 2S: test for the mean of Batch 01</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reusable-test-function">Reusable test function</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#test-for-the-sample-variance">Test for the sample variance</a><ul class="nav section-nav flex-column">
@@ -505,7 +504,6 @@ document.write(`
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Effect size estimates</a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generic-simulation-test-function">Generic simulation test function</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanations">Explanations</a><ul class="nav section-nav flex-column">
@@ -666,10 +664,6 @@ Try to break things.</p>
     <span class="n">xbar</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
     <span class="n">sumsqdevs</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([(</span><span class="n">xi</span><span class="o">-</span><span class="n">xbar</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">xi</span> <span class="ow">in</span> <span class="n">sample</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">sumsqdevs</span> <span class="o">/</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-
-<span class="k">def</span> <span class="nf">std</span><span class="p">(</span><span class="n">sample</span><span class="p">):</span>
-    <span class="n">s2</span> <span class="o">=</span> <span class="n">var</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">s2</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -681,6 +675,48 @@ Try to break things.</p>
 <section id="the-p-value">
 <h3>The p-value<a class="headerlink" href="#the-p-value" title="Permalink to this heading">#</a></h3>
 <p>the <span class="math notranslate nohighlight">\(p\)</span>-value is the probability of observing statistic (or more extreme) under the null hypothesis.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">thetas0</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">]</span>
+
+<span class="n">obs</span> <span class="o">=</span> <span class="mi">4</span>            <span class="c1"># observed value (computed from sample)</span>
+<span class="n">th0</span> <span class="o">=</span> <span class="mi">3</span>            <span class="c1"># parameter under null</span>
+<span class="n">dev</span> <span class="o">=</span> <span class="n">obs</span> <span class="o">-</span> <span class="n">th0</span>    <span class="c1"># obs deviation from null</span>
+
+<span class="c1"># select the values in the tails of `thetas0`</span>
+<span class="n">tails</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">thetas0</span> <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">v</span><span class="o">-</span><span class="n">th0</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">dev</span><span class="p">]</span>
+
+<span class="c1"># compute the proportion in the tails</span>
+<span class="c1"># = prob of observing &quot;obs or more extreme&quot; value under H0</span>
+<span class="n">pvalue</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tails</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">thetas0</span><span class="p">)</span>
+<span class="n">pvalue</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.6
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># thetas0 = [1,2,3,3,6]</span>
+
+<span class="c1"># obs = 4</span>
+
+<span class="c1"># mu0 = mean(thetas0)</span>
+<span class="c1"># dev = obs - mu0</span>
+<span class="c1"># tails = [v for v in thetas0 if abs(v-mu0) &gt;= dev]</span>
+<span class="c1"># pvalue = len(tails) / len(thetas0)</span>
+<span class="c1"># pvalue</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The deviation from the parameter <code class="docutils literal notranslate"><span class="pre">theta0</span></code> of 60% of the values in the list <code class="docutils literal notranslate"><span class="pre">thetas0</span></code>
+are equal to or more extreme than the deviation of the observed test statistic <span class="math notranslate nohighlight">\(\hat{\theta}_{\mathbf{x}} = \tt{obs}\)</span>
+form the parameter <span class="math notranslate nohighlight">\(\theta_0 = \tt{th0}\)</span>.</p>
 </section>
 </section>
 <section id="the-logic-of-hypothesis-testing">
@@ -795,6 +831,15 @@ when the production line is working as expected.</p>
 </div>
 </div>
 </div>
+<p>We’ll use the same mean as …</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">mean</span><span class="p">(</span><span class="n">sample</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 <section id="sampling-distribution-of-the-mean-under-the-null">
 <h3>Sampling distribution of the mean under the null<a class="headerlink" href="#sampling-distribution-of-the-mean-under-the-null" title="Permalink to this heading">#</a></h3>
@@ -826,7 +871,7 @@ by calling the helper function <code class="docutils literal notranslate"><span 
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;hist_kbars40.pdf&quot;</span><span class="p">)</span>
-<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">kbars40</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">kbars40</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$\overline{\mathbf</span><span class="si">{k}</span><span class="s2">}_0$&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$f_{\overline{\mathbf</span><span class="si">{K}</span><span class="s2">}_0}$&quot;</span><span class="p">)</span>
 <span class="n">savefigure</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
@@ -840,7 +885,7 @@ by calling the helper function <code class="docutils literal notranslate"><span 
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/intro_to_NHST/hist_kbars40.png
 </pre></div>
 </div>
-<img alt="../_images/4fa5a74d3009cd03072fa35ab2d80474c71ffbd76142ec64b5aaec7cc04a9874.png" src="../_images/4fa5a74d3009cd03072fa35ab2d80474c71ffbd76142ec64b5aaec7cc04a9874.png" />
+<img alt="../_images/fc0abfa037f03ae9e2d7842ad32945495bec91b1961d43c0f35ad592d928a31f.png" src="../_images/fc0abfa037f03ae9e2d7842ad32945495bec91b1961d43c0f35ad592d928a31f.png" />
 </div>
 </div>
 </section>
@@ -1065,7 +1110,8 @@ The function <code class="docutils literal notranslate"><span class="pre">ci_mea
 when called with the argument <code class="docutils literal notranslate"><span class="pre">method=&quot;b&quot;</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">stats_helpers</span> <span class="kn">import</span> <span class="n">ci_mean</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO: redo using ci_mean(ksample04) and manual subtraction + explain</span>
+<span class="kn">from</span> <span class="nn">stats_helpers</span> <span class="kn">import</span> <span class="n">ci_mean</span>
 
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">48</span><span class="p">)</span>
 <span class="n">ci_mean</span><span class="p">(</span><span class="n">ksample04</span><span class="o">-</span><span class="n">muK0</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">)</span>
@@ -1147,7 +1193,7 @@ which sample <code class="docutils literal notranslate"><span class="pre">ksampl
 
 <span class="c1"># plot the sampling distribution as a histogram</span>
 <span class="n">bins</span> <span class="o">=</span> <span class="n">nicebins</span><span class="p">(</span><span class="n">kbars40</span><span class="p">,</span> <span class="n">obsmean01</span><span class="p">)</span>
-<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">kbars40</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">kbars40</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
 
 <span class="c1"># plot red line for the observed statistic</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">obsmean01</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
@@ -1167,70 +1213,9 @@ which sample <code class="docutils literal notranslate"><span class="pre">ksampl
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/intro_to_NHST/hist_p-value_kombucha_obsmean01.png
 </pre></div>
 </div>
-<img alt="../_images/3503b05ff3f43557a696a69f5b5aab0d5ec07da317d5ab9acdc0fdf9274e4a4b.png" src="../_images/3503b05ff3f43557a696a69f5b5aab0d5ec07da317d5ab9acdc0fdf9274e4a4b.png" />
+<img alt="../_images/3e681996b0336a8e1e8d55889cbd1776c51d515c9015a38b187b6eeb6bfd0d62.png" src="../_images/3e681996b0336a8e1e8d55889cbd1776c51d515c9015a38b187b6eeb6bfd0d62.png" />
 </div>
 </div>
-</section>
-<section id="reusable-test-function">
-<h3>Reusable test function<a class="headerlink" href="#reusable-test-function" title="Permalink to this heading">#</a></h3>
-<p>Let’s write a reusable function for performing the simulation test for the mean.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#######################################################</span>
-
-<span class="k">def</span> <span class="nf">simulation_test_mean</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">mu0</span><span class="p">,</span> <span class="n">sigma0</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">10000</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Compute the p-value of the observed mean of `sample`</span>
-<span class="sd">    under H0 of a normal distribution `norm(mu0,sigma0)`.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Compute the observed value of the mean</span>
-    <span class="n">obsmean</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
-
-    <span class="c1"># Obtain the sampling dist. of the mean under H0</span>
-    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
-    <span class="n">rvXH0</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">mu0</span><span class="p">,</span> <span class="n">sigma0</span><span class="p">)</span>
-    <span class="n">xbars</span> <span class="o">=</span> <span class="n">gen_sampling_dist</span><span class="p">(</span><span class="n">rvXH0</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">mean</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
-
-    <span class="c1"># Compute the p-value</span>
-    <span class="c1"># tails = tailvalues(xbars, obsmean)</span>
-    <span class="n">dev</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">obsmean</span> <span class="o">-</span> <span class="n">mu0</span><span class="p">)</span>
-    <span class="n">tails</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">xbars</span> <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">v</span><span class="o">-</span><span class="n">muK0</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">dev</span><span class="p">]</span>
-    <span class="n">pvalue</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tails</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">xbars</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">pvalue</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## TEST 1 (Do we get the same answer for Batch 04?)</span>
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
-<span class="n">simulation_test_mean</span><span class="p">(</span><span class="n">ksample04</span><span class="p">,</span> <span class="n">mu0</span><span class="o">=</span><span class="n">muK0</span><span class="p">,</span> <span class="n">sigma0</span><span class="o">=</span><span class="n">sigmaK0</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.0149
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## TEST 2 (Do we get the same answer for Batch 01?)</span>
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
-<span class="n">simulation_test_mean</span><span class="p">(</span><span class="n">ksample01</span><span class="p">,</span> <span class="n">mu0</span><span class="o">=</span><span class="n">muK0</span><span class="p">,</span> <span class="n">sigma0</span><span class="o">=</span><span class="n">sigmaK0</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.5711
-</pre></div>
-</div>
-</div>
-</div>
-<p>We have confirmed the function <code class="docutils literal notranslate"><span class="pre">simulation_test_mean</span></code> works as expected.
-We’ve added it to <code class="docutils literal notranslate"><span class="pre">stats_helpers</span></code> module so we can reuse it later.</p>
 </section>
 </section>
 <section id="test-for-the-sample-variance">
@@ -1265,7 +1250,7 @@ by calling the helper function <code class="docutils literal notranslate"><span 
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;hist_kvars20.pdf&quot;</span><span class="p">)</span>
-<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">kvars20</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">kvars20</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$s_{{\mathbf</span><span class="si">{k}</span><span class="s2">}_0}^2}$&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$f_{S_{{\mathbf</span><span class="si">{K}</span><span class="s2">}_0}^2}$&quot;</span><span class="p">)</span>
 <span class="n">savefigure</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
@@ -1279,7 +1264,7 @@ by calling the helper function <code class="docutils literal notranslate"><span 
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/intro_to_NHST/hist_kvars20.png
 </pre></div>
 </div>
-<img alt="../_images/fc68c14f4eaca1e1e3482ebb4dbe6b18153a409e540a380b9415e9c0d3fec7f8.png" src="../_images/fc68c14f4eaca1e1e3482ebb4dbe6b18153a409e540a380b9415e9c0d3fec7f8.png" />
+<img alt="../_images/a342d5e1c194c86bb221e867c3c5308ce61e57c9232f89f146a0c44388b12214.png" src="../_images/a342d5e1c194c86bb221e867c3c5308ce61e57c9232f89f146a0c44388b12214.png" />
 </div>
 </div>
 </section>
@@ -1357,13 +1342,13 @@ so our decision is “fail to reject <span class="math notranslate nohighlight">
 
 <span class="c1"># plot the sampling distribution as a histogram</span>
 <span class="n">bins</span> <span class="o">=</span> <span class="n">nicebins</span><span class="p">(</span><span class="n">kvars20</span><span class="p">,</span> <span class="n">obsvar02</span><span class="p">)</span>
-<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">kvars20</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">kvars20</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
 
 <span class="c1"># plot red line for the observed statistic</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">obsvar02</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
 
 <span class="c1"># plot the values that are equal or more extreme in red</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">tails</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">right_tail</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$f_{S^2_{\mathbf</span><span class="si">{K}</span><span class="s2">_0}}$&quot;</span><span class="p">)</span>
 
 <span class="n">savefigure</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
@@ -1377,7 +1362,7 @@ so our decision is “fail to reject <span class="math notranslate nohighlight">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/intro_to_NHST/hist_p-value_kombucha_obsvar02.png
 </pre></div>
 </div>
-<img alt="../_images/0864936f423893bd66bcd1cb072709b8fbddc548bfe9f41df7561b6d0c9ec5e1.png" src="../_images/0864936f423893bd66bcd1cb072709b8fbddc548bfe9f41df7561b6d0c9ec5e1.png" />
+<img alt="../_images/57ed4d2f104708862a89ffdc5fbb9bd40d03f32b5efc48e0922f31980ac90292.png" src="../_images/57ed4d2f104708862a89ffdc5fbb9bd40d03f32b5efc48e0922f31980ac90292.png" />
 </div>
 </div>
 </section>
@@ -1442,13 +1427,13 @@ so our decision is to reject <span class="math notranslate nohighlight">\(H_0\)<
 
 <span class="c1"># plot the sampling distribution as a histogram</span>
 <span class="n">bins</span> <span class="o">=</span> <span class="n">nicebins</span><span class="p">(</span><span class="n">kvars40</span><span class="p">,</span> <span class="n">obsvar08</span><span class="p">)</span>
-<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">kvars40</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">kvars40</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
 
 <span class="c1"># plot red line for the observed statistic</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">obsvar08</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
 
 <span class="c1"># plot the values that are equal or more extreme in red</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">tails</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">right_tail</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$f_{S^2_{\mathbf</span><span class="si">{K}</span><span class="s2">_0}}$&quot;</span><span class="p">)</span>
 
 <span class="n">savefigure</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
@@ -1462,7 +1447,7 @@ so our decision is to reject <span class="math notranslate nohighlight">\(H_0\)<
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/intro_to_NHST/hist_p-value_kombucha_obsvar08.png
 </pre></div>
 </div>
-<img alt="../_images/fabbde4265539d88986bb303ee5deed8c7b89109f704796370fc73110522ad80.png" src="../_images/fabbde4265539d88986bb303ee5deed8c7b89109f704796370fc73110522ad80.png" />
+<img alt="../_images/9c300c5ebe3dc854591ab2647a5c5c443b410a6510794d032d4df791b05f92b8.png" src="../_images/9c300c5ebe3dc854591ab2647a5c5c443b410a6510794d032d4df791b05f92b8.png" />
 </div>
 </div>
 <section id="id2">
@@ -1519,65 +1504,6 @@ then dividing by the theoretical variance <span class="math notranslate nohighli
 <p>The interval <span class="math notranslate nohighlight">\(\ci{\Delta,0.9}^* = [1.17, 2.18]\)</span> tells us the observed sample variance
 in Batch 08 is somewhere between 1.17 and 2.18 times the expected variance <span class="math notranslate nohighlight">\(\sigma_{K_0}^2\)</span> under the null hypothesis.</p>
 </section>
-</section>
-<section id="generic-simulation-test-function">
-<h3>Generic simulation test function<a class="headerlink" href="#generic-simulation-test-function" title="Permalink to this heading">#</a></h3>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#######################################################</span>
-
-<span class="k">def</span> <span class="nf">simulation_test_var</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">mu0</span><span class="p">,</span> <span class="n">sigma0</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;greater&quot;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Compute the p-value of the observed variance of `sample`</span>
-<span class="sd">    under H0 of a normal distribution `norm(mu0,sigma0)`.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># 1. Compute the sample variance</span>
-    <span class="n">obsvar</span> <span class="o">=</span> <span class="n">var</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
-    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
-
-    <span class="c1"># 2. Get sampling distribution of variance under H0</span>
-    <span class="n">rvXH0</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">mu0</span><span class="p">,</span> <span class="n">sigma0</span><span class="p">)</span>
-    <span class="n">xvars</span> <span class="o">=</span> <span class="n">gen_sampling_dist</span><span class="p">(</span><span class="n">rvXH0</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">var</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
-
-    <span class="c1"># 3. Compute the p-value</span>
-    <span class="n">tails</span> <span class="o">=</span> <span class="p">[</span><span class="n">xvar</span> <span class="k">for</span> <span class="n">xvar</span> <span class="ow">in</span> <span class="n">xvars</span> <span class="k">if</span> <span class="n">xvar</span> <span class="o">&gt;=</span> <span class="n">obsvar</span><span class="p">]</span>
-    <span class="n">pvalue</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tails</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">xvars</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">pvalue</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># reproduce the results from Example 3</span>
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
-<span class="n">simulation_test_var</span><span class="p">(</span><span class="n">ksample02</span><span class="p">,</span> <span class="n">muK0</span><span class="p">,</span> <span class="n">sigmaK0</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;greater&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.2132
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># reproduce the results from Example 4</span>
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">43</span><span class="p">)</span>
-<span class="n">simulation_test_var</span><span class="p">(</span><span class="n">ksample08</span><span class="p">,</span> <span class="n">muK0</span><span class="p">,</span> <span class="n">sigmaK0</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;greater&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.0041
-</pre></div>
-</div>
-</div>
-</div>
-<p>We confirm the function <code class="docutils literal notranslate"><span class="pre">simulation_test_var</span></code> gives the same <span class="math notranslate nohighlight">\(p\)</span>-values as the two samples
-we calculated manually above,
-so we can be confident it is working as expected.</p>
 </section>
 </section>
 <section id="explanations">
@@ -1719,7 +1645,8 @@ then divide by the total number of simulations:</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
 <span class="n">kvars20</span> <span class="o">=</span> <span class="n">gen_sampling_dist</span><span class="p">(</span><span class="n">rvK0</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">var</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 <span class="n">tails</span> <span class="o">=</span> <span class="n">tailvalues</span><span class="p">(</span><span class="n">kvars20</span><span class="p">,</span> <span class="n">obsvar02</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;greater&quot;</span><span class="p">)</span>
-<span class="nb">len</span><span class="p">(</span><span class="n">tails</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">kvars20</span><span class="p">)</span>
+<span class="n">pvalue</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tails</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">kvars20</span><span class="p">)</span>
+<span class="n">pvalue</span>
 </pre></div>
 </div>
 </div>
@@ -1735,8 +1662,8 @@ where we want to detect positive deviations from the expected distribution under
 </section>
 <section id="two-sided-p-value-calculation-example">
 <h4>Two-sided <span class="math notranslate nohighlight">\(p\)</span>-value calculation example<a class="headerlink" href="#two-sided-p-value-calculation-example" title="Permalink to this heading">#</a></h4>
-<p>Reusing the <span class="math notranslate nohighlight">\(\tt{obsmean04} = \overline{\mathbf{x}}_{04} = 1003.8335\)</span>
-that we calculated earlier in Example~1S,
+<p>Reusing the <span class="math notranslate nohighlight">\(\tt{obsmean04} = \overline{\mathbf{x}}_{04} = 1003.83\)</span>
+that we calculated earlier in Example 1S,
 we can obtain the <span class="math notranslate nohighlight">\(p\)</span>-value by calling the function <code class="docutils literal notranslate"><span class="pre">tailvalues</span></code>
 with the option <code class="docutils literal notranslate"><span class="pre">alt=&quot;two-sided&quot;</span></code> then divide by the total number of simulations:</p>
 <div class="cell docutils container">
@@ -1744,7 +1671,8 @@ with the option <code class="docutils literal notranslate"><span class="pre">alt
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
 <span class="n">kbars40</span> <span class="o">=</span> <span class="n">gen_sampling_dist</span><span class="p">(</span><span class="n">rvK0</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">mean</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
 <span class="n">tails</span> <span class="o">=</span> <span class="n">tailvalues</span><span class="p">(</span><span class="n">kbars40</span><span class="p">,</span> <span class="n">obsmean04</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;two-sided&quot;</span><span class="p">)</span>
-<span class="nb">len</span><span class="p">(</span><span class="n">tails</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">kbars40</span><span class="p">)</span>
+<span class="n">pvalue</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tails</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">kbars40</span><span class="p">)</span>
+<span class="n">pvalue</span>
 </pre></div>
 </div>
 </div>
@@ -1754,7 +1682,7 @@ with the option <code class="docutils literal notranslate"><span class="pre">alt
 </div>
 </div>
 </div>
-<p>The value we obtain is identical to the <span class="math notranslate nohighlight">\(p\)</span>-value that we obtained in Example~1S,
+<p>The value we obtain is identical to the <span class="math notranslate nohighlight">\(p\)</span>-value that we obtained in Example 1S,
 so we know the function <code class="docutils literal notranslate"><span class="pre">tailvalues</span></code> works as expected for <span class="math notranslate nohighlight">\(p\)</span>-value calculations of type \textbf{(c)},
 where we want to detect both positive and negative deviations from the expected distribution under <span class="math notranslate nohighlight">\(H_0\)</span>.</p>
 </section>
@@ -1774,13 +1702,14 @@ Cohen’s <span class="math notranslate nohighlight">\(d\)</span> is one such me
   d = \frac{\overline{\mathbf{x}} - \mu_0}{ s_{\mathbf{x}} }.
 \]</div>
 <p>For example,
-the sample <span class="math notranslate nohighlight">\(\mathbf{k}_04\)</span> from Batch 04 has mean <span class="math notranslate nohighlight">\(\overline{\mathbf{k}}_04 = 1003.83\)</span>,
+the sample <span class="math notranslate nohighlight">\(\mathbf{k}_{04}\)</span> from Batch 04 has mean <span class="math notranslate nohighlight">\(\overline{\mathbf{k}}_{04} = 1003.83\)</span>,
 which corresponds to a “raw” deviation of <span class="math notranslate nohighlight">\(3.83\)</span> from the expected value <span class="math notranslate nohighlight">\(\mu_{K_0}=1000\)</span>.
 We must divide the raw deviation by the sample’s standard deviation <span class="math notranslate nohighlight">\(s_{\mathbf{k}_{04}}= 7.85\)</span>
 to obtain Cohen’s <span class="math notranslate nohighlight">\(d\)</span> standardized effect size.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">mean</span><span class="p">(</span><span class="n">ksample04</span><span class="p">)</span> <span class="o">-</span> <span class="n">muK0</span><span class="p">)</span> <span class="o">/</span> <span class="n">std</span><span class="p">(</span><span class="n">ksample04</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">std04</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">var</span><span class="p">(</span><span class="n">ksample04</span><span class="p">))</span>
+<span class="p">(</span><span class="n">mean</span><span class="p">(</span><span class="n">ksample04</span><span class="p">)</span> <span class="o">-</span> <span class="n">muK0</span><span class="p">)</span> <span class="o">/</span> <span class="n">std04</span>
 </pre></div>
 </div>
 </div>
@@ -1822,7 +1751,7 @@ which we quantify as “medium” effect size according to the table of referenc
 <span class="sd">    Cohen&#39;s d for one group compared to the theoretical mean `mu0`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">obsmean</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
-    <span class="n">obsstd</span> <span class="o">=</span> <span class="n">std</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+    <span class="n">obsstd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">var</span><span class="p">(</span><span class="n">sample</span><span class="p">))</span>
     <span class="n">d</span> <span class="o">=</span> <span class="p">(</span><span class="n">obsmean</span> <span class="o">-</span> <span class="n">mu0</span><span class="p">)</span> <span class="o">/</span> <span class="n">obsstd</span>
     <span class="k">return</span> <span class="n">d</span>
 </pre></div>
@@ -1958,7 +1887,6 @@ which we quantify as “medium” effect size according to the table of referenc
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2s-test-for-the-mean-of-batch-01">Example 2S: test for the mean of Batch 01</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reusable-test-function">Reusable test function</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#test-for-the-sample-variance">Test for the sample variance</a><ul class="nav section-nav flex-column">
@@ -1968,7 +1896,6 @@ which we quantify as “medium” effect size according to the table of referenc
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Effect size estimates</a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generic-simulation-test-function">Generic simulation test function</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanations">Explanations</a><ul class="nav section-nav flex-column">

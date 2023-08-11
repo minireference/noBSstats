@@ -470,7 +470,16 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebook-setup">Notebook setup</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definitions">Definitions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definitions">Definitions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#context">Context</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#analytical-approximations">Analytical approximations</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#normal-approximation-to-the-sample-mean">Normal approximation to the sample mean</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#student-s-t-approximation-to-the-sample-mean">Student’s <span class="math notranslate nohighlight">\(t\)</span>-approximation to the sample mean</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#the-chi-2-approximation-to-the-sample-variance">The <span class="math notranslate nohighlight">\(\chi^2\)</span>-approximation to the sample variance</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#formulas">Formulas</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#test-for-the-sample-mean-known-variance">Test for the sample mean (known variance)</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#analytical-approximation-for-the-sample-mean">Analytical approximation for the sample mean</a><ul class="nav section-nav flex-column">
@@ -520,7 +529,10 @@ document.write(`
 </li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#statistical-modelling-and-assumptions">Statistical modelling and assumptions</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-nn-use-integration-to-obtain-of-the-probability">Exercise NN: use integration to obtain of the probability …</a></li>
 </ul>
@@ -628,6 +640,8 @@ document.write(`
 </section>
 <section id="definitions">
 <h2>Definitions<a class="headerlink" href="#definitions" title="Permalink to this heading">#</a></h2>
+<section id="context">
+<h3>Context<a class="headerlink" href="#context" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
 <li><p>test statistic</p></li>
 <li><p>sampling distribution of the test statistic</p></li>
@@ -651,6 +665,108 @@ document.write(`
 </div>
 </div>
 </div>
+</section>
+<section id="analytical-approximations">
+<h3>Analytical approximations<a class="headerlink" href="#analytical-approximations" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># theoretical model for the kombucha volumes</span>
+<span class="n">muX0</span> <span class="o">=</span> <span class="mi">1000</span>   <span class="c1"># population mean (expected kombucha volume)</span>
+<span class="n">sigmaX0</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># population standard deviation</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sample</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1005.19</span><span class="p">,</span>  <span class="mf">987.31</span><span class="p">,</span> <span class="mf">1002.4</span><span class="p">,</span>  <span class="mf">991.96</span><span class="p">,</span>
+          <span class="mf">1000.17</span><span class="p">,</span> <span class="mf">1003.94</span><span class="p">,</span> <span class="mf">1012.79</span><span class="p">]</span>
+<span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>  <span class="c1"># sample size</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="normal-approximation-to-the-sample-mean">
+<h4>Normal approximation to the sample mean<a class="headerlink" href="#normal-approximation-to-the-sample-mean" title="Permalink to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
+
+<span class="n">sigmaX0</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># population standard deviation</span>
+<span class="n">se</span> <span class="o">=</span> <span class="n">sigmaX0</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="n">rvNXbar_0</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">muX0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">se</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">plot_pdf</span><span class="p">(</span><span class="n">rvNXbar_0</span><span class="p">,</span> <span class="n">xlims</span><span class="o">=</span><span class="p">[</span><span class="mi">980</span><span class="p">,</span> <span class="mi">1020</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$f_{\overline{\mathbf</span><span class="si">{X}</span><span class="s2">}}$&quot;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$\overline{\mathbf</span><span class="si">{x}</span><span class="s2">}$&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/ca83cfb993aa632ffa6fec96db82c46263d475e5041d00fd0a1478b05365f5d1.png" src="../_images/ca83cfb993aa632ffa6fec96db82c46263d475e5041d00fd0a1478b05365f5d1.png" />
+</div>
+</div>
+</section>
+<section id="student-s-t-approximation-to-the-sample-mean">
+<h4>Student’s <span class="math notranslate nohighlight">\(t\)</span>-approximation to the sample mean<a class="headerlink" href="#student-s-t-approximation-to-the-sample-mean" title="Permalink to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">t</span> <span class="k">as</span> <span class="n">tdist</span>
+
+<span class="n">muX0</span> <span class="o">=</span> <span class="mi">1000</span>      <span class="c1"># population mean (expected kombucha volume)</span>
+<span class="n">sigmaX0</span> <span class="o">=</span> <span class="mi">10</span>     <span class="c1"># population standard deviation</span>
+<span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>  <span class="c1"># sample size</span>
+<span class="n">sehat</span> <span class="o">=</span> <span class="n">std</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="n">rvTXbar_0</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">muX0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">sehat</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">plot_pdf</span><span class="p">(</span><span class="n">rvTXbar_0</span><span class="p">,</span> <span class="n">xlims</span><span class="o">=</span><span class="p">[</span><span class="mi">980</span><span class="p">,</span> <span class="mi">1020</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$f_{\overline{\mathbf</span><span class="si">{X}</span><span class="s2">}}$&quot;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$\overline{\mathbf</span><span class="si">{x}</span><span class="s2">}$&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/e996225a3e51b68d8346c1537e9904d55dfe7db33b0bbd41fccc3e1780014852.png" src="../_images/e996225a3e51b68d8346c1537e9904d55dfe7db33b0bbd41fccc3e1780014852.png" />
+</div>
+</div>
+</section>
+<section id="the-chi-2-approximation-to-the-sample-variance">
+<h4>The <span class="math notranslate nohighlight">\(\chi^2\)</span>-approximation to the sample variance<a class="headerlink" href="#the-chi-2-approximation-to-the-sample-variance" title="Permalink to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">chi2</span>
+<span class="n">sigmaX0</span> <span class="o">=</span> <span class="mi">10</span>     <span class="c1"># population standard deviation</span>
+<span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>  <span class="c1"># sample size</span>
+<span class="n">scale</span> <span class="o">=</span> <span class="n">sigmaX0</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">rvQS2_0</span> <span class="o">=</span> <span class="n">chi2</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">scale</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">plot_pdf</span><span class="p">(</span><span class="n">rvQS2_0</span><span class="p">,</span> <span class="n">rv_name</span><span class="o">=</span><span class="s2">&quot;Q&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$f_{S^2_{\mathbf</span><span class="si">{X}</span><span class="s2">}}$&quot;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$s^2_{\mathbf</span><span class="si">{x}</span><span class="s2">}$&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/5f75445dc7d6b67a69b0bdfc16b475427de1926d2b869599d41ad1d7fd20a4ff.png" src="../_images/5f75445dc7d6b67a69b0bdfc16b475427de1926d2b869599d41ad1d7fd20a4ff.png" />
+</div>
+</div>
+</section>
+</section>
 </section>
 <section id="formulas">
 <h2>Formulas<a class="headerlink" href="#formulas" title="Permalink to this heading">#</a></h2>
@@ -779,7 +895,7 @@ when the production line is working as expected.</p>
 <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">calc_prob_and_plot_tails</span><span class="p">(</span><span class="n">rvZ</span><span class="p">,</span> <span class="o">-</span><span class="n">obsz04</span><span class="p">,</span> <span class="n">obsz04</span><span class="p">,</span> <span class="n">xlims</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$z$&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$f_Z$&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$f_</span><span class="si">{Z_0}</span><span class="s2">$&quot;</span><span class="p">)</span>
 <span class="n">savefigure</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -789,7 +905,7 @@ when the production line is working as expected.</p>
 Saved figure to figures/stats/intro_to_NHST/p-value_tails_kombucha_obsz04.png
 </pre></div>
 </div>
-<img alt="../_images/cc8e74cdf894a26adb461d6e1fe8e15d82daa2ba2c14b40a0d9ad99fa45f7eb2.png" src="../_images/cc8e74cdf894a26adb461d6e1fe8e15d82daa2ba2c14b40a0d9ad99fa45f7eb2.png" />
+<img alt="../_images/176caf2cc2bd46e5c3879dcb90c128287d8ebae161cfc8d625d85a4547e1c13b.png" src="../_images/176caf2cc2bd46e5c3879dcb90c128287d8ebae161cfc8d625d85a4547e1c13b.png" />
 </div>
 </div>
 <section id="alternative-calculation-without-pivotal-transformation">
@@ -853,7 +969,7 @@ which is described by a non-standard normal distribution:</p>
 Saved figure to figures/stats/intro_to_NHST/p-value_tails_Example1N_Kbar0.png
 </pre></div>
 </div>
-<img alt="../_images/926c5a1b0f92f26fac97f4f6527affb7b75e8dc4bced4d4a4599bb0060abf56b.png" src="../_images/926c5a1b0f92f26fac97f4f6527affb7b75e8dc4bced4d4a4599bb0060abf56b.png" />
+<img alt="../_images/567fdd464b3f877ada4daefb0d8a9639e0dc008ecc217a6ca59155d5d9b47992.png" src="../_images/567fdd464b3f877ada4daefb0d8a9639e0dc008ecc217a6ca59155d5d9b47992.png" />
 </div>
 </div>
 <p>The <span class="math notranslate nohighlight">\(p\)</span>-value we obtain is exactly the same.</p>
@@ -962,10 +1078,12 @@ We conclude that Batch 01 must be regular.</p>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/intro_to_NHST/p-value_tails_kombucha_obsz01.pdf
-Saved figure to figures/stats/intro_to_NHST/p-value_tails_kombucha_obsz01.png
 </pre></div>
 </div>
-<img alt="../_images/548ed0552833caa62a175166cca69f6282682915393f1b3fb9c9bd0a3d47ca7e.png" src="../_images/548ed0552833caa62a175166cca69f6282682915393f1b3fb9c9bd0a3d47ca7e.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/intro_to_NHST/p-value_tails_kombucha_obsz01.png
+</pre></div>
+</div>
+<img alt="../_images/b5e557e008c6c1d53dfcc591b2191da258c1abcc7e88ad9794784b2c36ffd788.png" src="../_images/b5e557e008c6c1d53dfcc591b2191da258c1abcc7e88ad9794784b2c36ffd788.png" />
 </div>
 </div>
 </section>
@@ -1228,7 +1346,7 @@ We see that <code class="docutils literal notranslate"><span class="pre">sehat04
 Saved figure to figures/stats/intro_to_NHST/p-value_tails_kombucha_obst01.png
 </pre></div>
 </div>
-<img alt="../_images/46c02a6b6212db93141a325a0927325dcc8cd3ddcc83cbe9027ca5973318e031.png" src="../_images/46c02a6b6212db93141a325a0927325dcc8cd3ddcc83cbe9027ca5973318e031.png" />
+<img alt="../_images/2ce3093dfdc977af37090b391f538e963070695a217e0ec9f2d4e9354ce05aa9.png" src="../_images/2ce3093dfdc977af37090b391f538e963070695a217e0ec9f2d4e9354ce05aa9.png" />
 </div>
 </div>
 </section>
@@ -1334,7 +1452,7 @@ so there is no reason to reject <span class="math notranslate nohighlight">\(H_0
 Saved figure to figures/stats/intro_to_NHST/p-value_right_tail_kombucha_obsq02.png
 </pre></div>
 </div>
-<img alt="../_images/8cfc8652e154c7471f658faaa3966a02c70c3850dd6db17474a0217af1c1088f.png" src="../_images/8cfc8652e154c7471f658faaa3966a02c70c3850dd6db17474a0217af1c1088f.png" />
+<img alt="../_images/5716867354829779ee868253561867b2d3e2cd5c53add2252f08a2df62c85b90.png" src="../_images/5716867354829779ee868253561867b2d3e2cd5c53add2252f08a2df62c85b90.png" />
 </div>
 </div>
 </section>
@@ -1653,6 +1771,9 @@ where we want to detect both positive and negative deviations from the expected 
 </section>
 <section id="discussion">
 <h2>Discussion<a class="headerlink" href="#discussion" title="Permalink to this heading">#</a></h2>
+<section id="statistical-modelling-and-assumptions">
+<h3>Statistical modelling and assumptions<a class="headerlink" href="#statistical-modelling-and-assumptions" title="Permalink to this heading">#</a></h3>
+</section>
 </section>
 <section id="exercises">
 <h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this heading">#</a></h2>
@@ -1749,7 +1870,16 @@ where we want to detect both positive and negative deviations from the expected 
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebook-setup">Notebook setup</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definitions">Definitions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definitions">Definitions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#context">Context</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#analytical-approximations">Analytical approximations</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#normal-approximation-to-the-sample-mean">Normal approximation to the sample mean</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#student-s-t-approximation-to-the-sample-mean">Student’s <span class="math notranslate nohighlight">\(t\)</span>-approximation to the sample mean</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#the-chi-2-approximation-to-the-sample-variance">The <span class="math notranslate nohighlight">\(\chi^2\)</span>-approximation to the sample variance</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#formulas">Formulas</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#test-for-the-sample-mean-known-variance">Test for the sample mean (known variance)</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#analytical-approximation-for-the-sample-mean">Analytical approximation for the sample mean</a><ul class="nav section-nav flex-column">
@@ -1799,7 +1929,10 @@ where we want to detect both positive and negative deviations from the expected 
 </li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#statistical-modelling-and-assumptions">Statistical modelling and assumptions</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-nn-use-integration-to-obtain-of-the-probability">Exercise NN: use integration to obtain of the probability …</a></li>
 </ul>

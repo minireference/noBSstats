@@ -15,30 +15,28 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
-from stats_helpers import calcdf
-from scipy.stats import t as tdist
+# ALT1. use the `bootstrap` function from `scipy.stats`
+from scipy.stats import bootstrap
 
-n, m = len(xsample), len(ysample)
-xbar, ybar = mean(xsample), mean(ysample)
-sx, sy = std(xsample), std(ysample)
-obsdhat = dmeans(xsample, ysample)
-seD = np.sqrt(sx**2/n + sy**2/m)
-df = calcdf(sx,n,sy,m)
-rvTDhat0 = tdist(df, loc=0, scale=seD)
-
-pvalue = tailprobs(rvTDhat0, obsdhat, alt="two-sided")
-    
-pvalue
+np.random.seed(53)
+res = bootstrap((asample,), statistic=var,
+                confidence_level=0.9, n_resamples=5000,
+                vectorized=False, method="percentile")
+[res.confidence_interval.low,
+ res.confidence_interval.high]
 ------------------
 
 
 [0;31m---------------------------------------------------------------------------[0m
 [0;31mNameError[0m                                 Traceback (most recent call last)
-Cell [0;32mIn[6], line 12[0m
-[1;32m      9[0m df [38;5;241m=[39m calcdf(sx,n,sy,m)
-[1;32m     10[0m rvTDhat0 [38;5;241m=[39m tdist(df, loc[38;5;241m=[39m[38;5;241m0[39m, scale[38;5;241m=[39mseD)
-[0;32m---> 12[0m pvalue [38;5;241m=[39m [43mtailprobs[49m(rvTDhat0, obsdhat, alt[38;5;241m=[39m[38;5;124m"[39m[38;5;124mtwo-sided[39m[38;5;124m"[39m)
-[1;32m     14[0m pvalue
+Cell [0;32mIn[4], line 5[0m
+[1;32m      2[0m [38;5;28;01mfrom[39;00m [38;5;21;01mscipy[39;00m[38;5;21;01m.[39;00m[38;5;21;01mstats[39;00m [38;5;28;01mimport[39;00m bootstrap
+[1;32m      4[0m np[38;5;241m.[39mrandom[38;5;241m.[39mseed([38;5;241m53[39m)
+[0;32m----> 5[0m res [38;5;241m=[39m bootstrap(([43masample[49m,), statistic[38;5;241m=[39mvar,
+[1;32m      6[0m                 confidence_level[38;5;241m=[39m[38;5;241m0.9[39m, n_resamples[38;5;241m=[39m[38;5;241m5000[39m,
+[1;32m      7[0m                 vectorized[38;5;241m=[39m[38;5;28;01mFalse[39;00m, method[38;5;241m=[39m[38;5;124m"[39m[38;5;124mpercentile[39m[38;5;124m"[39m)
+[1;32m      8[0m [res[38;5;241m.[39mconfidence_interval[38;5;241m.[39mlow,
+[1;32m      9[0m  res[38;5;241m.[39mconfidence_interval[38;5;241m.[39mhigh]
 
-[0;31mNameError[0m: name 'tailprobs' is not defined
+[0;31mNameError[0m: name 'asample' is not defined
 
