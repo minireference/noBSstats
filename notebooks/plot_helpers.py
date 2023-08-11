@@ -237,9 +237,9 @@ def calc_prob_and_plot(rv, a, b, xlims=None, ax=None, title=None):
 
     # 3. highlight the area under pX between x=a and x=b
     mask = (x > a) & (x < b)
-    ax.fill_between(x[mask], y1=pX[mask], alpha=0.2, facecolor="blue")
-    ax.vlines([a], ymin=0, ymax=rv.pdf(a), linestyle="-", alpha=0.5, color="blue")
-    ax.vlines([b], ymin=0, ymax=rv.pdf(b), linestyle="-", alpha=0.5, color="blue")
+    ax.fill_between(x[mask], y1=pX[mask], alpha=0.2, facecolor=blue)
+    ax.vlines([a], ymin=0, ymax=rv.pdf(a), linestyle="-", alpha=0.5, color=blue)
+    ax.vlines([b], ymin=0, ymax=rv.pdf(b), linestyle="-", alpha=0.5, color=blue)
     
     # return prob and figure axes
     return p, ax
@@ -247,7 +247,7 @@ def calc_prob_and_plot(rv, a, b, xlims=None, ax=None, title=None):
 
 
 def calc_prob_and_plot_tails(rv, x_l, x_r, xlims=None, ax=None, title=None,
-                             color="blue", facecolor="red", alpha=0.3):
+                             color=blue, facecolor="red", alpha=0.3):
     """
     Plot the area-under-the-curve visualization for the distribution's tails and
     calculate their combined probability mass: Pr({X < x_l}) + Pr({X > x_r}).
@@ -313,8 +313,8 @@ def plot_pdf_and_cdf(rv, b=None, a=-np.inf, xlims=None, rv_name="X", title=None)
     if b:
         # highlight the area under pX between x=a and x=b
         mask = (x > a) & (x < b)
-        ax0.fill_between(x[mask], y1=pX[mask], alpha=0.2, facecolor="blue")
-        ax0.vlines([b], ymin=0, ymax=rv.pdf(b), linestyle="-", alpha=0.5, color="blue")
+        ax0.fill_between(x[mask], y1=pX[mask], alpha=0.2, facecolor=blue)
+        ax0.vlines([b], ymin=0, ymax=rv.pdf(b), linestyle="-", alpha=0.5, color=blue)
         ax0.text(b, 0, "$b$", horizontalalignment="center", verticalalignment="top")
         ax0.text(b, rv.pdf(b)/2.5, r"Pr$(\{" + rv_name + r" \leq b \})$    ",
                  horizontalalignment="right", verticalalignment="center")
@@ -326,7 +326,7 @@ def plot_pdf_and_cdf(rv, b=None, a=-np.inf, xlims=None, rv_name="X", title=None)
 
     if b:
         # highlight the point x=b
-        ax1.vlines([b], ymin=0, ymax=rv.cdf(b), linestyle="-", color="blue")
+        ax1.vlines([b], ymin=0, ymax=rv.cdf(b), linestyle="-", color=blue)
         ax1.text(b, 0, "$b$", horizontalalignment="center", verticalalignment="top")
         ax1.text(b, rv.cdf(b), "$(b, F_{" + rv_name + "}(b))$",
                  horizontalalignment="right", verticalalignment="bottom")
