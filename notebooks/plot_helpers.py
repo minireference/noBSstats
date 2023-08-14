@@ -38,7 +38,8 @@ RCPARAMS = {
                    'Century Schoolbook L', 'Utopia', 'ITC Bookman',
                    'Bookman', 'Nimbus Roman No9 L', 'Times New Roman',
                    'Times', 'Charter', 'serif'],
-    'font.family': 'serif',    
+    'font.family': 'serif',
+    # 'text.latex.preamble': r'\usepackage{amsmath}',  # use for more commands
     #     'figure.dpi': 300,
     #     'font.size': 20,
     #     'figure.titlesize': 16,

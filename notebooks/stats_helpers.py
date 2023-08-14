@@ -180,8 +180,8 @@ def tailvalues(valuesH0, obs, alt="two-sided"):
         tails = valuesH0[valuesH0 <= obs]
     elif alt == "two-sided":
         meanH0 = np.mean(valuesH0)
-        dev = abs(obs - meanH0)
-        tails = valuesH0[abs(valuesH0-meanH0) >= dev]
+        obsdev = abs(obs - meanH0)
+        tails = valuesH0[abs(valuesH0-meanH0) >= obsdev]
     return tails
 
 
@@ -197,9 +197,9 @@ def tailprobs(rvH0, obs, alt="two-sided"):
         pvalue = rvH0.cdf(obs)
     elif alt == "two-sided":  # assumes distribution is symmetric
         meanH0 = rvH0.mean()
-        dev = abs(obs - meanH0)
-        pleft = rvH0.cdf(meanH0 - dev)
-        pright = 1 - rvH0.cdf(meanH0 + dev)
+        obsdev = abs(obs - meanH0)
+        pleft = rvH0.cdf(meanH0 - obsdev)
+        pright = 1 - rvH0.cdf(meanH0 + obsdev)
         pvalue = pleft + pright
     return pvalue
 
