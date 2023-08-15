@@ -644,8 +644,7 @@ def plot_samples(samples_df, ax=None, xlims=None, filename=None,
         fig = ax.figure
 
     # 2. Plot the samples as strip plot
-    pal = "dark:b"
-    sns.stripplot(samples_df, orient="h", s=3, palette=pal, ax=ax)
+    sns.stripplot(samples_df, orient="h", s=3, palette=[blue]*N, ax=ax, alpha=0.8, jitter=0)
 
     # 3. Add annotations 
     for i in range(1, N+1):
@@ -709,7 +708,7 @@ def plot_sampling_dist(stats, label=None, xlims=None, ax=None,
     if scatter == "mean":
         sns.scatterplot(x=stats, y=-y_offset, ax=ax, color=orange, marker="D", s=30, alpha=0.1)
     elif scatter == "std":
-        sns.scatterplot(x=[0.0], y=-y_offset, color=orange, marker="D", s=30, alpha=0.9)
+        # sns.scatterplot(x=[0.0], y=-y_offset, color=orange, marker="D", s=30, alpha=0.9)
         sns.scatterplot(x=stats, y=-y_offset, ax=ax, color=orange, marker="|", s=30, alpha=0.1)
 
     # 4. Handle keyword arguments
@@ -859,7 +858,7 @@ def plot_alpha_beta_errors(cohend, ax=None, xlims=None, n=9,
     ax.set_yticks([])
     if show_alt:
         ax.set_xticks([0,CV,muHA])
-        ax.set_xticklabels(["0","CV", "$\Delta$"])        
+        ax.set_xticklabels(["0","CV", "$\Delta$"])
     else:
         ax.set_xticks([0,CV])
         ax.set_xticklabels(["0","CV"])
