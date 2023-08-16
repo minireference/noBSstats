@@ -148,21 +148,6 @@ def ci_dmeans(xsample, ysample, alpha=0.1, method="a"):
                 np.quantile(dmeans_boot, 1-alpha/2)]
 
 
-def boot_ci(sample, estfunc, alpha=0.1, method=None, B=5000):
-    """
-    An adaptor for calling the function `scipy.stats.bootstrap` without the need
-    to specify all all the optional keyword arguments.
-    """
-    res = bootstrap((sample,),
-                    statistic=estfunc,
-                    confidence_level=1-alpha,
-                    n_resamples=B,
-                    vectorized=False,
-                    method=method)
-    return [res.confidence_interval.low,
-            res.confidence_interval.high]
-
-
 
 # TAIL CALCULATION UTILS
 ################################################################################
@@ -180,8 +165,8 @@ def tailvalues(valuesH0, obs, alt="two-sided"):
         tails = valuesH0[valuesH0 <= obs]
     elif alt == "two-sided":
         meanH0 = np.mean(valuesH0)
-        dev = abs(obs - meanH0)
-        tails = valuesH0[abs(valuesH0-meanH0) >= dev]
+        obsdev = abs(obs - meanH0)
+        tails = valuesH0[abs(valuesH0-meanH0) >= obsdev]
     return tails
 
 
@@ -197,9 +182,9 @@ def tailprobs(rvH0, obs, alt="two-sided"):
         pvalue = rvH0.cdf(obs)
     elif alt == "two-sided":  # assumes distribution is symmetric
         meanH0 = rvH0.mean()
-        dev = abs(obs - meanH0)
-        pleft = rvH0.cdf(meanH0 - dev)
-        pright = 1 - rvH0.cdf(meanH0 + dev)
+        obsdev = abs(obs - meanH0)
+        pleft = rvH0.cdf(meanH0 - obsdev)
+        pright = 1 - rvH0.cdf(meanH0 + obsdev)
         pvalue = pleft + pright
     return pvalue
 
@@ -483,6 +468,23 @@ def ttest_paired(sample1, sample2, alt="two-sided"):
 
 # SIMULATION OF CONFIDENCE INTERVAL PROPERTIES
 ################################################################################
+
+
+def boot_ci(sample, estfunc, alpha=0.1, method=None, B=5000):
+    """
+    An adaptor for calling the function `scipy.stats.bootstrap` without the need
+    to specify all all the optional keyword arguments.
+    """
+    res = bootstrap([sample],
+                    statistic=estfunc,
+                    confidence_level=1-alpha,
+                    n_resamples=B,
+                    vectorized=False,
+                    method=method)
+    return [res.confidence_interval.low,
+            res.confidence_interval.high]
+
+
 
 class mixnorms(object):
     """

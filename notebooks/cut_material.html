@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>var tests &#8212; No BS Stats Notebooks</title>
+    <title>Advanced bootstrap methods &#8212; No BS Stats Notebooks</title>
   
   
   
@@ -192,7 +192,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="99_mean_estimation_details.html">Sampling distribution of the mean details</a></li>
 <li class="toctree-l2"><a class="reference internal" href="32_confidence_intervals.html">Section 3.2 — Confidence intervals</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../exercises/exercises_32_confidence_intervals.html">Exercises for Section 3.2 Confidence intervals</a></li>
-<li class="toctree-l2"><a class="reference internal" href="33_intro_to_NHST.html">Section 3.3S — Introduction to hypothesis testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="33_intro_to_NHST.html">Section 3.3 — Introduction to hypothesis testing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="34_analytical_approx.html">Section 3.4 — Hypothesis testing using analytical approximations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="35_two_sample_tests.html">Section 3.5 — Two-sample hypothesis tests</a></li>
 <li class="toctree-l2"><a class="reference internal" href="36_design.html">Section 3.6 — Statistical design and error analysis</a></li>
@@ -457,7 +457,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>var tests</h1>
+    <h1>Advanced bootstrap methods</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -467,7 +467,8 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">var tests</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Advanced bootstrap methods</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#var-tests">var tests</a></li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#computing-two-sample-t-test-p-values-generic">Computing two-sample t-test <span class="math notranslate nohighlight">\(p\)</span>-values (generic)</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pooled-variance-calculations">Pooled variance calculations</a></li>
 </ul>
@@ -615,6 +616,96 @@ document.write(`
 </div>
 </div>
 </div>
+<section id="advanced-bootstrap-methods">
+<h1>Advanced bootstrap methods<a class="headerlink" href="#advanced-bootstrap-methods" title="Permalink to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Parametric boostrap 1: assume normal model for the population</span>
+<span class="n">avars_boot</span> <span class="o">=</span> <span class="n">gen_boot_dist</span><span class="p">(</span><span class="n">asample</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">var</span><span class="p">)</span>
+
+<span class="n">n</span> <span class="o">=</span> <span class="n">asample</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+<span class="n">abar</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">asample</span><span class="p">)</span>
+<span class="n">astd</span> <span class="o">=</span> <span class="n">std</span><span class="p">(</span><span class="n">asample</span><span class="p">)</span>
+<span class="n">rvNS2</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">abar</span><span class="p">,</span> <span class="n">astd</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">stats_helpers</span> <span class="kn">import</span> <span class="n">gen_sampling_dist</span>
+<span class="n">avars_pboot1</span> <span class="o">=</span> <span class="n">gen_sampling_dist</span><span class="p">(</span><span class="n">rvNS2</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">var</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+
+<span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">avars_pboot1</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+
+<span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">avars_pboot1</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span>
+ <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">avars_pboot1</span><span class="p">,</span><span class="mi">95</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">line</span> <span class="mi">2</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="c1"># Parametric boostrap 1: assume normal model for the population</span>
+<span class="ne">----&gt; </span><span class="mi">2</span> <span class="n">avars_boot</span> <span class="o">=</span> <span class="n">gen_boot_dist</span><span class="p">(</span><span class="n">asample</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">var</span><span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="n">n</span> <span class="o">=</span> <span class="n">asample</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="n">abar</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">asample</span><span class="p">)</span>
+
+<span class="ne">NameError</span>: name &#39;gen_boot_dist&#39; is not defined
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Parametric boostrap 2: direct modelling of var using scaled chi-square model</span>
+<span class="c1"># This is a random idea based on Example 4 in cut_material/discovering_estimator_formulas.tex</span>
+<span class="n">avars_boot</span> <span class="o">=</span> <span class="n">gen_boot_dist</span><span class="p">(</span><span class="n">asample</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">var</span><span class="p">)</span>
+
+<span class="n">n</span> <span class="o">=</span> <span class="n">asample</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span>
+<span class="n">scale</span> <span class="o">=</span> <span class="n">var</span><span class="p">(</span><span class="n">asample</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">chi2</span>
+<span class="n">rvS2</span> <span class="o">=</span> <span class="n">chi2</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">scale</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">stats_helpers</span> <span class="kn">import</span> <span class="n">gen_sampling_dist</span>
+<span class="n">avars_pboot2</span> <span class="o">=</span> <span class="n">rvS2</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">5000</span><span class="p">)</span>
+
+<span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">avars_pboot2</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+
+<span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">avars_pboot2</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span>
+ <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">avars_pboot2</span><span class="p">,</span><span class="mi">95</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[212.76908831801552, 511.8854254249474]
+</pre></div>
+</div>
+<img alt="../_images/ccd97c1bbf78e3dfa20830274426b4cc8414bb9ef166727515e5c71519eaf5fb.png" src="../_images/ccd97c1bbf78e3dfa20830274426b4cc8414bb9ef166727515e5c71519eaf5fb.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Basic bootstrap (a.k.a. reversed)</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">bootstrap</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">53</span><span class="p">)</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">bootstrap</span><span class="p">((</span><span class="n">asample</span><span class="p">,),</span> <span class="n">statistic</span><span class="o">=</span><span class="n">var</span><span class="p">,</span>
+                <span class="n">confidence_level</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">n_resamples</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
+                <span class="n">vectorized</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;basic&quot;</span><span class="p">)</span>
+
+<span class="c1"># sns.histplot(res.bootstrap_distribution, bins=30)</span>
+
+<span class="p">[</span><span class="n">res</span><span class="o">.</span><span class="n">confidence_interval</span><span class="o">.</span><span class="n">low</span><span class="p">,</span>
+ <span class="n">res</span><span class="o">.</span><span class="n">confidence_interval</span><span class="o">.</span><span class="n">high</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[211.122988505747, 495.557011494253]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
 <section id="var-tests">
 <h1>var tests<a class="headerlink" href="#var-tests" title="Permalink to this heading">#</a></h1>
 <div class="cell docutils container">
@@ -628,22 +719,6 @@ document.write(`
                 <span class="n">vectorized</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;percentile&quot;</span><span class="p">)</span>
 <span class="p">[</span><span class="n">res</span><span class="o">.</span><span class="n">confidence_interval</span><span class="o">.</span><span class="n">low</span><span class="p">,</span>
  <span class="n">res</span><span class="o">.</span><span class="n">confidence_interval</span><span class="o">.</span><span class="n">high</span><span class="p">]</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">line</span> <span class="mi">5</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">bootstrap</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">53</span><span class="p">)</span>
-<span class="ne">----&gt; </span><span class="mi">5</span> <span class="n">res</span> <span class="o">=</span> <span class="n">bootstrap</span><span class="p">((</span><span class="n">asample</span><span class="p">,),</span> <span class="n">statistic</span><span class="o">=</span><span class="n">var</span><span class="p">,</span>
-<span class="g g-Whitespace">      </span><span class="mi">6</span>                 <span class="n">confidence_level</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">n_resamples</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
-<span class="g g-Whitespace">      </span><span class="mi">7</span>                 <span class="n">vectorized</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;percentile&quot;</span><span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">8</span> <span class="p">[</span><span class="n">res</span><span class="o">.</span><span class="n">confidence_interval</span><span class="o">.</span><span class="n">low</span><span class="p">,</span>
-<span class="g g-Whitespace">      </span><span class="mi">9</span>  <span class="n">res</span><span class="o">.</span><span class="n">confidence_interval</span><span class="o">.</span><span class="n">high</span><span class="p">]</span>
-
-<span class="ne">NameError</span>: name &#39;asample&#39; is not defined
 </pre></div>
 </div>
 </div>
@@ -3309,7 +3384,8 @@ and the current bottling process only produces “up to spec” bottles only …
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">var tests</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Advanced bootstrap methods</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#var-tests">var tests</a></li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#computing-two-sample-t-test-p-values-generic">Computing two-sample t-test <span class="math notranslate nohighlight">\(p\)</span>-values (generic)</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pooled-variance-calculations">Pooled variance calculations</a></li>
 </ul>
@@ -3400,7 +3476,7 @@ By Ivan Savov
     
   <p class="copyright">
     
-      © Copyright 2022.
+      © Copyright 2023.
       <br/>
     
   </p>

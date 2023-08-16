@@ -15,28 +15,31 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
-# ALT1. use the `bootstrap` function from `scipy.stats`
-from scipy.stats import bootstrap
+# Parametric boostrap 1: assume normal model for the population
+avars_boot = gen_boot_dist(asample, estfunc=var)
 
-np.random.seed(53)
-res = bootstrap((asample,), statistic=var,
-                confidence_level=0.9, n_resamples=5000,
-                vectorized=False, method="percentile")
-[res.confidence_interval.low,
- res.confidence_interval.high]
+n = asample.count()
+abar = mean(asample)
+astd = std(asample)
+rvNS2 = norm(abar, astd)
+
+from stats_helpers import gen_sampling_dist
+avars_pboot1 = gen_sampling_dist(rvNS2, estfunc=var, n=n)
+
+sns.histplot(avars_pboot1, bins=30)
+
+[np.percentile(avars_pboot1,5),
+ np.percentile(avars_pboot1,95)]
 ------------------
 
 
 [0;31m---------------------------------------------------------------------------[0m
 [0;31mNameError[0m                                 Traceback (most recent call last)
-Cell [0;32mIn[4], line 5[0m
-[1;32m      2[0m [38;5;28;01mfrom[39;00m [38;5;21;01mscipy[39;00m[38;5;21;01m.[39;00m[38;5;21;01mstats[39;00m [38;5;28;01mimport[39;00m bootstrap
-[1;32m      4[0m np[38;5;241m.[39mrandom[38;5;241m.[39mseed([38;5;241m53[39m)
-[0;32m----> 5[0m res [38;5;241m=[39m bootstrap(([43masample[49m,), statistic[38;5;241m=[39mvar,
-[1;32m      6[0m                 confidence_level[38;5;241m=[39m[38;5;241m0.9[39m, n_resamples[38;5;241m=[39m[38;5;241m5000[39m,
-[1;32m      7[0m                 vectorized[38;5;241m=[39m[38;5;28;01mFalse[39;00m, method[38;5;241m=[39m[38;5;124m"[39m[38;5;124mpercentile[39m[38;5;124m"[39m)
-[1;32m      8[0m [res[38;5;241m.[39mconfidence_interval[38;5;241m.[39mlow,
-[1;32m      9[0m  res[38;5;241m.[39mconfidence_interval[38;5;241m.[39mhigh]
+Cell [0;32mIn[4], line 2[0m
+[1;32m      1[0m [38;5;66;03m# Parametric boostrap 1: assume normal model for the population[39;00m
+[0;32m----> 2[0m avars_boot [38;5;241m=[39m [43mgen_boot_dist[49m(asample, estfunc[38;5;241m=[39mvar)
+[1;32m      4[0m n [38;5;241m=[39m asample[38;5;241m.[39mcount()
+[1;32m      5[0m abar [38;5;241m=[39m mean(asample)
 
-[0;31mNameError[0m: name 'asample' is not defined
+[0;31mNameError[0m: name 'gen_boot_dist' is not defined
 

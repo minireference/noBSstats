@@ -192,7 +192,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/99_mean_estimation_details.html">Sampling distribution of the mean details</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/32_confidence_intervals.html">Section 3.2 — Confidence intervals</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../exercises/exercises_32_confidence_intervals.html">Exercises for Section 3.2 Confidence intervals</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../notebooks/33_intro_to_NHST.html">Section 3.3S — Introduction to hypothesis testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/33_intro_to_NHST.html">Section 3.3 — Introduction to hypothesis testing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/34_analytical_approx.html">Section 3.4 — Hypothesis testing using analytical approximations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/35_two_sample_tests.html">Section 3.5 — Two-sample hypothesis tests</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/36_design.html">Section 3.6 — Statistical design and error analysis</a></li>
@@ -470,6 +470,8 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebook-setup">Notebook setup</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-nn-alt-t-test-for-the-mean-of-batch-04-example-1bt">Problem NN: alt t-test for the mean of Batch 04 (Example 1BT)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-nn-alt-t-test-for-the-mean-of-batch-01-example-2bt">Problem NN: alt t-test for the mean of Batch 01 (Example 2BT)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-nn-simulation-test-of-mean">Problem NN: simulation test of mean</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-nn-simulation-test-of-var">Problem NN: simulation test of var</a></li>
 </ul>
             </nav>
         </div>
@@ -681,6 +683,133 @@ so our decision is to reject <span class="math notranslate nohighlight">\(H_0\)<
 <p>The <span class="math notranslate nohighlight">\(p\)</span>-value is very large,
 so we have no reason to reject <span class="math notranslate nohighlight">\(H_0\)</span>.</p>
 </section>
+<section id="problem-nn-simulation-test-of-mean">
+<h2>Problem NN: simulation test of mean<a class="headerlink" href="#problem-nn-simulation-test-of-mean" title="Permalink to this heading">#</a></h2>
+<p>Let’s write a reusable function for performing the simulation test for the mean.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#######################################################</span>
+
+<span class="k">def</span> <span class="nf">simulation_test_mean</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">mu0</span><span class="p">,</span> <span class="n">sigma0</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">10000</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the p-value of the observed mean of `sample`</span>
+<span class="sd">    under H0 of a normal distribution `norm(mu0,sigma0)`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Compute the observed value of the mean</span>
+    <span class="n">obsmean</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+
+    <span class="c1"># Obtain the sampling dist. of the mean under H0</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+    <span class="n">rvXH0</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">mu0</span><span class="p">,</span> <span class="n">sigma0</span><span class="p">)</span>
+    <span class="n">xbars</span> <span class="o">=</span> <span class="n">gen_sampling_dist</span><span class="p">(</span><span class="n">rvXH0</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">mean</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+
+    <span class="c1"># Compute the p-value</span>
+    <span class="c1"># tails = tailvalues(xbars, obsmean)</span>
+    <span class="n">dev</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">obsmean</span> <span class="o">-</span> <span class="n">mu0</span><span class="p">)</span>
+    <span class="n">tails</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">xbars</span> <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">v</span><span class="o">-</span><span class="n">muK0</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">dev</span><span class="p">]</span>
+    <span class="n">pvalue</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tails</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">xbars</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pvalue</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## TEST 1 (Do we get the same answer for Batch 04?)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">simulation_test_mean</span><span class="p">(</span><span class="n">ksample04</span><span class="p">,</span> <span class="n">mu0</span><span class="o">=</span><span class="n">muK0</span><span class="p">,</span> <span class="n">sigma0</span><span class="o">=</span><span class="n">sigmaK0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">15</span><span class="p">],</span> <span class="n">line</span> <span class="mi">3</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="c1">## TEST 1 (Do we get the same answer for Batch 04?)</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="ne">----&gt; </span><span class="mi">3</span> <span class="n">simulation_test_mean</span><span class="p">(</span><span class="n">ksample04</span><span class="p">,</span> <span class="n">mu0</span><span class="o">=</span><span class="n">muK0</span><span class="p">,</span> <span class="n">sigma0</span><span class="o">=</span><span class="n">sigmaK0</span><span class="p">)</span>
+
+<span class="ne">NameError</span>: name &#39;sigmaK0&#39; is not defined
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## TEST 2 (Do we get the same answer for Batch 01?)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">simulation_test_mean</span><span class="p">(</span><span class="n">ksample01</span><span class="p">,</span> <span class="n">mu0</span><span class="o">=</span><span class="n">muK0</span><span class="p">,</span> <span class="n">sigma0</span><span class="o">=</span><span class="n">sigmaK0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.5711
+</pre></div>
+</div>
+</div>
+</div>
+<p>We have confirmed the function <code class="docutils literal notranslate"><span class="pre">simulation_test_mean</span></code> works as expected.
+We’ve added it to <code class="docutils literal notranslate"><span class="pre">stats_helpers</span></code> module so we can reuse it later.</p>
+</section>
+<section id="problem-nn-simulation-test-of-var">
+<h2>Problem NN: simulation test of var<a class="headerlink" href="#problem-nn-simulation-test-of-var" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#######################################################</span>
+
+<span class="k">def</span> <span class="nf">simulation_test_var</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">mu0</span><span class="p">,</span> <span class="n">sigma0</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;greater&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the p-value of the observed variance of `sample`</span>
+<span class="sd">    under H0 of a normal distribution `norm(mu0,sigma0)`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># 1. Compute the sample variance</span>
+    <span class="n">obsvar</span> <span class="o">=</span> <span class="n">var</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+
+    <span class="c1"># 2. Get sampling distribution of variance under H0</span>
+    <span class="n">rvXH0</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">mu0</span><span class="p">,</span> <span class="n">sigma0</span><span class="p">)</span>
+    <span class="n">xvars</span> <span class="o">=</span> <span class="n">gen_sampling_dist</span><span class="p">(</span><span class="n">rvXH0</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">var</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+
+    <span class="c1"># 3. Compute the p-value</span>
+    <span class="n">tails</span> <span class="o">=</span> <span class="p">[</span><span class="n">xvar</span> <span class="k">for</span> <span class="n">xvar</span> <span class="ow">in</span> <span class="n">xvars</span> <span class="k">if</span> <span class="n">xvar</span> <span class="o">&gt;=</span> <span class="n">obsvar</span><span class="p">]</span>
+    <span class="n">pvalue</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tails</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">xvars</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pvalue</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># reproduce the results from Example 3</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">simulation_test_var</span><span class="p">(</span><span class="n">ksample02</span><span class="p">,</span> <span class="n">muK0</span><span class="p">,</span> <span class="n">sigmaK0</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;greater&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.2132
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># reproduce the results from Example 4</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">43</span><span class="p">)</span>
+<span class="n">simulation_test_var</span><span class="p">(</span><span class="n">ksample08</span><span class="p">,</span> <span class="n">muK0</span><span class="p">,</span> <span class="n">sigmaK0</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;greater&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.0041
+</pre></div>
+</div>
+</div>
+</div>
+<p>We confirm the function <code class="docutils literal notranslate"><span class="pre">simulation_test_var</span></code> gives the same <span class="math notranslate nohighlight">\(p\)</span>-values as the two samples
+we calculated manually above,
+so we can be confident it is working as expected.</p>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -735,6 +864,8 @@ so we have no reason to reject <span class="math notranslate nohighlight">\(H_0\
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebook-setup">Notebook setup</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-nn-alt-t-test-for-the-mean-of-batch-04-example-1bt">Problem NN: alt t-test for the mean of Batch 04 (Example 1BT)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-nn-alt-t-test-for-the-mean-of-batch-01-example-2bt">Problem NN: alt t-test for the mean of Batch 01 (Example 2BT)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-nn-simulation-test-of-mean">Problem NN: simulation test of mean</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-nn-simulation-test-of-var">Problem NN: simulation test of var</a></li>
 </ul>
   </nav></div>
 
@@ -758,7 +889,7 @@ By Ivan Savov
     
   <p class="copyright">
     
-      © Copyright 2022.
+      © Copyright 2023.
       <br/>
     
   </p>
