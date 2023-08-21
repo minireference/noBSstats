@@ -91,8 +91,9 @@ def gen_boot_dist(sample, estfunc, B=5000):
 
 def ci_mean(sample, alpha=0.1, method="a"):
     """
-    Compute the confidence interval for the population mean.
-    - method "a" will computes analytical approximation based on Student's t-dist
+    Compute confidence interval for the population mean.
+    - method="a" analytical approx. based on Student's t-dist
+    - method="b" approx. based on bootstrap estimation
     """
     assert method in ["a", "b"]
     if method == "a":        # analytical approximation
@@ -100,8 +101,8 @@ def ci_mean(sample, alpha=0.1, method="a"):
         n = len(sample)
         xbar = np.mean(sample)
         sehat = np.std(sample, ddof=1) / np.sqrt(n)
-        t_l = tdist.ppf(alpha/2, df=n-1)
-        t_u = tdist.ppf(1-alpha/2, df=n-1)
+        t_l = tdist(df=n-1).ppf(alpha/2)
+        t_u = tdist(df=n-1).ppf(1-alpha/2)
         return [xbar + t_l*sehat, xbar + t_u*sehat]
     elif method == "b":          # bootstrap estimation
         xbars_boot = gen_boot_dist(sample, estfunc=mean)
@@ -111,14 +112,16 @@ def ci_mean(sample, alpha=0.1, method="a"):
 
 def ci_var(sample, alpha=0.1, method="a"):
     """
-    Compute the confidence interval for the population variance.
+    Compute confidence interval for the population variance.
+    - method="a" analytical approx. based on chi-squared dist
+    - method="b" approx. based on bootstrap estimation
     """
     assert method in ["a", "b"]
     if method == "a":        # analytical approximation
         n = len(sample)
         s2 = np.var(sample, ddof=1)
-        q_l = chi2.ppf(alpha/2, df=n-1)
-        q_u = chi2.ppf(1-alpha/2, df=n-1)
+        q_l = chi2(df=n-1).ppf(alpha/2)
+        q_u = chi2(df=n-1).ppf(1-alpha/2)
         return [(n-1)*s2/q_u, (n-1)*s2/q_l]
     elif method == "b":          # bootstrap estimation
         vars_boot = gen_boot_dist(sample, estfunc=var)
@@ -128,7 +131,9 @@ def ci_var(sample, alpha=0.1, method="a"):
 
 def ci_dmeans(xsample, ysample, alpha=0.1, method="a"):
     """
-    Compute the confidence interval for the difference between population means.
+    Compute confidence interval for the difference between population means.
+    - method="a" analytical approx. based on Student's t-dist
+    - method="b" approx. based on bootstrap estimation
     """
     assert method in ["a", "b"]
     if method == "a":        # analytical approximation
@@ -136,9 +141,9 @@ def ci_dmeans(xsample, ysample, alpha=0.1, method="a"):
         stdY, m = np.std(ysample, ddof=1), len(ysample)
         dhat = np.mean(xsample) - np.mean(ysample)
         seD = np.sqrt(stdX**2/n + stdY**2/m)
-        df = calcdf(stdX, n, stdY, m)
-        t_l = tdist.ppf(alpha/2, df=df)
-        t_u = tdist.ppf(1-alpha/2, df=df)
+        dfD = calcdf(stdX, n, stdY, m)
+        t_l = tdist(df=dfD).ppf(alpha/2)
+        t_u = tdist(df=dfD).ppf(1-alpha/2)
         return [dhat + t_l*seD, dhat + t_u*seD]
     elif method == "b":          # bootstrap estimation
         xbars_boot = gen_boot_dist(xsample, np.mean)
@@ -215,8 +220,7 @@ def chi2test_var(sample, sigma0, alt="greater"):
     n = len(sample)
     s2 = np.var(sample, ddof=1)
     obschi2 = (n - 1) * s2 / sigma0**2
-    df = n - 1
-    rvX2 = chi2(df)
+    rvX2 = chi2(df=n-1)
     pvalue = tailprobs(rvX2, obschi2, alt=alt)
     return pvalue
 
@@ -410,7 +414,7 @@ def ttest_mean(sample, mu0, alt="two-sided"):
     std = np.std(sample, ddof=1)
     sehat = std / np.sqrt(n)
     obst = (obsmean - mu0) / sehat
-    rvT = tdist(n-1)
+    rvT = tdist(df=n-1)
     pvalue = tailprobs(rvT, obst, alt=alt)
     return pvalue
 
@@ -432,15 +436,15 @@ def ttest_dmeans(xsample, ysample, equal_var=False, alt="two-sided"):
     if not equal_var:  # Welch's t-test (default)
         seD = np.sqrt(sx**2/n + sy**2/m)
         obst = (obsdhat - 0) / seD
-        df = calcdf(sx, n, sy, m)
-        rvT0 = tdist(df)
+        dfD = calcdf(sx, n, sy, m)
+        rvT0 = tdist(df=dfD)
     else:              # Use pooled variance
         varp = ((n-1)*sx**2 + (m-1)*sy**2) / (n+m-2)
         stdp = np.sqrt(varp)
         seDp = stdp * np.sqrt(1/n + 1/m)
         obst = (obsdhat - 0) / seDp
         dfp = n + m - 2
-        rvT0 = tdist(dfp)
+        rvT0 = tdist(df=dfp)
 
     # Calculate the p-value from the t-distribution
     pvalue = tailprobs(rvT0, obst, alt=alt)
@@ -459,8 +463,7 @@ def ttest_paired(sample1, sample2, alt="two-sided"):
     meand  = np.mean(ds)
     se = std / np.sqrt(n)
     obst = (meand - 0) / se
-    df = n - 1
-    rvT = tdist(df)
+    rvT = tdist(df=n-1)
     pvalue = tailprobs(rvT, obst, alt=alt)
     return pvalue
 
