@@ -15,31 +15,45 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
-# Parametric boostrap 1: assume normal model for the population
-avars_boot = gen_boot_dist(asample, estfunc=var)
+np.random.seed(42)
+pval = ttest_ind(pricesW, pricesE, permutations=10000).pvalue
+print("expected", pval)
 
-n = asample.count()
-abar = mean(asample)
-astd = std(asample)
-rvNS2 = norm(abar, astd)
+# PERMUTATION T-TEST MANUAL VERIFICATION
+np.random.seed(42)
 
-from stats_helpers import gen_sampling_dist
-avars_pboot1 = gen_sampling_dist(rvNS2, estfunc=var, n=n)
+nW, nE = len(pricesW), len(pricesE)
+stdW, stdE = std(pricesW), std(pricesE)
+seD = np.sqrt(stdW**2/nW + stdE**2/nE)
+dprice = dmeans(pricesW, pricesE)
+obst = (dprice - 0) / seD
 
-sns.histplot(avars_pboot1, bins=30)
+# 2. Obtain the sampling distribution under H0
+P = 10000
+pts0 = []
+for i in range(0, P):
+    ps1, ps2 = resample_under_H0(pricesW, pricesE)
+    std1, std2 = std(ps1), std(ps2)
+    pseD = np.sqrt(std1**2/nW + std2**2/nE)
+    pdprice = dmeans(ps1, ps2)
+    pt0 = (pdprice - 0) / pseD
+    pts0.append(pt0)
 
-[np.percentile(avars_pboot1,5),
- np.percentile(avars_pboot1,95)]
+tails = tailvalues(pts0, obst)
+pvalue_ttest = len(tails) / len(pdhats0)
+pvalue_ttest
+
+
 ------------------
 
 
 [0;31m---------------------------------------------------------------------------[0m
 [0;31mNameError[0m                                 Traceback (most recent call last)
 Cell [0;32mIn[4], line 2[0m
-[1;32m      1[0m [38;5;66;03m# Parametric boostrap 1: assume normal model for the population[39;00m
-[0;32m----> 2[0m avars_boot [38;5;241m=[39m [43mgen_boot_dist[49m(asample, estfunc[38;5;241m=[39mvar)
-[1;32m      4[0m n [38;5;241m=[39m asample[38;5;241m.[39mcount()
-[1;32m      5[0m abar [38;5;241m=[39m mean(asample)
+[1;32m      1[0m np[38;5;241m.[39mrandom[38;5;241m.[39mseed([38;5;241m42[39m)
+[0;32m----> 2[0m pval [38;5;241m=[39m [43mttest_ind[49m(pricesW, pricesE, permutations[38;5;241m=[39m[38;5;241m10000[39m)[38;5;241m.[39mpvalue
+[1;32m      3[0m [38;5;28mprint[39m([38;5;124m"[39m[38;5;124mexpected[39m[38;5;124m"[39m, pval)
+[1;32m      5[0m [38;5;66;03m# PERMUTATION T-TEST MANUAL VERIFICATION[39;00m
 
-[0;31mNameError[0m: name 'gen_boot_dist' is not defined
+[0;31mNameError[0m: name 'ttest_ind' is not defined
 
