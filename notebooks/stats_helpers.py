@@ -113,7 +113,7 @@ def ci_mean(sample, alpha=0.1, method="a"):
 def ci_var(sample, alpha=0.1, method="a"):
     """
     Compute confidence interval for the population variance.
-    - method="a" analytical approx. based on chi-squared dist
+    - method="a" analytical approx. based on chi-square dist
     - method="b" approx. based on bootstrap estimation
     """
     assert method in ["a", "b"]
