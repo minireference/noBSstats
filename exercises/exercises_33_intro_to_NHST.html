@@ -193,6 +193,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/34_analytical_approx.html">Section 3.4 — Hypothesis testing using analytical approximations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/35_two_sample_tests.html">Section 3.5 — Two-sample hypothesis tests</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/36_design.html">Section 3.6 — Statistical design and error analysis</a></li>
+
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../notebooks/40_LINEAR_MODELS.html">Chapter 4 — Linear models</a></li>
@@ -468,7 +469,6 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estimator-functions-defined-in-section-3-1">Estimator functions defined in Section 3.1</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mean-test-on-batch-05-estimated-variance">Mean test on batch 05 (estimated variance)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sleep-scores">Sleep scores</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cohen-s-d-via-bootstrap">Cohen’s d via bootstrap</a></li>
 </ul>
 </li>
@@ -617,73 +617,6 @@ Name: volume, dtype: float64
 </div>
 </div>
 </section>
-<section id="sleep-scores">
-<h3>Sleep scores<a class="headerlink" href="#sleep-scores" title="Permalink to this heading">#</a></h3>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">doctors</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/doctors.csv&quot;</span><span class="p">)</span>
-<span class="n">scoresU</span> <span class="o">=</span> <span class="n">doctors</span><span class="p">[</span><span class="n">doctors</span><span class="p">[</span><span class="s2">&quot;location&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;urban&quot;</span><span class="p">][</span><span class="s2">&quot;score&quot;</span><span class="p">]</span>
-<span class="n">scoresR</span> <span class="o">=</span> <span class="n">doctors</span><span class="p">[</span><span class="n">doctors</span><span class="p">[</span><span class="s2">&quot;location&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;rural&quot;</span><span class="p">][</span><span class="s2">&quot;score&quot;</span><span class="p">]</span>
-
-<span class="c1"># observed difference between means</span>
-<span class="n">dhat</span> <span class="o">=</span> <span class="n">dmeans</span><span class="p">(</span><span class="n">scoresR</span><span class="p">,</span> <span class="n">scoresU</span><span class="p">)</span>
-<span class="n">dhat</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.2236048265460084
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pstats</span><span class="p">,</span> <span class="n">pvalue</span> <span class="o">=</span> <span class="n">permutation_test</span><span class="p">(</span><span class="n">scoresR</span><span class="p">,</span> <span class="n">scoresU</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">dmeans</span><span class="p">)</span>
-<span class="n">pvalue</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.0132
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># plot the sampling distribution in blue</span>
-<span class="n">bins</span> <span class="o">=</span> <span class="n">nicebins</span><span class="p">(</span><span class="n">dstats</span><span class="p">,</span> <span class="n">dhat</span><span class="p">)</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">pstats</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">)</span>
-
-<span class="c1"># plot red line for the observed statistic</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">dhat</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
-
-<span class="c1"># plot the values that are equal or more extreme in red</span>
-<span class="n">tails</span> <span class="o">=</span> <span class="n">tailvalues</span><span class="p">(</span><span class="n">pstats</span><span class="p">,</span> <span class="n">dhat</span><span class="p">)</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">tails</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../_images/43a52470702119abb63ff3f25514db15e3740dee89dd756c140698014b1a8c55.png" src="../_images/43a52470702119abb63ff3f25514db15e3740dee89dd756c140698014b1a8c55.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ALT. use the ttest_ind with permutations argument</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">ttest_ind</span>
-<span class="n">ttest_ind</span><span class="p">(</span><span class="n">scoresR</span><span class="p">,</span> <span class="n">scoresU</span><span class="p">,</span> <span class="n">permutations</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span><span class="o">.</span><span class="n">pvalue</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.013098690130986902
-</pre></div>
-</div>
-</div>
-</div>
-</section>
 <section id="cohen-s-d-via-bootstrap">
 <h3>Cohen’s d via bootstrap<a class="headerlink" href="#cohen-s-d-via-bootstrap" title="Permalink to this heading">#</a></h3>
 </section>
@@ -743,7 +676,6 @@ Name: volume, dtype: float64
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estimator-functions-defined-in-section-3-1">Estimator functions defined in Section 3.1</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mean-test-on-batch-05-estimated-variance">Mean test on batch 05 (estimated variance)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sleep-scores">Sleep scores</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cohen-s-d-via-bootstrap">Cohen’s d via bootstrap</a></li>
 </ul>
 </li>

@@ -197,6 +197,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="34_analytical_approx.html">Section 3.4 — Hypothesis testing using analytical approximations</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Section 3.5 — Two-sample hypothesis tests</a></li>
 <li class="toctree-l2"><a class="reference internal" href="36_design.html">Section 3.6 — Statistical design and error analysis</a></li>
+
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="40_LINEAR_MODELS.html">Chapter 4 — Linear models</a></li>
@@ -516,10 +517,7 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comparison-to-resampling-methods">Comparison to resampling methods</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#e3-x-pooled-variance">E3.X Pooled variance</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#links">Links</a></li>
 </ul>
             </nav>
@@ -1088,7 +1086,7 @@ that should contain the difference between group means <span class="math notrans
         <span class="n">pdhats0</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pdhat0</span><span class="p">)</span>
 
     <span class="c1"># 3. Compute the p-value</span>
-    <span class="n">tails</span> <span class="o">=</span> <span class="n">tailvalues</span><span class="p">(</span><span class="n">pdhats0</span><span class="p">,</span> <span class="n">obsdhat</span><span class="p">)</span>
+    <span class="n">tails</span> <span class="o">=</span> <span class="n">tailvalues</span><span class="p">(</span><span class="n">pdhats0</span><span class="p">,</span> <span class="n">obsdhat</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;two-sided&quot;</span><span class="p">)</span>
     <span class="n">pvalue</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tails</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">pdhats0</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">pvalue</span>
 </pre></div>
@@ -1260,7 +1258,9 @@ that should contain the difference between group means <span class="math notrans
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/two_sample_tests/hist_p-value_dmeans_students.pdf
-Saved figure to figures/stats/two_sample_tests/hist_p-value_dmeans_students.png
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/two_sample_tests/hist_p-value_dmeans_students.png
 </pre></div>
 </div>
 <img alt="../_images/8519c20895d1246c2fa633c7c7d63a18c5d730eacfe2626591a48092b716299b.png" src="../_images/8519c20895d1246c2fa633c7c7d63a18c5d730eacfe2626591a48092b716299b.png" />
@@ -1883,8 +1883,8 @@ because we use randomness as part of the calculation.</p>
     <span class="c1"># calculate the pooled variance and std</span>
     <span class="n">var_pooled</span> <span class="o">=</span> <span class="p">((</span><span class="n">n1</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">var1</span><span class="o">+</span><span class="p">(</span><span class="n">n2</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">var2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">n1</span><span class="o">+</span><span class="n">n2</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
     <span class="n">std_pooled</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">var_pooled</span><span class="p">)</span>
-    <span class="n">cohend</span> <span class="o">=</span> <span class="p">(</span><span class="n">mean1</span> <span class="o">-</span> <span class="n">mean2</span><span class="p">)</span> <span class="o">/</span> <span class="n">std_pooled</span>
-    <span class="k">return</span> <span class="n">cohend</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="p">(</span><span class="n">mean1</span> <span class="o">-</span> <span class="n">mean2</span><span class="p">)</span> <span class="o">/</span> <span class="n">std_pooled</span>
+    <span class="k">return</span> <span class="n">d</span>
 </pre></div>
 </div>
 </div>
@@ -1934,26 +1934,7 @@ because we use randomness as part of the calculation.</p>
 </section>
 <section id="exercises">
 <h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this heading">#</a></h2>
-<section id="e3-x-pooled-variance">
-<h3>E3.X Pooled variance<a class="headerlink" href="#e3-x-pooled-variance" title="Permalink to this heading">#</a></h3>
-<p>Redo Example 6T but this time run the two-sample <span class="math notranslate nohighlight">\(t\)</span>-test with pooled variance.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">students</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/students.csv&quot;</span><span class="p">)</span>
-<span class="n">scoresD</span> <span class="o">=</span> <span class="n">students</span><span class="p">[</span><span class="n">students</span><span class="p">[</span><span class="s2">&quot;curriculum&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;debate&quot;</span><span class="p">][</span><span class="s2">&quot;score&quot;</span><span class="p">]</span>
-<span class="n">scoresL</span> <span class="o">=</span> <span class="n">students</span><span class="p">[</span><span class="n">students</span><span class="p">[</span><span class="s2">&quot;curriculum&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;lecture&quot;</span><span class="p">][</span><span class="s2">&quot;score&quot;</span><span class="p">]</span>
-<span class="n">res</span> <span class="o">=</span> <span class="n">ttest_ind</span><span class="p">(</span><span class="n">scoresD</span><span class="p">,</span> <span class="n">scoresL</span><span class="p">,</span> <span class="n">equal_var</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">res</span><span class="o">.</span><span class="n">pvalue</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.10917234443214315
-</pre></div>
-</div>
-</div>
-</div>
-</section>
+<p>See notebook <a class="reference internal" href="../exercises/exercises_35_two_sample_tests.html"><span class="doc std std-doc">exercises_35_two_sample_tests.ipynb</span></a>.</p>
 </section>
 <section id="links">
 <h2>Links<a class="headerlink" href="#links" title="Permalink to this heading">#</a></h2>
@@ -2080,10 +2061,7 @@ via <a class="reference external" href="https://en.wikipedia.org/wiki/Permutatio
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comparison-to-resampling-methods">Comparison to resampling methods</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#e3-x-pooled-variance">E3.X Pooled variance</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#links">Links</a></li>
 </ul>
   </nav></div>
