@@ -216,8 +216,6 @@ const thebe_selector_output = ".output, .cell_output"
 
 
 
-
-
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/pandas_tutorial.html">Appendix D — Pandas tutorial</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/seaborn_tutorial.html">Appendix E — Seaborn tutorial</a></li>
 
@@ -480,17 +478,18 @@ document.write(`
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-logic-of-hypothesis-testing">The logic of hypothesis testing</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#overview-of-the-hypothesis-testing-procedure">Overview of the hypothesis testing procedure</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpreting-the-result-of-a-hypothesis-test-optional">Interpreting the result of a hypothesis test (optional)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#court-trial-analogy">Court trial analogy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpreting-the-result-of-a-hypothesis-test">Interpreting the result of a hypothesis test</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#effect-size-estimates">Effect size estimates</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simulation-tests">Simulation tests</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#test-for-the-mean">Test for the mean</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kombucha-bottling-process">Kombucha bottling process</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#distribution-under-the-null">Distribution under the null</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#computer-model-for-the-kombucha-volumes-under-h-0">Computer model for the kombucha volumes under <span class="math notranslate nohighlight">\(H_0\)</span></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sampling-distribution-of-the-mean-under-the-null">Sampling distribution of the mean under the null</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1s-test-for-the-mean-of-batch-04">Example 1S: test for the mean of Batch 04</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#sampling-distribution-under-the-null-hypothesis">Sampling distribution under the null hypothesis</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#sampling-distribution-of-the-mean-under-the-null-hypothesis">Sampling distribution of the mean under the null hypothesis</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Effect size estimates</a></li>
 </ul>
 </li>
@@ -507,7 +506,6 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanations">Explanations</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#court-trial-analogy">Court trial analogy</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-sided-and-two-sided-tests">One-sided and two-sided tests</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-the-tails-of-a-distribution">Selecting the tails of a distribution</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#one-sided-p-value-calculation-example">One-sided <span class="math notranslate nohighlight">\(p\)</span>-value calculation example</a></li>
@@ -539,11 +537,7 @@ document.write(`
 <p>This notebook contains the code examples from <span class="xref myst"><strong>Section 3.3 Introduction to hypothesis testing</strong></span> of the <strong>No Bullshit Guide to Statistics</strong>.</p>
 <p>I highly recommend that you use the notebook interactively.
 I’ve intentionally left empty code cells throughout the notebook,
-which you can use to try some commands on your own.
-For example,
-you can copy-paste some of the commands in previous cells,
-modify them and run to see what happens.
-Try to break things.</p>
+which you can use to try some commands on your own.</p>
 <section id="notebook-setup">
 <h2>Notebook setup<a class="headerlink" href="#notebook-setup" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
@@ -562,7 +556,6 @@ Try to break things.</p>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot helper functions</span>
 <span class="kn">from</span> <span class="nn">plot_helpers</span> <span class="kn">import</span> <span class="n">nicebins</span>
-<span class="kn">from</span> <span class="nn">plot_helpers</span> <span class="kn">import</span> <span class="n">plot_pdf</span>
 <span class="kn">from</span> <span class="nn">plot_helpers</span> <span class="kn">import</span> <span class="n">savefigure</span>
 </pre></div>
 </div>
@@ -634,9 +627,8 @@ Try to break things.</p>
 <h2>What is hypothesis testing?<a class="headerlink" href="#what-is-hypothesis-testing" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
 <li><p>An approach to formulating research questions as <strong>yes-no decisions</strong> and a <strong>procedure for making these decisions</strong>.</p></li>
-<li><p>Hypothesis testing is a standardized procedure for doing statistical analysis<br />
+<li><p>Hypothesis testing is a standardized procedure for doing statistical analysis
 (also uses stats jargon that makes everything look more convincing ;)</p></li>
-<li><p>NEW CONCEPT:</p></li>
 </ul>
 </section>
 <section id="definitions">
@@ -674,7 +666,7 @@ Try to break things.</p>
 </section>
 <section id="the-p-value">
 <h3>The p-value<a class="headerlink" href="#the-p-value" title="Permalink to this heading">#</a></h3>
-<p>the <span class="math notranslate nohighlight">\(p\)</span>-value is the probability of observing statistic (or more extreme) under the null hypothesis.</p>
+<p>The <span class="math notranslate nohighlight">\(p\)</span>-value is the probability of observing statistic (or more extreme) under the null hypothesis.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">thetas0</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">]</span>
@@ -715,43 +707,48 @@ form the parameter <span class="math notranslate nohighlight">\(\theta_0 = \tt{t
 <li><p><strong>outputs</strong>: a decision that is one of: “reject the null hypothesis” or “fail to reject the null hypothesis”</p></li>
 </ul>
 <p><img alt="hypothesis testing overview" src="../_images/intro_to_hypothesis_testing.png" /></p>
-<p>In this notebook, we’ll look at two different approaches for computing the sampling distributions:
-simulations and analytical approximations.</p>
+<p>In this notebook, we’ll use simulation to obtain the sampling distributions of the test statistic under the null hypothesis.</p>
 </section>
-<section id="interpreting-the-result-of-a-hypothesis-test-optional">
-<h3>Interpreting the result of a hypothesis test (optional)<a class="headerlink" href="#interpreting-the-result-of-a-hypothesis-test-optional" title="Permalink to this heading">#</a></h3>
+<section id="court-trial-analogy">
+<h3>Court trial analogy<a class="headerlink" href="#court-trial-analogy" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
-<li><p>The implication of rejecting the null hypothesis is that there must be a difference between the observed sample and the theoretical model.</p>
+<li><p>defendant innocent &lt;-&gt; null hypothesis</p></li>
+<li><p>found guilty &lt;-&gt; reject null</p></li>
+<li><p>acquitted &lt;-&gt; fail to reject the null</p></li>
+</ul>
+</section>
+<section id="interpreting-the-result-of-a-hypothesis-test">
+<h3>Interpreting the result of a hypothesis test<a class="headerlink" href="#interpreting-the-result-of-a-hypothesis-test" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>The implication of rejecting the null hypothesis is that there must be a difference between
+the population from which the sample was taken <span class="math notranslate nohighlight">\(X \sim \mathcal{N}(\mu,\sigma)\)</span>
+and the theoretical model <span class="math notranslate nohighlight">\(X_0 \sim \mathcal{N}(\mu_{X_0},\sigma_{X_0})\)</span>.</p>
 <ul>
-<li><p>Note that rejecting null hypothesis (<span class="math notranslate nohighlight">\(H_0\)</span>) is not the same as “proving” the alternative hypothesis (<span class="math notranslate nohighlight">\(H_A\)</span>);
-we have just shown that the data is unlikely under the null hypothesis.
-The conclusion is that it’s worth looking for <em>some</em> alternative hypothesis.</p></li>
+<li><p>Note that rejecting null hypothesis <span class="math notranslate nohighlight">\(H_0\)</span> is not the same as “proving” the alternative hypothesis <span class="math notranslate nohighlight">\(H_A\)</span> is true;
+we have just shown that the data is unlikely to occur by chance under the null hypothesis.</p></li>
 <li><p>Using statistics jargon, when we reject the hypothesis <span class="math notranslate nohighlight">\(H_0\)</span> we say we’ve observed a “statistically significant” result,
 which sounds a lot more impressive than it actually is.
-The null hypothesis testing procedure is used to just rule out “occurred by chance” scenario,
-which is a very basic sanity check.</p></li>
+The hypothesis testing procedure is just a simple check we perform to rule out the “occurred by chance” possibility.</p></li>
 </ul>
 </li>
-<li><p>The implication of failing to reject the null hypothesis is that the observed sample is “not significant,” meaning it could have occurred by chance,
-so there is no need to search for an alternative hypothesis.</p>
-<ul>
-<li><p>Note that “failing to reject” is not the same as “proving” the null hypothesis.</p></li>
-</ul>
-</li>
+<li><p>The implication of failing to reject the null hypothesis is that the observed sample could have occurred by chance under <span class="math notranslate nohighlight">\(H_0\)</span>,
+so there is no need to search for an alternative hypothesis.
+Note that “failing to reject <span class="math notranslate nohighlight">\(H_0\)</span>” is not the same as “proving” the null hypothesis.</p></li>
 </ul>
 <p>I know all this sounds super complicated and roundabout (an it is!),
 but you will get a hang of it with practice.</p>
 </section>
 <section id="effect-size-estimates">
 <h3>Effect size estimates<a class="headerlink" href="#effect-size-estimates" title="Permalink to this heading">#</a></h3>
-<p>The <strong>effect size</strong> <span class="math notranslate nohighlight">\(\Delta\)</span> describes the <em>magnitude</em> of the deviation of the observed statistic
+<p>The <strong>effect size</strong> <span class="math notranslate nohighlight">\(\Delta\)</span> measures the <em>magnitude</em> of the deviation of the observed statistic
 from the expected theoretical value.
 For example,
 in a test that compare the sample mean <span class="math notranslate nohighlight">\(\overline{\mathbf{x}}\)</span> to a theoretical mean <span class="math notranslate nohighlight">\(\mu_{X_0}\)</span>,
-the effect size estimate can be obtain from <span class="math notranslate nohighlight">\(\widehat{\Delta} = \overline{\mathbf{x}} - \mu_{X_0}\)</span>.</p>
+we can use <span class="math notranslate nohighlight">\(\Delta = \mu - \mu_{X_0}\)</span> to measure the deviation of the unknown mean <span class="math notranslate nohighlight">\(\mu\)</span> from the theoretical mean <span class="math notranslate nohighlight">\(\mu_{X_0}\)</span>.
+We can obtain an effect size estimate by computing <span class="math notranslate nohighlight">\(\widehat{\Delta} = \overline{\mathbf{x}} - \mu_{X_0}\)</span>.</p>
 <p>Another way to report effect size is to construct a <strong>confidence interval</strong>,
 which takes into account the variability of the data.
-The confidence interval that tells us a range of values where we believe the true value of <span class="math notranslate nohighlight">\(\Delta\)</span> falls.
+A confidence interval tells us a range of values where we believe the true value of <span class="math notranslate nohighlight">\(\Delta\)</span> falls.
 The functions <code class="docutils literal notranslate"><span class="pre">ci_mean</span></code> and <code class="docutils literal notranslate"><span class="pre">ci_var</span></code> from the <code class="docutils literal notranslate"><span class="pre">stats_helpers</span></code> module can help us with confidence interval calculations.</p>
 </section>
 </section>
@@ -759,6 +756,12 @@ The functions <code class="docutils literal notranslate"><span class="pre">ci_me
 <h2>Simulation tests<a class="headerlink" href="#simulation-tests" title="Permalink to this heading">#</a></h2>
 <p>Let’s start with a description of the problem.
 We want to compare a sample of observations from an unknown population to a <strong>fully specified theoretical model</strong>.</p>
+<p>TODO: import from text</p>
+<ul class="simple">
+<li><p>a</p></li>
+<li><p>b</p></li>
+<li><p>c</p></li>
+</ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">gen_sampling_dist</span><span class="p">(</span><span class="n">rv</span><span class="p">,</span> <span class="n">estfunc</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">10000</span><span class="p">):</span>
@@ -779,16 +782,28 @@ We want to compare a sample of observations from an unknown population to a <str
 </section>
 <section id="test-for-the-mean">
 <h2>Test for the mean<a class="headerlink" href="#test-for-the-mean" title="Permalink to this heading">#</a></h2>
+<p>We’ll now discuss hypothesis tests based on the sample mean.
+We’re interested in distinguishing between the competing hypotheses:</p>
+<div class="math notranslate nohighlight">
+\[
+    H_A: \mu \neq \mu_{X_0}
+    \qquad \text{and} \qquad
+    H_0: \mu = \mu_{X_0},
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mu\)</span> is the mean of the unknown population <span class="math notranslate nohighlight">\(X \sim \mathcal{N}(\mu,\sigma)\)</span>
+from which the sample <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> was taken,
+and <span class="math notranslate nohighlight">\(\mu_{X_0}\)</span> is the mean of the theoretical model <span class="math notranslate nohighlight">\(X_0 \sim \mathcal{N}(\mu_{X_0}, \sigma_{X_0})\)</span>.</p>
 <section id="kombucha-bottling-process">
 <h3>Kombucha bottling process<a class="headerlink" href="#kombucha-bottling-process" title="Permalink to this heading">#</a></h3>
 <p>We’ll use the kombucha scenario for all the examples in this section.
 Recall, the probability distirbution of the kombucha volume is described by
 the theoretical model <span class="math notranslate nohighlight">\(K_0 \sim \mathcal{N}(\mu_{K_0} = 1000, \sigma_{K_0}=10)\)</span>
 when the production line is working as expected.</p>
-<p>We can use simulation to obtain the sampling distribution since <span class="math notranslate nohighlight">\(\mu_{K_0}\)</span> and <span class="math notranslate nohighlight">\(\sigma_{K_0}\)</span> are known.</p>
+<p>Since <span class="math notranslate nohighlight">\(\mu_{K_0}\)</span> and <span class="math notranslate nohighlight">\(\sigma_{K_0}\)</span> are known,
+we can use simulation to obtain the sampling distribution of any test statistic.</p>
 </section>
-<section id="distribution-under-the-null">
-<h3>Distribution under the null<a class="headerlink" href="#distribution-under-the-null" title="Permalink to this heading">#</a></h3>
+<section id="computer-model-for-the-kombucha-volumes-under-h-0">
+<h3>Computer model for the kombucha volumes under <span class="math notranslate nohighlight">\(H_0\)</span><a class="headerlink" href="#computer-model-for-the-kombucha-volumes-under-h-0" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
@@ -802,35 +817,39 @@ when the production line is working as expected.</p>
 </div>
 </div>
 </div>
+<p>Let’s look at a random sample of size <span class="math notranslate nohighlight">\(n=40\)</span> from the distribution under the null hypothesis.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
-<span class="n">rvK0</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">rvK0</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([1004.97,  998.62, 1006.48, 1015.23,  997.66,  997.66, 1015.79,
        1007.67,  995.31, 1005.43,  995.37,  995.34, 1002.42,  980.87,
-        982.75,  994.38,  989.87, 1003.14,  990.92,  985.88])
+        982.75,  994.38,  989.87, 1003.14,  990.92,  985.88, 1014.66,
+        997.74, 1000.68,  985.75,  994.56, 1001.11,  988.49, 1003.76,
+        993.99,  997.08,  993.98, 1018.52,  999.87,  989.42, 1008.23,
+        987.79, 1002.09,  980.4 ,  986.72, 1001.97])
 </pre></div>
 </div>
 </div>
 </div>
-<p>We’ll use the same mean as …</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">mean</span><span class="p">(</span><span class="n">sample</span><span class="p">):</span>
-    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
+<p>We can obtain the sampling distribution of the mean by repeatedly generating samples like this,
+and computing the mean from each of them.</p>
 </section>
 <section id="sampling-distribution-of-the-mean-under-the-null">
 <h3>Sampling distribution of the mean under the null<a class="headerlink" href="#sampling-distribution-of-the-mean-under-the-null" title="Permalink to this heading">#</a></h3>
 <p>We can generate the sampling distribution of the mean <span class="math notranslate nohighlight">\(\overline{\mathbf{K}}_0\)</span>
-by calling the helper function <code class="docutils literal notranslate"><span class="pre">gen_sampling_dist</span></code>.</p>
+by running a simulation using the helper function <code class="docutils literal notranslate"><span class="pre">gen_sampling_dist</span></code>.
+We supply three parameters for the simulation:</p>
+<ol class="arabic simple">
+<li><p>the computer model under <span class="math notranslate nohighlight">\(H_0\)</span></p></li>
+<li><p>the estimator function</p></li>
+<li><p>the sample size</p></li>
+</ol>
+<p>In our case, 1. is <code class="docutils literal notranslate"><span class="pre">rvK0</span></code>, 2. is the function <code class="docutils literal notranslate"><span class="pre">mean</span></code>, and 3. <code class="docutils literal notranslate"><span class="pre">n=40</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">stats_helpers</span> <span class="kn">import</span> <span class="n">gen_sampling_dist</span>
@@ -875,18 +894,25 @@ by calling the helper function <code class="docutils literal notranslate"><span 
 <img alt="../_images/fc0abfa037f03ae9e2d7842ad32945495bec91b1961d43c0f35ad592d928a31f.png" src="../_images/fc0abfa037f03ae9e2d7842ad32945495bec91b1961d43c0f35ad592d928a31f.png" />
 </div>
 </div>
+<p>The sampling distribution <span class="math notranslate nohighlight">\(\overline{\mathbf{K}}_0 = \tt{kbars40}\)</span>
+tells us the variability of the sample means we can expect to observe when <span class="math notranslate nohighlight">\(H_0\)</span> is true.</p>
 </section>
 <section id="example-1s-test-for-the-mean-of-batch-04">
 <h3>Example 1S: test for the mean of Batch 04<a class="headerlink" href="#example-1s-test-for-the-mean-of-batch-04" title="Permalink to this heading">#</a></h3>
+<p>We want to check whether Batch~04 is “regular” or “irregular” by comparing the mean volume of this batch <span class="math notranslate nohighlight">\(\mu\)</span>
+to the mean of the theoretical model <span class="math notranslate nohighlight">\(\mu_{K_0} = 1000\)</span>;ml.
+We formulate the following competing hypotheses:</p>
 <div class="math notranslate nohighlight">
 \[
-    H_0: \;\; \mu = \mu_{K_0} = 1000,
-    \qquad \qquad
-    H_A: \;\; \mu \neq \mu_{K_0}.
+    H_A: \mu \neq \mu_{K_0}
+    \qquad \text{and} \qquad
+    H_0: \mu = \mu_{K_0}.
 \]</div>
 <p>In words,
 the null hypothesis describes a regular batch,
-where the mean of the batch is equal to the mean of the model <span class="math notranslate nohighlight">\(\mu_{K_0}=1000\)</span>.</p>
+where the mean of the batch is equal to the mean of the model <span class="math notranslate nohighlight">\(\mu_{K_0}=1000\)</span>.
+The two-sided alternative hypothesis states that the mean volume of Batch~04 differs from the expected mean <span class="math notranslate nohighlight">\(\mu_{K_0}\)</span>,
+and it includes both positive or negative deviations.</p>
 <p>Let’s start by loading the sample <span class="math notranslate nohighlight">\(\mathbf{k}_{04}\)</span> from Batch 04 of the <code class="docutils literal notranslate"><span class="pre">kombucha</span></code> dataset.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -926,15 +952,17 @@ where the mean of the batch is equal to the mean of the model <span class="math 
 <p>The mean volume calculated from the sample <code class="docutils literal notranslate"><span class="pre">ksample04</span></code> is <span class="math notranslate nohighlight">\(3.83\)</span> ml higher than the expected mean <span class="math notranslate nohighlight">\(\mu_{K_0} = 1000\)</span> ml.
 Is this a big difference or not?
 How likely is such deviation to occur by chance under the null hypothesis?</p>
-<section id="sampling-distribution-under-the-null-hypothesis">
-<h4>Sampling distribution under the null hypothesis<a class="headerlink" href="#sampling-distribution-under-the-null-hypothesis" title="Permalink to this heading">#</a></h4>
+<section id="sampling-distribution-of-the-mean-under-the-null-hypothesis">
+<h4>Sampling distribution of the mean under the null hypothesis<a class="headerlink" href="#sampling-distribution-of-the-mean-under-the-null-hypothesis" title="Permalink to this heading">#</a></h4>
 <p>To answer the above question,
-we need to generate the sampling distribution of the mean
-for samples of size <span class="math notranslate nohighlight">\(n=40\)</span> under the null hypothesis <span class="math notranslate nohighlight">\(H_0\)</span>.
-We can do this using the <code class="docutils literal notranslate"><span class="pre">gen_sampling_dist</span></code> function,
-by providing it the probability model <code class="docutils literal notranslate"><span class="pre">rvK0</span></code> <span class="math notranslate nohighlight">\(= K_0 \sim \mathcal{N}(\mu_{K_0}=1000,\sigma_{K_0}=10)\)</span>,
-which describes the variability of the kombucha volumes when the factory is operating correctly.</p>
-<p>We can now generate the sampling distribution of the mean using simulation.</p>
+we need to know the sampling distribution of the mean
+for samples of size <span class="math notranslate nohighlight">\(n=40\)</span> under the null hypothesis <span class="math notranslate nohighlight">\(H_0\)</span> (which we just learned how to do above).</p>
+<p>Let’s run the simulation based on the using the function <code class="docutils literal notranslate"><span class="pre">gen_sampling_dist</span></code> with parameters:</p>
+<ol class="arabic simple">
+<li><p>probability model <code class="docutils literal notranslate"><span class="pre">rvK0</span></code> <span class="math notranslate nohighlight">\(= K_0 \sim \mathcal{N}(\mu_{K_0}=1000,\sigma_{K_0}=10)\)</span></p></li>
+<li><p>the estimator function <code class="docutils literal notranslate"><span class="pre">mean</span></code></p></li>
+<li><p>the sample size <code class="docutils literal notranslate"><span class="pre">n</span> <span class="pre">=</span> <span class="pre">len(ksample04)</span> <span class="pre">=</span> <span class="pre">40</span></code></p></li>
+</ol>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">stats_helpers</span> <span class="kn">import</span> <span class="n">gen_sampling_dist</span>
@@ -948,6 +976,10 @@ which describes the variability of the kombucha volumes when the factory is oper
 <p>To calculate the <span class="math notranslate nohighlight">\(p\)</span>-value,
 we want to count how many values of sampling distribution <code class="docutils literal notranslate"><span class="pre">kbars40</span></code>
 are equal or more extreme than the observed value <span class="math notranslate nohighlight">\(\overline{\mathbf{k}}_{04} =\)</span> <code class="docutils literal notranslate"><span class="pre">obsmean04</span></code> = 1003.8335.</p>
+<p>In this context,
+“<span class="math notranslate nohighlight">\(\overline{\mathbf{k}}_{04}\)</span> or more extreme” means all values whose <em>deviation</em> from the mean <span class="math notranslate nohighlight">\(\mu_{K_0} = 1000\)</span>
+is equal to or more extreme than the deviation of the observed mean <span class="math notranslate nohighlight">\(\overline{\mathbf{k}}_{04}\)</span> from <span class="math notranslate nohighlight">\(\mu_{K_0}\)</span>.</p>
+<p>Let’s start by computing the observed deviation <span class="math notranslate nohighlight">\(|\overline{\mathbf{k}}_{04} - \mu_{K_0}|\)</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obsdev04</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">obsmean04</span> <span class="o">-</span> <span class="n">muK0</span><span class="p">)</span>
@@ -961,10 +993,12 @@ are equal or more extreme than the observed value <span class="math notranslate 
 </div>
 </div>
 </div>
+<p>Next we use the list-comprehension syntax to go through the list <code class="docutils literal notranslate"><span class="pre">kbars40</span></code>
+and select only the values <code class="docutils literal notranslate"><span class="pre">v</span></code> whose absolute deviation from the mean <code class="docutils literal notranslate"><span class="pre">abs(v-muK0)</span></code>
+is equal to or greater than the observe deviation <code class="docutils literal notranslate"><span class="pre">obsdev04</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#######################################################</span>
-<span class="n">tails</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kbars40</span> <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">v</span><span class="o">-</span><span class="n">muK0</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">obsdev04</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tails</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kbars40</span> <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">v</span><span class="o">-</span><span class="n">muK0</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">obsdev04</span><span class="p">]</span>
 <span class="n">tails</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
 </pre></div>
 </div>
@@ -975,6 +1009,8 @@ are equal or more extreme than the observed value <span class="math notranslate 
 </div>
 </div>
 </div>
+<p>The list <code class="docutils literal notranslate"><span class="pre">tails</span></code> contains the subset of the simulated means
+that satisfy the “<span class="math notranslate nohighlight">\(\overline{\mathbf{k}}_{04}\)</span> or more extreme” condition.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">tails</span><span class="p">)</span>
@@ -987,6 +1023,12 @@ are equal or more extreme than the observed value <span class="math notranslate 
 </div>
 </div>
 </div>
+<p>Out of the total of <span class="math notranslate nohighlight">\(N=10000\)</span> simulated samples under <span class="math notranslate nohighlight">\(H_0\)</span>,
+only 149 satisfy this condition “<span class="math notranslate nohighlight">\(\overline{\mathbf{k}}_{04}\)</span> or more extreme.”
+That’s not a lot!</p>
+<p>The <span class="math notranslate nohighlight">\(p\)</span>-value is computed as  he number of observations in the tails,
+divided by the total number of simulated observations.</p>
+<p>TODO: mention proportion</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pvalue04</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tails</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">kbars40</span><span class="p">)</span>
@@ -1000,10 +1042,8 @@ are equal or more extreme than the observed value <span class="math notranslate 
 </div>
 </div>
 </div>
-<p>The <span class="math notranslate nohighlight">\(p\)</span>-value is the ratio of the number of observations in the tails,
-divided by the total number of simulated observations.</p>
-<p>We can visualize the above calculation by plotting a histogram of sampling distribution <span class="math notranslate nohighlight">\(\overline{\mathbf{K}}_0\)</span>
-and highlighting the parts in the tails.</p>
+<p>We can visualize the <span class="math notranslate nohighlight">\(p\)</span>-value calculation by plotting a histogram of sampling distribution <span class="math notranslate nohighlight">\(\overline{\mathbf{K}}_0\)</span>
+and highlighting the parts of the histogram that satisfy the “<span class="math notranslate nohighlight">\(\overline{\mathbf{k}}_{04}\)</span> or more extreme” condition.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># plot the sampling distribution as a histogram</span>
@@ -1019,18 +1059,6 @@ and highlighting the parts in the tails.</p>
 </div>
 <div class="cell_output docutils container">
 <img alt="../_images/102d99e5229e1ca1c65f5476303396a797ee7f158128af46641524438f8e5116.png" src="../_images/102d99e5229e1ca1c65f5476303396a797ee7f158128af46641524438f8e5116.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mi">1000</span> <span class="o">-</span> <span class="p">(</span><span class="n">obsmean04</span> <span class="o">-</span> <span class="mi">1000</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>996.1665
-</pre></div>
-</div>
 </div>
 </div>
 <div class="cell docutils container">
@@ -1054,29 +1082,31 @@ and highlighting the parts in the tails.</p>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/intro_to_NHST/hist_p-value_kombucha_obsmean04.pdf
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/intro_to_NHST/hist_p-value_kombucha_obsmean04.png
+Saved figure to figures/stats/intro_to_NHST/hist_p-value_kombucha_obsmean04.png
 </pre></div>
 </div>
 <img alt="../_images/6e75c70dda30cb501414c1cc42640d35b99eaf0a8423116596426601c0e77f24.png" src="../_images/6e75c70dda30cb501414c1cc42640d35b99eaf0a8423116596426601c0e77f24.png" />
 </div>
 </div>
-<p>We can now make the decision based on the <span class="math notranslate nohighlight">\(p\)</span>-value and a pre-determined threshold,
+<p>Note the <span class="math notranslate nohighlight">\(p\)</span>-value calculation includes simulated observations in the left tail of the distribution:
+<span class="math notranslate nohighlight">\(\{ \overline{\mathbf{K}}_0 \leq 996.17 \}\)</span>.
+This is because the alternative hypothesis is stated as <span class="math notranslate nohighlight">\(\mu \neq \mu_{K_0}\)</span>,
+so we must consider both positive and negative deviations.</p>
+<p>We can now make the decision by comparing the <span class="math notranslate nohighlight">\(p\)</span>-value to the pre-determined threshold <span class="math notranslate nohighlight">\(\alpha\)</span>,
 which is conventionally chosen <span class="math notranslate nohighlight">\(\alpha=0.05\)</span> (1 in 20).
 The <span class="math notranslate nohighlight">\(p\)</span>-value is 0.015,
 which means <span class="math notranslate nohighlight">\(\overline{\mathbf{k}}_{04} = 1003.83\)</span> has only a 1.5% chance of occurring under the null hypothesis.
-Since the observed value of the mean <code class="docutils literal notranslate"><span class="pre">obsmean04</span></code> = 1003.8335 is unlikely under <span class="math notranslate nohighlight">\(H_0\)</span>,
-our decision is to “reject the null hypothesis.”</p>
-<p>Recall the math statement of the null hypothesis is <span class="math notranslate nohighlight">\(H_0: \mu = \mu_{K_0} = 1000\)</span>,
-which describes a batch whose mean is equal to the mean of the model <span class="math notranslate nohighlight">\(\mu_{K_0}\)</span>.
-The conclusion to reject <span class="math notranslate nohighlight">\(H_0\)</span> tells us the batch is irregular.</p>
+The <span class="math notranslate nohighlight">\(p\)</span>-value 0.015 tells us the observed mean <code class="docutils literal notranslate"><span class="pre">obsmean04</span></code> = 1003.8335
+is very unlikely to occur by chance under <span class="math notranslate nohighlight">\(H_0\)</span>,
+so our decision is to “reject the null hypothesis.”
+In other words, Batch 04 is irregular.</p>
 </section>
 <section id="id1">
 <h4>Effect size estimates<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h4>
-<p>We were able to detect that batch differs from the expected distribution,
+<p>We were able to detect that Batch 04 differs from the expected distribution,
 but how big is the deviation?
-We can use the deviation from the expected mean as measure of the effect size <span class="math notranslate nohighlight">\(\widehat{\Delta} = \overline{\mathbf{k}} - \mu_{K_0}\)</span> in this situation.</p>
+We can use the deviation from the expected mean <span class="math notranslate nohighlight">\(\widehat{\Delta} = \overline{\mathbf{k}}_{04} - \mu_{K_0}\)</span>
+as an estimate of the effect size in this situation.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mean</span><span class="p">(</span><span class="n">ksample04</span><span class="p">)</span> <span class="o">-</span> <span class="n">muK0</span>
@@ -1091,34 +1121,45 @@ We can use the deviation from the expected mean as measure of the effect size <s
 </div>
 <p>The point estimate <span class="math notranslate nohighlight">\(\widehat{\Delta} = \overline{\mathbf{k}}_{04} - \mu_{K_0} = 3.83\)</span>
 tells us how much the mean of the sample differs from the expected population mean <span class="math notranslate nohighlight">\(\mu_{K_0}\)</span>,
-but doesn’t tell us the uncertainty in this estimate.</p>
-<p>The bootstrap confidence interval for the effect size
-<span class="math notranslate nohighlight">\(\ci{\Delta,0.9}^*\)</span> tells us a range of plausible values for the effect size.
-The function <code class="docutils literal notranslate"><span class="pre">ci_mean</span></code> that we defined earlier performs the exact same operation,
-when called with the argument <code class="docutils literal notranslate"><span class="pre">method=&quot;b&quot;</span></code>.</p>
+but it doesn’t tell us the uncertainty in this estimate.</p>
+<p>Let’s calculate the 90% bootstrap confidence interval for the effect size  <span class="math notranslate nohighlight">\(\ci{\Delta,0.9}^*\)</span>.</p>
+<p>First let’s obtain a 90% obtain a confidence interval <span class="math notranslate nohighlight">\(\ci{\mu,0.9}^*\)</span> for the unknown population mean <span class="math notranslate nohighlight">\(\mu\)</span>.
+We can do this by calling the function <code class="docutils literal notranslate"><span class="pre">ci_mean</span></code> that we defined in Section 3.2
+with the options <code class="docutils literal notranslate"><span class="pre">alpha=0.1</span></code> and <code class="docutils literal notranslate"><span class="pre">method=&quot;b&quot;</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO: redo using ci_mean(ksample04) and manual subtraction + explain</span>
-<span class="kn">from</span> <span class="nn">stats_helpers</span> <span class="kn">import</span> <span class="n">ci_mean</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">stats_helpers</span> <span class="kn">import</span> <span class="n">ci_mean</span>
 
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">48</span><span class="p">)</span>
-<span class="n">ci_mean</span><span class="p">(</span><span class="n">ksample04</span><span class="o">-</span><span class="n">muK0</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">)</span>
+<span class="n">cimu04</span> <span class="o">=</span> <span class="n">ci_mean</span><span class="p">(</span><span class="n">ksample04</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can now convert the confidence interval <span class="math notranslate nohighlight">\(\ci{\mu,0.9}^* =\)</span> <code class="docutils literal notranslate"><span class="pre">cimu04</span></code>
+to a confidence interval for the effect size by
+subtracting the theoretical mean from both limits.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">cimu04</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">muK0</span><span class="p">,</span> <span class="n">cimu04</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">muK0</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[1.7537499999999935, 5.802025000000007]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[1.7537499999998545, 5.802025000000185]
 </pre></div>
 </div>
 </div>
 </div>
-<p>The confidence interval <span class="math notranslate nohighlight">\(\ci{\Delta,0.9}^* = [1.75, 5.80]\)</span> tells us the true discrepancy
-of Batch 04 from the expected mean can be anywhere from 1.75 to 5.8.</p>
+<p>The confidence interval <span class="math notranslate nohighlight">\(\ci{\Delta,0.9}^* = [1.75, 5.80]\)</span> tells us a range of plausible values for the true effect size (how irregular Batch 04 is) could be anywhere between 1.75ml and 5.8ml.</p>
+<p>This is much more interesting to know,
+since it tells us a whole range of plausible values.
+The interval estimate <span class="math notranslate nohighlight">\(\ci{\Delta,0.9}^* = [1.75, 5.80]\)</span> takes into account the variability of the samples we used in the calculation.</p>
 </section>
 </section>
 <section id="example-2s-test-for-the-mean-of-batch-01">
 <h3>Example 2S: test for the mean of Batch 01<a class="headerlink" href="#example-2s-test-for-the-mean-of-batch-01" title="Permalink to this heading">#</a></h3>
-<p>Let’s repeat the procedure on the sample <span class="math notranslate nohighlight">\(\mathbf{k}_{01}\)</span> which comes from Batch 01.</p>
+<p>Let’s repeat simulation test procedure on the sample <span class="math notranslate nohighlight">\(\mathbf{k}_{01}\)</span> which comes from Batch 01.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">batch01</span> <span class="o">=</span> <span class="n">kombucha</span><span class="p">[</span><span class="n">kombucha</span><span class="p">[</span><span class="s2">&quot;batch&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">]</span>
@@ -1146,6 +1187,7 @@ of Batch 04 from the expected mean can be anywhere from 1.75 to 5.8.</p>
 </div>
 </div>
 </div>
+<p>We generate the sampling distribution of the mean for samples of size <span class="math notranslate nohighlight">\(n=40\)</span> under the null hypothesis <span class="math notranslate nohighlight">\(H_0\)</span> by running a simulation using the function <code class="docutils literal notranslate"><span class="pre">gen_sampling_dist</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
@@ -1154,11 +1196,13 @@ of Batch 04 from the expected mean can be anywhere from 1.75 to 5.8.</p>
 </div>
 </div>
 </div>
+<p>Next we computed the observed deviation <code class="docutils literal notranslate"><span class="pre">obsdev01</span></code> <span class="math notranslate nohighlight">\(=|\overline{\mathbf{k}}_{01} - \mu_{K_0}|\)</span>,
+then select the values in <code class="docutils literal notranslate"><span class="pre">kbars40</span></code> whose deviation from <span class="math notranslate nohighlight">\(\mu_{K_0}\)</span> is greater than the observed deviation,
+and finally compute the <span class="math notranslate nohighlight">\(p\)</span>-value as the proportion of values in the tails.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obsdev01</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">obsmean01</span> <span class="o">-</span> <span class="n">muK0</span><span class="p">)</span>
 <span class="n">tails</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kbars40</span> <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">v</span><span class="o">-</span><span class="n">muK0</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">obsdev01</span><span class="p">]</span>
-<span class="c1">#######################################################</span>
 <span class="n">pvalue01</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tails</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">kbars40</span><span class="p">)</span>
 <span class="n">pvalue01</span>
 </pre></div>
@@ -1174,11 +1218,34 @@ of Batch 04 from the expected mean can be anywhere from 1.75 to 5.8.</p>
 Using the terminology of hypothesis testing,
 we say the outcome of the hypothesis test is that we <em>failed to reject</em> <span class="math notranslate nohighlight">\(H_0: \mu = \mu_{K_0}\)</span>.
 We have not seen any evidence that suggests that the mean of the population from
-which sample <code class="docutils literal notranslate"><span class="pre">ksample01</span></code> was taken differs from the mean of the theoretical model <span class="math notranslate nohighlight">\(K_0\)</span>.</p>
-<p>Ship it!</p>
+which sample <code class="docutils literal notranslate"><span class="pre">ksample01</span></code> was taken from differs from the mean of the theoretical model <span class="math notranslate nohighlight">\(K_0\)</span>.</p>
+<p>In other words, Batch 01 is regular. Ship it!</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;hist_p-value_kombucha_obsmean01.pdf&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bins</span> <span class="o">=</span> <span class="n">nicebins</span><span class="p">(</span><span class="n">kbars40</span><span class="p">,</span> <span class="n">obsmean01</span><span class="p">)</span>
+
+<span class="c1"># plot the sampling distribution as a histogram</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">kbars40</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">)</span>
+
+<span class="c1"># plot red line for the observed statistic</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">obsmean01</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+
+<span class="c1"># plot the values that are equal or more extreme in red</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">tails</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: ylabel=&#39;Count&#39;&gt;
+</pre></div>
+</div>
+<img alt="../_images/0dad0a47731360a241623b1a93b700b9a5ed1803ba65bc1713af3451e90a06a2.png" src="../_images/0dad0a47731360a241623b1a93b700b9a5ed1803ba65bc1713af3451e90a06a2.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># FIGURES ONLY</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;hist_p-value_kombucha_obsmean01.pdf&quot;</span><span class="p">)</span>
 
 <span class="c1"># plot the sampling distribution as a histogram</span>
 <span class="n">bins</span> <span class="o">=</span> <span class="n">nicebins</span><span class="p">(</span><span class="n">kbars40</span><span class="p">,</span> <span class="n">obsmean01</span><span class="p">)</span>
@@ -1203,6 +1270,18 @@ which sample <code class="docutils literal notranslate"><span class="pre">ksampl
 </pre></div>
 </div>
 <img alt="../_images/3e681996b0336a8e1e8d55889cbd1776c51d515c9015a38b187b6eeb6bfd0d62.png" src="../_images/3e681996b0336a8e1e8d55889cbd1776c51d515c9015a38b187b6eeb6bfd0d62.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bins</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">bins</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.22425657905478147
+</pre></div>
+</div>
 </div>
 </div>
 </section>
@@ -1259,17 +1338,16 @@ by calling the helper function <code class="docutils literal notranslate"><span 
 </section>
 <section id="example-3s-test-for-the-variance-of-batch-02">
 <h3>Example 3S: test for the variance of Batch 02<a class="headerlink" href="#example-3s-test-for-the-variance-of-batch-02" title="Permalink to this heading">#</a></h3>
-<p>Let’s assume the sample of volume measurements <span class="math notranslate nohighlight">\(\mathbf{k}_{02}\)</span> from the Batch 02 of the kombucha bottling plant comes from a population with unknown variance <span class="math notranslate nohighlight">\(\sigma^2\)</span>,
+<p>The sample of volume measurements <span class="math notranslate nohighlight">\(\mathbf{k}_{02}\)</span> from the Batch 02 of the kombucha bottling plant comes from an unknown population with variance <span class="math notranslate nohighlight">\(\sigma^2\)</span>,
 which we can estimate by computing the sample variance <span class="math notranslate nohighlight">\(s^2_{\mathbf{k}_{02}}\)</span>.</p>
-<p>We want to check whether Batch 02 is a “regular” or “irregular” by comparing the variance in the volumes
-of this batch <span class="math notranslate nohighlight">\(\sigma^2\)</span> to the variance of the theoretical model <span class="math notranslate nohighlight">\(\sigma_{K_0}^2= 100\)</span>.
+<p>We want to check whether Batch 02 is a “regular” or “irregular” by comparing the variance of this batch, <span class="math notranslate nohighlight">\(\sigma^2\)</span>, to the variance of the theoretical model <span class="math notranslate nohighlight">\(\sigma_{K_0}^2= 100\)</span>.
 Specifically,
 we’re interested in detecting the case when the variance is higher than expected:</p>
 <div class="math notranslate nohighlight">
 \[
-    H_0: \;\; \sigma^2 \leq \sigma_{K_0}^2,
-    \qquad \qquad
-    H_A: \;\; \sigma^2 &gt; \sigma_{K_0}^2.
+    H_A: \sigma^2 &gt; \sigma_{K_0}^2
+    \qquad \text{and} \qquad
+    H_0: \sigma^2 \leq \sigma_{K_0}^2.
 \]</div>
 <p>Note the alternative hypothesis uses the “greater than” inequality,
 since we don’t mind batches with low variance.</p>
@@ -1301,6 +1379,7 @@ since we don’t mind batches with low variance.</p>
 </div>
 </div>
 </div>
+<p>We’ll now generate the sampling distribution of the variance for sample of size <span class="math notranslate nohighlight">\(n=20\)</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
@@ -1327,7 +1406,31 @@ since we don’t mind batches with low variance.</p>
 so our decision is “fail to reject <span class="math notranslate nohighlight">\(H_0\)</span>.”</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;hist_p-value_kombucha_obsvar02.pdf&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># choose common bins for the histograms</span>
+<span class="n">bins</span> <span class="o">=</span> <span class="n">nicebins</span><span class="p">(</span><span class="n">kvars20</span><span class="p">,</span> <span class="n">obsvar02</span><span class="p">)</span>
+
+<span class="c1"># plot sampling distribution</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">kvars20</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">)</span>
+
+<span class="c1"># plot red line for the observed statistic</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">obsvar02</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+
+<span class="c1"># plot the values that are equal or more extreme in red</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">right_tail</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: ylabel=&#39;Count&#39;&gt;
+</pre></div>
+</div>
+<img alt="../_images/9e9fb9fd54b3d0917895f55a14d132b72eb9443f988bc3eba90b833b38554aee.png" src="../_images/9e9fb9fd54b3d0917895f55a14d132b72eb9443f988bc3eba90b833b38554aee.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># FIGURES ONLY</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;hist_p-value_kombucha_obsvar02.pdf&quot;</span><span class="p">)</span>
 
 <span class="c1"># plot the sampling distribution as a histogram</span>
 <span class="n">bins</span> <span class="o">=</span> <span class="n">nicebins</span><span class="p">(</span><span class="n">kvars20</span><span class="p">,</span> <span class="n">obsvar02</span><span class="p">)</span>
@@ -1442,7 +1545,7 @@ so our decision is to reject <span class="math notranslate nohighlight">\(H_0\)<
 <section id="id2">
 <h4>Effect size estimates<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h4>
 <p>We found the variance in the volumes in this batch is higher than the expected variance.
-Now let’s estimate the effect size <span class="math notranslate nohighlight">\(\widehat{\Delta} = s^2_{\mathbf{k}_{08}} / \sigma_{K_0}^2\)</span>.</p>
+Now let’s compute an estimate for the effect size <span class="math notranslate nohighlight">\(\widehat{\Delta} = s^2_{\mathbf{k}_{08}} / \sigma_{K_0}^2\)</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">var</span><span class="p">(</span><span class="n">ksample08</span><span class="p">)</span> <span class="o">/</span> <span class="n">sigmaK0</span><span class="o">**</span><span class="mi">2</span>
@@ -1455,11 +1558,11 @@ Now let’s estimate the effect size <span class="math notranslate nohighlight">
 </div>
 </div>
 </div>
+<p>This tells us the variance of <span class="math notranslate nohighlight">\(\mathbf{k}_{08}\)</span> is 70% higher in the theoretically expected variance <span class="math notranslate nohighlight">\(\sigma_{K_0}^2 = 100\)</span>.</p>
 <p>The bootstrap confidence interval for the effect size
 <span class="math notranslate nohighlight">\(\ci{\Delta,0.9}^*\)</span> tells us a range of plausible values for the effect size.
 We can obtain <span class="math notranslate nohighlight">\(\ci{\Delta,0.9}^*\)</span> by first computing a 90% bootstrap confidence interval
-for the variance <span class="math notranslate nohighlight">\(\ci{\sigma^2,0.9}^*\)</span>,
-then dividing by the theoretical variance <span class="math notranslate nohighlight">\(\sigma_{K_0}^2\)</span>.</p>
+for the variance <span class="math notranslate nohighlight">\(\ci{\sigma^2,0.9}^*\)</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">stats_helpers</span> <span class="kn">import</span> <span class="n">ci_var</span>
@@ -1476,6 +1579,9 @@ then dividing by the theoretical variance <span class="math notranslate nohighli
 </div>
 </div>
 </div>
+<p>We can obtain a confidence interval for
+<span class="math notranslate nohighlight">\(\Delta = \sigma^2 / \sigma_{K_0}^2\)</span>
+by dividing the limits of <span class="math notranslate nohighlight">\(\ci{\sigma^2,0.9}^*\)</span> by the theoretical variance <span class="math notranslate nohighlight">\(\sigma_{K_0}^2\)</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ci_l</span> <span class="o">=</span> <span class="n">civar08_boot</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">sigmaK0</span><span class="o">**</span><span class="mi">2</span>
@@ -1497,40 +1603,33 @@ in Batch 08 is somewhere between 1.17 and 2.18 times the expected variance <span
 </section>
 <section id="explanations">
 <h2>Explanations<a class="headerlink" href="#explanations" title="Permalink to this heading">#</a></h2>
-<section id="court-trial-analogy">
-<h3>Court trial analogy<a class="headerlink" href="#court-trial-analogy" title="Permalink to this heading">#</a></h3>
-<ul class="simple">
-<li><p>defendant innocent &lt;-&gt; null hypothesis</p></li>
-<li><p>found guilty &lt;-&gt; reject null</p></li>
-<li><p>acquitted &lt;-&gt; fail to reject the null</p></li>
-</ul>
-</section>
 <section id="one-sided-and-two-sided-tests">
 <h3>One-sided and two-sided tests<a class="headerlink" href="#one-sided-and-two-sided-tests" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># FIGURES ONLY</span>
-<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;panel_hist_p-values_left_twotailed_right_tests.pdf&quot;</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">stats_helpers</span> <span class="kn">import</span> <span class="n">tailvalues</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">stats_helpers</span> <span class="kn">import</span> <span class="n">tailvalues</span>
 <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">t</span> <span class="k">as</span> <span class="n">tdist</span>
 <span class="n">rvT</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
-
 <span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
 <span class="n">ys</span> <span class="o">=</span> <span class="n">rvT</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>
-
 <span class="n">N</span> <span class="o">=</span> <span class="mi">100000</span>
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
 <span class="n">ts</span> <span class="o">=</span> <span class="n">rvT</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
-
 <span class="n">bins</span> <span class="o">=</span> <span class="n">nicebins</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">nbins</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
 
-<span class="k">with</span> <span class="n">plt</span><span class="o">.</span><span class="n">rc_context</span><span class="p">({</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:(</span><span class="mi">9</span><span class="p">,</span><span class="mf">2.3</span><span class="p">)}),</span> <span class="n">sns</span><span class="o">.</span><span class="n">axes_style</span><span class="p">(</span><span class="s2">&quot;ticks&quot;</span><span class="p">):</span>
-    <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax3</span><span class="p">,</span> <span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">FIGSIZE</span> <span class="o">=</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mf">1.4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># FIGURES ONLY -- RIGHT</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;hist_p-values_right_tail_test.pdf&quot;</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">plt</span><span class="o">.</span><span class="n">rc_context</span><span class="p">({</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:</span><span class="n">FIGSIZE</span><span class="p">}),</span> <span class="n">sns</span><span class="o">.</span><span class="n">axes_style</span><span class="p">(</span><span class="s2">&quot;ticks&quot;</span><span class="p">):</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax3</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
     <span class="n">ax3</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$f_{\widehat{\Theta}_0}$&quot;</span><span class="p">)</span>
 
-    <span class="c1"># RIGHT</span>
-    <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;(a) right-tailed test&#39;</span>
-    <span class="n">ax3</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span>
     <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">ts</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax3</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
     <span class="n">ax3</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
     <span class="n">ax3</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="mi">2</span><span class="p">])</span>
@@ -1540,58 +1639,90 @@ in Batch 08 is somewhere between 1.17 and 2.18 times the expected variance <span
     <span class="c1"># highlight the right tail</span>
     <span class="n">tailvalues3</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">ts</span> <span class="k">if</span> <span class="n">t</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">]</span>
     <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">tailvalues3</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
-    <span class="n">ax3</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">300</span><span class="p">,</span> <span class="s2">&quot;$\hat{</span><span class="se">\\</span><span class="s2">theta}_{\mathbf</span><span class="si">{x}</span><span class="s2">}$&quot;</span><span class="p">,</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
-
-    <span class="c1"># LEFT</span>
-    <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;(b) left-tailed test&#39;</span>
-    <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span>
-    <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">ts</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
-    <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
-    <span class="n">ax1</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
-    <span class="n">ax1</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
-    <span class="n">ax1</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
-    <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-    <span class="n">ax1</span><span class="o">.</span><span class="n">spines</span><span class="p">[[</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="s1">&#39;top&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-    <span class="c1"># highlight the left tail</span>
-    <span class="n">tailvalues1</span> <span class="o">=</span> <span class="n">tailvalues</span><span class="p">(</span><span class="n">ts</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;less&quot;</span><span class="p">)</span>
-    <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">tailvalues1</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
-    <span class="n">ax1</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">300</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$\hat{\theta}_{\mathbf</span><span class="si">{x}</span><span class="s2">}$&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
-
-    <span class="c1"># TWO-TAILED</span>
-    <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;(c) two-tailed test&#39;</span>
-    <span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span>
-    <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">ts</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
-    <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
-    <span class="n">ax2</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
-    <span class="n">ax2</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
-    <span class="n">ax2</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
-    <span class="n">ax2</span><span class="o">.</span><span class="n">spines</span><span class="p">[[</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="s1">&#39;top&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-    <span class="c1"># highlight the left and right tails</span>
-    <span class="n">tailvalues2</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">ts</span> <span class="k">if</span> <span class="n">t</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="mi">2</span> <span class="ow">or</span> <span class="n">t</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">]</span>
-    <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">tailvalues2</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
-    <span class="n">ax2</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">300</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$\theta_0$-dev&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
-    <span class="n">ax2</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">300</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$\theta_0$+dev&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
-    <span class="n">ax2</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">300</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$\theta_0$&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
-
+    <span class="n">ax3</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">370</span><span class="p">,</span> <span class="s2">&quot;$\hat{</span><span class="se">\\</span><span class="s2">theta}_{\mathbf</span><span class="si">{x}</span><span class="s2">}$&quot;</span><span class="p">,</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
 
 <span class="n">savefigure</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/intro_to_NHST/panel_hist_p-values_left_twotailed_right_tests.pdf
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/intro_to_NHST/hist_p-values_right_tail_test.pdf
+Saved figure to figures/stats/intro_to_NHST/hist_p-values_right_tail_test.png
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/intro_to_NHST/panel_hist_p-values_left_twotailed_right_tests.png
+<img alt="../_images/6b0f963a4eed3186386ac6cd002ef3ef86384d8852e1027b8b53e0e47c8dc44c.png" src="../_images/6b0f963a4eed3186386ac6cd002ef3ef86384d8852e1027b8b53e0e47c8dc44c.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># FIGURES ONLY -- LEFT</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;hist_p-values_left_tail_test.pdf&quot;</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">plt</span><span class="o">.</span><span class="n">rc_context</span><span class="p">({</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:</span><span class="n">FIGSIZE</span><span class="p">}),</span> <span class="n">sns</span><span class="o">.</span><span class="n">axes_style</span><span class="p">(</span><span class="s2">&quot;ticks&quot;</span><span class="p">):</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$f_{\widehat{\Theta}_0}$&quot;</span><span class="p">)</span>
+
+    <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">ts</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">spines</span><span class="p">[[</span><span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="s1">&#39;top&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="c1"># highlight the left tail</span>
+    <span class="n">tailvalues1</span> <span class="o">=</span> <span class="n">tailvalues</span><span class="p">(</span><span class="n">ts</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;less&quot;</span><span class="p">)</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">tailvalues1</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">370</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$\hat{\theta}_{\mathbf</span><span class="si">{x}</span><span class="s2">}$&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+
+<span class="n">savefigure</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../_images/2571e07d41880a1b2531ea50ee39ec1293bccdbc10ddfe5fe75421f5bcd6f6c9.png" src="../_images/2571e07d41880a1b2531ea50ee39ec1293bccdbc10ddfe5fe75421f5bcd6f6c9.png" />
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/intro_to_NHST/hist_p-values_left_tail_test.pdf
+Saved figure to figures/stats/intro_to_NHST/hist_p-values_left_tail_test.png
+</pre></div>
+</div>
+<img alt="../_images/a2583327d77c9b41edfd5c6f4f2c723a1fed34df2b32619b92f8718dd44d9f1f.png" src="../_images/a2583327d77c9b41edfd5c6f4f2c723a1fed34df2b32619b92f8718dd44d9f1f.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># FIGURES ONLY -- TWO-TAILED</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;hist_p-values_two_tail_test.pdf&quot;</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">plt</span><span class="o">.</span><span class="n">rc_context</span><span class="p">({</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:</span><span class="n">FIGSIZE</span><span class="p">}),</span> <span class="n">sns</span><span class="o">.</span><span class="n">axes_style</span><span class="p">(</span><span class="s2">&quot;ticks&quot;</span><span class="p">):</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax2</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$f_{\widehat{\Theta}_0}$&quot;</span><span class="p">)</span>
+
+    <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">ts</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">spines</span><span class="p">[[</span><span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="s1">&#39;top&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="c1"># highlight the left and right tails</span>
+    <span class="n">tailvalues2</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">ts</span> <span class="k">if</span> <span class="n">t</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="mi">2</span> <span class="ow">or</span> <span class="n">t</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">]</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">tailvalues2</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">370</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$\theta_0$-dev&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">370</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$\theta_0$+dev&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">370</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$\theta_0$&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+
+<span class="n">savefigure</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/intro_to_NHST/hist_p-values_two_tail_test.pdf
+Saved figure to figures/stats/intro_to_NHST/hist_p-values_two_tail_test.png
+</pre></div>
+</div>
+<img alt="../_images/1a4e1c9362df90c57bb2817b7518228aa2d277ba5e39fc4258446df0247d4f4a.png" src="../_images/1a4e1c9362df90c57bb2817b7518228aa2d277ba5e39fc4258446df0247d4f4a.png" />
 </div>
 </div>
 <section id="selecting-the-tails-of-a-distribution">
 <h4>Selecting the tails of a distribution<a class="headerlink" href="#selecting-the-tails-of-a-distribution" title="Permalink to this heading">#</a></h4>
-<p>The concept of statistics that are “equal or more extreme than” the observed statistic <span class="math notranslate nohighlight">\(\hat{\theta}_{\mathbf{x}}\)</span>
-is essential to the logic of hypothesis testing.</p>
+<p>The concept of statistics that are “equal or more extreme than <span class="math notranslate nohighlight">\(\hat{\theta}_{\mathbf{x}}\)</span>”
+is essential to the logic of hypothesis testing.
+We’ll need to perform this type of filtering any time we use numerical methods for hypothesis testing.</p>
+<p>Let’s write a helper function that performs the selection of the tail values for us.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">tailvalues</span><span class="p">(</span><span class="n">valuesH0</span><span class="p">,</span> <span class="n">obs</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;two-sided&quot;</span><span class="p">):</span>
@@ -1614,23 +1745,26 @@ is essential to the logic of hypothesis testing.</p>
 </div>
 </div>
 </div>
-<p>For right-tailed tests,
+<p>You should be familiar with the three types of tail values selections:</p>
+<ul class="simple">
+<li><p>For right-tailed tests,
 we call <code class="docutils literal notranslate"><span class="pre">tailvalues</span></code> with the option <code class="docutils literal notranslate"><span class="pre">alt=&quot;greater&quot;</span></code>,
 which will select the subset of values in the list
-<code class="docutils literal notranslate"><span class="pre">valuesH0</span></code> that are equal to or greater than the observed statistic <code class="docutils literal notranslate"><span class="pre">obs</span></code>.</p>
-<p>UPDATE ME TODO
-For two-tailed tests, like the Example 1S,
-we want to select the observations that are equal to or more extreme than the deviation
-of the observed statistic <code class="docutils literal notranslate"><span class="pre">obs</span></code>.
-This means all values that are greater than <code class="docutils literal notranslate"><span class="pre">|obs|</span></code> and less than <code class="docutils literal notranslate"><span class="pre">-|obs|</span></code>.</p>
+<code class="docutils literal notranslate"><span class="pre">valuesH0</span></code> that are equal to or greater than the observed statistic <code class="docutils literal notranslate"><span class="pre">obs</span></code>.</p></li>
+<li><p>Foe left-tailed test,
+we call <code class="docutils literal notranslate"><span class="pre">tailvalues</span></code> with the option <code class="docutils literal notranslate"><span class="pre">alt=&quot;less&quot;</span></code>,
+which selects the values that are equal to or less than the observed statistic <code class="docutils literal notranslate"><span class="pre">obs</span></code>.</p></li>
+<li><p>For two-tailed tests,
+we select values observations whose deviation from the mean <code class="docutils literal notranslate"><span class="pre">meanH0</span></code>
+is equal to or greater than the observed deviation <code class="docutils literal notranslate"><span class="pre">obsdev</span></code>.</p></li>
+</ul>
 </section>
 <section id="one-sided-p-value-calculation-example">
 <h4>One-sided <span class="math notranslate nohighlight">\(p\)</span>-value calculation example<a class="headerlink" href="#one-sided-p-value-calculation-example" title="Permalink to this heading">#</a></h4>
 <p>We can verify that  the function <code class="docutils literal notranslate"><span class="pre">tailvalues</span></code> works as expected
 by reproducing the <span class="math notranslate nohighlight">\(p\)</span>-value calculation from Example 3S.
-Reusing the variables <span class="math notranslate nohighlight">\(\tt{obsvar02} = s_{\mathbf{k}_{02}}^2 = 124.32\)</span> we calculated above,
-we can obtain the <span class="math notranslate nohighlight">\(p\)</span>-value by calling the helper function <code class="docutils literal notranslate"><span class="pre">tailvalues</span></code> with the option <code class="docutils literal notranslate"><span class="pre">alt=&quot;greater&quot;</span></code>
-then divide by the total number of simulations:</p>
+Reusing the variables <code class="docutils literal notranslate"><span class="pre">n02=20</span></code> and <span class="math notranslate nohighlight">\(\tt{obsvar02} = s_{\mathbf{k}_{02}}^2 = 124.32\)</span> we calculated above,
+we can obtain the <span class="math notranslate nohighlight">\(p\)</span>-value by calling the helper function <code class="docutils literal notranslate"><span class="pre">tailvalues</span></code> with the option <code class="docutils literal notranslate"><span class="pre">alt=&quot;greater&quot;</span></code>,then dividing by the total number of simulations:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
@@ -1647,13 +1781,13 @@ then divide by the total number of simulations:</p>
 </div>
 </div>
 </div>
-<p>The value we obtain is identical to the <span class="math notranslate nohighlight">\(p\)</span>-value <span class="math notranslate nohighlight">\(\tt{pvalue02} = 0.2132\)</span> that we computed in Example 3S,
-so we know the function <code class="docutils literal notranslate"><span class="pre">tailvalues</span></code> works as expected for <span class="math notranslate nohighlight">\(p\)</span>-value calculations of type \textbf{(a)},
+<p>The result is identical to the <span class="math notranslate nohighlight">\(p\)</span>-value <span class="math notranslate nohighlight">\(\tt{pvalue02} = 0.2132\)</span> that we computed in Example 3S,
+so we know the function <code class="docutils literal notranslate"><span class="pre">tailvalues</span></code> works as expected for <span class="math notranslate nohighlight">\(p\)</span>-value calculations of type <strong>(a)</strong>,
 where we want to detect positive deviations from the expected distribution under <span class="math notranslate nohighlight">\(H_0\)</span>.</p>
 </section>
 <section id="two-sided-p-value-calculation-example">
 <h4>Two-sided <span class="math notranslate nohighlight">\(p\)</span>-value calculation example<a class="headerlink" href="#two-sided-p-value-calculation-example" title="Permalink to this heading">#</a></h4>
-<p>Reusing the <span class="math notranslate nohighlight">\(\tt{obsmean04} = \overline{\mathbf{x}}_{04} = 1003.83\)</span>
+<p>Reusing the values <code class="docutils literal notranslate"><span class="pre">n04=40</span></code> and <span class="math notranslate nohighlight">\(\tt{obsmean04} = \overline{\mathbf{x}}_{04} = 1003.83\)</span>
 that we calculated earlier in Example 1S,
 we can obtain the <span class="math notranslate nohighlight">\(p\)</span>-value by calling the function <code class="docutils literal notranslate"><span class="pre">tailvalues</span></code>
 with the option <code class="docutils literal notranslate"><span class="pre">alt=&quot;two-sided&quot;</span></code> then divide by the total number of simulations:</p>
@@ -1673,13 +1807,24 @@ with the option <code class="docutils literal notranslate"><span class="pre">alt
 </div>
 </div>
 </div>
-<p>The value we obtain is identical to the <span class="math notranslate nohighlight">\(p\)</span>-value that we obtained in Example 1S,
-so we know the function <code class="docutils literal notranslate"><span class="pre">tailvalues</span></code> works as expected for <span class="math notranslate nohighlight">\(p\)</span>-value calculations of type \textbf{(c)},
+<p>The result is identical to the <span class="math notranslate nohighlight">\(p\)</span>-value that we obtained in Example 1S,
+so we know the function <code class="docutils literal notranslate"><span class="pre">tailvalues</span></code> works as expected for <span class="math notranslate nohighlight">\(p\)</span>-value calculations of type <strong>(c)</strong>,
 where we want to detect both positive and negative deviations from the expected distribution under <span class="math notranslate nohighlight">\(H_0\)</span>.</p>
 </section>
 </section>
 <section id="summary-of-the-hypothesis-testing-procedure">
 <h3>Summary of the hypothesis testing procedure<a class="headerlink" href="#summary-of-the-hypothesis-testing-procedure" title="Permalink to this heading">#</a></h3>
+<p>The steps of the hypothesis testing procedure are as follows:</p>
+<ul class="simple">
+<li><p>Step 1: Formulate two competing hypotheses <span class="math notranslate nohighlight">\(H_0\)</span> and <span class="math notranslate nohighlight">\(H_A\)</span>.</p></li>
+<li><p>Step 2: Choose an estimator relevant for distinguishing between the two hypotheses.</p></li>
+<li><p>Step 3: Compute the test statistic <span class="math notranslate nohighlight">\(\hat{\theta}_{\mathbf{x}}\)</span> from the sample <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>.</p></li>
+<li><p>Step 4: Obtain <span class="math notranslate nohighlight">\(\widehat{\Theta}_0\)</span>, the sampling distribution of the test statistic under the null hypothesis.</p></li>
+<li><p>Step 5: Decide whether to <em>reject</em> or <em>fail to reject</em> the null hypothesis <span class="math notranslate nohighlight">\(H_0\)</span>
+based on the <span class="math notranslate nohighlight">\(p\)</span>-value computed from the observed test statistic <span class="math notranslate nohighlight">\(\hat{\theta}_{\mathbf{x}}\)</span>
+under the sampling distribution <span class="math notranslate nohighlight">\(\widehat{\Theta}_0\)</span> assuming <span class="math notranslate nohighlight">\(H_0\)</span> is true.</p></li>
+<li><p>Step 6: Report your decision and calculate effect size estimates.</p></li>
+</ul>
 </section>
 </section>
 <section id="discussion">
@@ -1687,7 +1832,8 @@ where we want to detect both positive and negative deviations from the expected 
 <section id="standardized-effect-size">
 <h3>Standardized effect size<a class="headerlink" href="#standardized-effect-size" title="Permalink to this heading">#</a></h3>
 <p>It is sometimes useful to report the effect size using a “standardized” measure for effect sizes.
-Cohen’s <span class="math notranslate nohighlight">\(d\)</span> is one such measure, and it is defined as the difference between the observed mean and an expected mean divided by the sample standard deviation:</p>
+Cohen’s <span class="math notranslate nohighlight">\(d\)</span> is one such measure, and it is defined as the difference between the observed mean and an expected mean,
+divided by the sample standard deviation:</p>
 <div class="math notranslate nohighlight">
 \[
   d = \frac{\overline{\mathbf{x}} - \mu_0}{ s_{\mathbf{x}} }.
@@ -1695,7 +1841,7 @@ Cohen’s <span class="math notranslate nohighlight">\(d\)</span> is one such me
 <p>For example,
 the sample <span class="math notranslate nohighlight">\(\mathbf{k}_{04}\)</span> from Batch 04 has mean <span class="math notranslate nohighlight">\(\overline{\mathbf{k}}_{04} = 1003.83\)</span>,
 which corresponds to a “raw” deviation of <span class="math notranslate nohighlight">\(3.83\)</span> from the expected value <span class="math notranslate nohighlight">\(\mu_{K_0}=1000\)</span>.
-We must divide the raw deviation by the sample’s standard deviation <span class="math notranslate nohighlight">\(s_{\mathbf{k}_{04}}= 7.85\)</span>
+We divide the raw deviation (<span class="math notranslate nohighlight">\(\overline{\mathbf{k}}_{04} - \mu_{K_0}\)</span>) by the sample’s standard deviation <span class="math notranslate nohighlight">\(s_{\mathbf{k}_{04}}= 7.85\)</span>
 to obtain Cohen’s <span class="math notranslate nohighlight">\(d\)</span> standardized effect size.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1710,7 +1856,8 @@ to obtain Cohen’s <span class="math notranslate nohighlight">\(d\)</span> stan
 </div>
 </div>
 </div>
-<p>We can interpret the value of Cohen’s <span class="math notranslate nohighlight">\(d\)</span> obtained using this <a class="reference external" href="https://en.wikipedia.org/wiki/Effect_size#Cohen's_d">table of reference values</a>:</p>
+<p>We can interpret the value of Cohen’s <span class="math notranslate nohighlight">\(d\)</span> obtained using this <a class="reference external" href="https://en.wikipedia.org/wiki/Effect_size#Cohen's_d">table of reference values</a>,
+which was published in (Cohen YYYY TODO) and continues to be used as a reference to this day.</p>
 <table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Cohen’s d</p></th>
@@ -1776,11 +1923,11 @@ which we quantify as “medium” effect size according to the table of referenc
 <section id="links">
 <h2>Links<a class="headerlink" href="#links" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
-<li><p><a class="reference external" href="https://minireference.com/blog/wp-content/uploads/2021/03/TheIntroductoryStatisticsCourse__Cobb.pdf">The Introductory Statistics Course: A Ptolemaic Curriculum</a> by George W. Cobb</p></li>
-<li><p><a class="reference external" href="https://www.tandfonline.com/doi/full/10.1080/00031305.2015.1089789">What Teachers Should Know About the Bootstrap: Resampling in the Undergraduate Statistics Curriculum</a> by Tim C. Hesterberg</p></li>
-<li><p>[BOOK] <a class="reference external" href="https://greenteapress.com/wp/think-stats-2e/">Think Stats 2e</a> by Allen B. Downey</p></li>
-<li><p>[VIDEO] <a class="reference external" href="https://www.youtube.com/watch?v=S41zQEshs5k">There’s Only One Test</a> by Allen B. Downey</p></li>
-<li><p>[TALK] <a class="reference external" href="https://www.youtube.com/watch?v=Iq9DzN6mvYA">Statistics for Hackers</a> by Jake Vanderplas</p></li>
+<li><p>[TALK] <a class="reference external" href="https://www.youtube.com/watch?v=Iq9DzN6mvYA"><em>Statistics for Hackers</em></a> by Jake Vanderplas</p></li>
+<li><p>[VIDEO] <a class="reference external" href="https://www.youtube.com/watch?v=S41zQEshs5k"><em>There’s Only One Test</em></a> by Allen B. Downey</p></li>
+<li><p>[PAPER] <a class="reference external" href="https://minireference.com/blog/wp-content/uploads/2021/03/TheIntroductoryStatisticsCourse__Cobb.pdf"><em>The Introductory Statistics Course: A Ptolemaic Curriculum</em></a> by George W. Cobb</p></li>
+<li><p>[PAPER] <a class="reference external" href="https://www.tandfonline.com/doi/full/10.1080/00031305.2015.1089789"><em>What Teachers Should Know About the Bootstrap: Resampling in the Undergraduate Statistics Curriculum</em></a> by Tim C. Hesterberg</p></li>
+<li><p>[BOOK] <a class="reference external" href="https://greenteapress.com/wp/think-stats-2e/"><em>Think Stats 2e</em></a> by Allen B. Downey</p></li>
 </ul>
 </section>
 </section>
@@ -1863,17 +2010,18 @@ which we quantify as “medium” effect size according to the table of referenc
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-logic-of-hypothesis-testing">The logic of hypothesis testing</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#overview-of-the-hypothesis-testing-procedure">Overview of the hypothesis testing procedure</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpreting-the-result-of-a-hypothesis-test-optional">Interpreting the result of a hypothesis test (optional)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#court-trial-analogy">Court trial analogy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpreting-the-result-of-a-hypothesis-test">Interpreting the result of a hypothesis test</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#effect-size-estimates">Effect size estimates</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simulation-tests">Simulation tests</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#test-for-the-mean">Test for the mean</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kombucha-bottling-process">Kombucha bottling process</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#distribution-under-the-null">Distribution under the null</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#computer-model-for-the-kombucha-volumes-under-h-0">Computer model for the kombucha volumes under <span class="math notranslate nohighlight">\(H_0\)</span></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sampling-distribution-of-the-mean-under-the-null">Sampling distribution of the mean under the null</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1s-test-for-the-mean-of-batch-04">Example 1S: test for the mean of Batch 04</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#sampling-distribution-under-the-null-hypothesis">Sampling distribution under the null hypothesis</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#sampling-distribution-of-the-mean-under-the-null-hypothesis">Sampling distribution of the mean under the null hypothesis</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Effect size estimates</a></li>
 </ul>
 </li>
@@ -1890,7 +2038,6 @@ which we quantify as “medium” effect size according to the table of referenc
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanations">Explanations</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#court-trial-analogy">Court trial analogy</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-sided-and-two-sided-tests">One-sided and two-sided tests</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-the-tails-of-a-distribution">Selecting the tails of a distribution</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#one-sided-p-value-calculation-example">One-sided <span class="math notranslate nohighlight">\(p\)</span>-value calculation example</a></li>
