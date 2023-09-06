@@ -783,7 +783,8 @@ def plot_sampling_dists_panel(rv, xlims, N=1000, ns=[10,30,100], binwidth=None, 
 
 
 def plot_alpha_beta_errors(cohend, ax=None, xlims=None, n=9,
-                           show_alt=True, show_concl=False, show_dist_labels=False, fontsize=14, alpha_offset=0):
+                           show_alt=True, show_concl=False, show_dist_labels=False, show_es=False,
+                           fontsize=14, alpha_offset=(0,0), beta_offset=(0,0)):
     """
     Plot sampling distribution under H0 and HA on the same graph,
     with Type I and Type II error probabilities highlighted.
@@ -821,7 +822,7 @@ def plot_alpha_beta_errors(cohend, ax=None, xlims=None, n=9,
     CV = norm.ppf(1-alpha) * se
 
     # generate data (pd = plot data)
-    xs = np.linspace(xmin, xmax, 1000)
+    # xs = np.linspace(xmin, xmax, 1000)
 
     # plot sampling distributions
     calc_prob_and_plot_tails(rvXbarH0, x_l=xmin, x_r=CV, xlims=[xmin,xmax],
@@ -838,15 +839,14 @@ def plot_alpha_beta_errors(cohend, ax=None, xlims=None, n=9,
     ax.set_xlabel("t")
     ax.xaxis.set_label_coords(1, 0.1)
 
-    # cutoff line
-    ax.vlines([CV], ymin=0, ymax=ax.get_ylim()[1], linestyle="-", color="red")
-
     # errors
-    alpha_x = (CV + rvXbarH0.ppf(0.94)) / 2  + alpha_offset
-    ax.annotate(r' $\alpha$', xy=(alpha_x, rvXbarH0.pdf(alpha_x)/5), fontsize=fontsize, va="center", color=alpha_color)
+    alpha_x = (CV + rvXbarH0.ppf(0.94)) / 2 + alpha_offset[0]
+    alpha_y = rvXbarH0.pdf(alpha_x)/5 + alpha_offset[1]
+    ax.annotate(r' $\alpha$', xy=(alpha_x, alpha_y), fontsize=fontsize, va="center", color=alpha_color)
     if show_alt:
-        beta_x = (CV + rvXbarHA.ppf(0.1)) / 2
-        ax.annotate(r'$\beta$  ', xy=(beta_x, rvXbarH0.pdf(beta_x)/5), fontsize=fontsize, color=beta_color, va="center", ha="right")
+        beta_x = (CV + rvXbarHA.ppf(0.1)) / 2 + beta_offset[0]
+        beta_y = rvXbarH0.pdf(beta_x)/5 + beta_offset[1]
+        ax.annotate(r'$\beta$  ', xy=(beta_x, beta_y), fontsize=fontsize, color=beta_color, va="center", ha="right")
 
     # distribution annotations
     if show_dist_labels:
@@ -870,8 +870,18 @@ def plot_alpha_beta_errors(cohend, ax=None, xlims=None, n=9,
     # ax.vlines([0,muHA], ymin=0, ymax=rvXbarH0.pdf(0), linestyle="dotted", color="k", linewidth=1)
 
     # manually set y-limits of plot to avoid gap
-    ymax = rvXbarH0.pdf(0)*1.1
+    rvXbarH0MAX = rvXbarH0.pdf(0)
+    ymax = rvXbarH0MAX*1.15
     ax.set_ylim([0,ymax])
+
+    # cutoff line
+    ax.vlines([CV], ymin=0, ymax=ax.get_ylim()[1], linestyle="-", color="red")
+
+    # effect size (thick line segement above pdf plots)
+    if show_es:
+        esy = rvXbarH0MAX*1.07
+        ax.plot([0,muHA], [esy,esy], linewidth=4, pickradius=1, solid_capstyle="butt")
+
 
     # decision annotations
     if show_concl:
