@@ -833,6 +833,11 @@ def plot_alpha_beta_errors(cohend, ax=None, xlims=None, n=9,
     ax.set_title(None)
     ax.spines[['left', 'right', 'top']].set_visible(False)
 
+    # manually add arrowhead to x-axis + label t at the end
+    ax.plot(1, 0, ">k", alpha=0.2, transform=ax.get_yaxis_transform(), clip_on=False)
+    ax.set_xlabel("t")
+    ax.xaxis.set_label_coords(1, 0.1)
+
     # cutoff line
     ax.vlines([CV], ymin=0, ymax=ax.get_ylim()[1], linestyle="-", color="red")
 
@@ -848,21 +853,25 @@ def plot_alpha_beta_errors(cohend, ax=None, xlims=None, n=9,
         arrowprops = dict(facecolor='black', shrink=0.05, width=2, headwidth=6, headlength=8)
         H0_x = rvXbarH0.ppf(0.1)
         H0_y = rvXbarH0.pdf(H0_x)
-        ax.annotate('$\overline{\mathbf{X}}_0$', xy=(H0_x, H0_y), xytext=(H0_x-1, H0_y+0.1), ha="right", arrowprops=arrowprops)
+        ax.annotate('$T_0$', xy=(H0_x, H0_y), xytext=(H0_x-1, H0_y+0.1), ha="right", arrowprops=arrowprops)
         if show_alt:
             HA_x = rvXbarHA.ppf(0.90)
             HA_y = rvXbarHA.pdf(HA_x)
-            ax.annotate('$\overline{\mathbf{X}}_A$', xy=(HA_x, HA_y), xytext=(HA_x+1, HA_y+0.1), arrowprops=arrowprops)
+            ax.annotate('$T_A$', xy=(HA_x, HA_y), xytext=(HA_x+1, HA_y+0.1), arrowprops=arrowprops)
 
     # x-axis ticks and labels
     ax.set_yticks([])
     if show_alt:
         ax.set_xticks([0,CV,muHA])
-        ax.set_xticklabels(["0","CV", "$\Delta$"])
+        ax.set_xticklabels(["0", r"CV$_{\alpha}$", "$\Delta$"])
     else:
         ax.set_xticks([0,CV])
-        ax.set_xticklabels(["0","CV"])
+        ax.set_xticklabels(["0", r"CV$_{\alpha}$"])
     # ax.vlines([0,muHA], ymin=0, ymax=rvXbarH0.pdf(0), linestyle="dotted", color="k", linewidth=1)
+
+    # manually set y-limits of plot to avoid gap
+    ymax = rvXbarH0.pdf(0)*1.1
+    ax.set_ylim([0,ymax])
 
     # decision annotations
     if show_concl:
