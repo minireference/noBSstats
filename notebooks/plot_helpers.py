@@ -844,9 +844,11 @@ def plot_alpha_beta_errors(cohend, ax=None, xlims=None, n=9,
     alpha_y = rvXbarH0.pdf(alpha_x)/5 + alpha_offset[1]
     ax.annotate(r' $\alpha$', xy=(alpha_x, alpha_y), fontsize=fontsize, va="center", color=alpha_color)
     if show_alt:
-        beta_x = (CV + rvXbarHA.ppf(0.1)) / 2 + beta_offset[0]
-        beta_y = rvXbarH0.pdf(beta_x)/5 + beta_offset[1]
-        ax.annotate(r'$\beta$  ', xy=(beta_x, beta_y), fontsize=fontsize, color=beta_color, va="center", ha="right")
+        beta = rvXbarHA.cdf(CV)
+        if beta > 0.01:
+            beta_x = (CV + rvXbarHA.ppf(0.1)) / 2 + beta_offset[0]
+            beta_y = rvXbarH0.pdf(beta_x)/5 + beta_offset[1]
+            ax.annotate(r'$\beta$  ', xy=(beta_x, beta_y), fontsize=fontsize, color=beta_color, va="center", ha="right")
 
     # distribution annotations
     if show_dist_labels:
