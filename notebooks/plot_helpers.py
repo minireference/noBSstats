@@ -801,7 +801,8 @@ def plot_alpha_beta_errors(cohend, ax=None, xlims=None, n=9, alpha=0.05,
     # design choices
     transp = 0.1
     alpha_color = "#4A25FF"
-    beta_color = "#0cb0d6"
+    beta_color = "#0CB0D6"
+    axis_color = "#808080"
 
     # default design parameters
     # n = 9         
@@ -832,9 +833,16 @@ def plot_alpha_beta_errors(cohend, ax=None, xlims=None, n=9, alpha=0.05,
     ax.spines[['left', 'right', 'top']].set_visible(False)
 
     # manually add arrowhead to x-axis + label t at the end
-    ax.plot(1, 0, ">k", alpha=0.2, transform=ax.get_yaxis_transform(), clip_on=False)
+    ax.plot(1, 0, ">", color=axis_color, transform=ax.get_yaxis_transform(), clip_on=False)
     ax.set_xlabel("t")
-    ax.xaxis.set_label_coords(1, 0.1)
+    ax.spines['bottom'].set_color(axis_color)
+    ax.tick_params(axis='x', colors=axis_color)
+    ax.xaxis.label.set_color(axis_color)
+    aspect_ratio = ax.get_xlim()[1] / ax.get_ylim()[1] 
+    if aspect_ratio > 5:
+        ax.xaxis.set_label_coords(1, 0.1)
+    else:
+        ax.xaxis.set_label_coords(1, 0.2)
 
     # errors
     alpha_x = (CV + rvXbarH0.ppf(0.94)) / 2 + alpha_offset[0]
