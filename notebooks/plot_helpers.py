@@ -782,7 +782,7 @@ def plot_sampling_dists_panel(rv, xlims, N=1000, ns=[10,30,100], binwidth=None, 
 ################################################################################
 
 
-def plot_alpha_beta_errors(cohend, ax=None, xlims=None, n=9,
+def plot_alpha_beta_errors(cohend, ax=None, xlims=None, n=9, alpha=0.05,
                            show_alt=True, show_concl=False, show_dist_labels=False, show_es=False,
                            fontsize=14, alpha_offset=(0,0), beta_offset=(0,0)):
     """
@@ -803,15 +803,15 @@ def plot_alpha_beta_errors(cohend, ax=None, xlims=None, n=9,
     alpha_color = "#4A25FF"
     beta_color = "#0cb0d6"
 
-    # sample design 
-    # n = 9
-    alpha = 0.05
+    # default design parameters
+    # n = 9         
+    # alpha = 0.05
+
 
     # populations
     muH0 = 0
     sigma = 2
     muHA = muH0 + cohend*sigma
-
 
     # sampling distributions
     se = np.sqrt(sigma**2/n)
@@ -820,9 +820,6 @@ def plot_alpha_beta_errors(cohend, ax=None, xlims=None, n=9,
 
     # cutoff value
     CV = norm.ppf(1-alpha) * se
-
-    # generate data (pd = plot data)
-    # xs = np.linspace(xmin, xmax, 1000)
 
     # plot sampling distributions
     calc_prob_and_plot_tails(rvXbarH0, x_l=xmin, x_r=CV, xlims=[xmin,xmax],
@@ -843,8 +840,9 @@ def plot_alpha_beta_errors(cohend, ax=None, xlims=None, n=9,
     alpha_x = (CV + rvXbarH0.ppf(0.94)) / 2 + alpha_offset[0]
     alpha_y = rvXbarH0.pdf(alpha_x)/5 + alpha_offset[1]
     ax.annotate(r' $\alpha$', xy=(alpha_x, alpha_y), fontsize=fontsize, va="center", color=alpha_color)
+
+    beta = rvXbarHA.cdf(CV)
     if show_alt:
-        beta = rvXbarHA.cdf(CV)
         if beta > 0.01:
             beta_x = (CV + rvXbarHA.ppf(0.1)) / 2 + beta_offset[0]
             beta_y = rvXbarH0.pdf(beta_x)/5 + beta_offset[1]
@@ -884,7 +882,6 @@ def plot_alpha_beta_errors(cohend, ax=None, xlims=None, n=9,
         esy = rvXbarH0MAX*1.07
         ax.plot([0,muHA], [esy,esy], linewidth=4, pickradius=1, solid_capstyle="butt")
 
-
     # decision annotations
     if show_concl:
         offset2 = 0.15
@@ -894,6 +891,9 @@ def plot_alpha_beta_errors(cohend, ax=None, xlims=None, n=9,
         ax.annotate('Reject $H_0$', xy=(xmax-0.1, -offset3), ha="right", annotation_clip=False, )
         ax.annotate("", xy=(xmin, -offset2), xytext=(CV, -offset2), arrowprops=arrowprops2, annotation_clip=False)
         ax.annotate('Fail to reject $H_0$', xy=(xmin+0.1, -offset3), ha="left", annotation_clip=False)
+
+    # print design params for other info
+    print("Design params: n =", n, ", alpha =", alpha, ", beta =", beta, ", Delta =", muHA, ", d =", cohend, ", CV =", CV)
 
     return ax
 
