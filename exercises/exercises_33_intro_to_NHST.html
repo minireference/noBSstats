@@ -61,6 +61,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'exercises/exercises_33_intro_to_NHST';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -468,6 +470,7 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mean-test-on-batch-05-estimated-variance">Mean test on batch 05 (estimated variance)</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cohen-s-d-via-bootstrap">Cohen’s d via bootstrap</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#electric-scooters">Electric scooters</a></li>
 </ul>
 </li>
 </ul>
@@ -599,24 +602,74 @@ in the <strong>No Bullshit Guide to Statistics</strong>.</p>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>count      40.000000
-mean     1002.534750
-std         6.553409
-min       992.090000
-25%       998.515000
-50%      1002.060000
-75%      1004.870000
-max      1027.190000
-Name: volume, dtype: float64
-</pre></div>
-</div>
-<img alt="../_images/1703e46286bff660fc5c95e7d38cc8c41b86e93c9e4a7222ab0bcde1321dd4a5.png" src="../_images/1703e46286bff660fc5c95e7d38cc8c41b86e93c9e4a7222ab0bcde1321dd4a5.png" />
-</div>
 </div>
 </section>
 <section id="cohen-s-d-via-bootstrap">
 <h3>Cohen’s d via bootstrap<a class="headerlink" href="#cohen-s-d-via-bootstrap" title="Permalink to this heading">#</a></h3>
+</section>
+<section id="electric-scooters">
+<h3>Electric scooters<a class="headerlink" href="#electric-scooters" title="Permalink to this heading">#</a></h3>
+<p>An electric scooter manufacturer launched a new model with large battery and claims the range of the scooter is 45 km. A distributor wants to put this claim to a test, and has collected data from 15 different electric scooters to measure the maximum range of trips, to see how long the battery lasts. We want to know if the data supports the manufacturer’s claim.</p>
+<p>The obtained the data <span class="math notranslate nohighlight">\(\texttt{ds} = [43.5, 44.8, 42.9, 46.2, 44.1, 43.8, 45.5, 43.4, 44.9, 42.7, 44.6, 47.0, 43.0, 44.2, 45.3]\)</span>.</p>
+<p>Assume the theoretical distribution is normally distributed <span class="math notranslate nohighlight">\(D_0 \sim \mathcal{N}(45, \sigma_{D_0})\)</span>,
+where <span class="math notranslate nohighlight">\(\sigma_{D_0}\)</span> is unknown so we’ll estimate it from the sample variance <span class="math notranslate nohighlight">\(\sigma_{D_0} \approx \texttt{dstd} = \texttt{std(ds)}\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># sample</span>
+<span class="n">ds</span> <span class="o">=</span> <span class="p">[</span><span class="mf">43.5</span><span class="p">,</span> <span class="mf">44.8</span><span class="p">,</span> <span class="mf">42.9</span><span class="p">,</span> <span class="mf">46.2</span><span class="p">,</span> <span class="mf">44.1</span><span class="p">,</span> <span class="mf">43.8</span><span class="p">,</span> <span class="mf">45.5</span><span class="p">,</span>
+      <span class="mf">43.4</span><span class="p">,</span> <span class="mf">44.9</span><span class="p">,</span> <span class="mf">42.7</span><span class="p">,</span> <span class="mf">44.6</span><span class="p">,</span> <span class="mf">47.0</span><span class="p">,</span> <span class="mf">43.0</span><span class="p">,</span> <span class="mf">44.2</span><span class="p">,</span> <span class="mf">45.3</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">stats_helpers</span> <span class="kn">import</span> <span class="n">mean</span><span class="p">,</span> <span class="n">std</span>
+<span class="n">dbar</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span>
+<span class="n">dstd</span> <span class="o">=</span> <span class="n">std</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
+<span class="n">muD0</span> <span class="o">=</span> <span class="mi">45</span>
+<span class="n">Dbar0</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="mi">45</span><span class="p">,</span> <span class="n">dstd</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">stats_helpers</span> <span class="kn">import</span> <span class="n">gen_sampling_dist</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">dbars0</span> <span class="o">=</span> <span class="n">gen_sampling_dist</span><span class="p">(</span><span class="n">Dbar0</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">mean</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obsdev</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dbar</span> <span class="o">-</span> <span class="n">muD0</span><span class="p">)</span>
+<span class="n">tails</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">dbars0</span> <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">v</span><span class="o">-</span><span class="n">muD0</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">obsdev</span><span class="p">]</span>
+<span class="n">pvalue</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tails</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">dbars0</span><span class="p">)</span>
+<span class="n">pvalue</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">stats_helpers</span> <span class="kn">import</span> <span class="n">simulation_test_mean</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">simulation_test_mean</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">mu0</span><span class="o">=</span><span class="n">muD0</span><span class="p">,</span> <span class="n">sigma0</span><span class="o">=</span><span class="n">dstd</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 </section>
 </section>
@@ -675,6 +728,7 @@ Name: volume, dtype: float64
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mean-test-on-batch-05-estimated-variance">Mean test on batch 05 (estimated variance)</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cohen-s-d-via-bootstrap">Cohen’s d via bootstrap</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#electric-scooters">Electric scooters</a></li>
 </ul>
 </li>
 </ul>

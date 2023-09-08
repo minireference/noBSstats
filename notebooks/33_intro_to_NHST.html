@@ -671,9 +671,9 @@ which you can use to try some commands on your own.</p>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">thetas0</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">]</span>
 
-<span class="n">obs</span> <span class="o">=</span> <span class="mi">4</span>            <span class="c1"># observed value (computed from sample)</span>
-<span class="n">th0</span> <span class="o">=</span> <span class="mi">3</span>            <span class="c1"># parameter under null</span>
-<span class="n">obsdev</span> <span class="o">=</span> <span class="n">obs</span> <span class="o">-</span> <span class="n">th0</span>    <span class="c1"># obs deviation from null</span>
+<span class="n">obstheta</span> <span class="o">=</span> <span class="mi">4</span>             <span class="c1"># observed value (computed from sample)</span>
+<span class="n">th0</span> <span class="o">=</span> <span class="mi">3</span>                  <span class="c1"># parameter under null</span>
+<span class="n">obsdev</span> <span class="o">=</span> <span class="n">obstheta</span> <span class="o">-</span> <span class="n">th0</span>  <span class="c1"># obs deviation from null</span>
 
 <span class="c1"># select the values in the tails of `thetas0`</span>
 <span class="n">tails</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">thetas0</span> <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">v</span><span class="o">-</span><span class="n">th0</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">obsdev</span><span class="p">]</span>
@@ -1082,7 +1082,9 @@ and highlighting the parts of the histogram that satisfy the “<span class="mat
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/intro_to_NHST/hist_p-value_kombucha_obsmean04.pdf
-Saved figure to figures/stats/intro_to_NHST/hist_p-value_kombucha_obsmean04.png
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/stats/intro_to_NHST/hist_p-value_kombucha_obsmean04.png
 </pre></div>
 </div>
 <img alt="../_images/6e75c70dda30cb501414c1cc42640d35b99eaf0a8423116596426601c0e77f24.png" src="../_images/6e75c70dda30cb501414c1cc42640d35b99eaf0a8423116596426601c0e77f24.png" />
@@ -1122,8 +1124,7 @@ as an estimate of the effect size in this situation.</p>
 <p>The point estimate <span class="math notranslate nohighlight">\(\widehat{\Delta} = \overline{\mathbf{k}}_{04} - \mu_{K_0} = 3.83\)</span>
 tells us how much the mean of the sample differs from the expected population mean <span class="math notranslate nohighlight">\(\mu_{K_0}\)</span>,
 but it doesn’t tell us the uncertainty in this estimate.</p>
-<p>Let’s calculate the 90% bootstrap confidence interval for the effect size  <span class="math notranslate nohighlight">\(\ci{\Delta,0.9}^*\)</span>.</p>
-<p>First let’s obtain a 90% obtain a confidence interval <span class="math notranslate nohighlight">\(\ci{\mu,0.9}^*\)</span> for the unknown population mean <span class="math notranslate nohighlight">\(\mu\)</span>.
+<p>Let’s calculate the 90% bootstrap confidence interval for the effect size  <span class="math notranslate nohighlight">\(\ci{\Delta,0.9}^*\)</span>. First let’s obtain a 90% obtain a confidence interval <span class="math notranslate nohighlight">\(\ci{\mu,0.9}^*\)</span> for the unknown population mean <span class="math notranslate nohighlight">\(\mu\)</span>.
 We can do this by calling the function <code class="docutils literal notranslate"><span class="pre">ci_mean</span></code> that we defined in Section 3.2
 with the options <code class="docutils literal notranslate"><span class="pre">alpha=0.1</span></code> and <code class="docutils literal notranslate"><span class="pre">method=&quot;b&quot;</span></code>.</p>
 <div class="cell docutils container">
@@ -1132,6 +1133,12 @@ with the options <code class="docutils literal notranslate"><span class="pre">al
 
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">48</span><span class="p">)</span>
 <span class="n">cimu04</span> <span class="o">=</span> <span class="n">ci_mean</span><span class="p">(</span><span class="n">ksample04</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">)</span>
+<span class="n">cimu04</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[1001.7537499999999, 1005.8020250000002]
 </pre></div>
 </div>
 </div>
@@ -1151,8 +1158,8 @@ subtracting the theoretical mean from both limits.</p>
 </div>
 </div>
 </div>
-<p>The confidence interval <span class="math notranslate nohighlight">\(\ci{\Delta,0.9}^* = [1.75, 5.80]\)</span> tells us a range of plausible values for the true effect size (how irregular Batch 04 is) could be anywhere between 1.75ml and 5.8ml.</p>
-<p>This is much more interesting to know,
+<p>The confidence interval <span class="math notranslate nohighlight">\(\ci{\Delta,0.9}^* = [1.75, 5.80]\)</span> tells us a range of plausible values for the true effect size (how irregular Batch 04 is) could be anywhere between 1.75ml and 5.8ml.
+This is much more interesting to know,
 since it tells us a whole range of plausible values.
 The interval estimate <span class="math notranslate nohighlight">\(\ci{\Delta,0.9}^* = [1.75, 5.80]\)</span> takes into account the variability of the samples we used in the calculation.</p>
 </section>
