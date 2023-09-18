@@ -3,18 +3,29 @@ Datasets
 
 This folder contains the datasets used for the examples, exercises, and problem in the **No Bullshit Guide to Statistics**.
 
-
-## Dataset 1: Website A/B test
-
-(coming soon)
+The files are stored in `CSV` format, which you can load using the function `pd.read_csv()`.
+Each data file has a metadata information in a file of the same name with the extension `.md`.
 
 
-## Dataset 2: Electricity prices
+## Main datasets
 
-(coming soon)
+These are the datasets used in examples and explanations throughout the book.
+
+### Dataset 1: Website A/B test
+
+- `visitors.csv`
+
+TODO: swap A & B labels; B = baseline,   A = alternative
 
 
-## Dataset 3: Student scores 
+### Dataset 2: Electricity prices
+
+- `eprices.csv`
+- `epriceswide.csv`
+
+
+
+### Dataset 3: Student scores 
 
 - Dataset: [`students.csv`](./students.csv)
 - Description: This dataset consists of student activity obtained from an online learning platform.
@@ -34,3 +45,43 @@ This folder contains the datasets used for the examples, exercises, and problem 
     that the student completed during the course.
 - Mode of data collection: Extracted from LMS database.
 - Source: Caroline Smith (experimental data)
+
+
+TODO: move detailed info to `students.md`
+
+
+### Dataset 4: Apples weights
+
+ - `apples.csv`
+
+
+
+### Dataset 5: Kombucha volumes
+
+ - `kombucha.csv`
+ - `kombuchapop.csv`
+
+
+### Dataset 6: Doctors sleep study
+
+ - `doctors.csv`
+
+
+
+### Dataset 7: Players
+
+- `players.csv`
+- `players_full.csv`
+
+
+
+
+## Other datasets
+
+Additional datasets you'll need for the exercises can be found in the directory `exercises/`
+while data sets used for problems are in `problems/`.
+
+The directory `formats/` contains examples of clean data in various file formats like.
+
+The directory `datasets/raw/` contains "raw" data files that need data cleanup and transformations,
+and are used as part of the exercises in the Pandas tutorial (Appendix D).
