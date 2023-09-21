@@ -2,7 +2,7 @@
 
 This series of notebooks and video tutorials presents **a complete example of a statistical analysis** that touches all major topics described in the upcoming book [**No Bullshit Guide to Statistics**](https://docs.google.com/document/d/1fwep23-95U-w1QMPU31nOvUnUXE2X3s_Dbk5JuLlKAY/edit). We'll illustrate key statistics concepts using hands-on code demonstrations in Python.
 
-Click on the video thumbnails to watch the video walkthroughs on youtube and use binder links like this one [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstatsnotebooks/main?labpath=stats_overview%2F00_Introduction.ipynb) to play with the notebooks interactively. Click [here](https://www.youtube.com/playlist?list=PLGmu4KtWiH680gMQnSbSADBuLnoyBUVFg) for see the complete playlist.
+Click on the video thumbnails to watch the video walkthroughs on youtube and use binder links like this one [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstats/main?labpath=stats_overview%2F00_Introduction.ipynb) to play with the notebooks interactively. Click [here](https://www.youtube.com/playlist?list=PLGmu4KtWiH680gMQnSbSADBuLnoyBUVFg) for see the complete playlist.
 
 Pro tip: If you find the narrative in the videos is too slow, you can change the playback speed to 1.25x or 1.5x. For more fine-grained control of playback speed, I highly recommend the [Video Speed Controller plugin](https://chrome.google.com/webstore/detail/video-speed-controller/nffaoalbilbmmfgbnbgppjihopabppdk) for Chrome.
 
@@ -14,8 +14,8 @@ Pro tip: If you find the narrative in the videos is too slow, you can change the
 
 In this video, we'll introduce the running example we'll use for the whole video series: Amy's experiment about providing additional training to her startup employees. In the second half of the video, we'll illustrate concepts from chapter 01 DATA like extracting data from a spreadsheet, transforming data from "wide" to "tall" format, and viewing descriptive statistics like histograms, box plots, strip plots, and numerical summaries.
 
-Introduction Notebook: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstatsnotebooks/main?labpath=stats_overview%2F00_Introduction.ipynb) [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/minireference/noBSstatsnotebooks/blob/main/stats_overview/00_Introduction.ipynb)  
-01 DATA Notebook: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstatsnotebooks/main?labpath=stats_overview%2F01_DATA.ipynb) [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/minireference/noBSstatsnotebooks/blob/main/stats_overview/01_DATA.ipynb)
+Introduction Notebook: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstats/main?labpath=stats_overview%2F00_Introduction.ipynb) [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/minireference/noBSstats/blob/main/stats_overview/00_Introduction.ipynb)  
+01 DATA Notebook: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstats/main?labpath=stats_overview%2F01_DATA.ipynb) [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/minireference/noBSstats/blob/main/stats_overview/01_DATA.ipynb)
 
 
 
@@ -29,7 +29,7 @@ This video introduces some fundamental topics from probability theory like rando
 
 The second half of the video is concerned with that probability distribution for samples of size n from a probability distribution. We study the properties of certain statistics (quantities computed from a sample) and learn about the Central Limit Theorem which tells us some useful facts about the distribution of the sample mean (usually denoted as overline-x) from any distribution.
 
-Notebook: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstatsnotebooks/main?labpath=stats_overview%2F02_PROB.ipynb) [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/minireference/noBSstatsnotebooks/blob/main/stats_overview/02_PROB.ipynb)
+Notebook: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstats/main?labpath=stats_overview%2F02_PROB.ipynb) [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/minireference/noBSstats/blob/main/stats_overview/02_PROB.ipynb)
 
 
 
@@ -53,7 +53,7 @@ Estimators (functions 𝑓 computed from samples) are a fundamental tool for sta
 
 This video provides a detailed hands-on discussion about the difference-between-group-means estimator `d = mean(xA) - mean(xB)`, which will is the math building block we'll need for both hypothesis testing and estimation. We'll obtain the sampling distribution for the difference-between-group-means estimator using both simulation and mathematical modelling techniques.
 
-Notebook: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstatsnotebooks/main?labpath=stats_overview%2F03_STATS.ipynb) [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/minireference/noBSstatsnotebooks/blob/main/stats_overview/03_STATS.ipynb)
+Notebook: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstats/main?labpath=stats_overview%2F03_STATS.ipynb) [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/minireference/noBSstats/blob/main/stats_overview/03_STATS.ipynb)
 
 
 
@@ -107,7 +107,7 @@ Notebook: see STATS notebook link above, starting at **Estimating the effect siz
 
 Linear models allow us to describe relationships between two continuous quantities x and y. We assume the output Y is distributed according to Y ~ b+m\*x, in other words the x-Y relationship is a line of the form y=mx+b. In this video we study the case when each employee receives a variable amount of stats training (anywhere from 0 hours to 100 hours), and the ELV value is modelled by the relationship ELV ∼ 𝛽0+𝛽1\*hours, where 𝛽0 is the intercept and 𝛽1 is the slope. The notebook shows several different ways to fit the model (find the best choice of parameters 𝛽0 and 𝛽1), interpret the results, and make predictions.
 
-Notebook: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstatsnotebooks/main?labpath=stats_overview%2F04_LINEAR_MODELS.ipynb) [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/minireference/noBSstatsnotebooks/blob/main/stats_overview/04_LINEAR_MODELS.ipynb)
+Notebook: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstats/main?labpath=stats_overview%2F04_LINEAR_MODELS.ipynb) [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/minireference/noBSstats/blob/main/stats_overview/04_LINEAR_MODELS.ipynb)
 
 
 

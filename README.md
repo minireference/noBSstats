@@ -9,7 +9,7 @@ This is what this repo is about.
 ## Getting started
 Use the binder button below to start an ephemeral JupyterLab instance where you can run the code in each notebook.
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstatsnotebooks/main)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstats/main)
 
 
 ## Contents

@@ -2,7 +2,7 @@ No Bullshit Stats Notebooks
 ===========================
 
 Use the binder button to run the [`notebooks`](./notebooks/README.md) interactively: 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstatsnotebooks/main)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstats/main)
 
 
 
