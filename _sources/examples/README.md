@@ -9,8 +9,14 @@ covered in the [Inventory of statistical test recipes](https://docs.google.com/d
 
 List of recipes:
 
-- `z_test`
-- `t_test`
-- `permutation_test` ...
+- Z-tests:
+  - `z_test`
+  - 
+- T-tests:
+  - One-sample $t$-test: [`one_sample_t-test.ipynb`](./one_sample_t-test.ipynb)
+  - Welch's two-sample $t$-test:
+  - Two-sample $t$-test with pooled variance: 
+- Reampling methods
+  - `permutation_test` ...
 
 
