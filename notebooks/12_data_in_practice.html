@@ -515,10 +515,7 @@ document.write(`
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-visualization-with-seaborn">Data visualization with Seaborn</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#studying-the-effect-of-ezlvl-on-time">Studying the effect of <code class="docutils literal notranslate"><span class="pre">ezlvl</span></code> on <code class="docutils literal notranslate"><span class="pre">time</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use-case-2">Use case 2</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#use-case-3">Use case 3</a></li>
-</ul>
-</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#studying-the-relationship-between-age-and-time">Studying the relationship between <code class="docutils literal notranslate"><span class="pre">age</span></code> and <code class="docutils literal notranslate"><span class="pre">time</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-datasets">Real-world datasets</a><ul class="nav section-nav flex-column">
@@ -558,6 +555,55 @@ document.write(`
 </div>
 <section id="notebook-setup">
 <h2>Notebook setup<a class="headerlink" href="#notebook-setup" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO: only keep this cell in figures notebook</span>
+<span class="c1"># load Python modules</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="kn">from</span> <span class="nn">plot_helpers</span> <span class="kn">import</span> <span class="n">savefigure</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO: only keep this cell in figures notebook</span>
+<span class="c1"># Figures setup</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>  <span class="c1"># needed otherwise `sns.set_theme` doesn&#39;t work</span>
+<span class="kn">from</span> <span class="nn">plot_helpers</span> <span class="kn">import</span> <span class="n">RCPARAMS</span>
+<span class="c1"># RCPARAMS.update({&#39;figure.figsize&#39;: (10, 3)})   # good for screen</span>
+<span class="n">RCPARAMS</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mf">1.6</span><span class="p">)})</span>  <span class="c1"># good for print</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set_theme</span><span class="p">(</span>
+    <span class="n">context</span><span class="o">=</span><span class="s2">&quot;paper&quot;</span><span class="p">,</span>
+    <span class="n">style</span><span class="o">=</span><span class="s2">&quot;whitegrid&quot;</span><span class="p">,</span>
+    <span class="n">palette</span><span class="o">=</span><span class="s2">&quot;colorblind&quot;</span><span class="p">,</span>
+    <span class="n">rc</span><span class="o">=</span><span class="n">RCPARAMS</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Useful colors</span>
+<span class="n">snspal</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">()</span>
+<span class="n">blue</span><span class="p">,</span> <span class="n">orange</span><span class="p">,</span> <span class="n">purple</span> <span class="o">=</span> <span class="n">snspal</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">snspal</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">snspal</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+<span class="c1"># red = sns.color_palette(&quot;tab10&quot;)[3]</span>
+
+<span class="c1"># High-resolution please</span>
+<span class="o">%</span><span class="k">config</span> InlineBackend.figure_format = &#39;retina&#39;
+
+<span class="c1"># Where to store figures</span>
+<span class="n">DESTDIR</span> <span class="o">=</span> <span class="s2">&quot;figures/data&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Figure size 640x480 with 0 Axes&gt;
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 <section id="note-for-windows-users">
 <h2>Note for Windows users<a class="headerlink" href="#note-for-windows-users" title="Permalink to this heading">#</a></h2>
@@ -2043,7 +2089,7 @@ Name: time, dtype: float64
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;pandas.core.groupby.generic.DataFrameGroupBy object at 0x7fa8c6864f70&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;pandas.core.groupby.generic.DataFrameGroupBy object at 0x7f7a00d75880&gt;
 </pre></div>
 </div>
 </div>
@@ -2055,7 +2101,7 @@ Name: time, dtype: float64
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;pandas.core.groupby.generic.SeriesGroupBy object at 0x7fa8c687e250&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;pandas.core.groupby.generic.SeriesGroupBy object at 0x7f7a00ccfb80&gt;
 </pre></div>
 </div>
 </div>
@@ -2215,7 +2261,8 @@ Alternatively,
 you can run <code class="docutils literal notranslate"><span class="pre">%pip</span> <span class="pre">install</span> <span class="pre">seaborn</span></code> to install just the Seaborn library.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">stripplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;ezlvl&quot;</span><span class="p">,</span> <span class="n">jitter</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">players</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># sns.stripplot(x=&quot;time&quot;, hue=&quot;ezlvl&quot;, jitter=0.01, data=players)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">stripplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">players</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2223,22 +2270,101 @@ you can run <code class="docutils literal notranslate"><span class="pre">%pip</s
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: xlabel=&#39;time&#39;&gt;
 </pre></div>
 </div>
-<img alt="../_images/44b6cfd45fc933dad0f11409f2d7ec7c4b544e2acb502f596227581e9b89e738.png" src="../_images/44b6cfd45fc933dad0f11409f2d7ec7c4b544e2acb502f596227581e9b89e738.png" />
+<img alt="../_images/45ccdead4d5b9c037dc27a6eaafebfee74a4f199311d891a6eb1fcfd41d39e30.png" src="../_images/45ccdead4d5b9c037dc27a6eaafebfee74a4f199311d891a6eb1fcfd41d39e30.png" />
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># sns.scatterplot(x=&quot;time&quot;, y=&quot;points&quot;, data=players)</span>
-<span class="c1"># sns.lineplot(x=&quot;time&quot;, y=&quot;points&quot;, data=players)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">stripplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;ezlvl&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">players</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: xlabel=&#39;time&#39;&gt;
+</pre></div>
+</div>
+<img alt="../_images/2d12a66e921827f5d3abc7c5decf27c1d53459d145537b06df5193dd6dbb2ecd.png" src="../_images/2d12a66e921827f5d3abc7c5decf27c1d53459d145537b06df5193dd6dbb2ecd.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># figures only</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;players-striplot-time-and-time-hue-ezlvl.pdf&quot;</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">plt</span><span class="o">.</span><span class="n">rc_context</span><span class="p">({</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:(</span><span class="mi">7</span><span class="p">,</span><span class="mf">2.0</span><span class="p">)}):</span> <span class="c1">#, sns.axes_style(&quot;ticks&quot;):</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="c1"># (a)</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">stripplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">players</span><span class="p">,</span> <span class="n">jitter</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;(a) Strip plot of the time variable &quot;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">250</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">350</span><span class="p">,</span> <span class="mi">400</span><span class="p">])</span>
+
+    <span class="c1"># (b)</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">stripplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;ezlvl&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">players</span><span class="p">,</span> <span class="n">jitter</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;(b) Same as (a) with hue determined by ezlvl&quot;</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">250</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">350</span><span class="p">,</span> <span class="mi">400</span><span class="p">])</span>
+    <span class="c1"># set lengend</span>
+    <span class="n">leg2</span> <span class="o">=</span> <span class="n">ax2</span><span class="o">.</span><span class="n">get_legend</span><span class="p">()</span>
+    <span class="n">handles_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">handle</span><span class="o">.</span><span class="n">get_label</span><span class="p">():</span> <span class="n">handle</span> <span class="k">for</span> <span class="n">handle</span> <span class="ow">in</span> <span class="n">leg2</span><span class="o">.</span><span class="n">legend_handles</span><span class="p">}</span>
+    <span class="n">handles</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">label_index</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">]:</span>
+        <span class="n">handles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">handles_dict</span><span class="p">[</span><span class="n">label_index</span><span class="p">])</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ezlvl = 0&quot;</span><span class="p">,</span> <span class="s2">&quot;ezlvl = 1&quot;</span><span class="p">]</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">handles</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+
+<span class="n">savefigure</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/data/players-striplot-time-and-time-hue-ezlvl.pdf
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/data/players-striplot-time-and-time-hue-ezlvl.png
+</pre></div>
+</div>
+<img alt="../_images/1b007aa9ba413e76065d9b75f7d749c81e24cb03a98d3004a363ba029af39cba.png" src="../_images/1b007aa9ba413e76065d9b75f7d749c81e24cb03a98d3004a363ba029af39cba.png" />
+</div>
+</div>
+<section id="studying-the-effect-of-ezlvl-on-time">
+<h3>Studying the effect of <code class="docutils literal notranslate"><span class="pre">ezlvl</span></code> on <code class="docutils literal notranslate"><span class="pre">time</span></code><a class="headerlink" href="#studying-the-effect-of-ezlvl-on-time" title="Permalink to this heading">#</a></h3>
+<p>The players dataset was collected as part of an experiment
+designed to answer the question “Does the easy first level lead to an improvement in user retention?”
+We want to compare the <code class="docutils literal notranslate"><span class="pre">time</span></code> variable (total time players spent in the game)
+of players who were shown the “easy level” version of the game (<code class="docutils literal notranslate"><span class="pre">ezlvl==1</span></code>)
+to the control group of played who played the regular vesion of the game (<code class="docutils literal notranslate"><span class="pre">ezlvl==0</span></code>).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">players</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;ezlvl&quot;</span><span class="p">)[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ezlvl
+0    242.173333
+1    257.341667
+Name: time, dtype: float64
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
-<span class="c1"># sns.scatterplot(x=&quot;ezlvl&quot;, y=&quot;time&quot;, hue=&quot;ezlvl&quot;, data=players)</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">stripplot</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="s2">&quot;ezlvl&quot;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;ezlvl&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">players</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;ezlvl&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;ezlvl&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">players</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/5c97c894ffadc63b0b274bc782763ab6b0004415a1f14f6e9ad879dbd9ac1b80.png" src="../_images/5c97c894ffadc63b0b274bc782763ab6b0004415a1f14f6e9ad879dbd9ac1b80.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">means</span> <span class="o">=</span> <span class="n">players</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;ezlvl&quot;</span><span class="p">)[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;ezlvl&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;ezlvl&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">players</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="p">[</span><span class="n">means</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">y</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="p">[</span><span class="n">means</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">y</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2246,64 +2372,98 @@ you can run <code class="docutils literal notranslate"><span class="pre">%pip</s
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: xlabel=&#39;time&#39;, ylabel=&#39;ezlvl&#39;&gt;
 </pre></div>
 </div>
-<img alt="../_images/a611836d0f326e83d6efa03d7ed0c6576568254456dd04accf5a708f544226bb.png" src="../_images/a611836d0f326e83d6efa03d7ed0c6576568254456dd04accf5a708f544226bb.png" />
+<img alt="../_images/5469b28fe1c9b8fef1dd746c72304be9bec66818cc8defad1a52c3e032d43be0.png" src="../_images/5469b28fe1c9b8fef1dd746c72304be9bec66818cc8defad1a52c3e032d43be0.png" />
 </div>
 </div>
-<section id="studying-the-effect-of-ezlvl-on-time">
-<h3>Studying the effect of <code class="docutils literal notranslate"><span class="pre">ezlvl</span></code> on <code class="docutils literal notranslate"><span class="pre">time</span></code><a class="headerlink" href="#studying-the-effect-of-ezlvl-on-time" title="Permalink to this heading">#</a></h3>
-<p>We want to study the relation <code class="docutils literal notranslate"><span class="pre">time</span> <span class="pre">~</span> <span class="pre">ezlvl</span></code>,
-which will tell us whether the “easy level” version of the game
-leads to improvements in user retention.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">lmplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;ezlvl&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">players</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.FacetGrid at 0x7fa8ba744400&gt;
-</pre></div>
-</div>
-<img alt="../_images/c62d975c859723f37c7bdf26500d3d167478cdd6c816a8f43e1e6840c9f2f47e.png" src="../_images/c62d975c859723f37c7bdf26500d3d167478cdd6c816a8f43e1e6840c9f2f47e.png" />
-</div>
-</div>
-</section>
-<section id="use-case-2">
-<h3>Use case 2<a class="headerlink" href="#use-case-2" title="Permalink to this heading">#</a></h3>
-<p>In Sec 1.1 use <code class="docutils literal notranslate"><span class="pre">time</span> <span class="pre">~</span> <span class="pre">age</span></code> to look for correlation between age and engagement.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">lmplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">players</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.FacetGrid at 0x7fa8ba5f97f0&gt;
-</pre></div>
-</div>
-<img alt="../_images/4bc398ed1b85fed54e1f96184043ec605f57fca82fe673d15ad8278881df8d48.png" src="../_images/4bc398ed1b85fed54e1f96184043ec605f57fca82fe673d15ad8278881df8d48.png" />
-</div>
-</div>
-<section id="use-case-3">
-<h4>Use case 3<a class="headerlink" href="#use-case-3" title="Permalink to this heading">#</a></h4>
-<p>In Sec 1.1	<code class="docutils literal notranslate"><span class="pre">jobstatus</span></code> (non-existent)	explain possible confounding of <code class="docutils literal notranslate"><span class="pre">time~age</span></code> correlation by confounder var. “employed” no time to play game vs. “unemployed” has time to play game, with young ppl being more likely to be unemployed</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">players_full</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/players_full.csv&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># figures only</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;players-scatterplot-x-time-y-ezlvl-with-means.pdf&quot;</span><span class="p">)</span>
 
-<span class="n">sns</span><span class="o">.</span><span class="n">lmplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;jobstatus&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">players_full</span><span class="p">)</span>
+<span class="n">means</span> <span class="o">=</span> <span class="n">players</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;ezlvl&quot;</span><span class="p">)[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;ezlvl&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;ezlvl&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">players</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="p">[</span><span class="n">means</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">y</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">blue</span><span class="p">,</span>   <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="p">[</span><span class="n">means</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">y</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">orange</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">get_legend</span><span class="p">()</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">430</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="n">savefigure</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.FacetGrid at 0x7fa8ba751f70&gt;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/data/players-scatterplot-x-time-y-ezlvl-with-means.pdf
+Saved figure to figures/data/players-scatterplot-x-time-y-ezlvl-with-means.png
 </pre></div>
 </div>
-<img alt="../_images/39c0972db6accab82d62eba679f3f17449b876fa17a29a9eefd395c3d191b64a.png" src="../_images/39c0972db6accab82d62eba679f3f17449b876fa17a29a9eefd395c3d191b64a.png" />
+<img alt="../_images/44997f937f60a8389cd7e23d5b87275b8de1a8a8a6dd283b28a8111e16db2770.png" src="../_images/44997f937f60a8389cd7e23d5b87275b8de1a8a8a6dd283b28a8111e16db2770.png" />
 </div>
 </div>
 </section>
+<section id="studying-the-relationship-between-age-and-time">
+<h3>Studying the relationship between <code class="docutils literal notranslate"><span class="pre">age</span></code> and <code class="docutils literal notranslate"><span class="pre">time</span></code><a class="headerlink" href="#studying-the-relationship-between-age-and-time" title="Permalink to this heading">#</a></h3>
+<p>The secondary research question,
+is to look for a correlation between the <code class="docutils literal notranslate"><span class="pre">age</span></code> variable and the <code class="docutils literal notranslate"><span class="pre">time</span></code> variable.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">players</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: xlabel=&#39;age&#39;, ylabel=&#39;time&#39;&gt;
+</pre></div>
+</div>
+<img alt="../_images/7ff4ea62667169345e2213a8a3d72e1e2c37e65a38a665c0b188de0724693249.png" src="../_images/7ff4ea62667169345e2213a8a3d72e1e2c37e65a38a665c0b188de0724693249.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">regplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="n">ci</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">players</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: xlabel=&#39;age&#39;, ylabel=&#39;time&#39;&gt;
+</pre></div>
+</div>
+<img alt="../_images/a424f5d5b764a0bf3b1a654f81e7691f758c53233c3cc6506593ef98b6652431.png" src="../_images/a424f5d5b764a0bf3b1a654f81e7691f758c53233c3cc6506593ef98b6652431.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># figures only</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;players-time-vs-age-scatterplot-and-regplot.pdf&quot;</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">plt</span><span class="o">.</span><span class="n">rc_context</span><span class="p">({</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:(</span><span class="mi">7</span><span class="p">,</span><span class="mi">3</span><span class="p">)}):</span> <span class="c1">#, sns.axes_style(&quot;ticks&quot;):</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="c1"># (a)</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">players</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;(a) Scatter plot of time versus age&quot;</span><span class="p">)</span>
+
+    <span class="c1"># (b)</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">regplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="n">ci</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">players</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;(b) Linear regression model of time versus age&quot;</span><span class="p">)</span>
+
+<span class="n">savefigure</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/data/players-time-vs-age-scatterplot-and-regplot.pdf
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/data/players-time-vs-age-scatterplot-and-regplot.png
+</pre></div>
+</div>
+<img alt="../_images/e09fe966d15b7f190bc01fb7f1d42ee261bdf577231aed1a73d0eee503cf237d.png" src="../_images/e09fe966d15b7f190bc01fb7f1d42ee261bdf577231aed1a73d0eee503cf237d.png" />
+</div>
+</div>
 </section>
 </section>
 <section id="real-world-datasets">
@@ -2546,10 +2706,7 @@ index &amp; client name &amp; filename &amp; shape &amp; sections \\
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-visualization-with-seaborn">Data visualization with Seaborn</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#studying-the-effect-of-ezlvl-on-time">Studying the effect of <code class="docutils literal notranslate"><span class="pre">ezlvl</span></code> on <code class="docutils literal notranslate"><span class="pre">time</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use-case-2">Use case 2</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#use-case-3">Use case 3</a></li>
-</ul>
-</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#studying-the-relationship-between-age-and-time">Studying the relationship between <code class="docutils literal notranslate"><span class="pre">age</span></code> and <code class="docutils literal notranslate"><span class="pre">time</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-datasets">Real-world datasets</a><ul class="nav section-nav flex-column">
