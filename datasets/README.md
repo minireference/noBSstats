@@ -7,15 +7,32 @@ The files are stored in `CSV` format, which you can load using the function `pd.
 Each data file has a metadata information in a file of the same name with the extension `.md`.
 
 
+
+## Introductory datasets
+
+### Players
+
+- `players.csv`: 12 observations of 7 variables from a computer game
+- `players_full.csv`: includes the confounding variable `jobstatus`
+
+
+
+### Minimal
+
+- `minimal.csv`: used in Appendix D: Introduction to Pandas
+- `raw/minimal.csv`: used as an example of data cleaning of missing values
+
+
+
 ## Main datasets
 
 These are the datasets used in examples and explanations throughout the book.
 
-### Dataset 1: Website A/B test
 
-- `visitors.csv`
+### Dataset 1: Apples weights
 
-TODO: swap A & B labels; B = baseline,   A = alternative
+ - `apples.csv`
+
 
 
 ### Dataset 2: Electricity prices
@@ -50,28 +67,24 @@ TODO: swap A & B labels; B = baseline,   A = alternative
 TODO: move detailed info to `students.md`
 
 
-### Dataset 4: Apples weights
 
- - `apples.csv`
-
-
-
-### Dataset 5: Kombucha volumes
+### Dataset 4: Kombucha volumes
 
  - `kombucha.csv`
  - `kombuchapop.csv`
 
 
-### Dataset 6: Doctors sleep study
+### Dataset 5: Doctors sleep study
 
  - `doctors.csv`
 
 
 
-### Dataset 7: Players
+### Dataset 6: Website A/B test
 
-- `players.csv`
-- `players_full.csv`
+- `visitors.csv`
+
+TODO: swap A & B labels; B = baseline,   A = alternative
 
 
 
