@@ -34,7 +34,7 @@ and talks about data pre-processing steps like data cleaning and outlier removal
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstats/main?labpath=notebooks%2F12_data_in_practice.ipynb)
 - Colab link: TODO
 
-TODO: finish the notebook with Alice, Bob, and Charlotte pre-processing steps:
+TODO: finish the notebook with dataset pre-processing steps:
 [12b_background_stories.ipynb](./12b_background_stories.ipynb).
 
 
