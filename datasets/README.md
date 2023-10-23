@@ -40,6 +40,9 @@ These are the datasets used in examples and explanations throughout the book.
 - `eprices.csv`
 - `epriceswide.csv`
 
+- columns:
+  - `end`: location of the charging station
+  - `price`: observed price
 
 
 ### Dataset 3: Student scores 
