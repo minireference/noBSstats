@@ -84,7 +84,9 @@ TODO: move detailed info to `students.md`
 
 - `visitors.csv`
 
-TODO: swap A & B labels; B = baseline,   A = alternative
+- columns:
+  - `version` (categorical) which is either B = baseline or A = alternative
+  - `bought` (boolean) whether visitor bought something or not
 
 
 
