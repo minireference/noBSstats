@@ -13,7 +13,6 @@ import numpy as np
 import pandas as pd
 from scipy.integrate import quad
 import seaborn as sns
-from statistics import mean
 
 from scipy.stats import randint    # special handling beta+1=beta
 from scipy.stats import nbinom     # display parameter n as r
