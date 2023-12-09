@@ -62,6 +62,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/12_data_in_practice';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -481,7 +483,6 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#test-a-simple-python-command">Test a simple Python command</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started-with-jupyterlab">Getting started with JupyterLab</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#download-and-install-jupyterlab-desktop">Download and install JupyterLab Desktop</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#download-the-nobsstats-notebooks-and-datasets">Download the <code class="docutils literal notranslate"><span class="pre">noBSstats</span></code> notebooks and datasets</a></li>
@@ -491,7 +492,7 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-management-with-pandas">Data management with Pandas</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-frames">Data frames</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-datasets">Loading datasets</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#players-dataset">Players dataset</a></li>
 </ul>
 </li>
@@ -515,15 +516,15 @@ document.write(`
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#series-methods">Series methods</a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-only-certain-rows-filtering">Selecting only certain rows (filtering)</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#bonus-topic-multiple-selection-criteria">Bonus topic: multiple selection criteria</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-only-certain-rows-filtering">Selecting only certain rows (filtering)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sorting-data-frames">Sorting data frames</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ranking-optional-material">Ranking (optional material)</a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sorting-data-frames-and-ranking">Sorting data frames and ranking</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#grouping-and-aggregation">Grouping and aggregation</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-visualization-with-seaborn">Data visualization with Seaborn</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#strip-plot-of-the-time-variable">Strip plot of the <code class="docutils literal notranslate"><span class="pre">time</span></code> variable</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#studying-the-effect-of-ezlvl-on-time">Studying the effect of <code class="docutils literal notranslate"><span class="pre">ezlvl</span></code> on <code class="docutils literal notranslate"><span class="pre">time</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#studying-the-relationship-between-age-and-time">Studying the relationship between <code class="docutils literal notranslate"><span class="pre">age</span></code> and <code class="docutils literal notranslate"><span class="pre">time</span></code></a></li>
 </ul>
@@ -546,10 +547,7 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-extraction">Data extraction</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-transformations">Data transformations</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tidy-data">Tidy data</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#the-melted-epriceswide-is-the-same-as-eprices">The melted-<code class="docutils literal notranslate"><span class="pre">epriceswide</span></code> is the same as <code class="docutils literal notranslate"><span class="pre">eprices</span></code></a></li>
-</ul>
-</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tidy-data">Tidy data</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-cleaning">Data cleaning</a></li>
 </ul>
 </li>
@@ -568,21 +566,6 @@ document.write(`
   <section class="tex2jax_ignore mathjax_ignore" id="section-1-2-data-in-practice">
 <h1>Section 1.2 — Data in practice<a class="headerlink" href="#section-1-2-data-in-practice" title="Permalink to this heading">#</a></h1>
 <p>This notebook contains all the code from <a class="reference external" href="https://minireference.com/static/excerpts/noBSstats/noBSstats_ch01_DATA.pdf#page=34">Section 1.2 Data in practice</a> of the <strong>No Bullshit Guide to Statistics</strong>.</p>
-<section id="test-a-simple-python-command">
-<h2>Test a simple Python command<a class="headerlink" href="#test-a-simple-python-command" title="Permalink to this heading">#</a></h2>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mi">2</span> <span class="o">+</span> <span class="mi">3</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5
-</pre></div>
-</div>
-</div>
-</div>
-</section>
 <section id="getting-started-with-jupyterlab">
 <h2>Getting started with JupyterLab<a class="headerlink" href="#getting-started-with-jupyterlab" title="Permalink to this heading">#</a></h2>
 <section id="download-and-install-jupyterlab-desktop">
@@ -591,118 +574,186 @@ document.write(`
 </section>
 <section id="download-the-nobsstats-notebooks-and-datasets">
 <h3>Download the <code class="docutils literal notranslate"><span class="pre">noBSstats</span></code> notebooks and datasets<a class="headerlink" href="#download-the-nobsstats-notebooks-and-datasets" title="Permalink to this heading">#</a></h3>
-<p>TODO: include image from attachments</p>
+<p>Go to URL <a class="github reference external" href="https://github.com/minireference/noBSstats">minireference/noBSstats</a> and use the Code dropdown button to download the ZIP archive of the entire repository.</p>
+<p><img alt="" src="../_images/repo-download-zip.png" /></p>
+<p>After downloading the ZIP archive,
+double-click on the file to extract its contents,
+and move the resulting folder <code class="docutils literal notranslate"><span class="pre">noBSstats</span></code> to a location on your computer
+where you normally keep your documents.</p>
+<p>The ZIP archive includes all the datasets and computational notebooks for the book.
+Use the <strong>File browser</strong> pane on the right
+to navigate to the location where you saved the <code class="docutils literal notranslate"><span class="pre">noBSstats</span></code> folder
+and explore the subfolders <code class="docutils literal notranslate"><span class="pre">datasets</span></code>, <code class="docutils literal notranslate"><span class="pre">notebooks</span></code>, <code class="docutils literal notranslate"><span class="pre">exercises</span></code>, <code class="docutils literal notranslate"><span class="pre">tutorials</span></code>, etc.</p>
 </section>
 <section id="datasets-for-the-book">
 <h3>Datasets for the book<a class="headerlink" href="#datasets-for-the-book" title="Permalink to this heading">#</a></h3>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="s2">&quot;../datasets&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;students.csv&#39;,
- &#39;epriceswide.csv&#39;,
- &#39;minimal.csv&#39;,
- &#39;exercises&#39;,
- &#39;formats&#39;,
- &#39;README.md&#39;,
- &#39;visitors.csv&#39;,
- &#39;index.md&#39;,
- &#39;eprices.csv&#39;,
- &#39;cut_material&#39;,
- &#39;apples.csv&#39;,
- &#39;doctors.csv&#39;,
- &#39;players_full.csv&#39;,
- &#39;players.csv&#39;,
- &#39;kombuchapop.csv&#39;,
- &#39;kombucha.csv&#39;,
- &#39;raw&#39;]
-</pre></div>
-</div>
-</div>
-</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">datasets</span></code> folder contains all the datasets used in examples and exercises throughout the book.</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>id</p></th>
+<th class="head"><p>filename</p></th>
+<th class="head"><p>relative path</p></th>
+<th class="head"><p>url</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>players.csv</p></td>
+<td><p>../datasets/players.csv</p></td>
+<td><p><a class="reference external" href="https://noBSstats.com/datasets/players.csv">https://noBSstats.com/datasets/players.csv</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>apples.csv</p></td>
+<td><p>../datasets/apples.csv</p></td>
+<td><p><a class="reference external" href="https://noBSstats.com/datasets/apples.csv">https://noBSstats.com/datasets/apples.csv</a></p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>eprices.csv</p></td>
+<td><p>../datasets/eprices.csv</p></td>
+<td><p><a class="reference external" href="https://noBSstats.com/datasets/eprices.csv">https://noBSstats.com/datasets/eprices.csv</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>2w</p></td>
+<td><p>epriceswide.csv</p></td>
+<td><p>../datasets/epriceswide.csv</p></td>
+<td><p><a class="reference external" href="https://noBSstats.com/datasets/epriceswide.csv">https://noBSstats.com/datasets/epriceswide.csv</a></p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>students.csv</p></td>
+<td><p>../datasets/students.csv</p></td>
+<td><p><a class="reference external" href="https://noBSstats.com/datasets/students.csv">https://noBSstats.com/datasets/students.csv</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>kombucha.csv</p></td>
+<td><p>../datasets/kombucha.csv</p></td>
+<td><p><a class="reference external" href="https://noBSstats.com/datasets/kombucha.csv">https://noBSstats.com/datasets/kombucha.csv</a></p></td>
+</tr>
+<tr class="row-even"><td><p>4p</p></td>
+<td><p>kombuchapop.csv</p></td>
+<td><p>../datasets/kombuchapop.csv</p></td>
+<td><p><a class="reference external" href="https://noBSstats.com/datasets/kombuchapop.csv">https://noBSstats.com/datasets/kombuchapop.csv</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>5</p></td>
+<td><p>doctors.csv</p></td>
+<td><p>../datasets/doctors.csv</p></td>
+<td><p><a class="reference external" href="https://noBSstats.com/datasets/doctors.csv">https://noBSstats.com/datasets/doctors.csv</a></p></td>
+</tr>
+<tr class="row-even"><td><p>6</p></td>
+<td><p>visitors.csv</p></td>
+<td><p>../datasets/visitors.csv</p></td>
+<td><p><a class="reference external" href="https://noBSstats.com/datasets/visitors.csv">https://noBSstats.com/datasets/visitors.csv</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>D</p></td>
+<td><p>minimal.csv</p></td>
+<td><p>../datasets/minimal.csv</p></td>
+<td><p><a class="reference external" href="https://noBSstats.com/datasets/minimal.csv">https://noBSstats.com/datasets/minimal.csv</a></p></td>
+</tr>
+</tbody>
+</table>
 </section>
 <section id="interactive-notebooks-for-each-section">
 <h3>Interactive notebooks for each section<a class="headerlink" href="#interactive-notebooks-for-each-section" title="Permalink to this heading">#</a></h3>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">sorted</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="s2">&quot;../notebooks&quot;</span><span class="p">))</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;10_DATA.md&#39;,
- &#39;11_intro_to_data.ipynb&#39;,
- &#39;12_data_in_practice.ipynb&#39;,
- &#39;13_descriptive_statistics.ipynb&#39;,
- &#39;20_PROB.md&#39;,
- &#39;21_discrete_random_vars.ipynb&#39;,
- &#39;22_multiple_random_vars.ipynb&#39;,
- &#39;23_inventory_discrete_dists.ipynb&#39;,
- &#39;24_calculus_prerequisites.ipynb&#39;,
- &#39;25_continuous_random_vars.ipynb&#39;,
- &#39;26_inventory_continuous_dists.ipynb&#39;,
- &#39;27_random_var_generation.ipynb&#39;,
- &#39;28_random_samples.ipynb&#39;,
- &#39;30_STATS.md&#39;,
- &#39;31_estimators.ipynb&#39;,
- &#39;32_confidence_intervals.ipynb&#39;,
- &#39;33_intro_to_NHST.ipynb&#39;,
- &#39;34_analytical_approx.ipynb&#39;,
- &#39;35_two_sample_tests.ipynb&#39;,
- &#39;36_design.ipynb&#39;,
- &#39;37_inventory_stats_tests.ipynb&#39;,
- &#39;40_LINEAR_MODELS.md&#39;,
- &#39;41_introduction_to_LMs.ipynb&#39;,
- &#39;50_BAYESIAN_STATS.md&#39;,
- &#39;99_mean_estimation_details.ipynb&#39;,
- &#39;99_proportions_estimators.ipynb&#39;,
- &#39;OLD34_analytical_approximation.ipynb&#39;,
- &#39;README.md&#39;,
- &#39;attachments&#39;,
- &#39;cut_material.ipynb&#39;,
- &#39;drafts&#39;,
- &#39;explorations&#39;,
- &#39;index.md&#39;,
- &#39;one_sample_known_mean_unknown_var.ipynb&#39;,
- &#39;plot_helpers.py&#39;,
- &#39;simdata&#39;,
- &#39;stats_helpers.py&#39;,
- &#39;test_helpers.py&#39;]
-</pre></div>
-</div>
-</div>
-</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">notebooks</span></code> folder contains the jupyter notebooks associated with each section of the book,
+similar to the one you’re currently looking at.</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>section</p></th>
+<th class="head"><p>notebook name</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Section 1.1</p></td>
+<td><p>11_intro_to_data.ipynb</p></td>
+</tr>
+<tr class="row-odd"><td><p>Section 1.2</p></td>
+<td><p>12_data_in_practice.ipynb</p></td>
+</tr>
+<tr class="row-even"><td><p>Section 1.3</p></td>
+<td><p>13_descriptive_statistics.ipynb</p></td>
+</tr>
+<tr class="row-odd"><td><p>Section 2.1</p></td>
+<td><p>21_discrete_random_vars.ipynb</p></td>
+</tr>
+<tr class="row-even"><td><p>Section 2.2</p></td>
+<td><p>22_multiple_random_vars.ipynb</p></td>
+</tr>
+<tr class="row-odd"><td><p>Section 2.3</p></td>
+<td><p>23_inventory_discrete_dists.ipynb</p></td>
+</tr>
+<tr class="row-even"><td><p>Section 2.4</p></td>
+<td><p>24_calculus_prerequisites.ipynb</p></td>
+</tr>
+<tr class="row-odd"><td><p>Section 2.5</p></td>
+<td><p>25_continuous_random_vars.ipynb</p></td>
+</tr>
+<tr class="row-even"><td><p>Section 2.6</p></td>
+<td><p>26_inventory_continuous_dists.ipynb</p></td>
+</tr>
+<tr class="row-odd"><td><p>Section 2.7</p></td>
+<td><p>27_random_var_generation.ipynb</p></td>
+</tr>
+<tr class="row-even"><td><p>Section 2.8</p></td>
+<td><p>28_random_samples.ipynb</p></td>
+</tr>
+<tr class="row-odd"><td><p>Section 3.1</p></td>
+<td><p>31_estimators.ipynb</p></td>
+</tr>
+<tr class="row-even"><td><p>Section 3.2</p></td>
+<td><p>32_confidence_intervals.ipynb</p></td>
+</tr>
+<tr class="row-odd"><td><p>Section 3.3</p></td>
+<td><p>33_intro_to_NHST.ipynb</p></td>
+</tr>
+<tr class="row-even"><td><p>Section 3.4</p></td>
+<td><p>34_analytical_approx.ipynb</p></td>
+</tr>
+<tr class="row-odd"><td><p>Section 3.5</p></td>
+<td><p>35_two_sample_tests.ipynb</p></td>
+</tr>
+<tr class="row-even"><td><p>Section 3.6</p></td>
+<td><p>36_design.ipynb</p></td>
+</tr>
+<tr class="row-odd"><td><p>Section 3.7</p></td>
+<td><p>37_inventory_stats_tests.ipynb</p></td>
+</tr>
+<tr class="row-even"><td><p>Section 4.1</p></td>
+<td><p>41_introduction_to_LMs.ipynb</p></td>
+</tr>
+</tbody>
+</table>
 </section>
 <section id="exercises-notebooks">
 <h3>Exercises notebooks<a class="headerlink" href="#exercises-notebooks" title="Permalink to this heading">#</a></h3>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">sorted</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="s2">&quot;../exercises&quot;</span><span class="p">))</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;__pycache__&#39;,
- &#39;datasets&#39;,
- &#39;exercises_12_practical_data.ipynb&#39;,
- &#39;exercises_13_descr_stats.ipynb&#39;,
- &#39;exercises_21_discrete_RVs.ipynb&#39;,
- &#39;exercises_31_estimtors.ipynb&#39;,
- &#39;exercises_32_confidence_intervals.ipynb&#39;,
- &#39;exercises_33_intro_to_NHST.ipynb&#39;,
- &#39;exercises_35_two_sample_tests.ipynb&#39;,
- &#39;plot_helpers.py&#39;,
- &#39;problems_1_data.ipynb&#39;,
- &#39;solutions&#39;,
- &#39;stats_helpers.py&#39;]
-</pre></div>
-</div>
-</div>
-</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">exercises</span></code> folder contains starter notebooks for the exercises in each section.</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>section</p></th>
+<th class="head"><p>notebook name</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Section 1.2</p></td>
+<td><p>exercises_12_practical_data.ipynb</p></td>
+</tr>
+<tr class="row-odd"><td><p>Section 1.3</p></td>
+<td><p>exercises_13_descr_stats.ipynb</p></td>
+</tr>
+<tr class="row-even"><td><p>Section 2.1</p></td>
+<td><p>exercises_21_discrete_RVs.ipynb</p></td>
+</tr>
+<tr class="row-odd"><td><p>Section 3.1</p></td>
+<td><p>exercises_31_estimtors.ipynb</p></td>
+</tr>
+<tr class="row-even"><td><p>Section 3.2</p></td>
+<td><p>exercises_32_confidence_intervals.ipynb</p></td>
+</tr>
+<tr class="row-odd"><td><p>Section 3.3</p></td>
+<td><p>exercises_33_intro_to_NHST.ipynb</p></td>
+</tr>
+<tr class="row-even"><td><p>Section 3.5</p></td>
+<td><p>exercises_35_two_sample_tests.ipynb</p></td>
+</tr>
+</tbody>
+</table>
 </section>
 </section>
 <section id="data-management-with-pandas">
@@ -716,10 +767,13 @@ We’ll follow the standard convention of importing the <code class="docutils li
 </div>
 </div>
 </div>
-<section id="data-frames">
-<h3>Data frames<a class="headerlink" href="#data-frames" title="Permalink to this heading">#</a></h3>
+<section id="loading-datasets">
+<h3>Loading datasets<a class="headerlink" href="#loading-datasets" title="Permalink to this heading">#</a></h3>
 <section id="players-dataset">
 <h4>Players dataset<a class="headerlink" href="#players-dataset" title="Permalink to this heading">#</a></h4>
+<p>Consider the data file <code class="docutils literal notranslate"><span class="pre">players.csv</span></code> is located in the <code class="docutils literal notranslate"><span class="pre">datasets</span></code> directory.
+The file extension <code class="docutils literal notranslate"><span class="pre">.csv</span></code> tells us the file contains text data formatted as Comma-Separated Values (CSV).
+We can use the command <code class="docutils literal notranslate"><span class="pre">%pycat</span></code> to print the raw contents of the this file.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">pycat</span> ../datasets/players.csv
@@ -727,8 +781,9 @@ We’ll follow the standard convention of importing the <code class="docutils li
 </div>
 </div>
 </div>
-<p>We can create a the data frame object <code class="docutils literal notranslate"><span class="pre">players</span></code>
-by loading the players dataset located at <code class="docutils literal notranslate"><span class="pre">../datasets/players.csv</span></code>
+<p>We see the file contains 13 lines of text, and each line contains—as promised by the <code class="docutils literal notranslate"><span class="pre">.csv</span></code> file extension—values separated by commas.
+The first line in the data file is called the “header” and contains the names of the variable names.</p>
+<p>We can create a the data frame object from the players dataset located at <code class="docutils literal notranslate"><span class="pre">../datasets/players.csv</span></code>
 by calling the function <code class="docutils literal notranslate"><span class="pre">pd.read_csv</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1129,10 +1184,12 @@ memory usage: 800.0+ bytes
 <h3>Accessing values in a DataFrame<a class="headerlink" href="#accessing-values-in-a-dataframe" title="Permalink to this heading">#</a></h3>
 <section id="selecting-individual-values">
 <h4>Selecting individual values<a class="headerlink" href="#selecting-individual-values" title="Permalink to this heading">#</a></h4>
+<p>The player with username <code class="docutils literal notranslate"><span class="pre">emil</span></code> has index <code class="docutils literal notranslate"><span class="pre">2</span></code> in the data frame.
+To see the value of the <code class="docutils literal notranslate"><span class="pre">points</span></code> variable for the player <code class="docutils literal notranslate"><span class="pre">emil</span></code>,
+we use the following expression based on the <code class="docutils literal notranslate"><span class="pre">.loc[]</span></code> selector syntax.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Emil&#39;s points</span>
-<span class="n">players</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="s2">&quot;points&quot;</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">players</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="s2">&quot;points&quot;</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
@@ -1145,11 +1202,10 @@ memory usage: 800.0+ bytes
 </section>
 <section id="selecting-entire-rows">
 <h4>Selecting entire rows<a class="headerlink" href="#selecting-entire-rows" title="Permalink to this heading">#</a></h4>
+<p>Let’s now select all the measurements we have for Sanjay (the player at index <code class="docutils literal notranslate"><span class="pre">6</span></code>).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Sanjay&#39;s data</span>
-<span class="n">row6</span> <span class="o">=</span> <span class="n">players</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">6</span><span class="p">,:]</span>  <span class="c1"># == players.loc[6]</span>
-<span class="n">row6</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">players</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">6</span><span class="p">,:]</span>  <span class="c1"># == players.loc[6]</span>
 </pre></div>
 </div>
 </div>
@@ -1166,52 +1222,15 @@ Name: 6, dtype: object
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Rows of the dataframe are Series objects</span>
-<span class="nb">type</span><span class="p">(</span><span class="n">row6</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pandas.core.series.Series
-</pre></div>
-</div>
-</div>
-</div>
-<p>The <code class="docutils literal notranslate"><span class="pre">index</span></code> of the series <code class="docutils literal notranslate"><span class="pre">row6</span></code> is the same as the columns index of the data frame <code class="docutils literal notranslate"><span class="pre">players</span></code>.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">row6</span><span class="o">.</span><span class="n">index</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Index([&#39;username&#39;, &#39;country&#39;, &#39;age&#39;, &#39;ezlvl&#39;, &#39;time&#39;, &#39;points&#39;, &#39;finished&#39;], dtype=&#39;object&#39;)
-</pre></div>
-</div>
-</div>
-</div>
-<p>To access individual values, use the square bracket notation.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">row6</span><span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">]</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>27
-</pre></div>
-</div>
-</div>
-</div>
 </section>
 <section id="selecting-entire-columns">
 <h4>Selecting entire columns<a class="headerlink" href="#selecting-entire-columns" title="Permalink to this heading">#</a></h4>
+<p>We use the square brackets to select columns from a data frame.
+For example,
+this is how we extract the <code class="docutils literal notranslate"><span class="pre">&quot;age&quot;</span></code> column from the <code class="docutils literal notranslate"><span class="pre">players</span></code> data frame.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ages</span> <span class="o">=</span> <span class="n">players</span><span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">]</span>
-<span class="n">ages</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">players</span><span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
@@ -1233,76 +1252,13 @@ Name: age, dtype: int64
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="n">ages</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pandas.core.series.Series
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ages</span><span class="o">.</span><span class="n">index</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>RangeIndex(start=0, stop=12, step=1)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ages</span><span class="o">.</span><span class="n">values</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([38, 21, 52, 50, 26, 45, 27, 23, 24, 59, 18, 22])
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ALT1.</span>
-<span class="c1"># players[&quot;age&quot;].equals( players.loc[:,&quot;age&quot;] )</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ALT2.</span>
-<span class="c1"># players[&quot;age&quot;].equals( players.age )</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ages</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>27
-</pre></div>
-</div>
-</div>
-</div>
 </section>
 <section id="selecting-multiple-columns">
 <h4>Selecting multiple columns<a class="headerlink" href="#selecting-multiple-columns" title="Permalink to this heading">#</a></h4>
+<p>We can select multiple columns by using list of column names inside the square brackets.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">players</span><span class="p">[</span> <span class="p">[</span><span class="s2">&quot;username&quot;</span><span class="p">,</span> <span class="s2">&quot;country&quot;</span><span class="p">]</span> <span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">players</span><span class="p">[</span> <span class="p">[</span><span class="s2">&quot;username&quot;</span><span class="p">,</span><span class="s2">&quot;country&quot;</span><span class="p">]</span> <span class="p">]</span>
 </pre></div>
 </div>
 </div>
@@ -1398,9 +1354,13 @@ Name: age, dtype: int64
 </section>
 <section id="statistical-calculations-using-pandas">
 <h3>Statistical calculations using Pandas<a class="headerlink" href="#statistical-calculations-using-pandas" title="Permalink to this heading">#</a></h3>
+<p>Let’s extract the values from the <code class="docutils literal notranslate"><span class="pre">&quot;age&quot;</span></code> column from the <code class="docutils literal notranslate"><span class="pre">players</span></code> data frame
+and store them as new variable called <code class="docutils literal notranslate"><span class="pre">ages</span></code>.
+We intentionally choose the name <code class="docutils literal notranslate"><span class="pre">ages</span></code> (plural of the column name)
+to remember where the data comes from.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ages</span> <span class="o">=</span> <span class="n">players</span><span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">]</span>  <span class="c1"># == players.loc[:,&quot;age&quot;]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ages</span> <span class="o">=</span> <span class="n">players</span><span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">]</span>
 <span class="n">ages</span>
 </pre></div>
 </div>
@@ -1423,6 +1383,7 @@ Name: age, dtype: int64
 </div>
 </div>
 </div>
+<p>The variable <code class="docutils literal notranslate"><span class="pre">ages</span></code> is a Pandas series object.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="n">ages</span><span class="p">)</span>
@@ -1435,8 +1396,22 @@ Name: age, dtype: int64
 </div>
 </div>
 </div>
+<p>We can access individual values within the series <code class="docutils literal notranslate"><span class="pre">ages</span></code> using the square brackets.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ages</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>27
+</pre></div>
+</div>
+</div>
+</div>
 <section id="series-attributes">
 <h4>Series attributes<a class="headerlink" href="#series-attributes" title="Permalink to this heading">#</a></h4>
+<p>The Pandas series <code class="docutils literal notranslate"><span class="pre">ages</span></code> has the same index as the <code class="docutils literal notranslate"><span class="pre">players</span></code> data frame.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ages</span><span class="o">.</span><span class="n">index</span>
@@ -1449,18 +1424,7 @@ Name: age, dtype: int64
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ages</span><span class="o">.</span><span class="n">values</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([38, 21, 52, 50, 26, 45, 27, 23, 24, 59, 18, 22])
-</pre></div>
-</div>
-</div>
-</div>
+<p>The series <code class="docutils literal notranslate"><span class="pre">ages</span></code> also “remembers” the name of the column from which it was extracted.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ages</span><span class="o">.</span><span class="n">name</span>
@@ -1473,21 +1437,16 @@ Name: age, dtype: int64
 </div>
 </div>
 </div>
+<p>We sometimes want to see the data without the index.
+We can do this by accessing the <code class="docutils literal notranslate"><span class="pre">.values</span></code> attribute of the series.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">players</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ages</span><span class="o">.</span><span class="n">values</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>username    sanjay
-country         ca
-age             27
-ezlvl            1
-time         350.0
-points        1401
-finished         1
-Name: 6, dtype: object
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([38, 21, 52, 50, 26, 45, 27, 23, 24, 59, 18, 22])
 </pre></div>
 </div>
 </div>
@@ -1507,10 +1466,17 @@ Name: 6, dtype: object
 </div>
 </div>
 </div>
+<p>Alternatively,
+since series objects are list-like,
+we can use the Python build in function <code class="docutils literal notranslate"><span class="pre">len</span></code> to find the length of the series.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># # ALT</span>
-<span class="c1"># len(ages)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">ages</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>12
 </pre></div>
 </div>
 </div>
@@ -1527,6 +1493,12 @@ Name: 6, dtype: object
 </div>
 </div>
 </div>
+<p>The average value of a list of <span class="math notranslate nohighlight">\(n\)</span> values <span class="math notranslate nohighlight">\(\mathbf{x} = [x_1, x_2, \ldots, x_n]\)</span>
+is computed using the formula
+<span class="math notranslate nohighlight">\(\overline{\mathbf{x}} = \tfrac{1}{n}\!\left(	x_1 + x_2 + \cdots + x_n	\right)\)</span>.
+This formula says that the average is computed by summing together all the values
+in the list <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> and dividing by the length of the list <span class="math notranslate nohighlight">\(n\)</span>.</p>
+<p>The expression for computing the average age using Pandas methods is as follows:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ages</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="n">ages</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
@@ -1539,6 +1511,10 @@ Name: 6, dtype: object
 </div>
 </div>
 </div>
+<p>An equivalent,
+more direct,
+way to compute the arithmetic mean of the values in the series <code class="docutils literal notranslate"><span class="pre">ages</span></code>
+is to call its <code class="docutils literal notranslate"><span class="pre">.mean()</span></code> method.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ages</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
@@ -1551,6 +1527,8 @@ Name: 6, dtype: object
 </div>
 </div>
 </div>
+<p>The <em>standard deviation</em> (dispersion from the mean) is another common statistic
+that we might want to calculate for a variable in a dataset.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ages</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
@@ -1563,11 +1541,22 @@ Name: 6, dtype: object
 </div>
 </div>
 </div>
+<p>Pandas series and data frames objects have numerous other methods for computing numerical
+data summaries, which are called the <em>descriptive statistics</em> of the variable.
+We’ll learn more about those in <a class="reference internal" href="13_descriptive_statistics.html"><span class="doc std std-doc">Section 1.3 Descriptive statistics</span></a>.</p>
 </section>
 </section>
 <section id="selecting-only-certain-rows-filtering">
 <h3>Selecting only certain rows (filtering)<a class="headerlink" href="#selecting-only-certain-rows-filtering" title="Permalink to this heading">#</a></h3>
-<p>To select only rows where <code class="docutils literal notranslate"><span class="pre">ezlvl</span></code> is <code class="docutils literal notranslate"><span class="pre">1</span></code>, we first build the boolean selection mask…</p>
+<p>We often want to select a subset of the rows of a data frame that fit one or more criteria.
+This is equivalent to “filtering out” the rows that don’t satisfy these criteria.
+We use a two-step procedure for this:</p>
+<ul class="simple">
+<li><p><strong>Step 1</strong>: Build a “selection mask” series that consists of boolean values (<code class="docutils literal notranslate"><span class="pre">True</span></code> or <code class="docutils literal notranslate"><span class="pre">False</span></code>).</p></li>
+<li><p><strong>Step 2</strong>: Select the subset of rows from the data frame using the mask.
+The result is a new data frame that contains only the rows that correspond to the <code class="docutils literal notranslate"><span class="pre">True</span></code> values in the selection mask.</p></li>
+</ul>
+<p>To select only rows where <code class="docutils literal notranslate"><span class="pre">ezlvl</span></code> is <code class="docutils literal notranslate"><span class="pre">1</span></code>, we first build the boolean selection mask (<strong>Step 1</strong>)…</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mask</span> <span class="o">=</span> <span class="n">players</span><span class="p">[</span><span class="s2">&quot;ezlvl&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span>
@@ -1593,7 +1582,7 @@ Name: ezlvl, dtype: bool
 </div>
 </div>
 </div>
-<p>… then select the rows using the mask.</p>
+<p>… then select the rows using the mask (<strong>Step 2</strong>).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">players</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
@@ -1793,28 +1782,9 @@ Name: ezlvl, dtype: bool
 </table>
 </div></div></div>
 </div>
-<section id="bonus-topic-multiple-selection-criteria">
-<h4>Bonus topic: multiple selection criteria<a class="headerlink" href="#bonus-topic-multiple-selection-criteria" title="Permalink to this heading">#</a></h4>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># mask for selecting players with ezlvl=1 and time greater than 200 mins</span>
-<span class="c1"># players[(players[&quot;ezlvl&quot;] == 1) &amp; (players[&quot;time&quot;] &gt;= 200)]</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># mask for selecting US and Canada players</span>
-<span class="c1"># players[&quot;country&quot;].isin([&quot;us&quot;,&quot;ca&quot;])</span>
-</pre></div>
-</div>
-</div>
-</div>
 </section>
-</section>
-<section id="sorting-data-frames-and-ranking">
-<h3>Sorting data frames and ranking<a class="headerlink" href="#sorting-data-frames-and-ranking" title="Permalink to this heading">#</a></h3>
+<section id="sorting-data-frames">
+<h3>Sorting data frames<a class="headerlink" href="#sorting-data-frames" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">players</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -1974,6 +1944,10 @@ Name: ezlvl, dtype: bool
 </table>
 </div></div></div>
 </div>
+<section id="ranking-optional-material">
+<h4>Ranking (optional material)<a class="headerlink" href="#ranking-optional-material" title="Permalink to this heading">#</a></h4>
+<p>We can also rank the players according to the <code class="docutils literal notranslate"><span class="pre">time</span></code> variable
+by using the method <code class="docutils literal notranslate"><span class="pre">.rank()</span></code> on the <code class="docutils literal notranslate"><span class="pre">&quot;time&quot;</span></code> column.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">players</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">rank</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -1998,83 +1972,10 @@ Name: time, dtype: float64
 </div>
 </div>
 </div>
+<p>The <em>rank</em> of an element in a list tells us the position it appears in when the list is sorted.
+We see from the players-ranked-by-time results that the player at index <code class="docutils literal notranslate"><span class="pre">7</span></code> has rank <code class="docutils literal notranslate"><span class="pre">1</span></code> (first),
+and the player at index <code class="docutils literal notranslate"><span class="pre">5</span></code> is ranked <code class="docutils literal notranslate"><span class="pre">12</span></code> (last).</p>
 </section>
-<section id="grouping-and-aggregation">
-<h3>Grouping and aggregation<a class="headerlink" href="#grouping-and-aggregation" title="Permalink to this heading">#</a></h3>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">players</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;ezlvl&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;pandas.core.groupby.generic.DataFrameGroupBy object at 0x7fac849dd610&gt;
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">players</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;ezlvl&quot;</span><span class="p">)[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;pandas.core.groupby.generic.SeriesGroupBy object at 0x7fac849dd250&gt;
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">players</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;ezlvl&quot;</span><span class="p">)[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ezlvl
-0    242.173333
-1    257.341667
-Name: time, dtype: float64
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">players</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;ezlvl&quot;</span><span class="p">)[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">aggregate</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">]))</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>           sum        mean
-ezlvl                     
-0      1453.04  242.173333
-1      1544.05  257.341667
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># # ALT1. newline continuation character</span>
-<span class="c1"># players.groupby(&quot;ezlvl&quot;)[&quot;time&quot;] \</span>
-<span class="c1">#   .agg([&quot;sum&quot;, &quot;mean&quot;])</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># # ALT2. expression inside parentheses</span>
-<span class="c1"># (players</span>
-<span class="c1">#   .groupby(&quot;ezlvl&quot;)[&quot;time&quot;]</span>
-<span class="c1">#   .agg([&quot;sum&quot;, &quot;mean&quot;, &quot;max&quot;])</span>
-<span class="c1"># )</span>
-</pre></div>
-</div>
-</div>
-</div>
 </section>
 </section>
 <section id="data-visualization-with-seaborn">
@@ -2088,22 +1989,12 @@ under the alias <code class="docutils literal notranslate"><span class="pre">sns
 </div>
 </div>
 </div>
-<p>If you get an error when running this code cell,
-run <code class="docutils literal notranslate"><span class="pre">%pip</span> <span class="pre">install</span> <span class="pre">seaborn</span></code> to install the Seaborn library.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">times</span> <span class="o">=</span> <span class="n">players</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">stripplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">times</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: xlabel=&#39;time&#39;&gt;
-</pre></div>
-</div>
-<img alt="../_images/42391dbb307fa5150866f9402977ae9c5c246d18ff2b132213fd5960b1c8a8ef.png" src="../_images/42391dbb307fa5150866f9402977ae9c5c246d18ff2b132213fd5960b1c8a8ef.png" />
-</div>
-</div>
+<p>All the Seaborn functions are now available under <code class="docutils literal notranslate"><span class="pre">sns.</span></code>.</p>
+<section id="strip-plot-of-the-time-variable">
+<h3>Strip plot of the <code class="docutils literal notranslate"><span class="pre">time</span></code> variable<a class="headerlink" href="#strip-plot-of-the-time-variable" title="Permalink to this heading">#</a></h3>
+<p>To generate a strip plot,
+we pass the data frame <code class="docutils literal notranslate"><span class="pre">players</span></code> as the <code class="docutils literal notranslate"><span class="pre">data</span></code> argument to the Seaborn function <code class="docutils literal notranslate"><span class="pre">sns.stripplot</span></code>,
+and specify the column name <code class="docutils literal notranslate"><span class="pre">&quot;time&quot;</span></code> (in quotes) as the <code class="docutils literal notranslate"><span class="pre">x</span></code> argument.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">stripplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">players</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">)</span>
@@ -2114,9 +2005,10 @@ run <code class="docutils literal notranslate"><span class="pre">%pip</span> <sp
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: xlabel=&#39;time&#39;&gt;
 </pre></div>
 </div>
-<img alt="../_images/8369bee985dcbc83c5c2d2714594e53e48b60c5e4b4f420349d1ff2417640daa.png" src="../_images/8369bee985dcbc83c5c2d2714594e53e48b60c5e4b4f420349d1ff2417640daa.png" />
+<img alt="../_images/91c2c3ba7d8a6a73e8ba8ddd136e47de3d0a9ab4293aac0ffa5e9aebfb249fc0.png" src="../_images/91c2c3ba7d8a6a73e8ba8ddd136e47de3d0a9ab4293aac0ffa5e9aebfb249fc0.png" />
 </div>
 </div>
+<p>We can enhance the strip plot by mapping the <code class="docutils literal notranslate"><span class="pre">ezlvl</span></code> variable to the colour (hue) of the points in the plot.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">stripplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">players</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;ezlvl&quot;</span><span class="p">)</span>
@@ -2127,9 +2019,10 @@ run <code class="docutils literal notranslate"><span class="pre">%pip</span> <sp
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: xlabel=&#39;time&#39;&gt;
 </pre></div>
 </div>
-<img alt="../_images/d26d8e3111b5106c3c5c37ada6a062f95e86e4140bada3ba3220f25d711d5f52.png" src="../_images/d26d8e3111b5106c3c5c37ada6a062f95e86e4140bada3ba3220f25d711d5f52.png" />
+<img alt="../_images/859dce163c2c5d1ef79985545fe6a250ebdb7b7d74c73deacf384c366556c911.png" src="../_images/859dce163c2c5d1ef79985545fe6a250ebdb7b7d74c73deacf384c366556c911.png" />
 </div>
 </div>
+</section>
 <section id="studying-the-effect-of-ezlvl-on-time">
 <h3>Studying the effect of <code class="docutils literal notranslate"><span class="pre">ezlvl</span></code> on <code class="docutils literal notranslate"><span class="pre">time</span></code><a class="headerlink" href="#studying-the-effect-of-ezlvl-on-time" title="Permalink to this heading">#</a></h3>
 <p>The players dataset was collected as part of an experiment
@@ -2137,19 +2030,7 @@ designed to answer the question “Does the easy first level lead to an improvem
 We want to compare the <code class="docutils literal notranslate"><span class="pre">time</span></code> variable (total time players spent in the game)
 of players who were shown the “easy level” version of the game (<code class="docutils literal notranslate"><span class="pre">ezlvl==1</span></code>)
 to the control group of played who played the regular vesion of the game (<code class="docutils literal notranslate"><span class="pre">ezlvl==0</span></code>).</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mean0</span> <span class="o">=</span> <span class="n">players</span><span class="p">[</span><span class="n">players</span><span class="p">[</span><span class="s2">&quot;ezlvl&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-<span class="n">mean0</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>242.17333333333332
-</pre></div>
-</div>
-</div>
-</div>
+<p>The mean <code class="docutils literal notranslate"><span class="pre">time</span></code> in the intervention group is:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mean1</span> <span class="o">=</span> <span class="n">players</span><span class="p">[</span><span class="n">players</span><span class="p">[</span><span class="s2">&quot;ezlvl&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
@@ -2163,6 +2044,21 @@ to the control group of played who played the regular vesion of the game (<code 
 </div>
 </div>
 </div>
+<p>The mean <code class="docutils literal notranslate"><span class="pre">time</span></code> in the control group is:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mean0</span> <span class="o">=</span> <span class="n">players</span><span class="p">[</span><span class="n">players</span><span class="p">[</span><span class="s2">&quot;ezlvl&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">mean0</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>242.17333333333332
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s generate a strip plot of the <code class="docutils literal notranslate"><span class="pre">time</span></code> variable for the two groups of players.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">stripplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">players</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;ezlvl&quot;</span><span class="p">,</span>
@@ -2174,15 +2070,16 @@ to the control group of played who played the regular vesion of the game (<code 
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: xlabel=&#39;time&#39;, ylabel=&#39;ezlvl&#39;&gt;
 </pre></div>
 </div>
-<img alt="../_images/b06b0b7ed11c879834f705bdd47ef15227b6b56c471b61d97342c6b4f4b8b06a.png" src="../_images/b06b0b7ed11c879834f705bdd47ef15227b6b56c471b61d97342c6b4f4b8b06a.png" />
+<img alt="../_images/a807a6a75ea3a4cf26c3eb8cbfc2e0f5717183af9b06e9430238864f251dd049.png" src="../_images/a807a6a75ea3a4cf26c3eb8cbfc2e0f5717183af9b06e9430238864f251dd049.png" />
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ALT. same stripplot with markers for the group means </span>
-<span class="c1"># ax = sns.stripplot(data=players, x=&quot;time&quot;, y=&quot;ezlvl&quot;, hue=&quot;ezlvl&quot;, orient=&quot;h&quot;, legend=None)</span>
-<span class="c1"># sns.stripplot(x=[mean0], y=[0], marker=&quot;D&quot;, orient=&quot;h&quot;, color=&quot;b&quot;, ax=ax)</span>
-<span class="c1"># sns.stripplot(x=[mean1], y=[1], marker=&quot;D&quot;, orient=&quot;h&quot;, color=&quot;r&quot;, ax=ax)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># # BONUS. stripplot with markers for the group means </span>
+<span class="c1"># sns.stripplot(data=players, x=&quot;time&quot;, y=&quot;ezlvl&quot;,</span>
+<span class="c1">#               hue=&quot;ezlvl&quot;, orient=&quot;h&quot;, legend=None)</span>
+<span class="c1"># sns.stripplot(x=[mean0], y=[0], marker=&quot;D&quot;, orient=&quot;h&quot;, color=&quot;b&quot;)</span>
+<span class="c1"># sns.stripplot(x=[mean1], y=[1], marker=&quot;D&quot;, orient=&quot;h&quot;, color=&quot;r&quot;)</span>
 </pre></div>
 </div>
 </div>
@@ -2205,6 +2102,7 @@ is to look for a correlation between the <code class="docutils literal notransla
 <img alt="../_images/567c6e190314c38d044d422e8a1c579cebe9a8fdd2e0e29847886b74b9320e71.png" src="../_images/567c6e190314c38d044d422e8a1c579cebe9a8fdd2e0e29847886b74b9320e71.png" />
 </div>
 </div>
+<p>We can also create a linear regression plot using the <code class="docutils literal notranslate"><span class="pre">regplot</span></code> function.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">regplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">players</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="n">ci</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
@@ -2218,13 +2116,84 @@ is to look for a correlation between the <code class="docutils literal notransla
 <img alt="../_images/eee882f79c4c26427d8dbd469fd02c93841c94427fe8fbd0ab0727e6253ce3f9.png" src="../_images/eee882f79c4c26427d8dbd469fd02c93841c94427fe8fbd0ab0727e6253ce3f9.png" />
 </div>
 </div>
+<p>We’ll learn more about linear regression in <a class="reference internal" href="40_LINEAR_MODELS.html"><span class="doc std std-doc">Chapter 4</span></a>.</p>
 </section>
 </section>
 <section id="real-world-datasets">
 <h2>Real-world datasets<a class="headerlink" href="#real-world-datasets" title="Permalink to this heading">#</a></h2>
-<p>TODO Add table as .md</p>
+<p>Imagine you’re a data scientist consulting with various clients.
+Clients come to you with datasets and real-world questions they want to answer using statistical analysis.
+The following table shows the complete list of the datasets
+that we’ll use in examples and explanations in the rest of the book.
+The last column of the table tells us the sections of the book where each dataset will be discussed.</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>index</p></th>
+<th class="head"><p>client name</p></th>
+<th class="head"><p>filename</p></th>
+<th class="head"><p>shape</p></th>
+<th class="head"><p>sections</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p></p></td>
+<td><p></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">players.csv</span></code></p></td>
+<td><p>12x7</p></td>
+<td><p>1.1, 1.2</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>Alice</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">apples.csv</span></code></p></td>
+<td><p>30x1</p></td>
+<td><p>3.1, 3.2</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>Bob</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">eprices.csv</span></code></p></td>
+<td><p>18x2</p></td>
+<td><p>3.1, 3.5</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>Charlotte</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">students.csv</span></code></p></td>
+<td><p>15x5</p></td>
+<td><p>1.3, 3.1, 3.5, 4.1</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>Khalid</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">kombucha.csv</span></code></p></td>
+<td><p>347x2</p></td>
+<td><p>3.1, 3.2, 3.3, 3.4</p></td>
+</tr>
+<tr class="row-odd"><td><p>5</p></td>
+<td><p>Dan</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">doctors.csv</span></code></p></td>
+<td><p>224x4</p></td>
+<td><p>3.1, 3.2, 3.5, 4.1</p></td>
+</tr>
+<tr class="row-even"><td><p>6</p></td>
+<td><p>Vanessa</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">visitors.csv</span></code></p></td>
+<td><p>2000x3</p></td>
+<td><p>3.6</p></td>
+</tr>
+<tr class="row-odd"><td><p></p></td>
+<td><p></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">minimal.csv</span></code></p></td>
+<td><p>5x4</p></td>
+<td><p>Appendix D</p></td>
+</tr>
+</tbody>
+</table>
+<p>Let’s briefly describe the background story behind each dataset and state
+the statistical question that each client is interested in answering.</p>
 <section id="apple-weights">
 <h3>Apple weights<a class="headerlink" href="#apple-weights" title="Permalink to this heading">#</a></h3>
+<p>Alice runs an apple orchard.
+She collected a sample from the apples harvested this year (the <em>population</em>)
+and sent you the data in a CSV file called <code class="docutils literal notranslate"><span class="pre">apples.csv</span></code>.</p>
+<p>You start by loading the data into Pandas and looking at its characteristics.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">apples</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/apples.csv&quot;</span><span class="p">)</span>
@@ -2238,6 +2207,7 @@ is to look for a correlation between the <code class="docutils literal notransla
 </div>
 </div>
 </div>
+<p>The first three observations in the apples dataset are:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">apples</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
@@ -2283,6 +2253,7 @@ is to look for a correlation between the <code class="docutils literal notransla
 </table>
 </div></div></div>
 </div>
+<p>The sample mean is:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">apples</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
@@ -2311,6 +2282,17 @@ is to look for a correlation between the <code class="docutils literal notransla
 </section>
 <section id="electricity-prices">
 <h3>Electricity prices<a class="headerlink" href="#electricity-prices" title="Permalink to this heading">#</a></h3>
+<p>Bob recently bought an electric car.
+He doesn’t have a charging station for his car at home,
+so he goes to public charging stations to recharge the car’s batteries.
+Bob lives downtown,
+so he can go either to the East End or West End of the city for charging.
+He wants to know which side of the city has cheaper prices.
+Are electricity prices cheaper in the East End or the West End of the city?</p>
+<p>To study this question,
+Bob collected electricity prices of East End and West End charging stations
+from a local price comparison website
+and provided you the prices in the dataset <code class="docutils literal notranslate"><span class="pre">eprices.csv</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">eprices</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/eprices.csv&quot;</span><span class="p">)</span>
@@ -2324,6 +2306,7 @@ is to look for a correlation between the <code class="docutils literal notransla
 </div>
 </div>
 </div>
+<p>The first three observations in the electricity prices dataset are:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">eprices</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
@@ -2373,6 +2356,7 @@ is to look for a correlation between the <code class="docutils literal notransla
 </table>
 </div></div></div>
 </div>
+<p>The average price in the West End is:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">eprices</span><span class="p">[</span><span class="n">eprices</span><span class="p">[</span><span class="s2">&quot;loc&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;West&quot;</span><span class="p">][</span><span class="s2">&quot;price&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
@@ -2385,6 +2369,7 @@ is to look for a correlation between the <code class="docutils literal notransla
 </div>
 </div>
 </div>
+<p>The average price in the East End is:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">eprices</span><span class="p">[</span><span class="n">eprices</span><span class="p">[</span><span class="s2">&quot;loc&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;East&quot;</span><span class="p">][</span><span class="s2">&quot;price&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
@@ -2397,6 +2382,8 @@ is to look for a correlation between the <code class="docutils literal notransla
 </div>
 </div>
 </div>
+<p>Let’s create a strip plot of electricity prices along the <span class="math notranslate nohighlight">\(x\)</span>-axis
+and use the <code class="docutils literal notranslate"><span class="pre">loc</span></code> variable to control the <span class="math notranslate nohighlight">\(y\)</span>-position and colour of the points.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">stripplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">eprices</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;price&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;loc&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;loc&quot;</span><span class="p">)</span>
@@ -2407,12 +2394,35 @@ is to look for a correlation between the <code class="docutils literal notransla
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: xlabel=&#39;price&#39;, ylabel=&#39;loc&#39;&gt;
 </pre></div>
 </div>
-<img alt="../_images/a8bf53fea725bda7e3ea1a5175dbcc6c83ef1c7535f37694bd71b1f4ee81db1d.png" src="../_images/a8bf53fea725bda7e3ea1a5175dbcc6c83ef1c7535f37694bd71b1f4ee81db1d.png" />
+<img alt="../_images/c4595cec941025ac57c42a54102174d41f2fd1d021f58aafa76c8a9fb7bbf926.png" src="../_images/c4595cec941025ac57c42a54102174d41f2fd1d021f58aafa76c8a9fb7bbf926.png" />
 </div>
 </div>
 </section>
 <section id="students-scores">
 <h3>Students’ scores<a class="headerlink" href="#students-scores" title="Permalink to this heading">#</a></h3>
+<p>Charlotte is a science teacher who wants to test the effectiveness of a new teaching method
+in which material is presented in the form of a “<a class="reference external" href="https://www.youtube.com/watch?v=eVtCO84MDj8">scientific debate</a>”.
+Student actors initially express “wrong” opinions,
+which are then corrected by presenting the “correct” way to think about science concepts.
+This type of teaching is in contrast to the usual lecture method,
+in which the teacher presents only the correct facts.</p>
+<p>To compare the effectiveness of the two teaching methods,
+she has prepared two variants of her course:</p>
+<ul class="simple">
+<li><p>In the <code class="docutils literal notranslate"><span class="pre">lecture</span></code> variant,
+the video lessons present the material in the usual lecture format
+that includes only correct facts and explanations.</p></li>
+<li><p>In the <code class="docutils literal notranslate"><span class="pre">debate</span></code> variant,
+the same material is covered through video lessons
+in which student actors express multiple points of view,
+including common misconceptions.</p></li>
+</ul>
+<p>Except for the different video lessons,
+the two variants of the course are identical:
+they cover the same topics,
+use the same total lecture time,
+and test students’ knowledge using the same assessment items.</p>
+<p>Let’s load the data file <code class="docutils literal notranslate"><span class="pre">students.csv</span></code> into Pandas and see what it looks like.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">students</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/students.csv&quot;</span><span class="p">)</span>
@@ -2426,6 +2436,7 @@ is to look for a correlation between the <code class="docutils literal notransla
 </div>
 </div>
 </div>
+<p>The first five observations in the students dataset are:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">students</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
@@ -2503,6 +2514,9 @@ is to look for a correlation between the <code class="docutils literal notransla
 </table>
 </div></div></div>
 </div>
+<p>We’re interested in comparing the two variants of the course,
+so we can generate a strip plot of the <code class="docutils literal notranslate"><span class="pre">score</span></code> variable,
+for the two groups defined by the <code class="docutils literal notranslate"><span class="pre">curriculum</span></code> variable.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">stripplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">students</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;score&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;curriculum&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;curriculum&quot;</span><span class="p">)</span>
@@ -2513,13 +2527,13 @@ is to look for a correlation between the <code class="docutils literal notransla
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: xlabel=&#39;score&#39;, ylabel=&#39;curriculum&#39;&gt;
 </pre></div>
 </div>
-<img alt="../_images/0ac50062fd28fc52a94528181144d9f4327dbb8e73347084a69e35796b20f0c9.png" src="../_images/0ac50062fd28fc52a94528181144d9f4327dbb8e73347084a69e35796b20f0c9.png" />
+<img alt="../_images/1fec030b4e22aa33ab5074000d3e82b533b24a8e5a0b0d3107ad490817b11a3a.png" src="../_images/1fec030b4e22aa33ab5074000d3e82b533b24a8e5a0b0d3107ad490817b11a3a.png" />
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lscores</span> <span class="o">=</span> <span class="n">students</span><span class="p">[</span><span class="n">students</span><span class="p">[</span><span class="s2">&quot;curriculum&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;lecture&quot;</span><span class="p">]</span>
-<span class="n">lscores</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lstudents</span> <span class="o">=</span> <span class="n">students</span><span class="p">[</span><span class="n">students</span><span class="p">[</span><span class="s2">&quot;curriculum&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;lecture&quot;</span><span class="p">]</span>
+<span class="n">lstudents</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -2531,8 +2545,8 @@ is to look for a correlation between the <code class="docutils literal notransla
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dscores</span> <span class="o">=</span> <span class="n">students</span><span class="p">[</span><span class="n">students</span><span class="p">[</span><span class="s2">&quot;curriculum&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;debate&quot;</span><span class="p">]</span>
-<span class="n">dscores</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dstudents</span> <span class="o">=</span> <span class="n">students</span><span class="p">[</span><span class="n">students</span><span class="p">[</span><span class="s2">&quot;curriculum&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;debate&quot;</span><span class="p">]</span>
+<span class="n">dstudents</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -2545,6 +2559,14 @@ is to look for a correlation between the <code class="docutils literal notransla
 </section>
 <section id="kombucha-volumes">
 <h3>Kombucha volumes<a class="headerlink" href="#kombucha-volumes" title="Permalink to this heading">#</a></h3>
+<p>Khalid is responsible for the production line at a kombucha brewing company.
+He needs to make sure the volume of kombucha that goes into each bottle is exactly 1 litre (1000 ml),
+but because of day-to-day variations in the fermentation process,
+production batches may end up with under-filled or over-filled bottles.
+Sending such <em>irregular</em> batches to clients will cause problems for the company,
+so Khalid wants to find a way to detect when the brewing and bottling process is not working as expected.</p>
+<p>Khalid compiled the dataset <code class="docutils literal notranslate"><span class="pre">kombucha.csv</span></code>,
+which contains the volume measurements from samples taken from 10 different production batches,</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kombucha</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/kombucha.csv&quot;</span><span class="p">)</span>
@@ -2570,6 +2592,7 @@ is to look for a correlation between the <code class="docutils literal notransla
 </div>
 </div>
 </div>
+<p>The first three observations in the kombucha dataset are:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kombucha</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
@@ -2619,18 +2642,8 @@ is to look for a correlation between the <code class="docutils literal notransla
 </table>
 </div></div></div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kombucha</span><span class="p">[</span><span class="s2">&quot;batch&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 1,  2,  3,  4,  5,  6,  7,  8,  9, 10])
-</pre></div>
-</div>
-</div>
-</div>
+<p>Let’s generate a combined strip plot of the observations from the different batches
+so that we can visually inspect the data.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">stripplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">kombucha</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;batch&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;volume&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
@@ -2641,7 +2654,7 @@ is to look for a correlation between the <code class="docutils literal notransla
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: xlabel=&#39;batch&#39;, ylabel=&#39;volume&#39;&gt;
 </pre></div>
 </div>
-<img alt="../_images/420cc8b7906f873be8040cabe4762a3be7163b3c6d8ba7ecfe0df61fb520a5f4.png" src="../_images/420cc8b7906f873be8040cabe4762a3be7163b3c6d8ba7ecfe0df61fb520a5f4.png" />
+<img alt="../_images/84192e81e6745b87060a0d7a9fb1d5be39f69c7dfa0c72a7f983318b16cdbb49.png" src="../_images/84192e81e6745b87060a0d7a9fb1d5be39f69c7dfa0c72a7f983318b16cdbb49.png" />
 </div>
 </div>
 <section id="average-volume-of-the-sample-from-batch-01">
@@ -2664,6 +2677,11 @@ is to look for a correlation between the <code class="docutils literal notransla
 </section>
 <section id="doctors-sleep-study">
 <h3>Doctors’ sleep study<a class="headerlink" href="#doctors-sleep-study" title="Permalink to this heading">#</a></h3>
+<p>Dan is a data analyst working at the Ministry of Health.
+His current assignment is to look for ways to improve the health of family doctors.
+He collected the doctors dataset (<code class="docutils literal notranslate"><span class="pre">doctors.csv</span></code>),
+which contains data about the demographics, life habits, and health metrics
+of 224 family doctors that Dan randomly selected from the populations of family doctors in the country.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">doctors</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/doctors.csv&quot;</span><span class="p">)</span>
@@ -2677,6 +2695,7 @@ is to look for a correlation between the <code class="docutils literal notransla
 </div>
 </div>
 </div>
+<p>The first three observations in the doctors dataset are:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">doctors</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
@@ -2734,6 +2753,8 @@ is to look for a correlation between the <code class="docutils literal notransla
 </table>
 </div></div></div>
 </div>
+<p>Dan is interested in comparing the sleep scores of doctors in rural and urban locations,
+so he starts by generating a strip plot of the <code class="docutils literal notranslate"><span class="pre">score</span></code> variable for the two values of the <code class="docutils literal notranslate"><span class="pre">location</span></code> variable.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">stripplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">doctors</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;score&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;location&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;location&quot;</span><span class="p">)</span>
@@ -2744,7 +2765,7 @@ is to look for a correlation between the <code class="docutils literal notransla
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: xlabel=&#39;score&#39;, ylabel=&#39;location&#39;&gt;
 </pre></div>
 </div>
-<img alt="../_images/0d0f4adbce5afec6e8e0847f669ba9049ad19192db251a2a556fce37ae97679d.png" src="../_images/0d0f4adbce5afec6e8e0847f669ba9049ad19192db251a2a556fce37ae97679d.png" />
+<img alt="../_images/5bfb0e5f16c3c13c130c4a3dca65818fa1978ea29d8d74a726e2673040afba7f.png" src="../_images/5bfb0e5f16c3c13c130c4a3dca65818fa1978ea29d8d74a726e2673040afba7f.png" />
 </div>
 </div>
 <section id="average-sleep-scores-for-doctors-in-different-locations">
@@ -2775,10 +2796,29 @@ is to look for a correlation between the <code class="docutils literal notransla
 </div>
 </div>
 </div>
+<p>We see doctors in <code class="docutils literal notranslate"><span class="pre">rural</span></code> locations get better sleep, on average, than doctors in <code class="docutils literal notranslate"><span class="pre">urban</span></code> locations.</p>
 </section>
 </section>
 <section id="website-visitors">
 <h3>Website visitors<a class="headerlink" href="#website-visitors" title="Permalink to this heading">#</a></h3>
+<p>Vanessa runs an e-commerce website and is about to launch a new design for the homepage.
+She wants to know if the new design is better or worse than the current design.
+Vanessa has access to the server logs from her website and is able to collect data about
+which visitors clicked the BUY NOW button and bought something.
+The term <em>conversion</em> is used when a visitor buys something,
+meaning they are “converted” from visitor to client.
+The <em>conversion rate</em> is the proportion of website visitors that become clients.</p>
+<p>Vanessa performed an experiment to check if the new website design is better than the current design
+when it comes to getting visitors to click the BUY NOW button.
+For the 2000 new visitors that the site received during the previous month,
+Vanessa randomly sent half of them to the new design (A for alternative),
+and the other half to the old design (B for baseline).
+She also recorded if a visitor bought a product during their visit to the website.</p>
+<p>The data consists of 2000 observations from visitors to the website from unique IP addresses.
+For each visitor,
+the column <code class="docutils literal notranslate"><span class="pre">version</span></code> contains which design they were presented with,
+and the column <code class="docutils literal notranslate"><span class="pre">bought</span></code> records whether the visitor purchased something or not.
+You use the usual Pandas commands to load the dataset <code class="docutils literal notranslate"><span class="pre">visitors.csv</span></code> to inspect it.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">visitors</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/visitors.csv&quot;</span><span class="p">)</span>
@@ -2792,6 +2832,7 @@ is to look for a correlation between the <code class="docutils literal notransla
 </div>
 </div>
 </div>
+<p>The first five observations in the visitors dataset are:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">visitors</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
@@ -2857,6 +2898,7 @@ is to look for a correlation between the <code class="docutils literal notransla
 </table>
 </div></div></div>
 </div>
+<p>The average (mean) conversion rate for version <code class="docutils literal notranslate"><span class="pre">A</span></code> of the website is:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">visitors</span><span class="p">[</span><span class="n">visitors</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;A&quot;</span><span class="p">][</span><span class="s2">&quot;bought&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
@@ -2869,6 +2911,7 @@ is to look for a correlation between the <code class="docutils literal notransla
 </div>
 </div>
 </div>
+<p>The average (mean) conversion rate for version <code class="docutils literal notranslate"><span class="pre">B</span></code> of the website is:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">visitors</span><span class="p">[</span><span class="n">visitors</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;B&quot;</span><span class="p">][</span><span class="s2">&quot;bought&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
@@ -2881,6 +2924,7 @@ is to look for a correlation between the <code class="docutils literal notransla
 </div>
 </div>
 </div>
+<p>We can represent the two conversion rates using a bar plot.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">visitors</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;bought&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;version&quot;</span><span class="p">)</span>
@@ -2891,18 +2935,25 @@ is to look for a correlation between the <code class="docutils literal notransla
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: xlabel=&#39;bought&#39;, ylabel=&#39;version&#39;&gt;
 </pre></div>
 </div>
-<img alt="../_images/a93188e83b3eb5bb20d3203eb2593ee22e2ade24d66c4f3ff1ef12b04cf425f9.png" src="../_images/a93188e83b3eb5bb20d3203eb2593ee22e2ade24d66c4f3ff1ef12b04cf425f9.png" />
+<img alt="../_images/2f6556f4219e248d0ef93ee1b442026a877f3bd9b71947fa0dac269796294f10.png" src="../_images/2f6556f4219e248d0ef93ee1b442026a877f3bd9b71947fa0dac269796294f10.png" />
 </div>
 </div>
+<p>The black lines represent the estimates of the uncertainty of the true conversion rates
+that Seaborn automatically computed for us.
+Specifically,
+the black lines represent <span class="math notranslate nohighlight">\(95\%\)</span> <em>confidence intervals</em> for the true proportions.
+We’ll learn about confidence intervals later in the book (Section 3.2).</p>
 </section>
 </section>
 <section id="discussion">
 <h2>Discussion<a class="headerlink" href="#discussion" title="Permalink to this heading">#</a></h2>
 <section id="data-extraction">
 <h3>Data extraction<a class="headerlink" href="#data-extraction" title="Permalink to this heading">#</a></h3>
+<p>See <a class="reference internal" href="../tutorials/pandas_tutorial.html"><span class="doc std std-doc">Appendix D: Pandas tutorial</span></a>.</p>
 </section>
 <section id="data-transformations">
 <h3>Data transformations<a class="headerlink" href="#data-transformations" title="Permalink to this heading">#</a></h3>
+<p>See <a class="reference internal" href="../tutorials/pandas_tutorial.html"><span class="doc std std-doc">Appendix D: Pandas tutorial</span></a>.</p>
 </section>
 <section id="tidy-data">
 <h3>Tidy data<a class="headerlink" href="#tidy-data" title="Permalink to this heading">#</a></h3>
@@ -2919,6 +2970,8 @@ is to look for a correlation between the <code class="docutils literal notransla
 </div>
 </div>
 </div>
+<p>The data frame <code class="docutils literal notranslate"><span class="pre">epriceswide</span></code> is not tidy,
+because each row contains multiple observations.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">epriceswide</span>
@@ -2998,6 +3051,12 @@ is to look for a correlation between the <code class="docutils literal notransla
 </table>
 </div></div></div>
 </div>
+<p>We can use the Pandas method <code class="docutils literal notranslate"><span class="pre">.melt</span></code> to convert the <code class="docutils literal notranslate"><span class="pre">epriceswide</span></code> data frame
+from “wide” format into “long” format,
+with one observation per row.</p>
+<p>The method <code class="docutils literal notranslate"><span class="pre">.melt</span></code> takes the argument <code class="docutils literal notranslate"><span class="pre">var_name</span></code>
+to specify the name of the variable that is encoded in the column positions,
+and the argument <code class="docutils literal notranslate"><span class="pre">value_name</span></code> to specify the name of the variable stored in the individual cells.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">epriceswide</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="n">var_name</span><span class="o">=</span><span class="s2">&quot;loc&quot;</span><span class="p">,</span> <span class="n">value_name</span><span class="o">=</span><span class="s2">&quot;price&quot;</span><span class="p">)</span>
@@ -3122,8 +3181,12 @@ is to look for a correlation between the <code class="docutils literal notransla
 </table>
 </div></div></div>
 </div>
-<section id="the-melted-epriceswide-is-the-same-as-eprices">
-<h4>The melted-<code class="docutils literal notranslate"><span class="pre">epriceswide</span></code> is the same as <code class="docutils literal notranslate"><span class="pre">eprices</span></code><a class="headerlink" href="#the-melted-epriceswide-is-the-same-as-eprices" title="Permalink to this heading">#</a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">.melt</span></code> operation transformed the implicit “which column is the data in” information
+into an explicit <code class="docutils literal notranslate"><span class="pre">loc</span></code> variable stored in a separate column.
+Each row in the transformed data frame contains only a single observation,
+so it is in tidy data format.</p>
+<p>The melted-<code class="docutils literal notranslate"><span class="pre">epriceswide</span></code> is the same as <code class="docutils literal notranslate"><span class="pre">eprices</span></code> dataset that we saw earlier.
+We can confirm this using the <code class="docutils literal notranslate"><span class="pre">.equals</span></code> method.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">epriceslong</span> <span class="o">=</span> <span class="n">epriceswide</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="n">var_name</span><span class="o">=</span><span class="s2">&quot;loc&quot;</span><span class="p">,</span> <span class="n">value_name</span><span class="o">=</span><span class="s2">&quot;price&quot;</span><span class="p">)</span>
@@ -3138,9 +3201,9 @@ is to look for a correlation between the <code class="docutils literal notransla
 </div>
 </div>
 </section>
-</section>
 <section id="data-cleaning">
 <h3>Data cleaning<a class="headerlink" href="#data-cleaning" title="Permalink to this heading">#</a></h3>
+<p>See <a class="reference internal" href="../tutorials/pandas_tutorial.html"><span class="doc std std-doc">Appendix D: Pandas tutorial</span></a>.</p>
 </section>
 </section>
 <section id="links">
@@ -3212,7 +3275,6 @@ is to look for a correlation between the <code class="docutils literal notransla
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#test-a-simple-python-command">Test a simple Python command</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started-with-jupyterlab">Getting started with JupyterLab</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#download-and-install-jupyterlab-desktop">Download and install JupyterLab Desktop</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#download-the-nobsstats-notebooks-and-datasets">Download the <code class="docutils literal notranslate"><span class="pre">noBSstats</span></code> notebooks and datasets</a></li>
@@ -3222,7 +3284,7 @@ is to look for a correlation between the <code class="docutils literal notransla
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-management-with-pandas">Data management with Pandas</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-frames">Data frames</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-datasets">Loading datasets</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#players-dataset">Players dataset</a></li>
 </ul>
 </li>
@@ -3246,15 +3308,15 @@ is to look for a correlation between the <code class="docutils literal notransla
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#series-methods">Series methods</a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-only-certain-rows-filtering">Selecting only certain rows (filtering)</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#bonus-topic-multiple-selection-criteria">Bonus topic: multiple selection criteria</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-only-certain-rows-filtering">Selecting only certain rows (filtering)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sorting-data-frames">Sorting data frames</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ranking-optional-material">Ranking (optional material)</a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sorting-data-frames-and-ranking">Sorting data frames and ranking</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#grouping-and-aggregation">Grouping and aggregation</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-visualization-with-seaborn">Data visualization with Seaborn</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#strip-plot-of-the-time-variable">Strip plot of the <code class="docutils literal notranslate"><span class="pre">time</span></code> variable</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#studying-the-effect-of-ezlvl-on-time">Studying the effect of <code class="docutils literal notranslate"><span class="pre">ezlvl</span></code> on <code class="docutils literal notranslate"><span class="pre">time</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#studying-the-relationship-between-age-and-time">Studying the relationship between <code class="docutils literal notranslate"><span class="pre">age</span></code> and <code class="docutils literal notranslate"><span class="pre">time</span></code></a></li>
 </ul>
@@ -3277,10 +3339,7 @@ is to look for a correlation between the <code class="docutils literal notransla
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-extraction">Data extraction</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-transformations">Data transformations</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tidy-data">Tidy data</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#the-melted-epriceswide-is-the-same-as-eprices">The melted-<code class="docutils literal notranslate"><span class="pre">epriceswide</span></code> is the same as <code class="docutils literal notranslate"><span class="pre">eprices</span></code></a></li>
-</ul>
-</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tidy-data">Tidy data</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-cleaning">Data cleaning</a></li>
 </ul>
 </li>

@@ -482,6 +482,8 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">CUT MATERIAL</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grouping-and-aggregation">Grouping and aggregation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#side-note-about-long-python-expressions">Side note about long Python expressions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hypothesis-testing-decision-rule">Hypothesis testing decision rule</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#advanced-bootstrap-methods">Advanced bootstrap methods</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#var-tests">var tests</a></li>
@@ -636,6 +638,175 @@ document.write(`
 </div>
 <section id="cut-material">
 <h1>CUT MATERIAL<a class="headerlink" href="#cut-material" title="Permalink to this heading">#</a></h1>
+<section id="grouping-and-aggregation">
+<h2>Grouping and aggregation<a class="headerlink" href="#grouping-and-aggregation" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">players</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/players.csv&quot;</span><span class="p">)</span>
+
+<span class="n">players</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;ezlvl&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;pandas.core.groupby.generic.DataFrameGroupBy object at 0x7fc32e8ffe20&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">players</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;ezlvl&quot;</span><span class="p">)[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;pandas.core.groupby.generic.SeriesGroupBy object at 0x7fc32e9cbdf0&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">players</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;ezlvl&quot;</span><span class="p">)[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ezlvl
+0    242.173333
+1    257.341667
+Name: time, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">players</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;ezlvl&quot;</span><span class="p">)[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">aggregate</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>           sum        mean
+ezlvl                     
+0      1453.04  242.173333
+1      1544.05  257.341667
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="side-note-about-long-python-expressions">
+<h2>Side note about long Python expressions<a class="headerlink" href="#side-note-about-long-python-expressions" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># OPTION 1: newline continuation character</span>
+<span class="n">players</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;ezlvl&quot;</span><span class="p">)[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span> \
+  <span class="o">.</span><span class="n">agg</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sum</th>
+      <th>mean</th>
+    </tr>
+    <tr>
+      <th>ezlvl</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1453.04</td>
+      <td>242.173333</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1544.05</td>
+      <td>257.341667</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># OPTION 2: expression inside parentheses</span>
+<span class="p">(</span><span class="n">players</span>
+  <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;ezlvl&quot;</span><span class="p">)[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span>
+  <span class="o">.</span><span class="n">agg</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">,</span> <span class="s2">&quot;max&quot;</span><span class="p">])</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sum</th>
+      <th>mean</th>
+      <th>max</th>
+    </tr>
+    <tr>
+      <th>ezlvl</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1453.04</td>
+      <td>242.173333</td>
+      <td>408.76</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1544.05</td>
+      <td>257.341667</td>
+      <td>381.97</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
 <p>NEW
 Use the option <code class="docutils literal notranslate"><span class="pre">permutations=10000</span></code> to perform a permutation test.</p>
 <div class="cell docutils container">
@@ -673,7 +844,7 @@ Use the option <code class="docutils literal notranslate"><span class="pre">perm
 <div class="cell_output docutils container">
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
 <span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">line</span> <span class="mi">2</span>
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="n">line</span> <span class="mi">2</span>
 <span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
 <span class="ne">----&gt; </span><span class="mi">2</span> <span class="n">pval</span> <span class="o">=</span> <span class="n">ttest_ind</span><span class="p">(</span><span class="n">pricesW</span><span class="p">,</span> <span class="n">pricesE</span><span class="p">,</span> <span class="n">permutations</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span><span class="o">.</span><span class="n">pvalue</span>
 <span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;expected&quot;</span><span class="p">,</span> <span class="n">pval</span><span class="p">)</span>
@@ -769,6 +940,7 @@ Use the option <code class="docutils literal notranslate"><span class="pre">perm
 </div>
 </div>
 </div>
+</section>
 <section id="hypothesis-testing-decision-rule">
 <h2>Hypothesis testing decision rule<a class="headerlink" href="#hypothesis-testing-decision-rule" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
@@ -3551,6 +3723,8 @@ and the current bottling process only produces “up to spec” bottles only …
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">CUT MATERIAL</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grouping-and-aggregation">Grouping and aggregation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#side-note-about-long-python-expressions">Side note about long Python expressions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hypothesis-testing-decision-rule">Hypothesis testing decision rule</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#advanced-bootstrap-methods">Advanced bootstrap methods</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#var-tests">var tests</a></li>
