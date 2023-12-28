@@ -62,6 +62,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/37_inventory_stats_tests';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -208,8 +210,8 @@ const thebe_selector_output = ".output, .cell_output"
 
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Section 3.7 — Inventory of statistical tests</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../examples/README.html">Statistical analysis examples</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../examples/one_sample_z-test.html">One-sample <span class="math notranslate nohighlight">\(z\)</span>-test for the mean</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../examples/one_sample_t-test.html">One-sample <span class="math notranslate nohighlight">\(z\)</span>-test for the mean</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/one_sample_z-test.html">One-sample z-test for the mean</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/one_sample_t-test.html">One-sample t-test for the mean</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../examples/ANOVA.html">Analysis of variance (ANOVA)</a></li>
 </ul>
 </li>
@@ -493,35 +495,51 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assumptions">Assumptions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#nhst-procedure">NHST procedure</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#categorization-of-statistical-test-recipes">Categorization of statistical test recipes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#z-tests">Z-Tests</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-sample-z-test">One-sample <span class="math notranslate nohighlight">\(z\)</span>-test</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proportion-tests">Proportion tests</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-proportion-z-test">One proportion z-test</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#binomial-test">Binomial test?</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#two-proportions-z-test">Two proportions z-test</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-sample-z-test-for-proportions">One-sample <span class="math notranslate nohighlight">\(z\)</span>-test for proportions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#binomial-test">Binomial test</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#two-sample-z-test-for-proportions">Two-sample <span class="math notranslate nohighlight">\(z\)</span>-test for proportions</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#t-tests">T-tests</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-sample-t-test">One sample t-test</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#welch-s-t-test-explain-pooled-variance-as-special-case-two-sample-t-test">Welch’s t-test (explain pooled variance as special case “Two sample t-test”)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#two-sample-paired-t-test">Two sample paired t-test</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-sample-t-test">One sample <span class="math notranslate nohighlight">\(t\)</span>-test</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#welch-s-two-sample-t-test">Welch’s two-sample <span class="math notranslate nohighlight">\(t\)</span>-test</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paired-t-test">Paired <span class="math notranslate nohighlight">\(t\)</span>-test</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#chi-square-tests">Chi-square tests</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chi-square-test-for-goodness-of-fit">Chi square test for goodness of fit</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chi-square-test-of-independence">Chi square test of independence</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chi-square-test-for-homogeneity">Chi square test for homogeneity</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chi-square-test-for-variance-numeric">Chi square test for variance (numeric)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chi-square-test-for-goodness-of-fit">Chi-square test for goodness of fit</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chi-square-test-of-independence">Chi-square test of independence</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chi-square-test-for-homogeneity">Chi-square test for homogeneity</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chi-square-test-for-the-population-variance">Chi-square test for the population variance</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#anova-tests">ANOVA tests</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-way-anova">One way ANOVA</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-way-repeated-measures-anova">One-way repeated measures ANOVA</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analysis-of-variance-anova-tests">Analysis of variance (ANOVA) tests</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-way-analysis-of-variance-anova">One-way analysis of variance (ANOVA)</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#two-way-anova">Two-way ANOVA</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#nonparametric-tests">Nonparametric tests</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sign-test-for-the-population-median">Sign test for the population median</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-sample-wilcoxon-signed-rank-test">One-sample Wilcoxon signed-rank test</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#wilcoxon-rank-sum-test">Wilcoxon rank sum test</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#wilcoxon-matched-pairs-signed-rank">Wilcoxon matched-pairs signed-rank</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#wilcoxon-signed-rank-test">Wilcoxon signed rank test</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kruskal-wallis-analysis-of-variance-by-ranks">Kruskal-Wallis analysis of variance by ranks</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resampling-methods">Resampling methods</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simulation-tests">Simulation tests</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#two-sample-permutation-test">Two-sample permutation test</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#permutation-anova">Permutation ANOVA</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#miscellaneous-tests">Miscellaneous tests</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#equivalence-tests">Equivalence tests</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kolmogorov-smirnov-test">Kolmogorov-Smirnov test</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shapiro-wilk-normality-test">Shapiro-Wilk normality test</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanations">Explanations</a></li>
@@ -625,52 +643,65 @@ document.write(`
 <section id="categorization-of-statistical-test-recipes">
 <h2>Categorization of statistical test recipes<a class="headerlink" href="#categorization-of-statistical-test-recipes" title="Permalink to this heading">#</a></h2>
 </section>
+<section id="z-tests">
+<h2>Z-Tests<a class="headerlink" href="#z-tests" title="Permalink to this heading">#</a></h2>
+<section id="one-sample-z-test">
+<h3>One-sample <span class="math notranslate nohighlight">\(z\)</span>-test<a class="headerlink" href="#one-sample-z-test" title="Permalink to this heading">#</a></h3>
+<p>See the <a class="reference internal" href="../examples/one_sample_z-test.html"><span class="doc std std-doc">examples/one_sample_z-test.ipynb</span></a> notebook.</p>
+</section>
+</section>
 <section id="proportion-tests">
 <h2>Proportion tests<a class="headerlink" href="#proportion-tests" title="Permalink to this heading">#</a></h2>
-<section id="one-proportion-z-test">
-<h3>One proportion z-test<a class="headerlink" href="#one-proportion-z-test" title="Permalink to this heading">#</a></h3>
+<section id="one-sample-z-test-for-proportions">
+<h3>One-sample <span class="math notranslate nohighlight">\(z\)</span>-test for proportions<a class="headerlink" href="#one-sample-z-test-for-proportions" title="Permalink to this heading">#</a></h3>
 </section>
 <section id="binomial-test">
-<h3>Binomial test?<a class="headerlink" href="#binomial-test" title="Permalink to this heading">#</a></h3>
+<h3>Binomial test<a class="headerlink" href="#binomial-test" title="Permalink to this heading">#</a></h3>
 </section>
-<section id="two-proportions-z-test">
-<h3>Two proportions z-test<a class="headerlink" href="#two-proportions-z-test" title="Permalink to this heading">#</a></h3>
+<section id="two-sample-z-test-for-proportions">
+<h3>Two-sample <span class="math notranslate nohighlight">\(z\)</span>-test for proportions<a class="headerlink" href="#two-sample-z-test-for-proportions" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">statsmodels.stats.proportion</span> <span class="kn">import</span> <span class="n">proportions_ztest</span>
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 </section>
 <section id="t-tests">
 <h2>T-tests<a class="headerlink" href="#t-tests" title="Permalink to this heading">#</a></h2>
 <section id="one-sample-t-test">
-<h3>One sample t-test<a class="headerlink" href="#one-sample-t-test" title="Permalink to this heading">#</a></h3>
+<h3>One sample <span class="math notranslate nohighlight">\(t\)</span>-test<a class="headerlink" href="#one-sample-t-test" title="Permalink to this heading">#</a></h3>
+<p>See the <a class="reference internal" href="../examples/one_sample_t-test.html"><span class="doc std std-doc">examples/one_sample_t-test.ipynb</span></a> notebook.</p>
 </section>
-<section id="welch-s-t-test-explain-pooled-variance-as-special-case-two-sample-t-test">
-<h3>Welch’s t-test (explain pooled variance as special case “Two sample t-test”)<a class="headerlink" href="#welch-s-t-test-explain-pooled-variance-as-special-case-two-sample-t-test" title="Permalink to this heading">#</a></h3>
+<section id="welch-s-two-sample-t-test">
+<h3>Welch’s two-sample <span class="math notranslate nohighlight">\(t\)</span>-test<a class="headerlink" href="#welch-s-two-sample-t-test" title="Permalink to this heading">#</a></h3>
+<p>(explain pooled variance as special case “Two sample t-test”, but inferior)</p>
 </section>
-<section id="two-sample-paired-t-test">
-<h3>Two sample paired t-test<a class="headerlink" href="#two-sample-paired-t-test" title="Permalink to this heading">#</a></h3>
+<section id="paired-t-test">
+<h3>Paired <span class="math notranslate nohighlight">\(t\)</span>-test<a class="headerlink" href="#paired-t-test" title="Permalink to this heading">#</a></h3>
 </section>
 </section>
 <section id="chi-square-tests">
 <h2>Chi-square tests<a class="headerlink" href="#chi-square-tests" title="Permalink to this heading">#</a></h2>
 <section id="chi-square-test-for-goodness-of-fit">
-<h3>Chi square test for goodness of fit<a class="headerlink" href="#chi-square-test-for-goodness-of-fit" title="Permalink to this heading">#</a></h3>
+<h3>Chi-square test for goodness of fit<a class="headerlink" href="#chi-square-test-for-goodness-of-fit" title="Permalink to this heading">#</a></h3>
 </section>
 <section id="chi-square-test-of-independence">
-<h3>Chi square test of independence<a class="headerlink" href="#chi-square-test-of-independence" title="Permalink to this heading">#</a></h3>
+<h3>Chi-square test of independence<a class="headerlink" href="#chi-square-test-of-independence" title="Permalink to this heading">#</a></h3>
 </section>
 <section id="chi-square-test-for-homogeneity">
-<h3>Chi square test for homogeneity<a class="headerlink" href="#chi-square-test-for-homogeneity" title="Permalink to this heading">#</a></h3>
+<h3>Chi-square test for homogeneity<a class="headerlink" href="#chi-square-test-for-homogeneity" title="Permalink to this heading">#</a></h3>
 </section>
-<section id="chi-square-test-for-variance-numeric">
-<h3>Chi square test for variance (numeric)<a class="headerlink" href="#chi-square-test-for-variance-numeric" title="Permalink to this heading">#</a></h3>
+<section id="chi-square-test-for-the-population-variance">
+<h3>Chi-square test for the population variance<a class="headerlink" href="#chi-square-test-for-the-population-variance" title="Permalink to this heading">#</a></h3>
 </section>
 </section>
-<section id="anova-tests">
-<h2>ANOVA tests<a class="headerlink" href="#anova-tests" title="Permalink to this heading">#</a></h2>
-<section id="one-way-anova">
-<h3>One way ANOVA<a class="headerlink" href="#one-way-anova" title="Permalink to this heading">#</a></h3>
-</section>
-<section id="one-way-repeated-measures-anova">
-<h3>One-way repeated measures ANOVA<a class="headerlink" href="#one-way-repeated-measures-anova" title="Permalink to this heading">#</a></h3>
+<section id="analysis-of-variance-anova-tests">
+<h2>Analysis of variance (ANOVA) tests<a class="headerlink" href="#analysis-of-variance-anova-tests" title="Permalink to this heading">#</a></h2>
+<section id="one-way-analysis-of-variance-anova">
+<h3>One-way analysis of variance (ANOVA)<a class="headerlink" href="#one-way-analysis-of-variance-anova" title="Permalink to this heading">#</a></h3>
 </section>
 <section id="two-way-anova">
 <h3>Two-way ANOVA<a class="headerlink" href="#two-way-anova" title="Permalink to this heading">#</a></h3>
@@ -679,14 +710,41 @@ document.write(`
 <section id="nonparametric-tests">
 <h2>Nonparametric tests<a class="headerlink" href="#nonparametric-tests" title="Permalink to this heading">#</a></h2>
 <p>Use when assumptions for other tests not valid</p>
+<section id="sign-test-for-the-population-median">
+<h3>Sign test for the population median<a class="headerlink" href="#sign-test-for-the-population-median" title="Permalink to this heading">#</a></h3>
+</section>
+<section id="one-sample-wilcoxon-signed-rank-test">
+<h3>One-sample Wilcoxon signed-rank test<a class="headerlink" href="#one-sample-wilcoxon-signed-rank-test" title="Permalink to this heading">#</a></h3>
+</section>
 <section id="wilcoxon-rank-sum-test">
 <h3>Wilcoxon rank sum test<a class="headerlink" href="#wilcoxon-rank-sum-test" title="Permalink to this heading">#</a></h3>
 </section>
-<section id="wilcoxon-matched-pairs-signed-rank">
-<h3>Wilcoxon matched-pairs signed-rank<a class="headerlink" href="#wilcoxon-matched-pairs-signed-rank" title="Permalink to this heading">#</a></h3>
+<section id="kruskal-wallis-analysis-of-variance-by-ranks">
+<h3>Kruskal-Wallis analysis of variance by ranks<a class="headerlink" href="#kruskal-wallis-analysis-of-variance-by-ranks" title="Permalink to this heading">#</a></h3>
 </section>
-<section id="wilcoxon-signed-rank-test">
-<h3>Wilcoxon signed rank test<a class="headerlink" href="#wilcoxon-signed-rank-test" title="Permalink to this heading">#</a></h3>
+</section>
+<section id="resampling-methods">
+<h2>Resampling methods<a class="headerlink" href="#resampling-methods" title="Permalink to this heading">#</a></h2>
+<section id="simulation-tests">
+<h3>Simulation tests<a class="headerlink" href="#simulation-tests" title="Permalink to this heading">#</a></h3>
+</section>
+<section id="two-sample-permutation-test">
+<h3>Two-sample permutation test<a class="headerlink" href="#two-sample-permutation-test" title="Permalink to this heading">#</a></h3>
+</section>
+<section id="permutation-anova">
+<h3>Permutation ANOVA<a class="headerlink" href="#permutation-anova" title="Permalink to this heading">#</a></h3>
+</section>
+</section>
+<section id="miscellaneous-tests">
+<h2>Miscellaneous tests<a class="headerlink" href="#miscellaneous-tests" title="Permalink to this heading">#</a></h2>
+<section id="equivalence-tests">
+<h3>Equivalence tests<a class="headerlink" href="#equivalence-tests" title="Permalink to this heading">#</a></h3>
+</section>
+<section id="kolmogorov-smirnov-test">
+<h3>Kolmogorov-Smirnov test<a class="headerlink" href="#kolmogorov-smirnov-test" title="Permalink to this heading">#</a></h3>
+</section>
+<section id="shapiro-wilk-normality-test">
+<h3>Shapiro-Wilk normality test<a class="headerlink" href="#shapiro-wilk-normality-test" title="Permalink to this heading">#</a></h3>
 </section>
 </section>
 <section id="explanations">
@@ -771,35 +829,51 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assumptions">Assumptions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#nhst-procedure">NHST procedure</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#categorization-of-statistical-test-recipes">Categorization of statistical test recipes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#z-tests">Z-Tests</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-sample-z-test">One-sample <span class="math notranslate nohighlight">\(z\)</span>-test</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proportion-tests">Proportion tests</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-proportion-z-test">One proportion z-test</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#binomial-test">Binomial test?</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#two-proportions-z-test">Two proportions z-test</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-sample-z-test-for-proportions">One-sample <span class="math notranslate nohighlight">\(z\)</span>-test for proportions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#binomial-test">Binomial test</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#two-sample-z-test-for-proportions">Two-sample <span class="math notranslate nohighlight">\(z\)</span>-test for proportions</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#t-tests">T-tests</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-sample-t-test">One sample t-test</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#welch-s-t-test-explain-pooled-variance-as-special-case-two-sample-t-test">Welch’s t-test (explain pooled variance as special case “Two sample t-test”)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#two-sample-paired-t-test">Two sample paired t-test</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-sample-t-test">One sample <span class="math notranslate nohighlight">\(t\)</span>-test</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#welch-s-two-sample-t-test">Welch’s two-sample <span class="math notranslate nohighlight">\(t\)</span>-test</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paired-t-test">Paired <span class="math notranslate nohighlight">\(t\)</span>-test</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#chi-square-tests">Chi-square tests</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chi-square-test-for-goodness-of-fit">Chi square test for goodness of fit</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chi-square-test-of-independence">Chi square test of independence</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chi-square-test-for-homogeneity">Chi square test for homogeneity</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chi-square-test-for-variance-numeric">Chi square test for variance (numeric)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chi-square-test-for-goodness-of-fit">Chi-square test for goodness of fit</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chi-square-test-of-independence">Chi-square test of independence</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chi-square-test-for-homogeneity">Chi-square test for homogeneity</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chi-square-test-for-the-population-variance">Chi-square test for the population variance</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#anova-tests">ANOVA tests</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-way-anova">One way ANOVA</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-way-repeated-measures-anova">One-way repeated measures ANOVA</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analysis-of-variance-anova-tests">Analysis of variance (ANOVA) tests</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-way-analysis-of-variance-anova">One-way analysis of variance (ANOVA)</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#two-way-anova">Two-way ANOVA</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#nonparametric-tests">Nonparametric tests</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sign-test-for-the-population-median">Sign test for the population median</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-sample-wilcoxon-signed-rank-test">One-sample Wilcoxon signed-rank test</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#wilcoxon-rank-sum-test">Wilcoxon rank sum test</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#wilcoxon-matched-pairs-signed-rank">Wilcoxon matched-pairs signed-rank</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#wilcoxon-signed-rank-test">Wilcoxon signed rank test</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kruskal-wallis-analysis-of-variance-by-ranks">Kruskal-Wallis analysis of variance by ranks</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resampling-methods">Resampling methods</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simulation-tests">Simulation tests</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#two-sample-permutation-test">Two-sample permutation test</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#permutation-anova">Permutation ANOVA</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#miscellaneous-tests">Miscellaneous tests</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#equivalence-tests">Equivalence tests</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kolmogorov-smirnov-test">Kolmogorov-Smirnov test</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shapiro-wilk-normality-test">Shapiro-Wilk normality test</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanations">Explanations</a></li>
