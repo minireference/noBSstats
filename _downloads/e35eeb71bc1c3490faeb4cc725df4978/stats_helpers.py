@@ -5,8 +5,10 @@ import numpy as np
 import pandas as pd
 from scipy.stats import bootstrap
 from scipy.stats import chi2
+from scipy.stats import f_oneway
 from scipy.stats import norm
 from scipy.stats import t as tdist
+
 
 
 
@@ -368,6 +370,41 @@ def permutation_test(xsample, ysample, estfunc, P=10000):
     # 3. Compute the p-value
     tails = tailvalues(pestimates, obsest)
     pvalue = len(tails) / len(pestimates)
+    return pvalue
+
+
+
+
+# PERMUTATION ANOVA
+################################################################################
+
+def permutation_anova(samples, P=10000, alt="greater"):
+    """
+    Compute the p-value of the observed F-statistic for `samples` list
+    under the null hypothesis where the group membership is randomized.
+    """
+    ns = [len(sample) for sample in samples]
+
+    # 1. Comptue the observed F-statistic
+    obsfstat, _ = f_oneway(*samples)
+
+    # 2. Get sampling dist. of F-statistic under H0
+    pfstats = []
+    for i in range(0, P):
+        values = np.concatenate(samples)
+        pvalues = np.random.permutation(values)
+        psamples = []
+        nstart = 0
+        for nstep in ns:
+            psample = pvalues[nstart:nstart+nstep]
+            psamples.append(psample)
+            nstart = nstart + nstep
+        pfstat, _ = f_oneway(*psamples)
+        pfstats.append(pfstat)
+
+    # 3. Compute the p-value
+    tails = tailvalues(pfstats, obsfstat, alt=alt)
+    pvalue = len(tails) / len(pfstats)
     return pvalue
 
 
