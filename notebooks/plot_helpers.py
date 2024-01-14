@@ -194,7 +194,7 @@ def plot_pdf(rv, xlims=None, ylims=None, rv_name="X", ax=None, title=None, **kwa
         xmin, xmax = rv.ppf(0.000000001), rv.ppf(0.99999)
     xs = np.linspace(xmin, xmax, 1000)
 
-    # Compute the probability mass function and plot it
+    # Compute the probability density function and plot it
     fXs = rv.pdf(xs)
     sns.lineplot(x=xs, y=fXs, ax=ax, **kwargs)
     ax.set_xlabel(rv_name.lower())
