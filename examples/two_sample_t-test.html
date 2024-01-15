@@ -213,6 +213,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l3"><a class="reference internal" href="one_sample_z-test.html">One-sample z-test for the mean</a></li>
 <li class="toctree-l3"><a class="reference internal" href="one_sample_t-test.html">One-sample t-test for the mean</a></li>
 <li class="toctree-l3 current active"><a class="current reference internal" href="#">Welch’s two-sample <span class="math notranslate nohighlight">\(t\)</span>-test</a></li>
+
 <li class="toctree-l3"><a class="reference internal" href="ANOVA.html">Analysis of variance (ANOVA)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="two_sample_equivalence_test.html">Two-sample equivalence test</a></li>
 </ul>
@@ -492,6 +493,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Welch’s two-sample <span class="math notranslate nohighlight">\(t\)</span>-test</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data">Data</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modeling-assumptions">Modeling assumptions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hypotheses">Hypotheses</a></li>
@@ -511,6 +513,10 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#links">Links</a></li>
 </ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#bonus-example-lalonde-dataset">Bonus example: Lalonde dataset</a></li>
+</ul>
+
             </nav>
         </div>
     </div>
@@ -863,6 +869,479 @@ the means of two samples are not significantly different.</p>
 <h2>Links<a class="headerlink" href="#links" title="Permalink to this heading">#</a></h2>
 </section>
 </section>
+<section id="bonus-example-lalonde-dataset">
+<h1>Bonus example: Lalonde dataset<a class="headerlink" href="#bonus-example-lalonde-dataset" title="Permalink to this heading">#</a></h1>
+<p>see original paper <a class="reference external" href="https://business.baylor.edu/scott_cunningham/teaching/lalonde-1986.pdf">https://business.baylor.edu/scott_cunningham/teaching/lalonde-1986.pdf</a><br />
+and these links for more info: <a class="reference external" href="https://www.one-tab.com/page/h_npVXMeTp2T7Dm5fAlDqw">https://www.one-tab.com/page/h_npVXMeTp2T7Dm5fAlDqw</a></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="n">lalonde</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/lalonde.csv&quot;</span><span class="p">)</span>
+<span class="n">lalonde</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>ID</th>
+      <th>Training</th>
+      <th>Age</th>
+      <th>Education_years</th>
+      <th>Married</th>
+      <th>No_Degree</th>
+      <th>Wage_1974</th>
+      <th>Wage_1975</th>
+      <th>Wage_1978</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>False</td>
+      <td>23</td>
+      <td>10</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>False</td>
+      <td>26</td>
+      <td>12</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>12383.680</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2</td>
+      <td>False</td>
+      <td>22</td>
+      <td>9</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3</td>
+      <td>False</td>
+      <td>18</td>
+      <td>9</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>10740.080</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>4</td>
+      <td>False</td>
+      <td>45</td>
+      <td>11</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>11796.470</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>440</th>
+      <td>440</td>
+      <td>True</td>
+      <td>33</td>
+      <td>12</td>
+      <td>1</td>
+      <td>0</td>
+      <td>20279.95</td>
+      <td>10941.35</td>
+      <td>15952.600</td>
+    </tr>
+    <tr>
+      <th>441</th>
+      <td>441</td>
+      <td>True</td>
+      <td>25</td>
+      <td>14</td>
+      <td>1</td>
+      <td>0</td>
+      <td>35040.07</td>
+      <td>11536.57</td>
+      <td>36646.950</td>
+    </tr>
+    <tr>
+      <th>442</th>
+      <td>442</td>
+      <td>True</td>
+      <td>35</td>
+      <td>9</td>
+      <td>1</td>
+      <td>1</td>
+      <td>13602.43</td>
+      <td>13830.64</td>
+      <td>12803.970</td>
+    </tr>
+    <tr>
+      <th>443</th>
+      <td>443</td>
+      <td>True</td>
+      <td>35</td>
+      <td>8</td>
+      <td>1</td>
+      <td>1</td>
+      <td>13732.07</td>
+      <td>17976.15</td>
+      <td>3786.628</td>
+    </tr>
+    <tr>
+      <th>444</th>
+      <td>444</td>
+      <td>True</td>
+      <td>33</td>
+      <td>11</td>
+      <td>1</td>
+      <td>1</td>
+      <td>14660.71</td>
+      <td>25142.24</td>
+      <td>4181.942</td>
+    </tr>
+  </tbody>
+</table>
+<p>445 rows × 9 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">control</span> <span class="o">=</span> <span class="n">lalonde</span><span class="p">[</span><span class="n">lalonde</span><span class="p">[</span><span class="s2">&quot;Training&quot;</span><span class="p">]</span><span class="o">==</span><span class="kc">False</span><span class="p">]</span>
+<span class="n">treated</span> <span class="o">=</span> <span class="n">lalonde</span><span class="p">[</span><span class="n">lalonde</span><span class="p">[</span><span class="s2">&quot;Training&quot;</span><span class="p">]</span><span class="o">==</span><span class="kc">True</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">control</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>ID</th>
+      <th>Age</th>
+      <th>Education_years</th>
+      <th>Married</th>
+      <th>No_Degree</th>
+      <th>Wage_1974</th>
+      <th>Wage_1975</th>
+      <th>Wage_1978</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>260.000000</td>
+      <td>260.000000</td>
+      <td>260.000000</td>
+      <td>260.000000</td>
+      <td>260.000000</td>
+      <td>260.000000</td>
+      <td>260.000000</td>
+      <td>260.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>129.500000</td>
+      <td>25.053846</td>
+      <td>10.088462</td>
+      <td>0.153846</td>
+      <td>0.834615</td>
+      <td>2107.026658</td>
+      <td>1266.909002</td>
+      <td>4554.801126</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>75.199734</td>
+      <td>7.057745</td>
+      <td>1.614325</td>
+      <td>0.361497</td>
+      <td>0.372244</td>
+      <td>5687.905694</td>
+      <td>3102.982044</td>
+      <td>5483.835991</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>0.000000</td>
+      <td>17.000000</td>
+      <td>3.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>64.750000</td>
+      <td>19.000000</td>
+      <td>9.000000</td>
+      <td>0.000000</td>
+      <td>1.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>129.500000</td>
+      <td>24.000000</td>
+      <td>10.000000</td>
+      <td>0.000000</td>
+      <td>1.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>3138.795500</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>194.250000</td>
+      <td>28.000000</td>
+      <td>11.000000</td>
+      <td>0.000000</td>
+      <td>1.000000</td>
+      <td>139.424700</td>
+      <td>650.096475</td>
+      <td>7288.420000</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>259.000000</td>
+      <td>55.000000</td>
+      <td>14.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>39570.680000</td>
+      <td>23031.980000</td>
+      <td>39483.530000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">treated</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>ID</th>
+      <th>Age</th>
+      <th>Education_years</th>
+      <th>Married</th>
+      <th>No_Degree</th>
+      <th>Wage_1974</th>
+      <th>Wage_1975</th>
+      <th>Wage_1978</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>185.000000</td>
+      <td>185.000000</td>
+      <td>185.000000</td>
+      <td>185.000000</td>
+      <td>185.000000</td>
+      <td>185.000000</td>
+      <td>185.000000</td>
+      <td>185.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>352.000000</td>
+      <td>25.816216</td>
+      <td>10.345946</td>
+      <td>0.189189</td>
+      <td>0.708108</td>
+      <td>2095.573689</td>
+      <td>1532.055314</td>
+      <td>6349.143530</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>53.549043</td>
+      <td>7.155019</td>
+      <td>2.010650</td>
+      <td>0.392722</td>
+      <td>0.455867</td>
+      <td>4886.620353</td>
+      <td>3219.250870</td>
+      <td>7867.402218</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>260.000000</td>
+      <td>17.000000</td>
+      <td>4.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>306.000000</td>
+      <td>20.000000</td>
+      <td>9.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>485.229800</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>352.000000</td>
+      <td>25.000000</td>
+      <td>11.000000</td>
+      <td>0.000000</td>
+      <td>1.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>4232.309000</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>398.000000</td>
+      <td>29.000000</td>
+      <td>12.000000</td>
+      <td>0.000000</td>
+      <td>1.000000</td>
+      <td>1291.468000</td>
+      <td>1817.284000</td>
+      <td>9642.999000</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>444.000000</td>
+      <td>48.000000</td>
+      <td>16.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>35040.070000</td>
+      <td>25142.240000</td>
+      <td>60307.930000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">ttest_ind</span>
+
+<span class="n">ttest_ind</span><span class="p">(</span><span class="n">treated</span><span class="p">[</span><span class="s2">&quot;Wage_1978&quot;</span><span class="p">],</span> <span class="n">control</span><span class="p">[</span><span class="s2">&quot;Wage_1978&quot;</span><span class="p">],</span> <span class="n">equal_var</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Ttest_indResult(statistic=2.674145513783345, pvalue=0.007892977714517335)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">stats_helpers</span> <span class="kn">import</span> <span class="n">cohend2</span>
+
+<span class="n">cohend2</span><span class="p">(</span><span class="n">treated</span><span class="p">[</span><span class="s2">&quot;Wage_1978&quot;</span><span class="p">],</span> <span class="n">control</span><span class="p">[</span><span class="s2">&quot;Wage_1978&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.27271540735846456
+</pre></div>
+</div>
+</div>
+</div>
+</section>
 
     <script type="text/x-thebe-config">
     {
@@ -927,6 +1406,7 @@ the means of two samples are not significantly different.</p>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Welch’s two-sample <span class="math notranslate nohighlight">\(t\)</span>-test</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data">Data</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modeling-assumptions">Modeling assumptions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hypotheses">Hypotheses</a></li>
@@ -946,6 +1426,10 @@ the means of two samples are not significantly different.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#links">Links</a></li>
 </ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#bonus-example-lalonde-dataset">Bonus example: Lalonde dataset</a></li>
+</ul>
+
   </nav></div>
 
 </div></div>

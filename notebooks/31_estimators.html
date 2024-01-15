@@ -213,6 +213,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l3"><a class="reference internal" href="../examples/one_sample_z-test.html">One-sample z-test for the mean</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../examples/one_sample_t-test.html">One-sample t-test for the mean</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../examples/two_sample_t-test.html">Welch’s two-sample <span class="math notranslate nohighlight">\(t\)</span>-test</a></li>
+
 <li class="toctree-l3"><a class="reference internal" href="../examples/ANOVA.html">Analysis of variance (ANOVA)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../examples/two_sample_equivalence_test.html">Two-sample equivalence test</a></li>
 </ul>
@@ -2438,10 +2439,10 @@ is an <em>unbiased</em> estimator of the population variance.</p>
 <p>Let’s see what happens if we the estimator
 <span class="math notranslate nohighlight">\(\tilde{s}_{\mathbf{x}}^2 = \frac{1}{n} \sum_{i=1}^n (x_i - \overline{x})^2\)</span>,
 which has denominator <span class="math notranslate nohighlight">\(n\)</span> instead of <span class="math notranslate nohighlight">\((n-1)\)</span>.</p>
-<p>First, let’s define the Python function that performs this calculation:</p>
+<p>First, let’s define the Python function <code class="docutils literal notranslate"><span class="pre">altvar</span></code> that performs this calculation:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">s2tilde</span><span class="p">(</span><span class="n">sample</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">altvar</span><span class="p">(</span><span class="n">sample</span><span class="p">):</span>
     <span class="n">xbar</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
     <span class="n">sumsqdevs</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([(</span><span class="n">xi</span><span class="o">-</span><span class="n">xbar</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">xi</span> <span class="ow">in</span> <span class="n">sample</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">sumsqdevs</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
@@ -2457,8 +2458,8 @@ which has denominator <span class="math notranslate nohighlight">\(n\)</span> in
 <span class="n">rvK</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">muK</span><span class="p">,</span> <span class="n">sigmaK</span><span class="p">)</span>
 
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
-<span class="n">s2tildes</span> <span class="o">=</span> <span class="n">gen_sampling_dist</span><span class="p">(</span><span class="n">rvK</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">s2tilde</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
-<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">s2tildes</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="s2">&quot;density&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">orange</span><span class="p">)</span>
+<span class="n">altvars</span> <span class="o">=</span> <span class="n">gen_sampling_dist</span><span class="p">(</span><span class="n">rvK</span><span class="p">,</span> <span class="n">estfunc</span><span class="o">=</span><span class="n">altvar</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">altvars</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="s2">&quot;density&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">orange</span><span class="p">)</span>
 <span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$</span><span class="se">\\</span><span class="s2">tilde</span><span class="si">{s}</span><span class="s2">^2_{\mathbf</span><span class="si">{k}</span><span class="s2">}$&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -2469,8 +2470,8 @@ which has denominator <span class="math notranslate nohighlight">\(n\)</span> in
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># E[simulated]      # population var    </span>
-<span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">s2tildes</span><span class="p">),</span>  <span class="n">sigmaK</span><span class="o">**</span><span class="mi">2</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># E[simulated]     # population var    </span>
+<span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">altvars</span><span class="p">),</span>  <span class="n">sigmaK</span><span class="o">**</span><span class="mi">2</span>
 </pre></div>
 </div>
 </div>
@@ -2682,7 +2683,7 @@ same distribution in both contexts.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.lines.Line2D at 0x7f0dbc4044c0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.lines.Line2D at 0x7ff1c44de2e0&gt;
 </pre></div>
 </div>
 <img alt="../_images/26bacad682bdca440607470208f38596fa6367e306b7b2f476c3c705509f8464.png" src="../_images/26bacad682bdca440607470208f38596fa6367e306b7b2f476c3c705509f8464.png" />
