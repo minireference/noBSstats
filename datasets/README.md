@@ -93,6 +93,14 @@ TODO: move detailed info to `students.md`
 
 
 
+## Real-world datasets
+
+### Lalonde
+
+An experiment whether training increases income.
+
+
+
 
 ## Other datasets
 

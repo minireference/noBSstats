@@ -35,7 +35,7 @@ covered in the [Inventory of statistical test recipes](https://docs.google.com/d
 - Nonparametric tests
   - Sign test for the population median
   - One-sample Wilcoxon signed-rank test
-  - Wilcoxon rank sum test
+  - Mann-Whitney U-test
   - Kruskal–Wallis analysis of variance by ranks
 
 - Resampling methods
