@@ -15,6 +15,29 @@ from scipy.stats import t as tdist
 #######################################################
 # max width that fits in the code blocks is 55 chars  #
 
+# DESCRIPTIVE STATISTICS
+################################################################################
+
+def median(values):
+    n = len(values)
+    svalues = sorted(values)
+    if n % 2 == 1:            # Case A: n is odd
+        mid = n // 2
+        return svalues[mid]
+    else:                     # Case B: n is even
+        j = n // 2
+        return 0.5*svalues[j-1] + 0.5*svalues[j]
+
+
+def quantile(values, q):
+    svalues = sorted(values)
+    p = q * (len(values)-1)
+    i = int(p)
+    g = p - int(p)
+    return (1-g)*svalues[i] + g*svalues[i+1]
+
+
+
 
 # ESTIMATORS
 ################################################################################
