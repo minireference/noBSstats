@@ -18,7 +18,7 @@ covered in the [Inventory of statistical test recipes](https://docs.google.com/d
 
 - T-tests
   - One-sample $t$-test: [`one_sample_t-test.ipynb`](./one_sample_t-test.ipynb)
-  - Welch's two-sample $t$-test: 
+  - Welch's two-sample $t$-test: [`two_sample_t-test.ipynb`](./two_sample_t-test.ipynb)
   - Two-sample $t$-test with pooled variance (not important)
   - Paired $t$-test
 
@@ -35,7 +35,7 @@ covered in the [Inventory of statistical test recipes](https://docs.google.com/d
 - Nonparametric tests
   - Sign test for the population median
   - One-sample Wilcoxon signed-rank test
-  - Mann-Whitney U-test
+  - Mann-Whitney U-test: [`Mann-Whitney_U-test.ipynb`](./Mann-Whitney_U-test.ipynb)
   - Kruskal–Wallis analysis of variance by ranks
 
 - Resampling methods
@@ -44,7 +44,7 @@ covered in the [Inventory of statistical test recipes](https://docs.google.com/d
   - Permutation ANOVA
 
 - Miscellaneous tests
-  - Equivalence tests
+  - Equivalence tests: [`two_sample_equivalence_test.ipynb`](./two_sample_equivalence_test.ipynb)
   - Kolmogorov–Smirnov test
   - Shapiro–Wilk normality test
 
