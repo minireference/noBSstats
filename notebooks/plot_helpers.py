@@ -1,6 +1,6 @@
 """
 This file contains helper functions for plotting the probability distributions.
-(c) 2022 Minireferece Co. - MIT License
+(c) 2024 Minireferece Co. - MIT License
 
 TODOs:
  - change x to xs (to signal it's a array-like)
@@ -23,7 +23,7 @@ from scipy.stats import norm
 
 # Useful colors
 snspal = sns.color_palette()
-blue, orange, purple = snspal[0], snspal[1], snspal[4]
+blue, orange, red, purple = snspal[0], snspal[1], snspal[3], snspal[4]
 
 
 
@@ -902,5 +902,20 @@ def plot_alpha_beta_errors(cohend, ax=None, xlims=None, n=9, alpha=0.05,
     # print design params for other info
     print("Design params: n =", n, ", alpha =", alpha, ", beta =", beta, ", Delta =", muHA, ", d =", cohend, ", CV =", CV)
 
+    return ax
+
+
+
+# Linear models
+################################################################################
+
+def plot_residuals(xdata, ydata, b0, b1, xlims=None, ax=None):
+    """
+    Plot residuals between the points (x,y) and the line y = b0 + b1*x.
+    """
+    if ax is None:
+        fig, ax = plt.subplots()
+    for x, y in zip(xdata, ydata):
+        ax.plot([x, x], [y, b0+b1*x], color=red, zorder=0)
     return ax
 
