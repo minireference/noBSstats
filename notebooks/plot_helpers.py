@@ -919,3 +919,37 @@ def plot_residuals(xdata, ydata, b0, b1, xlims=None, ax=None):
         ax.plot([x, x], [y, b0+b1*x], color=red, zorder=0)
     return ax
 
+
+def plot_residuals2(xdata, ydata, b0, b1, xlims=None, ax=None):
+    """
+    Plot residuals between the points (x,y) and the line y = b0 + b1*x
+    as a square.
+    """
+    from matplotlib.patches import Rectangle
+
+    if ax is None:
+        _, ax = plt.subplots()
+
+    def get_aspect(ax):
+        fig = ax.figure
+        ll, ur = ax.get_position() * fig.get_size_inches()
+        width, height = ur - ll
+        axes_ratio = height / width
+        aspect = axes_ratio / ax.get_data_ratio()
+        return aspect
+
+    for x, y in zip(xdata, ydata):
+        # plot the residual as a vertical line
+        ax.set_axisbelow(True)
+        ax.plot([x, x], [y, b0+b1*x], color=red, zorder=0, linewidth=0.5)
+        # plot the residual squared
+        deltay = y - (b0+b1*x)
+        deltax = get_aspect(ax)*deltay
+        rect1 = Rectangle([x, b0+b1*x], width=-deltax, height=deltay,
+                          linewidth=0, facecolor=red, zorder=2, alpha=0.3)
+        rect2 = Rectangle([x, b0+b1*x], width=-deltax, height=deltay,
+                          linewidth=0.5, facecolor="none", edgecolor=red, zorder=2)
+        ax.add_patch(rect1)
+        ax.add_patch(rect2)
+
+    return ax

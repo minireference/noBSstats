@@ -12,7 +12,7 @@ to check all the probability calculations for yourself.
 
 - Simple linear regression [41_simple_linear_regression.ipynb](./41_simple_linear_regression.ipynb)
 - Multiple linear regression [42_multiple_linear_regression.ipynb](./42_multiple_linear_regression.ipynb)
-- Regression with categorical predictors [43_regression_with_categorical_predictors.ipynb](./43_regression_with_categorical_predictors.ipynb)
-- Interpreting linear models [44_interpreting_linear_models.ipynb](./44_interpreting_linear_models.ipynb)
+- Interpreting linear models [43_interpreting_linear_models.ipynb](./43_interpreting_linear_models.ipynb)
+- Regression with categorical predictors [44_regression_with_categorical_predictors.ipynb](./44_regression_with_categorical_predictors.ipynb)
 - Generalized linear models [45_generalized_linear_models.ipynb](./45_generalized_linear_models.ipynb)
 
