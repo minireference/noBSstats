@@ -1,6 +1,6 @@
 """
 This file contains helper functions for plotting the probability distributions.
-(c) 2024 Minireferece Co. - MIT License
+(c) 2024 Minireference Co. - MIT License
 
 TODOs:
  - change x to xs (to signal it's a array-like)
@@ -95,7 +95,7 @@ def nicebins(stats, obs, nbins=60):
     # ... and generate the bins for the mid-section
     nmid = int(nbins * propmid)
     binsmid = np.linspace(x1, x2, nmid+1)
-    # Generate left and right bins with the same step size as `binsmid``
+    # Generate left and right bins with the same step size as `binsmid`
     step = (x2-x1) / nmid
     binsleft = np.sort(np.arange(x1, xmin, -step)[1:])
     binsright = np.arange(x2, xmax, step)[1:]
@@ -286,7 +286,7 @@ def plot_pdf_and_cdf(rv, b=None, a=-np.inf, xlims=None, rv_name="X", title=None)
     """
     Plot side-by-side figure that shows pdf and CDF of random variable `rv`.
     If `b` is specified, the left plot will shows the area-under-the-curve
-    visualization until x=b and tight plot higlights point at (b, F_X(b)).
+    visualization until x=b and tight plot highlights point at (b, F_X(b)).
     """
     fig, axs = plt.subplots(1, 2)
     ax0, ax1 = axs
@@ -499,10 +499,8 @@ def generate_pmf_panel(fname, xs, model, params_matrix,
     M = len(params_matrix)
     N = max( [len(row) for row in params_matrix] )
 
-    # prepare x-axis ticks at aevery multiple of `kticks`
-    xmax = np.max(xs) + 1
-
     # RV generation
+    xmax = np.max(xs) + 1
     fX_matrix = np.zeros( (M,N,xmax) )
     for i in range(0,M):
         for j in range(0,N):
@@ -522,7 +520,7 @@ def generate_pmf_panel(fname, xs, model, params_matrix,
 
     # Generate the MxN panel of subplots
     fig, axarr = plt.subplots(M, N, sharex=True, sharey=True)
-    # We neeed to ensure `axarr` is an MxN matrix even if M or N are 1
+    # We need to ensure `axarr` is an MxN matrix even if M or N are 1
     if M == 1 and N == 1:
         ax = axarr
         axarr = np.ndarray((1,1), object)
@@ -566,13 +564,13 @@ def generate_pmf_panel(fname, xs, model, params_matrix,
     return fig
 
 
-# Diagnositic plots (used in Section 2.7 Random variable generation)
+# Diagnostic plots (used in Section 2.7 Random variable generation)
 ################################################################################
 # The function qq_plot tries to imitate the behaviour of the function `qqplot`
 # defined in `statsmodels.graphics.api`. Usage: `qqplot(data, dist=norm(0,1), line='q')`. See:
 # https://github.com/statsmodels/statsmodels/blob/main/statsmodels/graphics/gofplots.py#L912-L919
 #
-# TODO: figure out how to plot all of data correctly: currenlty missing first and last data point
+# TODO: figure out how to plot all of data correctly: currently missing first and last data point
 
 def qq_plot(data, dist, ax=None, xlims=None, filename=None):
     # Setup figure and axes
@@ -748,7 +746,7 @@ def plot_samples_panel(rv, xlims, N=10, ns=[10,30,100], filename=None):
 
 def plot_sampling_dists_panel(rv, xlims, N=1000, ns=[10,30,100], binwidth=None, filename=None):
     """
-    Draw a panel of combined histogram and strip plot of the sampling distibutions
+    Draw a panel of combined histogram and strip plot of the sampling distributions
     of random variable `rv` for sample sizes `ns`.
     Need to pass appropriate `xlims` and `binwidth` parameters depending on `rv`.
     """
@@ -759,7 +757,7 @@ def plot_sampling_dists_panel(rv, xlims, N=1000, ns=[10,30,100], binwidth=None, 
 
     xbarss = []
     for n, ax in zip([10,30,100], axs):
-        # A. generate and plot sampling distributoin
+        # A. generate and plot sampling distribution
         xbars = gen_sampling_dist(rv, np.mean, n=n, N=N)
         plot_sampling_dist(xbars, ax=ax, xlims=xlims, binwidth=binwidth, label=f"$n={n}$")
         # B. plot the distribution predicted by the CLT
@@ -884,7 +882,7 @@ def plot_alpha_beta_errors(cohend, ax=None, xlims=None, n=9, alpha=0.05,
     # cutoff line
     ax.vlines([CV], ymin=0, ymax=ax.get_ylim()[1], linestyle="-", color="red")
 
-    # effect size (thick line segement above pdf plots)
+    # effect size (thick line segment above pdf plots)
     if show_es:
         esy = rvXbarH0MAX*1.07
         ax.plot([0,muHA], [esy,esy], linewidth=4, pickradius=1, solid_capstyle="butt")
