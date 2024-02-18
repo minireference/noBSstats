@@ -492,13 +492,35 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebook-setup">Notebook setup</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-of-linear-model-for-time-1-age">Plot of linear model for <code class="docutils literal notranslate"><span class="pre">time</span> <span class="pre">~</span> <span class="pre">1</span> <span class="pre">+</span> <span class="pre">age</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-of-linear-model-for-time-1-age-jobstatus">Plot of linear model for <code class="docutils literal notranslate"><span class="pre">time</span> <span class="pre">~</span> <span class="pre">1</span> <span class="pre">+</span> <span class="pre">age</span> <span class="pre">+</span> <span class="pre">jobstatus</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manual-select-subset-with-jobstatus-1">Manual select subset with jobstatus 1</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definitions">Definitions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-model">Linear model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-students-score-as-a-function-of-effort">Example: students score as a function of effort</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameter-estimation-using-least-squares">Parameter estimation using least squares</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-diagnostics">Model diagnostics</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#residuals-plots">Residuals plots</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sum-of-squares-quantities">Sum of squares quantities</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#coefficient-of-determination-r-2">Coefficient of determination <span class="math notranslate nohighlight">\(R^2\)</span></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#related-to-the-pearson-correlation-coefficient">Related to the Pearson correlation coefficient</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-confoudouder-2">Example confoudouder  2</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#random-slopes-and-random-intercepts">Random slopes and random intercepts</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-summary-table">Model summary table</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-linear-models-to-make-predictions">Using linear models to make predictions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#confidence-interval-for-observations">Confidence interval for observations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#confidence-interval-for-the-mean">Confidence interval for the mean</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanations">Explanations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#strategies-for-fitting-linear-models">Strategies for fitting linear models</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#analytical-formulas">Analytical formulas</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#links">Links</a></li>
 </ul>
             </nav>
         </div>
@@ -532,8 +554,8 @@ document.write(`
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Figures setup</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>  <span class="c1"># needed otherwise `sns.set_theme` doesn&#39;t work</span>
 <span class="kn">from</span> <span class="nn">plot_helpers</span> <span class="kn">import</span> <span class="n">RCPARAMS</span>
-<span class="c1"># RCPARAMS.update({&#39;figure.figsize&#39;: (10, 3)})   # good for screen</span>
-<span class="n">RCPARAMS</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mf">1.6</span><span class="p">)})</span>  <span class="c1"># good for print</span>
+<span class="n">RCPARAMS</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">)})</span>   <span class="c1"># good for screen</span>
+<span class="c1"># RCPARAMS.update({&#39;figure.figsize&#39;: (5, 1.6)})  # good for print</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">set_theme</span><span class="p">(</span>
     <span class="n">context</span><span class="o">=</span><span class="s2">&quot;paper&quot;</span><span class="p">,</span>
     <span class="n">style</span><span class="o">=</span><span class="s2">&quot;whitegrid&quot;</span><span class="p">,</span>
@@ -557,8 +579,26 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">plot_helpers</span> <span class="kn">import</span> <span class="n">plot_residuals</span>
+<span class="kn">from</span> <span class="nn">plot_helpers</span> <span class="kn">import</span> <span class="n">plot_residuals2</span>
+<span class="kn">from</span> <span class="nn">plot_helpers</span> <span class="kn">import</span> <span class="n">savefigure</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># set random seed for repeatability</span>
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
+<span class="c1"># silence kurtosistest warning when using n &lt; 20</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -583,74 +623,368 @@ document.write(`
 \newcommand{\ciu}[1]{\textbf{u}_{#1}}
 \]</div>
 <p>(this cell contains the macro definitions like <span class="math notranslate nohighlight">\(\stderr{\overline{\mathbf{x}}}\)</span>, <span class="math notranslate nohighlight">\(\stderrhat{}\)</span>, <span class="math notranslate nohighlight">\(\Mean\)</span>, …)</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">players_full</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/players_full.csv&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
 </section>
-<section id="plot-of-linear-model-for-time-1-age">
-<h2>Plot of linear model for <code class="docutils literal notranslate"><span class="pre">time</span> <span class="pre">~</span> <span class="pre">1</span> <span class="pre">+</span> <span class="pre">age</span></code><a class="headerlink" href="#plot-of-linear-model-for-time-1-age" title="Permalink to this heading">#</a></h2>
+<section id="definitions">
+<h2>Definitions<a class="headerlink" href="#definitions" title="Permalink to this heading">#</a></h2>
+</section>
+<section id="linear-model">
+<h2>Linear model<a class="headerlink" href="#linear-model" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">lmplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">players_full</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
+
+<span class="c1"># Define the linear model function</span>
+<span class="k">def</span> <span class="nf">linear_model</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mi">30</span> <span class="o">+</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">x</span>
+
+<span class="c1"># Define sigma for the normal distribution</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="mi">8</span>
+
+<span class="k">with</span> <span class="n">sns</span><span class="o">.</span><span class="n">axes_style</span><span class="p">(</span><span class="s2">&quot;ticks&quot;</span><span class="p">):</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+
+    <span class="c1"># Plot the linear model</span>
+    <span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+    <span class="n">ys</span> <span class="o">=</span> <span class="n">linear_model</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">xs</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">ys</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\mu_Y(x) = \beta_0 + \beta_1x$&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    
+    <span class="c1"># Plot Gaussian distributions at specified x positions and add sigma lines</span>
+    <span class="n">x_positions</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">x_pos</span> <span class="ow">in</span> <span class="n">x_positions</span><span class="p">:</span>
+        <span class="n">y_pos</span> <span class="o">=</span> <span class="n">linear_model</span><span class="p">(</span><span class="n">x_pos</span><span class="p">)</span>
+        <span class="n">ys</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">y_pos</span><span class="o">-</span><span class="mf">3.5</span><span class="o">*</span><span class="n">sigma</span><span class="p">,</span> <span class="n">y_pos</span><span class="o">+</span><span class="mf">3.5</span><span class="o">*</span><span class="n">sigma</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="n">pdf</span> <span class="o">=</span> <span class="mf">0.7</span><span class="o">*</span><span class="n">norm</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">y_pos</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">sigma</span><span class="p">)</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">ys</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">fill_betweenx</span><span class="p">(</span><span class="n">ys</span><span class="p">,</span> <span class="n">x_pos</span> <span class="o">-</span> <span class="n">pdf</span> <span class="o">*</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">x_pos</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;grey&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="c1"># Draw vertical sigma line and label it on the opposite side of the Gaussian shape</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">x_pos</span><span class="p">,</span> <span class="n">x_pos</span><span class="p">],</span> <span class="p">[</span><span class="n">y_pos</span><span class="p">,</span> <span class="n">y_pos</span> <span class="o">-</span> <span class="n">sigma</span><span class="p">],</span> <span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x_pos</span> <span class="o">+</span> <span class="mf">0.06</span><span class="p">,</span> <span class="n">y_pos</span> <span class="o">-</span> <span class="n">sigma</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\sigma$&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
+
+    <span class="c1"># y-intercept</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">0</span> <span class="o">-</span> <span class="mf">0.15</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\beta_0$&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Set up x-axis</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;$x$&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
+    
+    <span class="c1"># Set up y-axis</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;$y$&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">110</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">([])</span>
+    
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper left&#39;</span><span class="p">)</span>
+
+<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;linear_model_xy_with_gaussians.pdf&quot;</span><span class="p">)</span>
+<span class="n">savefigure</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.FacetGrid at 0x7f543bbd6220&gt;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/simple/linear_model_xy_with_gaussians.pdf
+Saved figure to figures/lm/simple/linear_model_xy_with_gaussians.png
 </pre></div>
 </div>
-<img alt="../_images/faa3ade619a2e3385b998dbedc78c10bb38861745505a5e70a0a09f9f2e75ad1.png" src="../_images/faa3ade619a2e3385b998dbedc78c10bb38861745505a5e70a0a09f9f2e75ad1.png" />
+<img alt="../_images/987ecbf925cf373348308656c4ae63276009d581016385ca8c0c7ce965ab6a3a.png" src="../_images/987ecbf925cf373348308656c4ae63276009d581016385ca8c0c7ce965ab6a3a.png" />
+</div>
+</div>
+</section>
+<section id="example-students-score-as-a-function-of-effort">
+<h2>Example: students score as a function of effort<a class="headerlink" href="#example-students-score-as-a-function-of-effort" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">students</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/students.csv&quot;</span><span class="p">)</span>
+<span class="c1"># students.head()</span>
+</pre></div>
+</div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">statsmodels.formula.api</span> <span class="k">as</span> <span class="nn">smf</span>
+<span class="c1">#######################################################</span>
+<span class="n">model1</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s1">&#39;score ~ 1 + effort&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">students</span><span class="p">)</span>
+<span class="n">fit1</span> <span class="o">=</span> <span class="n">model1</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 
-<span class="n">model1</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s1">&#39;time ~ 1 + age&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">players_full</span><span class="p">)</span>
-<span class="n">result1</span> <span class="o">=</span> <span class="n">model1</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-<span class="n">result1</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+<span class="c1"># the coefficients of the best-fit line</span>
+<span class="n">b0</span> <span class="o">=</span> <span class="n">fit1</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">Intercept</span>
+<span class="n">b1</span> <span class="o">=</span> <span class="n">fit1</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">effort</span>
+<span class="n">b0</span><span class="p">,</span> <span class="n">b1</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/hostedtoolcache/Python/3.8.18/x64/lib/python3.8/site-packages/scipy/stats/_stats_py.py:1736: UserWarning: kurtosistest only valid for n&gt;=20 ... continuing anyway, n=12
-  warnings.warn(&quot;kurtosistest only valid for n&gt;=20 ... continuing &quot;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(32.465809301599606, 4.504850344209074)
 </pre></div>
 </div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">fit1</span><span class="o">.</span><span class="n">scale</span><span class="p">)</span>
+<span class="c1"># ALT.</span>
+<span class="c1"># sigma = np.sqrt(np.sum(fit1.resid**2)/fit1.df_resid)</span>
+<span class="n">sigma</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4.929598282660258
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># fit1.summary()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">students</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;effort&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;score&#39;</span><span class="p">)</span>
+
+<span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+<span class="n">yhats</span> <span class="o">=</span> <span class="n">b0</span> <span class="o">+</span> <span class="n">b1</span><span class="o">*</span><span class="n">xs</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">xs</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">yhats</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">);</span>
+
+<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;students_scores_vs_effort_with_line.pdf&quot;</span><span class="p">)</span>
+<span class="n">savefigure</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">(),</span> <span class="n">filename</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/simple/students_scores_vs_effort_with_line.pdf
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/simple/students_scores_vs_effort_with_line.png
+</pre></div>
+</div>
+<img alt="../_images/9dc8bedfc34302063766ed1cc0759e37a46a37237792aded0ade57dfc00b96bc.png" src="../_images/9dc8bedfc34302063766ed1cc0759e37a46a37237792aded0ade57dfc00b96bc.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># # ALT.</span>
+<span class="c1"># sns.regplot(data=students, x=&quot;effort&quot;, y=&quot;score&quot;, ci=None);</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="parameter-estimation-using-least-squares">
+<h2>Parameter estimation using least squares<a class="headerlink" href="#parameter-estimation-using-least-squares" title="Permalink to this heading">#</a></h2>
+<p>How do we find the parameter estimates of the model?</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_residuals</span><span class="p">(</span><span class="n">students</span><span class="p">[</span><span class="s2">&quot;effort&quot;</span><span class="p">],</span> <span class="n">students</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">],</span> <span class="n">b0</span><span class="p">,</span> <span class="n">b1</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">students</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;effort&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;score&#39;</span><span class="p">)</span>
+<span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mf">12.2</span><span class="p">)</span>
+<span class="n">yhats</span> <span class="o">=</span> <span class="n">b0</span> <span class="o">+</span> <span class="n">b1</span><span class="o">*</span><span class="n">xs</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">xs</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">yhats</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C4&quot;</span><span class="p">);</span>
+
+<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;students_scores_with_residuals.pdf&quot;</span><span class="p">)</span>
+<span class="n">savefigure</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">(),</span> <span class="n">filename</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/simple/students_scores_with_residuals.pdf
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/simple/students_scores_with_residuals.png
+</pre></div>
+</div>
+<img alt="../_images/c128a7ee009db226335489db39b40501edc4bffdeb387be8404da7dc3ee5916e.png" src="../_images/c128a7ee009db226335489db39b40501edc4bffdeb387be8404da7dc3ee5916e.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">students</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;effort&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;score&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mf">12.2</span><span class="p">)</span>
+<span class="n">yhats</span> <span class="o">=</span> <span class="n">b0</span> <span class="o">+</span> <span class="n">b1</span><span class="o">*</span><span class="n">xs</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">xs</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">yhats</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C4&quot;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">plot_residuals2</span><span class="p">(</span><span class="n">students</span><span class="p">[</span><span class="s2">&quot;effort&quot;</span><span class="p">],</span> <span class="n">students</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">],</span> <span class="n">b0</span><span class="p">,</span> <span class="n">b1</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">);</span>
+
+<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;students_scores_with_residuals_squared.pdf&quot;</span><span class="p">)</span>
+<span class="n">savefigure</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">(),</span> <span class="n">filename</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/simple/students_scores_with_residuals_squared.pdf
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/simple/students_scores_with_residuals_squared.png
+</pre></div>
+</div>
+<img alt="../_images/2cf66965108c1f15e0d688e4e2754925dbe0fc74202cd698e79f157f41583b13.png" src="../_images/2cf66965108c1f15e0d688e4e2754925dbe0fc74202cd698e79f157f41583b13.png" />
+</div>
+</div>
+</section>
+<section id="model-diagnostics">
+<h2>Model diagnostics<a class="headerlink" href="#model-diagnostics" title="Permalink to this heading">#</a></h2>
+<section id="residuals-plots">
+<h3>Residuals plots<a class="headerlink" href="#residuals-plots" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">students</span><span class="p">[</span><span class="s2">&quot;effort&quot;</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">fit1</span><span class="o">.</span><span class="n">resid</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;residuals&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">);</span>
+
+<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;residuals_plot_vs_effort.pdf&quot;</span><span class="p">)</span>
+<span class="n">savefigure</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">(),</span> <span class="n">filename</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/simple/residuals_plot_vs_effort.pdf
+Saved figure to figures/lm/simple/residuals_plot_vs_effort.png
+</pre></div>
+</div>
+<img alt="../_images/62834db5c9a7c7c67902fa2985a2c8c3baca1f3ecd93a5bc272da50da2339904.png" src="../_images/62834db5c9a7c7c67902fa2985a2c8c3baca1f3ecd93a5bc272da50da2339904.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># # ALT.</span>
+<span class="c1"># sns.residplot(data=students, x=&quot;effort&quot;, y=&quot;score&quot;, lowess=True, color=&quot;g&quot;);</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="sum-of-squares-quantities">
+<h3>Sum of squares quantities<a class="headerlink" href="#sum-of-squares-quantities" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fit1</span><span class="o">.</span><span class="n">centered_tss</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1394.2040000000002
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fit1</span><span class="o">.</span><span class="n">ess</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1078.2917900307098
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fit1</span><span class="o">.</span><span class="n">ssr</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>315.91220996929053
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="coefficient-of-determination-r-2">
+<h3>Coefficient of determination <span class="math notranslate nohighlight">\(R^2\)</span><a class="headerlink" href="#coefficient-of-determination-r-2" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fit1</span><span class="o">.</span><span class="n">ess</span> <span class="o">/</span> <span class="n">fit1</span><span class="o">.</span><span class="n">centered_tss</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.7734103402591799
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fit1</span><span class="o">.</span><span class="n">rsquared</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.7734103402591798
+</pre></div>
+</div>
+</div>
+</div>
+<section id="related-to-the-pearson-correlation-coefficient">
+<h4>Related to the Pearson correlation coefficient<a class="headerlink" href="#related-to-the-pearson-correlation-coefficient" title="Permalink to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">efforts</span> <span class="o">=</span> <span class="n">students</span><span class="p">[</span><span class="s2">&quot;effort&quot;</span><span class="p">]</span>
+<span class="n">scores</span> <span class="o">=</span> <span class="n">students</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">]</span>
+<span class="n">pearson_r</span> <span class="o">=</span> <span class="n">efforts</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+<span class="n">pearson_r</span><span class="o">**</span><span class="mi">2</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.7734103402591799
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ALT.</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">pearsonr</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">pearsonr</span><span class="p">(</span><span class="n">efforts</span><span class="p">,</span> <span class="n">scores</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">r</span><span class="o">**</span><span class="mi">2</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.7734103402591799
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="model-summary-table">
+<h3>Model summary table<a class="headerlink" href="#model-summary-table" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fit1</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
 <div class="output text_html"><table class="simpletable">
 <caption>OLS Regression Results</caption>
 <tr>
-  <th>Dep. Variable:</th>          <td>time</td>       <th>  R-squared:         </th> <td>   0.260</td>
+  <th>Dep. Variable:</th>          <td>score</td>      <th>  R-squared:         </th> <td>   0.773</td>
 </tr>
 <tr>
-  <th>Model:</th>                   <td>OLS</td>       <th>  Adj. R-squared:    </th> <td>   0.186</td>
+  <th>Model:</th>                   <td>OLS</td>       <th>  Adj. R-squared:    </th> <td>   0.756</td>
 </tr>
 <tr>
-  <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>   3.516</td>
+  <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>   44.37</td>
 </tr>
 <tr>
-  <th>Date:</th>             <td>Fri, 02 Feb 2024</td> <th>  Prob (F-statistic):</th>  <td>0.0902</td> 
+  <th>Date:</th>             <td>Sun, 18 Feb 2024</td> <th>  Prob (F-statistic):</th> <td>1.56e-05</td>
 </tr>
 <tr>
-  <th>Time:</th>                 <td>17:26:23</td>     <th>  Log-Likelihood:    </th> <td> -72.909</td>
+  <th>Time:</th>                 <td>20:55:49</td>     <th>  Log-Likelihood:    </th> <td> -44.140</td>
 </tr>
 <tr>
-  <th>No. Observations:</th>      <td>    12</td>      <th>  AIC:               </th> <td>   149.8</td>
+  <th>No. Observations:</th>      <td>    15</td>      <th>  AIC:               </th> <td>   92.28</td>
 </tr>
 <tr>
-  <th>Df Residuals:</th>          <td>    10</td>      <th>  BIC:               </th> <td>   150.8</td>
+  <th>Df Residuals:</th>          <td>    13</td>      <th>  BIC:               </th> <td>   93.70</td>
 </tr>
 <tr>
   <th>Df Model:</th>              <td>     1</td>      <th>                     </th>     <td> </td>   
@@ -664,517 +998,97 @@ document.write(`
       <td></td>         <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P>|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
 </tr>
 <tr>
-  <th>Intercept</th> <td>  403.8531</td> <td>   88.666</td> <td>    4.555</td> <td> 0.001</td> <td>  206.292</td> <td>  601.414</td>
+  <th>Intercept</th> <td>   32.4658</td> <td>    6.155</td> <td>    5.275</td> <td> 0.000</td> <td>   19.169</td> <td>   45.763</td>
 </tr>
 <tr>
-  <th>age</th>       <td>   -4.5658</td> <td>    2.435</td> <td>   -1.875</td> <td> 0.090</td> <td>   -9.991</td> <td>    0.859</td>
+  <th>effort</th>    <td>    4.5049</td> <td>    0.676</td> <td>    6.661</td> <td> 0.000</td> <td>    3.044</td> <td>    5.966</td>
 </tr>
 </table>
 <table class="simpletable">
 <tr>
-  <th>Omnibus:</th>       <td> 2.175</td> <th>  Durbin-Watson:     </th> <td>   2.490</td>
+  <th>Omnibus:</th>       <td> 4.062</td> <th>  Durbin-Watson:     </th> <td>   2.667</td>
 </tr>
 <tr>
-  <th>Prob(Omnibus):</th> <td> 0.337</td> <th>  Jarque-Bera (JB):  </th> <td>   0.930</td>
+  <th>Prob(Omnibus):</th> <td> 0.131</td> <th>  Jarque-Bera (JB):  </th> <td>   1.777</td>
 </tr>
 <tr>
-  <th>Skew:</th>          <td>-0.123</td> <th>  Prob(JB):          </th> <td>   0.628</td>
+  <th>Skew:</th>          <td> 0.772</td> <th>  Prob(JB):          </th> <td>   0.411</td>
 </tr>
 <tr>
-  <th>Kurtosis:</th>      <td> 1.659</td> <th>  Cond. No.          </th> <td>    97.0</td>
+  <th>Kurtosis:</th>      <td> 3.677</td> <th>  Cond. No.          </th> <td>    44.5</td>
 </tr>
 </table><br/><br/>Notes:<br/>[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.</div></div>
 </div>
 </section>
-<section id="plot-of-linear-model-for-time-1-age-jobstatus">
-<h2>Plot of linear model for <code class="docutils literal notranslate"><span class="pre">time</span> <span class="pre">~</span> <span class="pre">1</span> <span class="pre">+</span> <span class="pre">age</span> <span class="pre">+</span> <span class="pre">jobstatus</span></code><a class="headerlink" href="#plot-of-linear-model-for-time-1-age-jobstatus" title="Permalink to this heading">#</a></h2>
-<p>We can “control for <code class="docutils literal notranslate"><span class="pre">jobstatus</span></code>” by including the variable in the linear model.
-Essentially,
-we’re fitting two separate models,
-one for <code class="docutils literal notranslate"><span class="pre">jobstatus=0</span></code> players and one for <code class="docutils literal notranslate"><span class="pre">jobstatus=1</span></code> players.</p>
+</section>
+<section id="using-linear-models-to-make-predictions">
+<h2>Using linear models to make predictions<a class="headerlink" href="#using-linear-models-to-make-predictions" title="Permalink to this heading">#</a></h2>
+<section id="confidence-interval-for-observations">
+<h3>Confidence interval for observations<a class="headerlink" href="#confidence-interval-for-observations" title="Permalink to this heading">#</a></h3>
+</section>
+<section id="confidence-interval-for-the-mean">
+<h3>Confidence interval for the mean<a class="headerlink" href="#confidence-interval-for-the-mean" title="Permalink to this heading">#</a></h3>
+</section>
+</section>
+<section id="explanations">
+<h2>Explanations<a class="headerlink" href="#explanations" title="Permalink to this heading">#</a></h2>
+<section id="strategies-for-fitting-linear-models">
+<h3>Strategies for fitting linear models<a class="headerlink" href="#strategies-for-fitting-linear-models" title="Permalink to this heading">#</a></h3>
+<section id="analytical-formulas">
+<h4>Analytical formulas<a class="headerlink" href="#analytical-formulas" title="Permalink to this heading">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">lmplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;jobstatus&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">players_full</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">efforts</span> <span class="o">=</span> <span class="n">students</span><span class="p">[</span><span class="s2">&quot;effort&quot;</span><span class="p">]</span>
+<span class="n">scores</span> <span class="o">=</span> <span class="n">students</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">]</span>
+
+<span class="n">effortsbar</span> <span class="o">=</span> <span class="n">efforts</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">scoresbar</span> <span class="o">=</span> <span class="n">scores</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="c1">#######################################################</span>
+<span class="n">num</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">((</span><span class="n">efforts</span> <span class="o">-</span> <span class="n">effortsbar</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">scores</span> <span class="o">-</span> <span class="n">scoresbar</span><span class="p">))</span>
+<span class="n">denom</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span> <span class="p">(</span><span class="n">efforts</span> <span class="o">-</span> <span class="n">effortsbar</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="p">)</span>
+<span class="n">b1</span> <span class="o">=</span> <span class="n">num</span> <span class="o">/</span> <span class="n">denom</span>
+<span class="n">b1</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.FacetGrid at 0x7f543af63370&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4.504850344209071
 </pre></div>
 </div>
-<img alt="../_images/de964efaf75127537d2913ea46258dcb17841577929852dc7caf68eed187fe75.png" src="../_images/de964efaf75127537d2913ea46258dcb17841577929852dc7caf68eed187fe75.png" />
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">statsmodels.formula.api</span> <span class="k">as</span> <span class="nn">smf</span>
-
-<span class="n">model2</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s1">&#39;time ~ 1 + age + C(jobstatus)&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">players_full</span><span class="p">)</span>
-<span class="n">result2</span> <span class="o">=</span> <span class="n">model2</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-<span class="n">result2</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># # ALT.</span>
+<span class="c1"># np.cov(efforts, scores, ddof=0)[0,1] / np.var(efforts, ddof=0)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">b0</span> <span class="o">=</span> <span class="n">scores</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="n">b1</span><span class="o">*</span><span class="n">efforts</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">b0</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/hostedtoolcache/Python/3.8.18/x64/lib/python3.8/site-packages/scipy/stats/_stats_py.py:1736: UserWarning: kurtosistest only valid for n&gt;=20 ... continuing anyway, n=12
-  warnings.warn(&quot;kurtosistest only valid for n&gt;=20 ... continuing &quot;
-</pre></div>
-</div>
-<div class="output text_html"><table class="simpletable">
-<caption>OLS Regression Results</caption>
-<tr>
-  <th>Dep. Variable:</th>          <td>time</td>       <th>  R-squared:         </th> <td>   0.404</td>
-</tr>
-<tr>
-  <th>Model:</th>                   <td>OLS</td>       <th>  Adj. R-squared:    </th> <td>   0.271</td>
-</tr>
-<tr>
-  <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>   3.045</td>
-</tr>
-<tr>
-  <th>Date:</th>             <td>Fri, 02 Feb 2024</td> <th>  Prob (F-statistic):</th>  <td>0.0977</td> 
-</tr>
-<tr>
-  <th>Time:</th>                 <td>17:26:24</td>     <th>  Log-Likelihood:    </th> <td> -71.616</td>
-</tr>
-<tr>
-  <th>No. Observations:</th>      <td>    12</td>      <th>  AIC:               </th> <td>   149.2</td>
-</tr>
-<tr>
-  <th>Df Residuals:</th>          <td>     9</td>      <th>  BIC:               </th> <td>   150.7</td>
-</tr>
-<tr>
-  <th>Df Model:</th>              <td>     2</td>      <th>                     </th>     <td> </td>   
-</tr>
-<tr>
-  <th>Covariance Type:</th>      <td>nonrobust</td>    <th>                     </th>     <td> </td>   
-</tr>
-</table>
-<table class="simpletable">
-<tr>
-          <td></td>             <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P>|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
-</tr>
-<tr>
-  <th>Intercept</th>         <td>  377.8172</td> <td>   85.764</td> <td>    4.405</td> <td> 0.002</td> <td>  183.806</td> <td>  571.828</td>
-</tr>
-<tr>
-  <th>C(jobstatus)[T.1]</th> <td> -124.0138</td> <td>   84.307</td> <td>   -1.471</td> <td> 0.175</td> <td> -314.728</td> <td>   66.701</td>
-</tr>
-<tr>
-  <th>age</th>               <td>   -1.6509</td> <td>    3.039</td> <td>   -0.543</td> <td> 0.600</td> <td>   -8.526</td> <td>    5.224</td>
-</tr>
-</table>
-<table class="simpletable">
-<tr>
-  <th>Omnibus:</th>       <td> 0.983</td> <th>  Durbin-Watson:     </th> <td>   1.910</td>
-</tr>
-<tr>
-  <th>Prob(Omnibus):</th> <td> 0.612</td> <th>  Jarque-Bera (JB):  </th> <td>   0.661</td>
-</tr>
-<tr>
-  <th>Skew:</th>          <td>-0.002</td> <th>  Prob(JB):          </th> <td>   0.718</td>
-</tr>
-<tr>
-  <th>Kurtosis:</th>      <td> 1.850</td> <th>  Cond. No.          </th> <td>    108.</td>
-</tr>
-</table><br/><br/>Notes:<br/>[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.</div></div>
-</div>
-<section id="manual-select-subset-with-jobstatus-1">
-<h3>Manual select subset with jobstatus 1<a class="headerlink" href="#manual-select-subset-with-jobstatus-1" title="Permalink to this heading">#</a></h3>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># import statsmodels.formula.api as smf</span>
-
-<span class="c1"># players_job1 = players_full[players_full[&quot;jobstatus&quot;]==1]</span>
-<span class="c1"># model3 = smf.ols(&#39;time ~ 1 + age&#39;, data=players_job1)</span>
-<span class="c1"># result3 = model3.fit()</span>
-<span class="c1"># result3.summary()</span>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>32.46580930159963
 </pre></div>
 </div>
 </div>
 </div>
 </section>
 </section>
-<section id="example-confoudouder-2">
-<h2>Example confoudouder  2<a class="headerlink" href="#example-confoudouder-2" title="Permalink to this heading">#</a></h2>
-<p>via <a class="reference external" href="https://stats.stackexchange.com/a/17338/62481">https://stats.stackexchange.com/a/17338/62481</a></p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">uniform</span><span class="p">,</span> <span class="n">randint</span>
-
-<span class="n">covariate</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
-<span class="n">exposure</span>  <span class="o">=</span> <span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="o">+</span>  <span class="mf">0.3</span> <span class="o">*</span> <span class="n">covariate</span>
-<span class="n">outcome</span>   <span class="o">=</span> <span class="mf">2.0</span> <span class="o">+</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">exposure</span> <span class="o">+</span> <span class="mf">0.25</span><span class="o">*</span><span class="n">covariate</span>
-
-<span class="c1"># covariate, exposure, outcome</span>
-<span class="n">df2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-    <span class="s2">&quot;covariate&quot;</span><span class="p">:</span><span class="n">covariate</span><span class="p">,</span>
-    <span class="s2">&quot;exposure&quot;</span><span class="p">:</span><span class="n">exposure</span><span class="p">,</span>
-    <span class="s2">&quot;outcome&quot;</span><span class="p">:</span><span class="n">outcome</span>
-<span class="p">})</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">lmplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;exposure&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;outcome&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df2</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.FacetGrid at 0x7f543b2dfdc0&gt;
-</pre></div>
-</div>
-<img alt="../_images/8480d52746605cabf517b95e70b3f62d5ffcd34fb4465d6c69d6e16047d8a86c.png" src="../_images/8480d52746605cabf517b95e70b3f62d5ffcd34fb4465d6c69d6e16047d8a86c.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">statsmodels.formula.api</span> <span class="k">as</span> <span class="nn">smf</span>
-
-<span class="n">model2a</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s1">&#39;outcome ~ exposure&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df2</span><span class="p">)</span>
-<span class="n">result2a</span> <span class="o">=</span> <span class="n">model2a</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-<span class="c1"># result2a.summary()</span>
-<span class="n">result2a</span><span class="o">.</span><span class="n">params</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Intercept    2.028636
-exposure     0.670186
-dtype: float64
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fg</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">lmplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;exposure&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;outcome&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;covariate&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df2</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../_images/dc3b67944aae72c0be59c775bfdb90fd05d319a0afd963e85b58991b6cb3cead.png" src="../_images/dc3b67944aae72c0be59c775bfdb90fd05d319a0afd963e85b58991b6cb3cead.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model2b</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s1">&#39;outcome ~ exposure + C(covariate)&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df2</span><span class="p">)</span>
-<span class="n">result2b</span> <span class="o">=</span> <span class="n">model2b</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-<span class="c1"># result2b.summary()</span>
-<span class="n">result2b</span><span class="o">.</span><span class="n">params</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Intercept            2.00
-C(covariate)[T.1]    0.25
-exposure             0.50
-dtype: float64
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mf">1.4</span><span class="p">)</span>
-
-<span class="n">m</span> <span class="o">=</span> <span class="n">result2b</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;exposure&quot;</span><span class="p">]</span>
-<span class="n">b0</span> <span class="o">=</span> <span class="n">result2b</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;Intercept&quot;</span><span class="p">]</span>
-<span class="n">b1</span> <span class="o">=</span> <span class="n">b0</span> <span class="o">+</span> <span class="n">result2b</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;C(covariate)[T.1]&quot;</span><span class="p">]</span>
-
-<span class="n">b0</span><span class="p">,</span> <span class="n">b1</span>
-
-<span class="n">y0</span> <span class="o">=</span> <span class="n">b0</span> <span class="o">+</span> <span class="n">m</span><span class="o">*</span><span class="n">x</span>
-<span class="n">y1</span> <span class="o">=</span> <span class="n">b1</span> <span class="o">+</span> <span class="n">m</span><span class="o">*</span><span class="n">x</span>
-<span class="n">ax</span> <span class="o">=</span> <span class="n">fg</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y0</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y1</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;m&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: xlabel=&#39;exposure&#39;, ylabel=&#39;outcome&#39;&gt;
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fg</span><span class="o">.</span><span class="n">figure</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../_images/fa25706771b303cc3e559ad397d5f72c4f2b4538059c2d2f60b2c777b3e4cf22.png" src="../_images/fa25706771b303cc3e559ad397d5f72c4f2b4538059c2d2f60b2c777b3e4cf22.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model2c</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s1">&#39;outcome ~ -1 + exposure*C(covariate)&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df2</span><span class="p">)</span>
-<span class="n">result2c</span> <span class="o">=</span> <span class="n">model2c</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-<span class="n">result2c</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
-<span class="c1"># result2c.params</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><table class="simpletable">
-<caption>OLS Regression Results</caption>
-<tr>
-  <th>Dep. Variable:</th>         <td>outcome</td>     <th>  R-squared:         </th> <td>   1.000</td> 
-</tr>
-<tr>
-  <th>Model:</th>                   <td>OLS</td>       <th>  Adj. R-squared:    </th> <td>   1.000</td> 
-</tr>
-<tr>
-  <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>9.006e+30</td>
-</tr>
-<tr>
-  <th>Date:</th>             <td>Fri, 02 Feb 2024</td> <th>  Prob (F-statistic):</th>  <td>  0.00</td>  
-</tr>
-<tr>
-  <th>Time:</th>                 <td>17:26:26</td>     <th>  Log-Likelihood:    </th> <td>  3386.6</td> 
-</tr>
-<tr>
-  <th>No. Observations:</th>      <td>   100</td>      <th>  AIC:               </th> <td>  -6765.</td> 
-</tr>
-<tr>
-  <th>Df Residuals:</th>          <td>    96</td>      <th>  BIC:               </th> <td>  -6755.</td> 
-</tr>
-<tr>
-  <th>Df Model:</th>              <td>     3</td>      <th>                     </th>     <td> </td>    
-</tr>
-<tr>
-  <th>Covariance Type:</th>      <td>nonrobust</td>    <th>                     </th>     <td> </td>    
-</tr>
-</table>
-<table class="simpletable">
-<tr>
-               <td></td>                 <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P>|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
-</tr>
-<tr>
-  <th>C(covariate)[0]</th>            <td>    2.0000</td> <td> 1.34e-16</td> <td> 1.49e+16</td> <td> 0.000</td> <td>    2.000</td> <td>    2.000</td>
-</tr>
-<tr>
-  <th>C(covariate)[1]</th>            <td>    2.2500</td> <td> 1.88e-16</td> <td>  1.2e+16</td> <td> 0.000</td> <td>    2.250</td> <td>    2.250</td>
-</tr>
-<tr>
-  <th>exposure</th>                   <td>    0.5000</td> <td> 2.36e-16</td> <td> 2.12e+15</td> <td> 0.000</td> <td>    0.500</td> <td>    0.500</td>
-</tr>
-<tr>
-  <th>exposure:C(covariate)[T.1]</th> <td> 6.661e-16</td> <td> 3.24e-16</td> <td>    2.055</td> <td> 0.043</td> <td> 2.28e-17</td> <td> 1.31e-15</td>
-</tr>
-</table>
-<table class="simpletable">
-<tr>
-  <th>Omnibus:</th>       <td> 0.401</td> <th>  Durbin-Watson:     </th> <td>   0.632</td>
-</tr>
-<tr>
-  <th>Prob(Omnibus):</th> <td> 0.818</td> <th>  Jarque-Bera (JB):  </th> <td>   0.562</td>
-</tr>
-<tr>
-  <th>Skew:</th>          <td> 0.060</td> <th>  Prob(JB):          </th> <td>   0.755</td>
-</tr>
-<tr>
-  <th>Kurtosis:</th>      <td> 2.653</td> <th>  Cond. No.          </th> <td>    9.70</td>
-</tr>
-</table><br/><br/>Notes:<br/>[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.</div></div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># import seaborn as sns</span>
-<span class="c1"># import matplotlib.pyplot as plt</span>
-<span class="c1"># df = sns.load_dataset(&#39;iris&#39;)</span>
-<span class="c1"># sns.regplot(x=df[&quot;sepal_length&quot;], y=df[&quot;sepal_width&quot;], line_kws={&quot;color&quot;:&quot;r&quot;,&quot;alpha&quot;:0.7,&quot;lw&quot;:5})</span>
-</pre></div>
-</div>
-</div>
-</div>
 </section>
-<section id="random-slopes-and-random-intercepts">
-<h2>Random slopes and random intercepts<a class="headerlink" href="#random-slopes-and-random-intercepts" title="Permalink to this heading">#</a></h2>
-<p>via <a class="reference external" href="https://patsy.readthedocs.io/en/latest/quickstart.html">https://patsy.readthedocs.io/en/latest/quickstart.html</a></p>
-<p>You can even write interactions between categorical and numerical variables.
-Here we fit two different slope coefficients for x1; one for the a1 group, and one for the a2 group:
-<code class="docutils literal notranslate"><span class="pre">dmatrix(&quot;a:x1&quot;,</span> <span class="pre">data)</span></code></p>
-<p>This is what matches the seaborn plot when using <code class="docutils literal notranslate"><span class="pre">hue</span></code> as an extra variable</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model2d</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s1">&#39;outcome ~ 1 + C(covariate) + C(covariate):exposure&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df2</span><span class="p">)</span>
-<span class="n">result2d</span> <span class="o">=</span> <span class="n">model2d</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-<span class="n">result2d</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
-<span class="c1"># result2c.params</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><table class="simpletable">
-<caption>OLS Regression Results</caption>
-<tr>
-  <th>Dep. Variable:</th>         <td>outcome</td>     <th>  R-squared:         </th> <td>   1.000</td> 
-</tr>
-<tr>
-  <th>Model:</th>                   <td>OLS</td>       <th>  Adj. R-squared:    </th> <td>   1.000</td> 
-</tr>
-<tr>
-  <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>3.817e+29</td>
-</tr>
-<tr>
-  <th>Date:</th>             <td>Fri, 02 Feb 2024</td> <th>  Prob (F-statistic):</th>  <td>  0.00</td>  
-</tr>
-<tr>
-  <th>Time:</th>                 <td>17:26:26</td>     <th>  Log-Likelihood:    </th> <td>  3228.6</td> 
-</tr>
-<tr>
-  <th>No. Observations:</th>      <td>   100</td>      <th>  AIC:               </th> <td>  -6449.</td> 
-</tr>
-<tr>
-  <th>Df Residuals:</th>          <td>    96</td>      <th>  BIC:               </th> <td>  -6439.</td> 
-</tr>
-<tr>
-  <th>Df Model:</th>              <td>     3</td>      <th>                     </th>     <td> </td>    
-</tr>
-<tr>
-  <th>Covariance Type:</th>      <td>nonrobust</td>    <th>                     </th>     <td> </td>    
-</tr>
-</table>
-<table class="simpletable">
-<tr>
-              <td></td>                <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P>|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
-</tr>
-<tr>
-  <th>Intercept</th>                <td>    2.0000</td> <td> 6.53e-16</td> <td> 3.06e+15</td> <td> 0.000</td> <td>    2.000</td> <td>    2.000</td>
-</tr>
-<tr>
-  <th>C(covariate)[T.1]</th>        <td>    0.2500</td> <td> 1.12e-15</td> <td> 2.23e+14</td> <td> 0.000</td> <td>    0.250</td> <td>    0.250</td>
-</tr>
-<tr>
-  <th>C(covariate)[0]:exposure</th> <td>    0.5000</td> <td> 1.15e-15</td> <td> 4.36e+14</td> <td> 0.000</td> <td>    0.500</td> <td>    0.500</td>
-</tr>
-<tr>
-  <th>C(covariate)[1]:exposure</th> <td>    0.5000</td> <td> 1.08e-15</td> <td> 4.63e+14</td> <td> 0.000</td> <td>    0.500</td> <td>    0.500</td>
-</tr>
-</table>
-<table class="simpletable">
-<tr>
-  <th>Omnibus:</th>       <td>1105.549</td> <th>  Durbin-Watson:     </th> <td>   0.505</td>
-</tr>
-<tr>
-  <th>Prob(Omnibus):</th>  <td> 0.000</td>  <th>  Jarque-Bera (JB):  </th> <td>  14.210</td>
-</tr>
-<tr>
-  <th>Skew:</th>           <td>-0.212</td>  <th>  Prob(JB):          </th> <td>0.000821</td>
-</tr>
-<tr>
-  <th>Kurtosis:</th>       <td> 1.203</td>  <th>  Cond. No.          </th> <td>    8.80</td>
-</tr>
-</table><br/><br/>Notes:<br/>[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.</div></div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">uniform</span><span class="p">,</span> <span class="n">randint</span>
-
-<span class="n">covariate3</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
-<span class="n">exposure3</span>  <span class="o">=</span> <span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="o">+</span>  <span class="mf">0.3</span> <span class="o">*</span> <span class="n">covariate</span>
-<span class="n">outcome3</span>   <span class="o">=</span> <span class="mf">2.0</span> <span class="o">+</span> <span class="mf">0.25</span><span class="o">*</span><span class="n">covariate3</span> <span class="o">+</span> <span class="p">(</span><span class="mf">0.5</span> <span class="o">+</span> <span class="mf">0.1</span><span class="o">*</span><span class="n">covariate3</span><span class="p">)</span><span class="o">*</span><span class="n">exposure3</span> 
-<span class="c1">#                  \             /    \                  /</span>
-<span class="c1">#                  different inst.      different slopes  </span>
-
-<span class="n">df3</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-    <span class="s2">&quot;covariate&quot;</span><span class="p">:</span><span class="n">covariate3</span><span class="p">,</span>
-    <span class="s2">&quot;exposure&quot;</span><span class="p">:</span><span class="n">exposure3</span><span class="p">,</span>
-    <span class="s2">&quot;outcome&quot;</span><span class="p">:</span><span class="n">outcome3</span>
-<span class="p">})</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fg</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">lmplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;exposure&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;outcome&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;covariate&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df3</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../_images/411f686652beaa975dfbf221bea2ea1861b20d8bafb5115de029064ee87b11b8.png" src="../_images/411f686652beaa975dfbf221bea2ea1861b20d8bafb5115de029064ee87b11b8.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model3d</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s1">&#39;outcome ~ 1 + C(covariate) + C(covariate):exposure&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df2</span><span class="p">)</span>
-<span class="n">result3d</span> <span class="o">=</span> <span class="n">model3d</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-<span class="n">result3d</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
-<span class="c1"># result2c.params</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><table class="simpletable">
-<caption>OLS Regression Results</caption>
-<tr>
-  <th>Dep. Variable:</th>         <td>outcome</td>     <th>  R-squared:         </th> <td>   1.000</td> 
-</tr>
-<tr>
-  <th>Model:</th>                   <td>OLS</td>       <th>  Adj. R-squared:    </th> <td>   1.000</td> 
-</tr>
-<tr>
-  <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>3.817e+29</td>
-</tr>
-<tr>
-  <th>Date:</th>             <td>Fri, 02 Feb 2024</td> <th>  Prob (F-statistic):</th>  <td>  0.00</td>  
-</tr>
-<tr>
-  <th>Time:</th>                 <td>17:26:27</td>     <th>  Log-Likelihood:    </th> <td>  3228.6</td> 
-</tr>
-<tr>
-  <th>No. Observations:</th>      <td>   100</td>      <th>  AIC:               </th> <td>  -6449.</td> 
-</tr>
-<tr>
-  <th>Df Residuals:</th>          <td>    96</td>      <th>  BIC:               </th> <td>  -6439.</td> 
-</tr>
-<tr>
-  <th>Df Model:</th>              <td>     3</td>      <th>                     </th>     <td> </td>    
-</tr>
-<tr>
-  <th>Covariance Type:</th>      <td>nonrobust</td>    <th>                     </th>     <td> </td>    
-</tr>
-</table>
-<table class="simpletable">
-<tr>
-              <td></td>                <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P>|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
-</tr>
-<tr>
-  <th>Intercept</th>                <td>    2.0000</td> <td> 6.53e-16</td> <td> 3.06e+15</td> <td> 0.000</td> <td>    2.000</td> <td>    2.000</td>
-</tr>
-<tr>
-  <th>C(covariate)[T.1]</th>        <td>    0.2500</td> <td> 1.12e-15</td> <td> 2.23e+14</td> <td> 0.000</td> <td>    0.250</td> <td>    0.250</td>
-</tr>
-<tr>
-  <th>C(covariate)[0]:exposure</th> <td>    0.5000</td> <td> 1.15e-15</td> <td> 4.36e+14</td> <td> 0.000</td> <td>    0.500</td> <td>    0.500</td>
-</tr>
-<tr>
-  <th>C(covariate)[1]:exposure</th> <td>    0.5000</td> <td> 1.08e-15</td> <td> 4.63e+14</td> <td> 0.000</td> <td>    0.500</td> <td>    0.500</td>
-</tr>
-</table>
-<table class="simpletable">
-<tr>
-  <th>Omnibus:</th>       <td>1105.549</td> <th>  Durbin-Watson:     </th> <td>   0.505</td>
-</tr>
-<tr>
-  <th>Prob(Omnibus):</th>  <td> 0.000</td>  <th>  Jarque-Bera (JB):  </th> <td>  14.210</td>
-</tr>
-<tr>
-  <th>Skew:</th>           <td>-0.212</td>  <th>  Prob(JB):          </th> <td>0.000821</td>
-</tr>
-<tr>
-  <th>Kurtosis:</th>       <td> 1.203</td>  <th>  Cond. No.          </th> <td>    8.80</td>
-</tr>
-</table><br/><br/>Notes:<br/>[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.</div></div>
-</div>
+<section id="discussion">
+<h2>Discussion<a class="headerlink" href="#discussion" title="Permalink to this heading">#</a></h2>
+</section>
+<section id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this heading">#</a></h2>
+</section>
+<section id="links">
+<h2>Links<a class="headerlink" href="#links" title="Permalink to this heading">#</a></h2>
 </section>
 </section>
 
@@ -1224,13 +1138,35 @@ Here we fit two different slope coefficients for x1; one for the a1 group, and o
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebook-setup">Notebook setup</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-of-linear-model-for-time-1-age">Plot of linear model for <code class="docutils literal notranslate"><span class="pre">time</span> <span class="pre">~</span> <span class="pre">1</span> <span class="pre">+</span> <span class="pre">age</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-of-linear-model-for-time-1-age-jobstatus">Plot of linear model for <code class="docutils literal notranslate"><span class="pre">time</span> <span class="pre">~</span> <span class="pre">1</span> <span class="pre">+</span> <span class="pre">age</span> <span class="pre">+</span> <span class="pre">jobstatus</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manual-select-subset-with-jobstatus-1">Manual select subset with jobstatus 1</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definitions">Definitions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-model">Linear model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-students-score-as-a-function-of-effort">Example: students score as a function of effort</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameter-estimation-using-least-squares">Parameter estimation using least squares</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-diagnostics">Model diagnostics</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#residuals-plots">Residuals plots</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sum-of-squares-quantities">Sum of squares quantities</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#coefficient-of-determination-r-2">Coefficient of determination <span class="math notranslate nohighlight">\(R^2\)</span></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#related-to-the-pearson-correlation-coefficient">Related to the Pearson correlation coefficient</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-confoudouder-2">Example confoudouder  2</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#random-slopes-and-random-intercepts">Random slopes and random intercepts</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-summary-table">Model summary table</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-linear-models-to-make-predictions">Using linear models to make predictions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#confidence-interval-for-observations">Confidence interval for observations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#confidence-interval-for-the-mean">Confidence interval for the mean</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanations">Explanations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#strategies-for-fitting-linear-models">Strategies for fitting linear models</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#analytical-formulas">Analytical formulas</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#links">Links</a></li>
 </ul>
   </nav></div>
 

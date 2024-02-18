@@ -15,45 +15,69 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
-np.random.seed(42)
-pval = ttest_ind(pricesW, pricesE, permutations=10000).pvalue
-print("expected", pval)
+import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+from scipy.stats import norm
 
-# PERMUTATION T-TEST MANUAL VERIFICATION
-np.random.seed(42)
+# Define the linear model function
+def linear_model(x):
+    return 30 + 5 * x
+sigma = 5
 
-nW, nE = len(pricesW), len(pricesE)
-stdW, stdE = std(pricesW), std(pricesE)
-seD = np.sqrt(stdW**2/nW + stdE**2/nE)
-dprice = dmeans(pricesW, pricesE)
-obst = (dprice - 0) / seD
+    
+# Set up the figure and 3D axis
+# fig = plt.figure(figsize=(12, 8), layout='compressed')
+# ax = fig.add_subplot(111, projection='3d')
 
-# 2. Obtain the sampling distribution under H0
-P = 10000
-pts0 = []
-for i in range(0, P):
-    ps1, ps2 = resample_under_H0(pricesW, pricesE)
-    std1, std2 = std(ps1), std(ps2)
-    pseD = np.sqrt(std1**2/nW + std2**2/nE)
-    pdprice = dmeans(ps1, ps2)
-    pt0 = (pdprice - 0) / pseD
-    pts0.append(pt0)
+fig, ax = plt.subplots(figsize=(12, 8), subplot_kw={'projection': '3d'})
+# gridspec_kw=dict(top=1.02, bottom=0.02, left=0, right=1))
 
-tails = tailvalues(pts0, obst)
-pvalue_ttest = len(tails) / len(pdhats0)
-pvalue_ttest
+# Plot the linear model
+x_values = np.linspace(5, 13, 200)
+ax.plot(x_values, linear_model(x_values), zs=0, zdir='z', label='Linear Model', color='blue')
+
+# Set labels and adjust the view
+ax.set_xlabel('$x$')
+ax.set_xticklabels([])
+ax.set_xlim([5,13])
+
+ax.set_ylabel('$y$')
+ax.set_yticklabels([])
+ax.set_ylim([40,110])
+
+# ax.set_zlabel('density')
+ax.set_zlim([0,0.06])
+
+ax.view_init(elev=30., azim=-60)
+ax.set_box_aspect([1.3, 1, 0.1])
+ax.grid(False)
 
 
+# Define positions for Gaussian distributions and sigma
+x_positions = [6, 7, 8, 9, 10, 11, 12]
+from matplotlib.collections import PolyCollection
+for x_pos in x_positions:
+    y_pos = linear_model(x_pos)
+    ys = np.linspace(y_pos-4*sigma, y_pos+4*sigma, 100)
+    fYs = norm(loc=y_pos, scale=sigma).pdf(ys)
+    verts = [list(zip(np.pad(ys, 1, mode='edge'), np.pad(fYs, 1)))]
+    poly = PolyCollection(verts, facecolors="k")
+    poly.set_alpha(0.2)
+    ax.add_collection3d(poly, zs=x_pos, zdir='x')
+
+filename = os.path.join(DESTDIR, "linear_model_3d.pdf")
+savefigure(fig, filename)
 ------------------
 
 
 [0;31m---------------------------------------------------------------------------[0m
 [0;31mNameError[0m                                 Traceback (most recent call last)
-Cell [0;32mIn[10], line 2[0m
-[1;32m      1[0m np[38;5;241m.[39mrandom[38;5;241m.[39mseed([38;5;241m42[39m)
-[0;32m----> 2[0m pval [38;5;241m=[39m [43mttest_ind[49m(pricesW, pricesE, permutations[38;5;241m=[39m[38;5;241m10000[39m)[38;5;241m.[39mpvalue
-[1;32m      3[0m [38;5;28mprint[39m([38;5;124m"[39m[38;5;124mexpected[39m[38;5;124m"[39m, pval)
-[1;32m      5[0m [38;5;66;03m# PERMUTATION T-TEST MANUAL VERIFICATION[39;00m
+Cell [0;32mIn[4], line 52[0m
+[1;32m     49[0m     poly[38;5;241m.[39mset_alpha([38;5;241m0.2[39m)
+[1;32m     50[0m     ax[38;5;241m.[39madd_collection3d(poly, zs[38;5;241m=[39mx_pos, zdir[38;5;241m=[39m[38;5;124m'[39m[38;5;124mx[39m[38;5;124m'[39m)
+[0;32m---> 52[0m filename [38;5;241m=[39m [43mos[49m[38;5;241m.[39mpath[38;5;241m.[39mjoin(DESTDIR, [38;5;124m"[39m[38;5;124mlinear_model_3d.pdf[39m[38;5;124m"[39m)
+[1;32m     53[0m savefigure(fig, filename)
 
-[0;31mNameError[0m: name 'ttest_ind' is not defined
+[0;31mNameError[0m: name 'os' is not defined
 
