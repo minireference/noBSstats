@@ -62,10 +62,12 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/42_multiple_linear_regression';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Section 4.4 — Interpreting linear models" href="43_interpreting_linear_models.html" />
+    <link rel="next" title="Section 4.3 — Interpreting linear models" href="43_interpreting_linear_models.html" />
     <link rel="prev" title="Section 4.1 — Simple linear regression" href="41_simple_linear_regression.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -208,10 +210,10 @@ const thebe_selector_output = ".output, .cell_output"
 
 <li class="toctree-l2"><a class="reference internal" href="37_inventory_stats_tests.html">Section 3.7 — Inventory of statistical tests</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../examples/README.html">Statistical analysis examples</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../examples/statistical_design.html">Statistical design examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../examples/one_sample_z-test.html">One-sample z-test for the mean</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../examples/one_sample_t-test.html">One-sample t-test for the mean</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../examples/two_sample_t-test.html">Welch’s two-sample <span class="math notranslate nohighlight">\(t\)</span>-test</a></li>
-
 <li class="toctree-l3"><a class="reference internal" href="../examples/ANOVA.html">Analysis of variance (ANOVA)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../examples/two_sample_equivalence_test.html">Two-sample equivalence test</a></li>
 
@@ -222,8 +224,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="40_LINEAR_MODELS.html">Chapter 4 — Linear models</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="41_simple_linear_regression.html">Section 4.1 — Simple linear regression</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Section 4.2 — Multiple linear regression</a></li>
-<li class="toctree-l2"><a class="reference internal" href="43_interpreting_linear_models.html">Section 4.4 — Interpreting linear models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="44_regression_with_categorical_predictors.html">Section 4.3 — Regression with categorical predictors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="43_interpreting_linear_models.html">Section 4.3 — Interpreting linear models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="44_regression_with_categorical_predictors.html">Section 4.4 — Regression with categorical predictors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="45_causal_effects_and_confounders.html">Section 4.5 — Causal effects and confounders</a></li>
 <li class="toctree-l2"><a class="reference internal" href="46_generalized_linear_models.html">Section 4.6 — Generalized linear models</a></li>
 </ul>
@@ -500,6 +502,16 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebook-setup">Notebook setup</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definitions">Definitions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#doctors-dataset">Doctors dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multiple-linear-regression-model">Multiple linear regression model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-linear-model-for-doctors-sleep-scores">Example: linear model for doctors’ sleep scores</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-model-projections">Plot model projections</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-residuals">Plot residuals</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanations">Explanations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#links">Links</a></li>
 </ul>
             </nav>
         </div>
@@ -533,8 +545,8 @@ document.write(`
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Figures setup</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>  <span class="c1"># needed otherwise `sns.set_theme` doesn&#39;t work</span>
 <span class="kn">from</span> <span class="nn">plot_helpers</span> <span class="kn">import</span> <span class="n">RCPARAMS</span>
-<span class="c1"># RCPARAMS.update({&#39;figure.figsize&#39;: (10, 3)})   # good for screen</span>
-<span class="n">RCPARAMS</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mf">1.6</span><span class="p">)})</span>  <span class="c1"># good for print</span>
+<span class="n">RCPARAMS</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">)})</span>   <span class="c1"># good for screen</span>
+<span class="c1"># RCPARAMS.update({&#39;figure.figsize&#39;: (5, 1.6)})  # good for print</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">set_theme</span><span class="p">(</span>
     <span class="n">context</span><span class="o">=</span><span class="s2">&quot;paper&quot;</span><span class="p">,</span>
     <span class="n">style</span><span class="o">=</span><span class="s2">&quot;whitegrid&quot;</span><span class="p">,</span>
@@ -560,6 +572,7 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># set random seed for repeatability</span>
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="c1">#######################################################</span>
 </pre></div>
 </div>
 </div>
@@ -573,7 +586,11 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">doctors</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/doctors.csv&quot;</span><span class="p">)</span>
-<span class="n">doctors</span>
+<span class="n">doctors</span><span class="o">.</span><span class="n">columns</span>
+
+<span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;loc&quot;</span><span class="p">,</span> <span class="s2">&quot;work&quot;</span><span class="p">,</span> <span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="s2">&quot;exp&quot;</span><span class="p">,</span> <span class="s2">&quot;hours&quot;</span><span class="p">,</span> <span class="s2">&quot;caf&quot;</span><span class="p">,</span> <span class="s2">&quot;alc&quot;</span><span class="p">,</span> <span class="s2">&quot;weed&quot;</span><span class="p">,</span> <span class="s2">&quot;exrc&quot;</span><span class="p">,</span> <span class="s2">&quot;score&quot;</span><span class="p">]</span>
+<span class="n">docs</span> <span class="o">=</span> <span class="n">doctors</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span>
+<span class="n">docs</span>
 </pre></div>
 </div>
 </div>
@@ -596,47 +613,83 @@ document.write(`
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>permit</th>
-      <th>name</th>
-      <th>location</th>
+      <th>loc</th>
+      <th>work</th>
+      <th>age</th>
+      <th>exp</th>
+      <th>hours</th>
+      <th>caf</th>
+      <th>alc</th>
+      <th>weed</th>
+      <th>exrc</th>
       <th>score</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>93636</td>
-      <td>Yesenia Smith</td>
-      <td>urban</td>
-      <td>82.0</td>
+      <td>rur</td>
+      <td>hos</td>
+      <td>26</td>
+      <td>2</td>
+      <td>21</td>
+      <td>2</td>
+      <td>0</td>
+      <td>5.0</td>
+      <td>0.0</td>
+      <td>63</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>79288</td>
-      <td>Andrew Stanley</td>
-      <td>rural</td>
-      <td>85.0</td>
+      <td>urb</td>
+      <td>cli</td>
+      <td>43</td>
+      <td>11</td>
+      <td>74</td>
+      <td>26</td>
+      <td>20</td>
+      <td>0.0</td>
+      <td>4.5</td>
+      <td>16</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>94980</td>
-      <td>Jessica Castro</td>
-      <td>rural</td>
-      <td>97.0</td>
+      <td>urb</td>
+      <td>hos</td>
+      <td>30</td>
+      <td>1</td>
+      <td>63</td>
+      <td>25</td>
+      <td>1</td>
+      <td>0.0</td>
+      <td>7.0</td>
+      <td>58</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>99441</td>
-      <td>Jasmine Lynch</td>
-      <td>urban</td>
-      <td>74.0</td>
+      <td>urb</td>
+      <td>eld</td>
+      <td>53</td>
+      <td>23</td>
+      <td>77</td>
+      <td>36</td>
+      <td>4</td>
+      <td>0.0</td>
+      <td>2.0</td>
+      <td>55</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>92882</td>
-      <td>Cassie Pena</td>
-      <td>urban</td>
-      <td>73.0</td>
+      <td>rur</td>
+      <td>cli</td>
+      <td>26</td>
+      <td>3</td>
+      <td>36</td>
+      <td>22</td>
+      <td>9</td>
+      <td>0.0</td>
+      <td>7.5</td>
+      <td>47</td>
     </tr>
     <tr>
       <th>...</th>
@@ -644,47 +697,323 @@ document.write(`
       <td>...</td>
       <td>...</td>
       <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
     </tr>
     <tr>
-      <th>219</th>
-      <td>61425</td>
-      <td>Christian Garza</td>
-      <td>urban</td>
-      <td>80.0</td>
+      <th>151</th>
+      <td>rur</td>
+      <td>cli</td>
+      <td>55</td>
+      <td>31</td>
+      <td>53</td>
+      <td>23</td>
+      <td>6</td>
+      <td>0.5</td>
+      <td>5.5</td>
+      <td>66</td>
     </tr>
     <tr>
-      <th>220</th>
-      <td>70978</td>
-      <td>Rebecca Colon</td>
-      <td>urban</td>
-      <td>78.0</td>
+      <th>152</th>
+      <td>urb</td>
+      <td>cli</td>
+      <td>41</td>
+      <td>15</td>
+      <td>71</td>
+      <td>17</td>
+      <td>19</td>
+      <td>0.0</td>
+      <td>9.5</td>
+      <td>39</td>
     </tr>
     <tr>
-      <th>221</th>
-      <td>66559</td>
-      <td>Mario Salas</td>
-      <td>urban</td>
-      <td>78.0</td>
+      <th>153</th>
+      <td>rur</td>
+      <td>cli</td>
+      <td>45</td>
+      <td>19</td>
+      <td>21</td>
+      <td>17</td>
+      <td>14</td>
+      <td>0.5</td>
+      <td>13.0</td>
+      <td>60</td>
     </tr>
     <tr>
-      <th>222</th>
-      <td>33954</td>
-      <td>Aaron Jackson</td>
-      <td>rural</td>
-      <td>74.0</td>
+      <th>154</th>
+      <td>urb</td>
+      <td>eld</td>
+      <td>59</td>
+      <td>35</td>
+      <td>49</td>
+      <td>11</td>
+      <td>9</td>
+      <td>2.0</td>
+      <td>15.5</td>
+      <td>88</td>
     </tr>
     <tr>
-      <th>223</th>
-      <td>97602</td>
-      <td>Zachary Cook</td>
-      <td>urban</td>
-      <td>84.0</td>
+      <th>155</th>
+      <td>urb</td>
+      <td>cli</td>
+      <td>46</td>
+      <td>12</td>
+      <td>37</td>
+      <td>5</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>10.0</td>
+      <td>81</td>
     </tr>
   </tbody>
 </table>
-<p>224 rows × 4 columns</p>
+<p>156 rows × 10 columns</p>
 </div></div></div>
 </div>
+</section>
+<section id="multiple-linear-regression-model">
+<h2>Multiple linear regression model<a class="headerlink" href="#multiple-linear-regression-model" title="Permalink to this heading">#</a></h2>
+</section>
+<section id="example-linear-model-for-doctors-sleep-scores">
+<h2>Example: linear model for doctors’ sleep scores<a class="headerlink" href="#example-linear-model-for-doctors-sleep-scores" title="Permalink to this heading">#</a></h2>
+<p>We want to know the influence of drinking alcohol, smoking weed, and exercise on sleep score?</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">statsmodels.formula.api</span> <span class="k">as</span> <span class="nn">smf</span>
+
+<span class="n">lm2</span>  <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;score ~ 1 + alc + weed + exrc&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">doctors</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">lm2</span><span class="o">.</span><span class="n">params</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Intercept    60.452901
+alc          -1.800101
+weed         -1.021552
+exrc          1.768289
+dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<section id="plot-model-projections">
+<h3>Plot model projections<a class="headerlink" href="#plot-model-projections" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">plot_pred</span><span class="p">(</span><span class="n">lmfit</span><span class="p">,</span> <span class="n">pred</span><span class="p">,</span> <span class="n">others</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate a partial regression plot from the best-fit line</span>
+<span class="sd">    of the predictor `pred`, where the intercept is calculated</span>
+<span class="sd">    from the average of the `other` predictors time their params.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span> <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">ax</span>
+    
+    <span class="n">data</span> <span class="o">=</span> <span class="n">lmfit</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">orig_exog</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">lmfit</span><span class="o">.</span><span class="n">params</span>
+    <span class="n">allpreds</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">-</span> <span class="p">{</span><span class="s2">&quot;Intercept&quot;</span><span class="p">}</span>
+    <span class="k">assert</span> <span class="n">pred</span> <span class="ow">in</span> <span class="n">allpreds</span> 
+    <span class="n">others</span> <span class="o">=</span> <span class="n">allpreds</span> <span class="o">-</span> <span class="p">{</span><span class="n">pred</span><span class="p">}</span> <span class="k">if</span> <span class="n">others</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">others</span>
+    <span class="n">intercept</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;Intercept&quot;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">other</span> <span class="ow">in</span> <span class="n">others</span><span class="p">:</span>
+        <span class="n">intercept</span> <span class="o">+=</span> <span class="n">params</span><span class="p">[</span><span class="n">other</span><span class="p">]</span><span class="o">*</span><span class="n">data</span><span class="p">[</span><span class="n">other</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> 
+    <span class="n">slope</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="n">pred</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="s2">&quot;intercept=&quot;</span><span class="p">,</span><span class="n">intercept</span><span class="p">,</span> <span class="s2">&quot;slope=&quot;</span><span class="p">,</span> <span class="n">slope</span><span class="p">)</span>
+
+    <span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">pred</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">data</span><span class="p">[</span><span class="n">pred</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+    <span class="n">ys</span> <span class="o">=</span> <span class="n">intercept</span> <span class="o">+</span> <span class="n">slope</span><span class="o">*</span><span class="n">xs</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">xs</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">ys</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">plt</span><span class="o">.</span><span class="n">rc_context</span><span class="p">({</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:(</span><span class="mi">12</span><span class="p">,</span><span class="mi">3</span><span class="p">)}):</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span><span class="n">ax2</span><span class="p">,</span><span class="n">ax3</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="c1"># alc</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">doctors</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;alc&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;score&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">)</span>
+    <span class="n">plot_pred</span><span class="p">(</span><span class="n">lm2</span><span class="p">,</span> <span class="s2">&quot;alc&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">)</span>
+    <span class="c1"># weed</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">doctors</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;weed&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;score&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">)</span>
+    <span class="n">plot_pred</span><span class="p">(</span><span class="n">lm2</span><span class="p">,</span> <span class="s2">&quot;weed&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">)</span>
+    <span class="c1"># exrc</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">doctors</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;exrc&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;score&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax3</span><span class="p">)</span>
+    <span class="n">plot_pred</span><span class="p">(</span><span class="n">lm2</span><span class="p">,</span> <span class="s2">&quot;exrc&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>alc intercept= 69.33837903371314 slope= -1.8001013152459402
+weed intercept= 48.667385017001344 slope= -1.021551659716443
+exrc intercept= 38.4984185910091 slope= 1.7682887564575607
+</pre></div>
+</div>
+<img alt="../_images/8dbc11a9cc73316cc58bfc40a62d9866f24a5facf5f8a670741c33452e411d4d.png" src="../_images/8dbc11a9cc73316cc58bfc40a62d9866f24a5facf5f8a670741c33452e411d4d.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># # ALT. Way to obtain this using `plot_partregress` with empty `exog_others`</span>
+<span class="c1"># from statsmodels.graphics.api import plot_partregress</span>
+<span class="c1"># with plt.rc_context({&quot;figure.figsize&quot;:(12,3)}):</span>
+<span class="c1">#     fig, (ax1,ax2,ax3) = plt.subplots(1,3, sharey=True)</span>
+<span class="c1">#     plot_partregress(&quot;score&quot;, &quot;alc&quot;, exog_others=[], data=doctors, obs_labels=False, ax=ax1)</span>
+<span class="c1">#     plot_partregress(&quot;score&quot;, &quot;weed&quot;, exog_others=[], data=doctors, obs_labels=False, ax=ax2)</span>
+<span class="c1">#     plot_partregress(&quot;score&quot;, &quot;exrc&quot;, exog_others=[], data=doctors, obs_labels=False, ax=ax3)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># # TODO: investigate what heppens when exog_others is not empty</span>
+<span class="c1"># from statsmodels.graphics.api import plot_partregress</span>
+<span class="c1"># with plt.rc_context({&quot;figure.figsize&quot;:(12,3)}):</span>
+<span class="c1">#     fig, (ax1,ax2,ax3) = plt.subplots(1,3, sharey=True)</span>
+<span class="c1">#     plot_partregress(&quot;score&quot;, &quot;alc&quot;,  exog_others=[&quot;weed&quot;, &quot;exrc&quot;], data=doctors, obs_labels=False, ax=ax1)</span>
+<span class="c1">#     plot_partregress(&quot;score&quot;, &quot;weed&quot;, exog_others=[&quot;alc&quot;, &quot;exrc&quot;], data=doctors, obs_labels=False, ax=ax2)</span>
+<span class="c1">#     plot_partregress(&quot;score&quot;, &quot;exrc&quot;, exog_others=[&quot;alc&quot;, &quot;weed&quot;], data=doctors, obs_labels=False, ax=ax3)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="plot-residuals">
+<h3>Plot residuals<a class="headerlink" href="#plot-residuals" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">plt</span><span class="o">.</span><span class="n">rc_context</span><span class="p">({</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:(</span><span class="mi">12</span><span class="p">,</span><span class="mi">3</span><span class="p">)}):</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span><span class="n">ax2</span><span class="p">,</span><span class="n">ax3</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;residuals&quot;</span><span class="p">)</span>
+    <span class="c1"># residuals vs. alc</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">doctors</span><span class="p">[</span><span class="s2">&quot;alc&quot;</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">lm2</span><span class="o">.</span><span class="n">resid</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;dashed&quot;</span><span class="p">)</span>
+    <span class="c1"># residuals vs. weed</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">doctors</span><span class="p">[</span><span class="s2">&quot;weed&quot;</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">lm2</span><span class="o">.</span><span class="n">resid</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;dashed&quot;</span><span class="p">)</span>
+    <span class="c1"># residuals vs. exrc</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">doctors</span><span class="p">[</span><span class="s2">&quot;exrc&quot;</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">lm2</span><span class="o">.</span><span class="n">resid</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax3</span><span class="p">)</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;dashed&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/b1aeef1ca53dad2f1795126b4b8ed4db1ca850fcedc326a590bedb0d6242a5d7.png" src="../_images/b1aeef1ca53dad2f1795126b4b8ed4db1ca850fcedc326a590bedb0d6242a5d7.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># # Partial models for individual variables </span>
+<span class="c1"># with plt.rc_context({&quot;figure.figsize&quot;:(12,3)}):</span>
+<span class="c1">#     fig, (ax1,ax2,ax3) = plt.subplots(1,3)</span>
+<span class="c1">#     sns.regplot(data=doctors, x=&quot;alc&quot;, y=&quot;score&quot;,  ci=None, ax=ax1)</span>
+<span class="c1">#     sns.regplot(data=doctors, x=&quot;weed&quot;, y=&quot;score&quot;, ci=None, ax=ax2)</span>
+<span class="c1">#     sns.regplot(data=doctors, x=&quot;exrc&quot;, y=&quot;score&quot;, ci=None, ax=ax3)</span>
+<span class="c1"># # smf.ols(&quot;score ~ 1 + alc&quot;, data=doctors).fit().params.values, \</span>
+<span class="c1"># # smf.ols(&quot;score ~ 1 + weed&quot;, data=doctors).fit().params.values, \</span>
+<span class="c1"># # smf.ols(&quot;score ~ 1 + exrc&quot;, data=doctors).fit().params.values</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lm2</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><table class="simpletable">
+<caption>OLS Regression Results</caption>
+<tr>
+  <th>Dep. Variable:</th>          <td>score</td>      <th>  R-squared:         </th> <td>   0.842</td>
+</tr>
+<tr>
+  <th>Model:</th>                   <td>OLS</td>       <th>  Adj. R-squared:    </th> <td>   0.839</td>
+</tr>
+<tr>
+  <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>   270.3</td>
+</tr>
+<tr>
+  <th>Date:</th>             <td>Wed, 28 Feb 2024</td> <th>  Prob (F-statistic):</th> <td>1.05e-60</td>
+</tr>
+<tr>
+  <th>Time:</th>                 <td>14:09:01</td>     <th>  Log-Likelihood:    </th> <td> -547.63</td>
+</tr>
+<tr>
+  <th>No. Observations:</th>      <td>   156</td>      <th>  AIC:               </th> <td>   1103.</td>
+</tr>
+<tr>
+  <th>Df Residuals:</th>          <td>   152</td>      <th>  BIC:               </th> <td>   1115.</td>
+</tr>
+<tr>
+  <th>Df Model:</th>              <td>     3</td>      <th>                     </th>     <td> </td>   
+</tr>
+<tr>
+  <th>Covariance Type:</th>      <td>nonrobust</td>    <th>                     </th>     <td> </td>   
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+      <td></td>         <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P>|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>Intercept</th> <td>   60.4529</td> <td>    1.289</td> <td>   46.885</td> <td> 0.000</td> <td>   57.905</td> <td>   63.000</td>
+</tr>
+<tr>
+  <th>alc</th>       <td>   -1.8001</td> <td>    0.070</td> <td>  -25.726</td> <td> 0.000</td> <td>   -1.938</td> <td>   -1.662</td>
+</tr>
+<tr>
+  <th>weed</th>      <td>   -1.0216</td> <td>    0.476</td> <td>   -2.145</td> <td> 0.034</td> <td>   -1.962</td> <td>   -0.081</td>
+</tr>
+<tr>
+  <th>exrc</th>      <td>    1.7683</td> <td>    0.138</td> <td>   12.809</td> <td> 0.000</td> <td>    1.496</td> <td>    2.041</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+  <th>Omnibus:</th>       <td> 1.140</td> <th>  Durbin-Watson:     </th> <td>   1.828</td>
+</tr>
+<tr>
+  <th>Prob(Omnibus):</th> <td> 0.565</td> <th>  Jarque-Bera (JB):  </th> <td>   0.900</td>
+</tr>
+<tr>
+  <th>Skew:</th>          <td> 0.182</td> <th>  Prob(JB):          </th> <td>   0.638</td>
+</tr>
+<tr>
+  <th>Kurtosis:</th>      <td> 3.075</td> <th>  Cond. No.          </th> <td>    31.2</td>
+</tr>
+</table><br/><br/>Notes:<br/>[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.</div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># What does this do?</span>
+<span class="kn">from</span> <span class="nn">statsmodels.graphics.api</span> <span class="kn">import</span> <span class="n">plot_fit</span>
+<span class="n">plot_fit</span><span class="p">(</span><span class="n">lm2</span><span class="p">,</span> <span class="s2">&quot;alc&quot;</span><span class="p">,</span> <span class="n">vlines</span><span class="o">=</span><span class="kc">False</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/ccee6d343a53d848a2ba31b3660ea423e8fa0136dbe3b21c5feb1c846ed2d9b7.png" src="../_images/ccee6d343a53d848a2ba31b3660ea423e8fa0136dbe3b21c5feb1c846ed2d9b7.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="explanations">
+<h2>Explanations<a class="headerlink" href="#explanations" title="Permalink to this heading">#</a></h2>
+</section>
+<section id="discussion">
+<h2>Discussion<a class="headerlink" href="#discussion" title="Permalink to this heading">#</a></h2>
+</section>
+<section id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this heading">#</a></h2>
+</section>
+<section id="links">
+<h2>Links<a class="headerlink" href="#links" title="Permalink to this heading">#</a></h2>
 </section>
 </section>
 
@@ -732,7 +1061,7 @@ document.write(`
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Section 4.4 — Interpreting linear models</p>
+        <p class="prev-next-title">Section 4.3 — Interpreting linear models</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -754,6 +1083,16 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebook-setup">Notebook setup</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definitions">Definitions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#doctors-dataset">Doctors dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multiple-linear-regression-model">Multiple linear regression model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-linear-model-for-doctors-sleep-scores">Example: linear model for doctors’ sleep scores</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-model-projections">Plot model projections</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-residuals">Plot residuals</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanations">Explanations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#links">Links</a></li>
 </ul>
   </nav></div>
 
