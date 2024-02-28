@@ -87,7 +87,7 @@ Check on the links below to learn more about the book:
 
 - [Concept map](https://minireference.com/static/excerpts/noBSstats/conceptmaps/BookSubjectsOverview.pdf) from the book
 - [Detailed book outline](https://docs.google.com/document/d/1fwep23-95U-w1QMPU31nOvUnUXE2X3s_Dbk5JuLlKAY/edit#) (continuously updated)
-- The target release date (digital pre-orders) is Sept 2023.
+- The target release date (digital pre-orders) is May 2024.
   Subscribe to the [mailing list](https://confirmsubscription.com/h/t/A17516BF2FCB41B2)
   for progress updates on the book.
 
