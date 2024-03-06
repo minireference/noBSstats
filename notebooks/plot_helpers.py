@@ -13,6 +13,8 @@ import numpy as np
 import pandas as pd
 from scipy.integrate import quad
 import seaborn as sns
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
 
 from scipy.stats import randint    # special handling beta+1=beta
 from scipy.stats import nbinom     # display parameter n as r
@@ -907,6 +909,41 @@ def plot_alpha_beta_errors(cohend, ax=None, xlims=None, n=9, alpha=0.05,
 # Linear models
 ################################################################################
 
+def simple_regplot(x, y, n_std=2, n_pts=100, ax=None,
+                   scatter_kws=None, line_kws=None, ci_kws=None):
+    """
+    Draw a regression line with error interval.
+    via https://stackoverflow.com/a/59756979/127114
+    See also https://github.com/ttesileanu/pydove/blob/main/pydove/regplot.py
+    """
+    ax = plt.gca() if ax is None else ax
+
+    # calculate best-fit line and interval
+    x_fit = sm.add_constant(x)
+    fit_results = sm.OLS(y, x_fit).fit()
+
+    eval_x = sm.add_constant(np.linspace(np.min(x), np.max(x), n_pts))
+    pred = fit_results.get_prediction(eval_x)
+
+    # draw the fit line and error interval
+    ci_kws = {} if ci_kws is None else ci_kws
+    ax.fill_between(
+        eval_x[:, 1],
+        pred.predicted_mean - n_std * pred.se_mean,
+        pred.predicted_mean + n_std * pred.se_mean,
+        alpha=0.5,
+        **ci_kws,
+    )
+    line_kws = {} if line_kws is None else line_kws
+    h = ax.plot(eval_x[:, 1], pred.predicted_mean, **line_kws)
+
+    # draw the scatterplot
+    scatter_kws = {} if scatter_kws is None else scatter_kws
+    ax.scatter(x, y, c=h[0].get_color(), **scatter_kws)
+
+    return fit_results
+
+
 def plot_residuals(xdata, ydata, b0, b1, xlims=None, ax=None):
     """
     Plot residuals between the points (x,y) and the line y = b0 + b1*x.
@@ -951,3 +988,95 @@ def plot_residuals2(xdata, ydata, b0, b1, xlims=None, ax=None):
         ax.add_patch(rect2)
 
     return ax
+
+
+def plot_lm_ttest(data, x, y, ax=None):
+    """
+    Plot a combined scatterplot, means, and LM slope line
+    to illustrate the equivalence between two-sample t-test
+    and a linear model with a single binary predictor `x`.
+    """
+    # Fit the linear model
+    lm = smf.ols(formula=f"{y} ~ 1 + C({x})", data=data).fit()
+    beta0, beta1 = lm.params
+    interceptlab, slopelab = lm.params.index
+
+    # Plot the data
+    ax = plt.gca() if ax is None else ax
+    sns.stripplot(data=data, x=x, y=y, hue=x, jitter=0, alpha=0.3)
+    sns.pointplot(data=data, x=x, y=y, hue=x, estimator="mean", errorbar=None, marker="D")
+
+    # Customize plot labels
+    xlabel0, xlabel1 = [l.get_text() for l in ax.get_xticklabels()]
+    newxlabel0 = xlabel0 + "\n0"
+    newxlabel1 = xlabel1 + "\n1"
+    ax.set_xticks([0,1])
+    ax.set_xticklabels([newxlabel0, newxlabel1])
+    ax.set_xlim([-0.3, 1.3])
+
+    # Get seaborn colors
+    snspal = sns.color_palette()
+
+    # Add h-lines to represent the two group means
+    ax.hlines(beta0, xmin=-0.3, xmax=1.3, color=snspal[0],
+              label=f"$\\beta_0$ = \\texttt{{{interceptlab}}} = {xlabel0} mean")
+    ax.hlines(beta0+beta1, xmin=0.8, xmax=1.2, color=snspal[1],
+              label=f"$\\beta_0 + \\beta_{{\\texttt{{{xlabel1}}}}}$ = {xlabel1} mean")
+
+    # Add diagonal to represent difference between means
+    ax.plot(
+        [0, 1],
+        [beta0, beta0 + beta1],
+        color="k",
+        label=f"$\\beta_{{\\texttt{{{xlabel1}}}}}$ = \\texttt{{{slopelab}}} slope",
+    )
+
+    # Return axes
+    ax.legend()
+    return ax
+
+
+
+def plot_lm_anova(data, x, y, ax=None):
+    """
+    Plot a combined scatterplot, means, and LM slope lines
+    to illustrate the equivalence between ANOVA test and
+    a linear model with a single categorical predictor `x`.
+    """
+    # Fit the linear model
+    lm = smf.ols(formula=f"{y} ~ 1 + C({x})", data=data).fit()
+
+    # Labels for the different levels of the categorical variable
+    labels = sorted(np.unique(data[x].values))
+
+    # Seaborn color palette, line styles, and aesthetics
+    snspal = sns.color_palette()
+    linestyles = ['solid', 'dotted', 'dashed', 'dashdot',
+                  (0, (3, 5, 1, 5, 1, 5)),  # dashdotdotted
+                  (5, (10, 3))]             # long dash with offset
+
+    # Plot the data
+    ax = plt.gca() if ax is None else ax
+    sns.stripplot(data=data, x=x, y=y, hue=x, jitter=0, alpha=0.3, order=labels, hue_order=labels)
+    sns.pointplot(data=data, x=x, y=y, hue=x, estimator="mean", errorbar=None, marker="D", hue_order=labels)
+    
+    # Group 1 (baseline)
+    beta0 = lm.params[0]
+    interceptlab = lm.params.index[0]
+    ax.axhline(beta0, color=snspal[0], linewidth=1,
+               label=f"$\\beta_0$ = \\texttt{{{interceptlab}}} = {labels[0]} mean")
+
+    # Remaining groups
+    for i in range(1, len(labels)):
+        label = labels[i]
+        beta = lm.params[i]
+        slopelab = lm.params.index[i]
+        linestyle = linestyles[i%len(linestyles)]
+        ax.hlines(beta0+beta, xmin=i-0.2, xmax=i+0.2, color=snspal[i])
+        ax.plot([i-0.7, i], [beta0, beta0 + beta], color="k", linestyle=linestyle,
+                label=f"$\\beta_{{\\texttt{{{label}}}}}$ = \\texttt{{{slopelab}}} slope")
+
+    # Return axes
+    ax.legend()
+    return ax
+
