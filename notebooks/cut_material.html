@@ -224,7 +224,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="42_multiple_linear_regression.html">Section 4.2 — Multiple linear regression</a></li>
 <li class="toctree-l2"><a class="reference internal" href="43_interpreting_linear_models.html">Section 4.3 — Interpreting linear models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="44_regression_with_categorical_predictors.html">Section 4.4 — Regression with categorical predictors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="45_causal_effects_and_confounders.html">Section 4.5 — Causal effects and confounders</a></li>
+<li class="toctree-l2"><a class="reference internal" href="45_model_selection.html">Section 4.5 — Model selection</a></li>
 <li class="toctree-l2"><a class="reference internal" href="46_generalized_linear_models.html">Section 4.6 — Generalized linear models</a></li>
 </ul>
 </li>
@@ -656,6 +656,30 @@ document.write(`
 <h1>CUT MATERIAL<a class="headerlink" href="#cut-material" title="Permalink to this heading">#</a></h1>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">jackknife</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">estfunc</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Evaluate the Jackknife estimate of the estimator `estfunc`.</span>
+<span class="sd">    via https://compphysics.github.io/MachineLearning/doc/LectureNotes/_build/html/chapter3.html</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+    <span class="n">stats</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+    <span class="c1"># Leaving out observations one-by-one</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">stats</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">estfunc</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span><span class="n">i</span><span class="p">))</span>
+
+    <span class="c1"># analysis</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Jackknife Statistics:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;original           bias      std. error&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%8g</span><span class="s2"> </span><span class="si">%14g</span><span class="s2"> </span><span class="si">%15g</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">estfunc</span><span class="p">(</span><span class="n">sample</span><span class="p">),</span> <span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">mean</span><span class="p">(</span><span class="n">stats</span><span class="p">)</span><span class="o">/</span><span class="n">n</span><span class="p">,</span> <span class="p">(</span><span class="n">n</span><span class="o">*</span><span class="n">var</span><span class="p">(</span><span class="n">stats</span><span class="p">))</span><span class="o">**</span><span class="mf">.5</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">stats</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="kn">import</span> <span class="n">Axes3D</span>
@@ -715,7 +739,7 @@ document.write(`
 <div class="cell_output docutils container">
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
 <span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">line</span> <span class="mi">52</span>
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">line</span> <span class="mi">52</span>
 <span class="g g-Whitespace">     </span><span class="mi">49</span>     <span class="n">poly</span><span class="o">.</span><span class="n">set_alpha</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)</span>
 <span class="g g-Whitespace">     </span><span class="mi">50</span>     <span class="n">ax</span><span class="o">.</span><span class="n">add_collection3d</span><span class="p">(</span><span class="n">poly</span><span class="p">,</span> <span class="n">zs</span><span class="o">=</span><span class="n">x_pos</span><span class="p">,</span> <span class="n">zdir</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
 <span class="ne">---&gt; </span><span class="mi">52</span> <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;linear_model_3d.pdf&quot;</span><span class="p">)</span>

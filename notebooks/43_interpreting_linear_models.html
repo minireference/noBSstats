@@ -226,7 +226,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="42_multiple_linear_regression.html">Section 4.2 — Multiple linear regression</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Section 4.3 — Interpreting linear models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="44_regression_with_categorical_predictors.html">Section 4.4 — Regression with categorical predictors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="45_causal_effects_and_confounders.html">Section 4.5 — Causal effects and confounders</a></li>
+<li class="toctree-l2"><a class="reference internal" href="45_model_selection.html">Section 4.5 — Model selection</a></li>
 <li class="toctree-l2"><a class="reference internal" href="46_generalized_linear_models.html">Section 4.6 — Generalized linear models</a></li>
 </ul>
 </li>
@@ -503,22 +503,42 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definitions">Definitions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-fit-metrics">Model fit metrics</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#metrics">Metrics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#other-metrics-optional-material">Other metrics (optional material)</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameter-estimates">Parameter estimates</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#confidence-intervals-for-model-parameters">Confidence intervals for model parameters</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hypothesis-testing-for-linear-models">Hypothesis testing for linear models</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assumptions-checks-and-diagnostics">Assumptions checks and diagnostics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hypothesis-testing-for-linear-models">Hypothesis testing for linear models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#f-test-for-the-overall-model">F-test for the overall model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#t-tests-for-individual-parameters">T-tests for individual parameters</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assumptions-checks-and-diagnostics">Assumptions checks and diagnostics</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diagnostics-plots">Diagnostics plots</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linearity-checks">Linearity checks</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#normality-checks">Normality checks</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#homoscedasticity-checks">Homoscedasticity checks</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#independence-checks">Independence checks</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#collinearity-checks">Collinearity checks</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#outliers-and-influential-observations">Outliers and influential observations</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diagnostic-checks">Diagnostic checks</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-prediction-accuracy">Model prediction accuracy</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prediction">Prediction</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#out-of-sample-prediction-accuracy">Out-of-sample prediction accuracy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#leave-one-out-cross-validation">Leave-one-out cross-validation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#regularization">Regularization</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanations">Explanations</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#resampling-methods-for-regression">Resampling methods for regression</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#towards-machine-learning">Towards machine learning</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#links">Links</a></li>
 </ul>
@@ -621,10 +641,10 @@ document.write(`
   <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>   270.3</td>
 </tr>
 <tr>
-  <th>Date:</th>             <td>Wed, 28 Feb 2024</td> <th>  Prob (F-statistic):</th> <td>1.05e-60</td>
+  <th>Date:</th>             <td>Wed, 06 Mar 2024</td> <th>  Prob (F-statistic):</th> <td>1.05e-60</td>
 </tr>
 <tr>
-  <th>Time:</th>                 <td>14:09:04</td>     <th>  Log-Likelihood:    </th> <td> -547.63</td>
+  <th>Time:</th>                 <td>08:47:17</td>     <th>  Log-Likelihood:    </th> <td> -547.63</td>
 </tr>
 <tr>
   <th>No. Observations:</th>      <td>   156</td>      <th>  AIC:               </th> <td>   1103.</td>
@@ -676,12 +696,24 @@ document.write(`
 <h2>Model fit metrics<a class="headerlink" href="#model-fit-metrics" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lm2</span><span class="o">.</span><span class="n">rsquared</span><span class="p">,</span> <span class="n">lm2</span><span class="o">.</span><span class="n">rsquared_adj</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lm2</span><span class="o">.</span><span class="n">rsquared</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(0.8421649167873537, 0.8390497506713147)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.8421649167873537
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lm2</span><span class="o">.</span><span class="n">rsquared_adj</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.8390497506713147
 </pre></div>
 </div>
 </div>
@@ -720,47 +752,195 @@ document.write(`
 <span class="n">scoreshat</span> <span class="o">=</span> <span class="n">lm2</span><span class="o">.</span><span class="n">fittedvalues</span><span class="o">.</span><span class="n">values</span>
 <span class="n">meanscore</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
 
+<span class="n">tss</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span> <span class="p">(</span><span class="n">scores</span><span class="o">-</span><span class="n">meanscore</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># R^2 alt.</span>
+<span class="n">lm2</span><span class="o">.</span><span class="n">rsquared</span><span class="p">,</span> <span class="n">metrics</span><span class="o">.</span><span class="n">r2_score</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">scoreshat</span><span class="p">),</span> <span class="n">lm2</span><span class="o">.</span><span class="n">rsquared</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">lm2</span><span class="o">.</span><span class="n">ssr</span><span class="o">/</span><span class="n">tss</span><span class="p">,</span> <span class="n">lm2</span><span class="o">.</span><span class="n">ess</span><span class="o">/</span><span class="n">tss</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(0.8421649167873537,
+ 0.8421649167873537,
+ 0.8421649167873537,
+ 0.8421649167873537,
+ 0.8421649167873543)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lm2</span><span class="o">.</span><span class="n">llf</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-547.6259042117637
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lm2</span><span class="o">.</span><span class="n">aic</span><span class="p">,</span> <span class="n">lm2</span><span class="o">.</span><span class="n">bic</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1103.2518084235273, 1115.4512324525256)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="other-metrics-optional-material">
+<h3>Other metrics (optional material)<a class="headerlink" href="#other-metrics-optional-material" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TSS = Total Sum of Squares</span>
+<span class="n">tss</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span> <span class="p">(</span><span class="n">scores</span><span class="o">-</span><span class="n">meanscore</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="p">)</span>
+<span class="n">lm2</span><span class="o">.</span><span class="n">centered_tss</span><span class="p">,</span> <span class="n">tss</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(64797.89743589744, 64797.8974358974)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># SSR = Sum of Squares Residuals</span>
+<span class="n">ssr</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span> <span class="p">(</span><span class="n">scores</span><span class="o">-</span><span class="n">scoreshat</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="p">)</span>
+<span class="n">ssr</span><span class="p">,</span> <span class="n">lm2</span><span class="o">.</span><span class="n">ssr</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(10227.38153379939, 10227.38153379939)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ESS = Explained Sum of Squares</span>
+<span class="n">ess</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span> <span class="p">(</span><span class="n">scoreshat</span><span class="o">-</span><span class="n">meanscore</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="p">)</span> 
+<span class="n">lm2</span><span class="o">.</span><span class="n">ess</span><span class="p">,</span> <span class="n">ess</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(54570.51590209805, 54570.51590209801)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># MSE</span>
+<span class="n">metrics</span><span class="o">.</span><span class="n">mean_squared_error</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">scoreshat</span><span class="p">),</span> <span class="n">lm2</span><span class="o">.</span><span class="n">ssr</span><span class="o">/</span><span class="n">n</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(65.56013803717558, 65.56013803717558)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># RMSE</span>
+<span class="n">metrics</span><span class="o">.</span><span class="n">root_mean_squared_error</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">scoreshat</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">lm2</span><span class="o">.</span><span class="n">ssr</span><span class="o">/</span><span class="n">n</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">AttributeError</span><span class="g g-Whitespace">                            </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">18</span><span class="p">],</span> <span class="n">line</span> <span class="mi">2</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="c1"># RMSE</span>
+<span class="ne">----&gt; </span><span class="mi">2</span> <span class="n">metrics</span><span class="o">.</span><span class="n">root_mean_squared_error</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">scoreshat</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">lm2</span><span class="o">.</span><span class="n">ssr</span><span class="o">/</span><span class="n">n</span><span class="p">)</span>
 
-<span class="c1"># TSS = Total Sum of Squares</span>
-<span class="n">tss</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span> <span class="p">(</span><span class="n">scores</span><span class="o">-</span><span class="n">meanscore</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="p">)</span> 
-<span class="c1"># lm2.centered_tss, tss</span>
-
-<span class="c1"># SSR = Sum of Squares Residuals</span>
-<span class="c1"># ssr = sum( (scores-scoreshat)**2 )</span>
-<span class="c1"># ssr, lm2.ssr</span>
-
-<span class="c1"># ESS = Explained Sum of Squares</span>
-<span class="c1"># ess = sum( (scoreshat-ybar)**2 ) </span>
-<span class="c1"># lm2.ess, ess</span>
-
-<span class="c1"># R^2</span>
-<span class="c1"># metrics.r2_score(scores, scoreshat), lm2.rsquared, 1-lm2.ssr/tss, lm2.ess/tss</span>
-
-<span class="c1"># MSE</span>
-<span class="c1"># metrics.mean_squared_error(scores, scoreshat), lm2.ssr/n</span>
-
-<span class="c1"># RMSE</span>
-<span class="c1"># metrics.root_mean_squared_error(scores, scoreshat), np.sqrt(lm2.ssr/n)</span>
-
-<span class="c1"># MAPE</span>
-<span class="c1"># mape = sum( np.abs(scores - scoreshat)/scores ) / n</span>
-<span class="c1"># metrics.mean_absolute_percentage_error(scores, scoreshat), mape</span>
-
-<span class="c1"># MAE</span>
-<span class="c1"># mae = sum( np.abs(scores - scoreshat) ) / n</span>
-<span class="c1"># metrics.mean_absolute_error(scores, scoreshat), mae</span>
-
-<span class="c1"># Mean squared error the model</span>
+<span class="ne">AttributeError</span>: module &#39;sklearn.metrics&#39; has no attribute &#39;root_mean_squared_error&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># MAPE</span>
+<span class="n">mape</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">scores</span> <span class="o">-</span> <span class="n">scoreshat</span><span class="p">)</span><span class="o">/</span><span class="n">scores</span> <span class="p">)</span> <span class="o">/</span> <span class="n">n</span>
+<span class="n">metrics</span><span class="o">.</span><span class="n">mean_absolute_percentage_error</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">scoreshat</span><span class="p">),</span> <span class="n">mape</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(0.2223447695690139, 0.2223447695690138)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># MAE</span>
+<span class="n">mae</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">scores</span> <span class="o">-</span> <span class="n">scoreshat</span><span class="p">)</span> <span class="p">)</span> <span class="o">/</span> <span class="n">n</span>
+<span class="n">metrics</span><span class="o">.</span><span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">scoreshat</span><span class="p">),</span> <span class="n">mae</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(6.415932421491938, 6.415932421491938)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Mean squared error the model</span>
 <span class="c1"># The explained sum of squares divided by the model degrees of freedom</span>
-<span class="c1"># lm2.mse_model, lm2.ess/3</span>
-
-<span class="c1"># Mean squared error of the residuals</span>
+<span class="n">lm2</span><span class="o">.</span><span class="n">mse_model</span><span class="p">,</span> <span class="n">lm2</span><span class="o">.</span><span class="n">ess</span><span class="o">/</span><span class="mi">3</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(18190.171967366015, 18190.171967366015)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Mean squared error of the residuals</span>
 <span class="c1"># The sum of squared residuals divided by the residual degrees of freedom.</span>
-<span class="c1"># lm2.mse_resid, lm2.ssr/(n-4)</span>
-
-<span class="c1"># Total mean squared error</span>
+<span class="n">lm2</span><span class="o">.</span><span class="n">mse_resid</span><span class="p">,</span> <span class="n">lm2</span><span class="o">.</span><span class="n">ssr</span><span class="o">/</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(67.28540482762757, 67.28540482762757)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Total mean squared error</span>
 <span class="c1"># The centered total sum of squares divided by the number of observations.</span>
-<span class="c1"># lm2.mse_total, lm2.centered_tss/(n-1)</span>
+<span class="n">lm2</span><span class="o">.</span><span class="n">mse_total</span><span class="p">,</span> <span class="n">lm2</span><span class="o">.</span><span class="n">centered_tss</span><span class="o">/</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(418.05095119933833, 418.05095119933833)
 </pre></div>
 </div>
 </div>
@@ -769,9 +949,6 @@ document.write(`
 </section>
 <section id="parameter-estimates">
 <h2>Parameter estimates<a class="headerlink" href="#parameter-estimates" title="Permalink to this heading">#</a></h2>
-</section>
-<section id="confidence-intervals-for-model-parameters">
-<h2>Confidence intervals for model parameters<a class="headerlink" href="#confidence-intervals-for-model-parameters" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># estimated parameters</span>
@@ -791,6 +968,22 @@ dtype: float64
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># estimated sigma (noise term)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">lm2</span><span class="o">.</span><span class="n">scale</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>8.202768119825622
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="confidence-intervals-for-model-parameters">
+<h2>Confidence intervals for model parameters<a class="headerlink" href="#confidence-intervals-for-model-parameters" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># standard errors</span>
 <span class="n">lm2</span><span class="o">.</span><span class="n">bse</span>
 </pre></div>
@@ -806,9 +999,80 @@ dtype: float64
 </div>
 </div>
 </div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lm2</span><span class="o">.</span><span class="n">conf_int</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Intercept</th>
+      <td>57.905480</td>
+      <td>63.000321</td>
+    </tr>
+    <tr>
+      <th>alc</th>
+      <td>-1.938347</td>
+      <td>-1.661856</td>
+    </tr>
+    <tr>
+      <th>weed</th>
+      <td>-1.962309</td>
+      <td>-0.080794</td>
+    </tr>
+    <tr>
+      <th>exrc</th>
+      <td>1.495533</td>
+      <td>2.041044</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
 </section>
 <section id="hypothesis-testing-for-linear-models">
 <h2>Hypothesis testing for linear models<a class="headerlink" href="#hypothesis-testing-for-linear-models" title="Permalink to this heading">#</a></h2>
+<section id="f-test-for-the-overall-model">
+<h3>F-test for the overall model<a class="headerlink" href="#f-test-for-the-overall-model" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lm2</span><span class="o">.</span><span class="n">fvalue</span><span class="p">,</span> <span class="n">lm2</span><span class="o">.</span><span class="n">f_pvalue</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(270.3435018926583, 1.0512133413866907e-60)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="t-tests-for-individual-parameters">
+<h3>T-tests for individual parameters<a class="headerlink" href="#t-tests-for-individual-parameters" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lm2</span><span class="o">.</span><span class="n">tvalues</span>
@@ -866,32 +1130,50 @@ dtype: float64
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.03351156181342315
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.03351156181342321
 </pre></div>
 </div>
 </div>
 </div>
 </section>
+</section>
 <section id="assumptions-checks-and-diagnostics">
 <h2>Assumptions checks and diagnostics<a class="headerlink" href="#assumptions-checks-and-diagnostics" title="Permalink to this heading">#</a></h2>
+<section id="diagnostics-plots">
+<h3>Diagnostics plots<a class="headerlink" href="#diagnostics-plots" title="Permalink to this heading">#</a></h3>
+</section>
+<section id="linearity-checks">
+<h3>Linearity checks<a class="headerlink" href="#linearity-checks" title="Permalink to this heading">#</a></h3>
+</section>
+<section id="normality-checks">
+<h3>Normality checks<a class="headerlink" href="#normality-checks" title="Permalink to this heading">#</a></h3>
+</section>
+<section id="homoscedasticity-checks">
+<h3>Homoscedasticity checks<a class="headerlink" href="#homoscedasticity-checks" title="Permalink to this heading">#</a></h3>
+</section>
+<section id="independence-checks">
+<h3>Independence checks<a class="headerlink" href="#independence-checks" title="Permalink to this heading">#</a></h3>
+</section>
+<section id="collinearity-checks">
+<h3>Collinearity checks<a class="headerlink" href="#collinearity-checks" title="Permalink to this heading">#</a></h3>
+</section>
 </section>
 <section id="outliers-and-influential-observations">
 <h2>Outliers and influential observations<a class="headerlink" href="#outliers-and-influential-observations" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO: move to Sec 4.3</span>
-<span class="c1"># Model fit diagnostics and plots</span>
-<span class="c1"># influence = fit1.get_influence()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Model fit diagnostics and plots</span>
+<span class="c1"># influence = lm2.get_influence()</span>
 <span class="c1"># influence.summary_frame()</span>
 
 <span class="c1"># resid_studentized = influence.resid_studentized_internal</span>
 <span class="c1"># resid_studentized</span>
 
-<span class="c1"># fit1.outlier_test()</span>
+<span class="c1"># lm2.outlier_test()</span>
 <span class="c1"># import statsmodels.api as sm</span>
-<span class="c1"># sm.graphics.influence_plot(fit1, criterion=&quot;cooks&quot;);</span>
-<span class="c1"># sm.graphics.plot_ccpr(fit1, &quot;effort&quot;);</span>
-<span class="c1"># sm.graphics.plot_regress_exog(fit1, &quot;effort&quot;);</span>
+<span class="c1"># sm.graphics.influence_plot(lm2, criterion=&quot;cooks&quot;);</span>
+<span class="c1"># sm.graphics.plot_ccpr(lm2, &quot;effort&quot;);</span>
+<span class="c1"># sm.graphics.plot_regress_exog(lm2, &quot;effort&quot;);</span>
 </pre></div>
 </div>
 </div>
@@ -900,7 +1182,7 @@ dtype: float64
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># lm2.fittedvalues</span>
 <span class="c1"># ALT. </span>
-<span class="c1"># m2.predict(doctors)</span>
+<span class="c1"># lm2.predict(doctors)</span>
 </pre></div>
 </div>
 </div>
@@ -915,9 +1197,9 @@ dtype: float64
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;jb&#39;: 0.8999138579592745,
- &#39;jbpv&#39;: 0.6376556155083202,
- &#39;skew&#39;: 0.18224568453683593,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;jb&#39;: 0.8999138579592739,
+ &#39;jbpv&#39;: 0.6376556155083204,
+ &#39;skew&#39;: 0.18224568453683587,
  &#39;kurtosis&#39;: 3.074795238556266,
  &#39;omni&#39;: 1.1403999852814177,
  &#39;omnipv&#39;: 0.5654123490825862,
@@ -1002,18 +1284,40 @@ dtype: float64
 </div>
 </div>
 </section>
+<section id="out-of-sample-prediction-accuracy">
+<h3>Out-of-sample prediction accuracy<a class="headerlink" href="#out-of-sample-prediction-accuracy" title="Permalink to this heading">#</a></h3>
+</section>
+<section id="leave-one-out-cross-validation">
+<h3>Leave-one-out cross-validation<a class="headerlink" href="#leave-one-out-cross-validation" title="Permalink to this heading">#</a></h3>
+</section>
+<section id="regularization">
+<h3>Regularization<a class="headerlink" href="#regularization" title="Permalink to this heading">#</a></h3>
+</section>
 </section>
 <section id="explanations">
 <h2>Explanations<a class="headerlink" href="#explanations" title="Permalink to this heading">#</a></h2>
 </section>
 <section id="discussion">
 <h2>Discussion<a class="headerlink" href="#discussion" title="Permalink to this heading">#</a></h2>
+<section id="resampling-methods-for-regression">
+<h3>Resampling methods for regression<a class="headerlink" href="#resampling-methods-for-regression" title="Permalink to this heading">#</a></h3>
+</section>
+<section id="towards-machine-learning">
+<h3>Towards machine learning<a class="headerlink" href="#towards-machine-learning" title="Permalink to this heading">#</a></h3>
+<p>The out-of-sample prediction accuracy is a common metric used in machine learning (ML) tasks.</p>
+</section>
 </section>
 <section id="exercises">
 <h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this heading">#</a></h2>
 </section>
 <section id="links">
 <h2>Links<a class="headerlink" href="#links" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>More details about model checking
+<a class="reference external" href="https://ethanweed.github.io/pythonbook/05.04-regression.html#model-checking">https://ethanweed.github.io/pythonbook/05.04-regression.html#model-checking</a></p></li>
+<li><p>Statistical Modeling: The Two Cultures paper that explains the importance of out-of-sample predictions for statistical modelling.
+<a class="reference external" href="https://projecteuclid.org/journals/statistical-science/volume-16/issue-3/Statistical-Modeling--The-Two-Cultures-with-comments-and-a/10.1214/ss/1009213726.full">https://projecteuclid.org/journals/statistical-science/volume-16/issue-3/Statistical-Modeling–The-Two-Cultures-with-comments-and-a/10.1214/ss/1009213726.full</a></p></li>
+</ul>
 </section>
 </section>
 
@@ -1084,22 +1388,42 @@ dtype: float64
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definitions">Definitions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-fit-metrics">Model fit metrics</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#metrics">Metrics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#other-metrics-optional-material">Other metrics (optional material)</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameter-estimates">Parameter estimates</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#confidence-intervals-for-model-parameters">Confidence intervals for model parameters</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hypothesis-testing-for-linear-models">Hypothesis testing for linear models</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assumptions-checks-and-diagnostics">Assumptions checks and diagnostics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hypothesis-testing-for-linear-models">Hypothesis testing for linear models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#f-test-for-the-overall-model">F-test for the overall model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#t-tests-for-individual-parameters">T-tests for individual parameters</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assumptions-checks-and-diagnostics">Assumptions checks and diagnostics</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diagnostics-plots">Diagnostics plots</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linearity-checks">Linearity checks</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#normality-checks">Normality checks</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#homoscedasticity-checks">Homoscedasticity checks</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#independence-checks">Independence checks</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#collinearity-checks">Collinearity checks</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#outliers-and-influential-observations">Outliers and influential observations</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diagnostic-checks">Diagnostic checks</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-prediction-accuracy">Model prediction accuracy</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prediction">Prediction</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#out-of-sample-prediction-accuracy">Out-of-sample prediction accuracy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#leave-one-out-cross-validation">Leave-one-out cross-validation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#regularization">Regularization</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanations">Explanations</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#resampling-methods-for-regression">Resampling methods for regression</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#towards-machine-learning">Towards machine learning</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#links">Links</a></li>
 </ul>
