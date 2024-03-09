@@ -14,7 +14,7 @@ to check all the probability calculations for yourself.
 You don't need to copy-paste the code examples manually—I've already copy-pasted them for you!
 
 - Discrete random variables [21_discrete_random_vars.ipynb](./21_discrete_random_vars.ipynb)
-- Multiple random variable [22_multiple_random_vars.ipynb](./22_multiple_random_vars.ipynb)
+- Multiple random variables [22_multiple_random_vars.ipynb](./22_multiple_random_vars.ipynb)
 - Inventory of discrete distributions [23_inventory_discrete_dists.ipynb](./23_inventory_discrete_dists.ipynb)
 - Calculus prerequisites [24_calculus_prerequisites.ipynb](./24_calculus_prerequisites.ipynb)
 - Continuous random variables [25_continuous_random_vars.ipynb](./25_continuous_random_vars.ipynb)
