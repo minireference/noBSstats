@@ -165,10 +165,9 @@ statistics operations we'll be doing in the next two chapters.
 
 ## Chapter 3: Inferential statistics
 
-(coming Feb 2023)
+See the list of notebooks in [30_STATS.md](./30_STATS.md)
+or check out the [Chapter 3 outline](https://docs.google.com/document/d/1fwep23-95U-w1QMPU31nOvUnUXE2X3s_Dbk5JuLlKAY/edit#bookmark=id.j4ea51vpt8cj).
 
-In the meantime,
-you check out the [Chapter 3 outline](https://docs.google.com/document/d/1fwep23-95U-w1QMPU31nOvUnUXE2X3s_Dbk5JuLlKAY/edit#heading=h.w1m7v7b5wie3) to see what will be covered.
 
 
 
@@ -177,10 +176,24 @@ you check out the [Chapter 3 outline](https://docs.google.com/document/d/1fwep23
 
 ## Chapter 4: Linear models
 
-(coming Spring 2023)
+See the list of notebooks in [40_LINEAR_MODELS.md](./40_LINEAR_MODELS.md) or read the [Chapter 4 outline](https://docs.google.com/document/d/1fwep23-95U-w1QMPU31nOvUnUXE2X3s_Dbk5JuLlKAY/edit#bookmark=id.dxun0kyq24f).
 
-In the meantime, you watch
-[PART IV](https://nobsstats.com/stats_overview/README.html#linear-models)
-of the [Stats overview](https://nobsstats.com/stats_overview/README.html) tutorial,
-and read the [Chapter 4 outline](https://docs.google.com/document/d/1fwep23-95U-w1QMPU31nOvUnUXE2X3s_Dbk5JuLlKAY/edit#heading=h.9etj7aw4al9w) to see what will be covered.
+See also [PART IV](https://nobsstats.com/stats_overview/README.html#linear-models)
+of the [Stats overview](https://nobsstats.com/stats_overview/README.html) tutorial.
+
+
+
+
+
+
+
+
+
+
+
+## Chapter 5: Bayesian statistics
+
+Coming soon.
+See the [Chapter 5 outline](https://docs.google.com/document/d/1fwep23-95U-w1QMPU31nOvUnUXE2X3s_Dbk5JuLlKAY/edit#bookmark=id.qxrxmkz5a3b6).
+
 
