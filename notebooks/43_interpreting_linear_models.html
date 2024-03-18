@@ -523,6 +523,8 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#outliers-and-influential-observations">Outliers and influential observations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cook-s-distance">Cook’s distance</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#studentized-residuals">Studentized residuals</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diagnostic-checks">Diagnostic checks</a></li>
 </ul>
 </li>
@@ -641,10 +643,10 @@ document.write(`
   <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>   270.3</td>
 </tr>
 <tr>
-  <th>Date:</th>             <td>Sat, 09 Mar 2024</td> <th>  Prob (F-statistic):</th> <td>1.05e-60</td>
+  <th>Date:</th>             <td>Mon, 18 Mar 2024</td> <th>  Prob (F-statistic):</th> <td>1.05e-60</td>
 </tr>
 <tr>
-  <th>Time:</th>                 <td>02:32:02</td>     <th>  Log-Likelihood:    </th> <td> -547.63</td>
+  <th>Time:</th>                 <td>16:17:26</td>     <th>  Log-Likelihood:    </th> <td> -547.63</td>
 </tr>
 <tr>
   <th>No. Observations:</th>      <td>   156</td>      <th>  AIC:               </th> <td>   1103.</td>
@@ -747,8 +749,7 @@ document.write(`
 <h3>Metrics<a class="headerlink" href="#metrics" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">metrics</span>
-<span class="n">scores</span> <span class="o">=</span> <span class="n">doctors</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scores</span> <span class="o">=</span> <span class="n">doctors</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
 <span class="n">scoreshat</span> <span class="o">=</span> <span class="n">lm2</span><span class="o">.</span><span class="n">fittedvalues</span><span class="o">.</span><span class="n">values</span>
 <span class="n">meanscore</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
 
@@ -760,13 +761,12 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># R^2 alt.</span>
-<span class="n">lm2</span><span class="o">.</span><span class="n">rsquared</span><span class="p">,</span> <span class="n">metrics</span><span class="o">.</span><span class="n">r2_score</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">scoreshat</span><span class="p">),</span> <span class="n">lm2</span><span class="o">.</span><span class="n">rsquared</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">lm2</span><span class="o">.</span><span class="n">ssr</span><span class="o">/</span><span class="n">tss</span><span class="p">,</span> <span class="n">lm2</span><span class="o">.</span><span class="n">ess</span><span class="o">/</span><span class="n">tss</span>
+<span class="n">lm2</span><span class="o">.</span><span class="n">rsquared</span><span class="p">,</span> <span class="n">lm2</span><span class="o">.</span><span class="n">rsquared</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">lm2</span><span class="o">.</span><span class="n">ssr</span><span class="o">/</span><span class="n">tss</span><span class="p">,</span> <span class="n">lm2</span><span class="o">.</span><span class="n">ess</span><span class="o">/</span><span class="n">tss</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(0.8421649167873537,
- 0.8421649167873537,
  0.8421649167873537,
  0.8421649167873537,
  0.8421649167873543)
@@ -846,7 +846,8 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># MSE</span>
-<span class="n">metrics</span><span class="o">.</span><span class="n">mean_squared_error</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">scoreshat</span><span class="p">),</span> <span class="n">lm2</span><span class="o">.</span><span class="n">ssr</span><span class="o">/</span><span class="n">n</span>
+<span class="kn">from</span> <span class="nn">statsmodels.tools.eval_measures</span> <span class="kn">import</span> <span class="n">mse</span>
+<span class="n">mse</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">scoreshat</span><span class="p">),</span> <span class="n">lm2</span><span class="o">.</span><span class="n">ssr</span><span class="o">/</span><span class="n">n</span>
 </pre></div>
 </div>
 </div>
@@ -859,32 +860,14 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># RMSE</span>
-<span class="n">metrics</span><span class="o">.</span><span class="n">root_mean_squared_error</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">scoreshat</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">lm2</span><span class="o">.</span><span class="n">ssr</span><span class="o">/</span><span class="n">n</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">AttributeError</span><span class="g g-Whitespace">                            </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">18</span><span class="p">],</span> <span class="n">line</span> <span class="mi">2</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="c1"># RMSE</span>
-<span class="ne">----&gt; </span><span class="mi">2</span> <span class="n">metrics</span><span class="o">.</span><span class="n">root_mean_squared_error</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">scoreshat</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">lm2</span><span class="o">.</span><span class="n">ssr</span><span class="o">/</span><span class="n">n</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">statsmodels.tools.eval_measures</span> <span class="kn">import</span> <span class="n">rmse</span>
 
-<span class="ne">AttributeError</span>: module &#39;sklearn.metrics&#39; has no attribute &#39;root_mean_squared_error&#39;
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># MAPE</span>
-<span class="n">mape</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">scores</span> <span class="o">-</span> <span class="n">scoreshat</span><span class="p">)</span><span class="o">/</span><span class="n">scores</span> <span class="p">)</span> <span class="o">/</span> <span class="n">n</span>
-<span class="n">metrics</span><span class="o">.</span><span class="n">mean_absolute_percentage_error</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">scoreshat</span><span class="p">),</span> <span class="n">mape</span>
+<span class="n">rmse</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">scoreshat</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">lm2</span><span class="o">.</span><span class="n">ssr</span><span class="o">/</span><span class="n">n</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(0.2223447695690139, 0.2223447695690138)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(8.096921516056307, 8.096921516056307)
 </pre></div>
 </div>
 </div>
@@ -892,13 +875,29 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># MAE</span>
+<span class="kn">from</span> <span class="nn">statsmodels.tools.eval_measures</span> <span class="kn">import</span> <span class="n">meanabs</span>
+
 <span class="n">mae</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">scores</span> <span class="o">-</span> <span class="n">scoreshat</span><span class="p">)</span> <span class="p">)</span> <span class="o">/</span> <span class="n">n</span>
-<span class="n">metrics</span><span class="o">.</span><span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">scoreshat</span><span class="p">),</span> <span class="n">mae</span>
+<span class="n">meanabs</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">scoreshat</span><span class="p">),</span> <span class="n">mae</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(6.415932421491938, 6.415932421491938)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># MAPE (cuttable)</span>
+<span class="n">mape</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">scores</span> <span class="o">-</span> <span class="n">scoreshat</span><span class="p">)</span><span class="o">/</span><span class="n">scores</span> <span class="p">)</span> <span class="o">/</span> <span class="n">n</span>
+<span class="n">mape</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.2223447695690138
 </pre></div>
 </div>
 </div>
@@ -926,7 +925,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(67.28540482762757, 67.28540482762757)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(67.28540482762756, 67.28540482762756)
 </pre></div>
 </div>
 </div>
@@ -1065,7 +1064,7 @@ dtype: float64
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(270.3435018926583, 1.0512133413866907e-60)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(270.34350189265837, 1.0512133413866766e-60)
 </pre></div>
 </div>
 </div>
@@ -1124,13 +1123,13 @@ dtype: float64
 <span class="n">t</span> <span class="o">=</span> <span class="n">lm2</span><span class="o">.</span><span class="n">tvalues</span><span class="p">[</span><span class="s2">&quot;weed&quot;</span><span class="p">]</span>
 <span class="n">pleft</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">lm2</span><span class="o">.</span><span class="n">df_resid</span><span class="p">)</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
 <span class="n">pright</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">tdist</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">lm2</span><span class="o">.</span><span class="n">df_resid</span><span class="p">)</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
-<span class="n">pvalue</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="nb">min</span><span class="p">(</span><span class="n">pleft</span><span class="p">,</span><span class="n">pright</span><span class="p">)</span>
+<span class="n">pvalue</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="nb">min</span><span class="p">(</span><span class="n">pleft</span><span class="p">,</span> <span class="n">pright</span><span class="p">)</span>
 <span class="n">pvalue</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.03351156181342321
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.03351156181342315
 </pre></div>
 </div>
 </div>
@@ -1144,32 +1143,508 @@ dtype: float64
 </section>
 <section id="linearity-checks">
 <h3>Linearity checks<a class="headerlink" href="#linearity-checks" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">regplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">doctors</span><span class="p">[</span><span class="s2">&quot;alc&quot;</span><span class="p">],</span>  <span class="n">y</span><span class="o">=</span><span class="n">lm2</span><span class="o">.</span><span class="n">resid</span><span class="p">,</span> <span class="n">lowess</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">regplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">doctors</span><span class="p">[</span><span class="s2">&quot;weed&quot;</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">lm2</span><span class="o">.</span><span class="n">resid</span><span class="p">,</span> <span class="n">lowess</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">regplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">doctors</span><span class="p">[</span><span class="s2">&quot;exrc&quot;</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">lm2</span><span class="o">.</span><span class="n">resid</span><span class="p">,</span> <span class="n">lowess</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/hostedtoolcache/Python/3.8.18/x64/lib/python3.8/site-packages/statsmodels/nonparametric/smoothers_lowess.py:227: RuntimeWarning: invalid value encountered in divide
+  res, _ = _lowess(y, x, x, np.ones_like(x),
+</pre></div>
+</div>
+<img alt="../_images/e1d04efa60ae352e9ad8bdca788685e73835fa9d5277a870da05c963d5bd8285.png" src="../_images/e1d04efa60ae352e9ad8bdca788685e73835fa9d5277a870da05c963d5bd8285.png" />
+</div>
+</div>
 </section>
 <section id="normality-checks">
 <h3>Normality checks<a class="headerlink" href="#normality-checks" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">lm2</span><span class="o">.</span><span class="n">resid</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/33a67ad2671d68f2e206bd4070672245ec3fa1a2b79dbbd5b8395285c5706506.png" src="../_images/33a67ad2671d68f2e206bd4070672245ec3fa1a2b79dbbd5b8395285c5706506.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">statsmodels.graphics.api</span> <span class="kn">import</span> <span class="n">qqplot</span>
+
+<span class="n">qqplot</span><span class="p">(</span><span class="n">lm2</span><span class="o">.</span><span class="n">resid</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/cc20d119c83f1b347508a4aa7e572228aec70f739e7a189e20cd7d66085d298c.png" src="../_images/cc20d119c83f1b347508a4aa7e572228aec70f739e7a189e20cd7d66085d298c.png" />
+</div>
+</div>
 </section>
 <section id="homoscedasticity-checks">
 <h3>Homoscedasticity checks<a class="headerlink" href="#homoscedasticity-checks" title="Permalink to this heading">#</a></h3>
+<p>via <a class="reference external" href="https://ethanweed.github.io/pythonbook/05.04-regression.html#checking-the-homogeneity-of-variance">https://ethanweed.github.io/pythonbook/05.04-regression.html#checking-the-homogeneity-of-variance</a></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_slplot</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="p">{</span><span class="s1">&#39;fitted&#39;</span><span class="p">:</span> <span class="n">lm2</span><span class="o">.</span><span class="n">fittedvalues</span><span class="p">,</span>
+     <span class="s1">&#39;sqrt_abs_stand_res&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">lm2</span><span class="o">.</span><span class="n">resid</span><span class="p">))})</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">regplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df_slplot</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;fitted&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;sqrt_abs_stand_res&#39;</span><span class="p">,</span> <span class="n">lowess</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\sqrt{|standardized residuals|}$&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Fitted Values&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/85b6cd3ceb20008fa9c56e12bf0a43c78dc6140296eef3e55862f537c6f99276.png" src="../_images/85b6cd3ceb20008fa9c56e12bf0a43c78dc6140296eef3e55862f537c6f99276.png" />
+</div>
+</div>
 </section>
 <section id="independence-checks">
 <h3>Independence checks<a class="headerlink" href="#independence-checks" title="Permalink to this heading">#</a></h3>
 </section>
 <section id="collinearity-checks">
 <h3>Collinearity checks<a class="headerlink" href="#collinearity-checks" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">variance_inflation_factor</span><span class="p">(</span><span class="n">exog</span><span class="p">,</span> <span class="n">exog_idx</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    exog : ndarray, (nobs, k_vars)</span>
+<span class="sd">        design matrix with all explanatory variables, as for example used in</span>
+<span class="sd">        regression</span>
+<span class="sd">    exog_idx : int</span>
+<span class="sd">        index of the exogenous variable in the columns of exog</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">k_vars</span> <span class="o">=</span> <span class="n">exog</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">x_i</span> <span class="o">=</span> <span class="n">exog</span><span class="p">[:,</span> <span class="n">exog_idx</span><span class="p">]</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">k_vars</span><span class="p">)</span> <span class="o">!=</span> <span class="n">exog_idx</span>
+    <span class="n">x_noti</span> <span class="o">=</span> <span class="n">exog</span><span class="p">[:,</span> <span class="n">mask</span><span class="p">]</span>
+    <span class="n">r_squared_i</span> <span class="o">=</span> <span class="n">OLS</span><span class="p">(</span><span class="n">x_i</span><span class="p">,</span> <span class="n">x_noti</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">rsquared</span>
+    <span class="n">vif</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="n">r_squared_i</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">vif</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">statsmodels.stats.outliers_influence</span> <span class="kn">import</span> <span class="n">variance_inflation_factor</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lm2</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">exog_names</span><span class="p">):</span>
+    <span class="n">vifi</span> <span class="o">=</span> <span class="n">variance_inflation_factor</span><span class="p">(</span><span class="n">lm2</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">exog</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;VIF for&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="n">vifi</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>VIF for Intercept = 3.854478605601843
+VIF for alc = 1.0026692156304757
+VIF for weed = 1.010703145007322
+VIF for exrc = 1.010048809433661
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">doctors</span><span class="p">[[</span><span class="s2">&quot;alc&quot;</span><span class="p">,</span> <span class="s2">&quot;weed&quot;</span><span class="p">,</span> <span class="s2">&quot;exrc&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">corr</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>alc</th>
+      <th>weed</th>
+      <th>exrc</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>alc</th>
+      <td>1.000000</td>
+      <td>0.042158</td>
+      <td>0.033625</td>
+    </tr>
+    <tr>
+      <th>weed</th>
+      <td>0.042158</td>
+      <td>1.000000</td>
+      <td>0.095239</td>
+    </tr>
+    <tr>
+      <th>exrc</th>
+      <td>0.033625</td>
+      <td>0.095239</td>
+      <td>1.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
 </section>
 </section>
 <section id="outliers-and-influential-observations">
 <h2>Outliers and influential observations<a class="headerlink" href="#outliers-and-influential-observations" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># regular residuals</span>
+<span class="n">lm2</span><span class="o">.</span><span class="n">resid</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0       7.654858
+1     -16.408174
+2     -13.030821
+3      -1.789073
+4     -10.514154
+         ...    
+151     7.132895
+152    -4.049719
+153     2.271540
+154    18.382639
+155     2.864212
+Length: 156, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">infl2</span> <span class="o">=</span> <span class="n">lm2</span><span class="o">.</span><span class="n">get_influence</span><span class="p">()</span>
+<span class="n">infl2</span><span class="o">.</span><span class="n">summary_frame</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>dfb_Intercept</th>
+      <th>dfb_alc</th>
+      <th>dfb_weed</th>
+      <th>dfb_exrc</th>
+      <th>cooks_d</th>
+      <th>standard_resid</th>
+      <th>hat_diag</th>
+      <th>dffits_internal</th>
+      <th>student_resid</th>
+      <th>dffits</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.116394</td>
+      <td>-0.111597</td>
+      <td>0.274526</td>
+      <td>-0.114981</td>
+      <td>0.025261</td>
+      <td>0.980976</td>
+      <td>0.095024</td>
+      <td>0.317875</td>
+      <td>0.980853</td>
+      <td>0.317836</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>-0.023456</td>
+      <td>-0.146355</td>
+      <td>0.077369</td>
+      <td>0.027821</td>
+      <td>0.013315</td>
+      <td>-2.013418</td>
+      <td>0.012967</td>
+      <td>-0.230777</td>
+      <td>-2.034092</td>
+      <td>-0.233147</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>-0.144254</td>
+      <td>0.149222</td>
+      <td>0.057507</td>
+      <td>-0.054123</td>
+      <td>0.011166</td>
+      <td>-1.602346</td>
+      <td>0.017098</td>
+      <td>-0.211335</td>
+      <td>-1.610728</td>
+      <td>-0.212441</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>-0.026064</td>
+      <td>0.014067</td>
+      <td>0.006287</td>
+      <td>0.011386</td>
+      <td>0.000180</td>
+      <td>-0.219722</td>
+      <td>0.014655</td>
+      <td>-0.026796</td>
+      <td>-0.219033</td>
+      <td>-0.026712</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>-0.054777</td>
+      <td>0.030947</td>
+      <td>0.050412</td>
+      <td>-0.051499</td>
+      <td>0.004112</td>
+      <td>-1.288119</td>
+      <td>0.009816</td>
+      <td>-0.128254</td>
+      <td>-1.290940</td>
+      <td>-0.128535</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>151</th>
+      <td>0.062777</td>
+      <td>-0.043468</td>
+      <td>-0.004970</td>
+      <td>0.003569</td>
+      <td>0.001719</td>
+      <td>0.873481</td>
+      <td>0.008930</td>
+      <td>0.082914</td>
+      <td>0.872796</td>
+      <td>0.082849</td>
+    </tr>
+    <tr>
+      <th>152</th>
+      <td>0.014217</td>
+      <td>-0.030273</td>
+      <td>0.022718</td>
+      <td>-0.035467</td>
+      <td>0.001050</td>
+      <td>-0.497866</td>
+      <td>0.016658</td>
+      <td>-0.064799</td>
+      <td>-0.496630</td>
+      <td>-0.064638</td>
+    </tr>
+    <tr>
+      <th>153</th>
+      <td>-0.010770</td>
+      <td>0.004213</td>
+      <td>-0.005710</td>
+      <td>0.036256</td>
+      <td>0.000468</td>
+      <td>0.280203</td>
+      <td>0.023268</td>
+      <td>0.043248</td>
+      <td>0.279352</td>
+      <td>0.043117</td>
+    </tr>
+    <tr>
+      <th>154</th>
+      <td>-0.112869</td>
+      <td>-0.076751</td>
+      <td>0.152961</td>
+      <td>0.387037</td>
+      <td>0.054721</td>
+      <td>2.287423</td>
+      <td>0.040153</td>
+      <td>0.467849</td>
+      <td>2.320169</td>
+      <td>0.474547</td>
+    </tr>
+    <tr>
+      <th>155</th>
+      <td>0.023912</td>
+      <td>-0.036369</td>
+      <td>-0.014210</td>
+      <td>0.030007</td>
+      <td>0.000791</td>
+      <td>0.353566</td>
+      <td>0.024677</td>
+      <td>0.056239</td>
+      <td>0.352546</td>
+      <td>0.056077</td>
+    </tr>
+  </tbody>
+</table>
+<p>156 rows × 10 columns</p>
+</div></div></div>
+</div>
+<section id="cook-s-distance">
+<h3>Cook’s distance<a class="headerlink" href="#cook-s-distance" title="Permalink to this heading">#</a></h3>
+<div class="math notranslate nohighlight">
+\[
+D_i = \frac{{\epsilon_i^*}^2 }{K+1} \times \frac{h_i}{1-h_i}
+\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">infl2</span><span class="o">.</span><span class="n">cooks_distance</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.02526116, 0.01331454, 0.01116562, 0.00017951, 0.0041123 ])
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="studentized-residuals">
+<h3>Studentized residuals<a class="headerlink" href="#studentized-residuals" title="Permalink to this heading">#</a></h3>
+<div class="math notranslate nohighlight">
+\[
+  r_{i}^* = \frac{r_i}{\hat{\sigma}_{(-i)} \sqrt{1-h_i}}
+\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">infl2</span><span class="o">.</span><span class="n">resid_studentized</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>  <span class="c1"># = infl2.resid_studentized_internal</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 0.98097556, -2.01341843, -1.60234556, -0.21972192, -1.28811914])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># obtained using Jackknife</span>
+<span class="n">infl2</span><span class="o">.</span><span class="n">resid_studentized_external</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 0.98085317, -2.03409243, -1.61072775, -0.21903275, -1.29094028])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lm2</span><span class="o">.</span><span class="n">outlier_test</span><span class="p">()</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>student_resid</th>
+      <th>unadj_p</th>
+      <th>bonf(p)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.980853</td>
+      <td>0.328234</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>-2.034092</td>
+      <td>0.043693</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>-1.610728</td>
+      <td>0.109327</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>-0.219033</td>
+      <td>0.826920</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>-1.290940</td>
+      <td>0.198697</td>
+      <td>1.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Model fit diagnostics and plots</span>
-<span class="c1"># influence = lm2.get_influence()</span>
-<span class="c1"># influence.summary_frame()</span>
+<span class="c1"># </span>
+<span class="c1"># </span>
 
 <span class="c1"># resid_studentized = influence.resid_studentized_internal</span>
 <span class="c1"># resid_studentized</span>
 
-<span class="c1"># lm2.outlier_test()</span>
+<span class="n">lm2</span><span class="o">.</span><span class="n">outlier_test</span><span class="p">()</span>
 <span class="c1"># import statsmodels.api as sm</span>
 <span class="c1"># sm.graphics.influence_plot(lm2, criterion=&quot;cooks&quot;);</span>
 <span class="c1"># sm.graphics.plot_ccpr(lm2, &quot;effort&quot;);</span>
@@ -1177,6 +1652,101 @@ dtype: float64
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>student_resid</th>
+      <th>unadj_p</th>
+      <th>bonf(p)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.980853</td>
+      <td>0.328234</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>-2.034092</td>
+      <td>0.043693</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>-1.610728</td>
+      <td>0.109327</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>-0.219033</td>
+      <td>0.826920</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>-1.290940</td>
+      <td>0.198697</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>151</th>
+      <td>0.872796</td>
+      <td>0.384160</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>152</th>
+      <td>-0.496630</td>
+      <td>0.620172</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>153</th>
+      <td>0.279352</td>
+      <td>0.780357</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>154</th>
+      <td>2.320169</td>
+      <td>0.021671</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>155</th>
+      <td>0.352546</td>
+      <td>0.724920</td>
+      <td>1.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>156 rows × 3 columns</p>
+</div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1187,6 +1757,7 @@ dtype: float64
 </div>
 </div>
 </div>
+</section>
 <section id="diagnostic-checks">
 <h3>Diagnostic checks<a class="headerlink" href="#diagnostic-checks" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
@@ -1197,9 +1768,9 @@ dtype: float64
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;jb&#39;: 0.8999138579592739,
- &#39;jbpv&#39;: 0.6376556155083204,
- &#39;skew&#39;: 0.18224568453683587,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;jb&#39;: 0.8999138579592745,
+ &#39;jbpv&#39;: 0.6376556155083202,
+ &#39;skew&#39;: 0.18224568453683593,
  &#39;kurtosis&#39;: 3.074795238556266,
  &#39;omni&#39;: 1.1403999852814177,
  &#39;omnipv&#39;: 0.5654123490825862,
@@ -1408,6 +1979,8 @@ dtype: float64
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#outliers-and-influential-observations">Outliers and influential observations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cook-s-distance">Cook’s distance</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#studentized-residuals">Studentized residuals</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diagnostic-checks">Diagnostic checks</a></li>
 </ul>
 </li>
