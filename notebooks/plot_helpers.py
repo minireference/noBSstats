@@ -22,6 +22,7 @@ from scipy.stats import hypergeom  # special handling M=a+b, n=a, N=n
 from scipy.stats import expon      # hide loc=0 parameter
 from scipy.stats import gamma      # hide loc=0 parameter
 from scipy.stats import norm
+from scipy.stats import t as tdist
 
 # Useful colors
 snspal = sns.color_palette()
@@ -909,40 +910,67 @@ def plot_alpha_beta_errors(cohend, ax=None, xlims=None, n=9, alpha=0.05,
 # Linear models
 ################################################################################
 
-def simple_regplot(x, y, n_std=2, n_pts=100, ax=None,
-                   scatter_kws=None, line_kws=None, ci_kws=None):
+def plot_lm_simple(xs, ys, ax=None, ci_mean=False, alpha_mean=0.1, lab_mean=True,
+                   ci_obs=False, alpha_obs=0.1, lab_obs=True):
     """
-    Draw a regression line with error interval.
-    via https://stackoverflow.com/a/59756979/127114
-    See also https://github.com/ttesileanu/pydove/blob/main/pydove/regplot.py
+    Draw a scatter plot of the data `[xs,ys]`, a regression line,
+    and optionally show confidence intervals for the model predcitions.
+    If `ci_mean` is True: draw a (1-alpha_mean)-CI for the mean.
+    If `ci_obs` is True: draw a (1-ci_obs)-CI for the predicted values.
     """
     ax = plt.gca() if ax is None else ax
 
-    # calculate best-fit line and interval
-    x_fit = sm.add_constant(x)
-    fit_results = sm.OLS(y, x_fit).fit()
+    # Prepare the data
+    xname = xs.name if hasattr(xs, "name") else "x"
+    yname = ys.name if hasattr(ys, "name") else "y"
+    data = pd.DataFrame({xname:xs, yname:ys})
+    n = len(xs)
 
-    eval_x = sm.add_constant(np.linspace(np.min(x), np.max(x), n_pts))
-    pred = fit_results.get_prediction(eval_x)
+    # Fit the linear model
+    formula = f"{yname} ~ 1 + {xname}"
+    lm = smf.ols(formula, data=data).fit()
 
-    # draw the fit line and error interval
-    ci_kws = {} if ci_kws is None else ci_kws
-    ax.fill_between(
-        eval_x[:, 1],
-        pred.predicted_mean - n_std * pred.se_mean,
-        pred.predicted_mean + n_std * pred.se_mean,
-        alpha=0.5,
-        **ci_kws,
-    )
-    line_kws = {} if line_kws is None else line_kws
-    h = ax.plot(eval_x[:, 1], pred.predicted_mean, **line_kws)
+    # Get model predicitons
+    x_vals = np.linspace(np.min(xs), np.max(xs), 100)
+    x_pred = {xname:x_vals}
+    y_pred = lm.get_prediction(x_pred)
 
-    # draw the scatterplot
-    scatter_kws = {} if scatter_kws is None else scatter_kws
-    ax.scatter(x, y, c=h[0].get_color(), **scatter_kws)
+    # Draw the scatterplot and plot the best-fit line
+    sns.scatterplot(x=xs, y=ys, ax=ax)
+    sns.lineplot(x=x_vals, y=y_pred.predicted, ax=ax)
 
-    return fit_results
+    if ci_mean:
+        # Draw the confidence interval for the mean
+        t_05, t_95 = tdist(df=n-2).ppf([alpha_mean/2, 1-alpha_mean/2])
+        lower_mean = y_pred.predicted + t_05*y_pred.se_mean
+        upper_mean = y_pred.predicted + t_95*y_pred.se_mean
+        if lab_mean:
+            if isinstance(lab_mean, str):
+                label_mean = lab_mean
+            else:
+                perc_mean = round(100*(1-alpha_mean))
+                label_mean = f"{perc_mean}% confidence interval for the mean"
+        else:
+            label_mean = None
+        ax.fill_between(x_vals, lower_mean, upper_mean, alpha=0.4, color="C0", label=label_mean)
 
+    if ci_obs:
+        # Draw the confidence interval for the outcome observations
+        t_05, t_95 = tdist(df=n-2).ppf([alpha_obs/2, 1-alpha_obs/2])
+        lower_obs = y_pred.predicted + t_05*y_pred.se_obs
+        upper_obs = y_pred.predicted + t_95*y_pred.se_obs
+        if lab_obs:
+            if isinstance(lab_obs, str):
+                label_obs = lab_obs
+            else:
+                perc_obs = round(100*(1-alpha_obs))
+                label_obs = f"{perc_obs}% confidence interval for observations"
+        else:
+            label_obs = None
+        ax.fill_between(x_vals, lower_obs, upper_obs, alpha=0.1, color="C0", label=label_obs)
+
+    if lab_mean or lab_obs:
+        ax.legend()
 
 def plot_residuals(xdata, ydata, b0, b1, xlims=None, ax=None):
     """
