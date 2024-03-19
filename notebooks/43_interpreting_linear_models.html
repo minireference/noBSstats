@@ -510,7 +510,10 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#confidence-intervals-for-model-parameters">Confidence intervals for model parameters</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hypothesis-testing-for-linear-models">Hypothesis testing for linear models</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#f-test-for-the-overall-model">F-test for the overall model</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#t-tests-for-individual-parameters">T-tests for individual parameters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#t-tests-for-individual-parameters">T-tests for individual parameters</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#other-t-values-and-p-values">Other t-values and p-values</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assumptions-checks-and-diagnostics">Assumptions checks and diagnostics</a><ul class="nav section-nav flex-column">
@@ -643,10 +646,10 @@ document.write(`
   <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>   270.3</td>
 </tr>
 <tr>
-  <th>Date:</th>             <td>Mon, 18 Mar 2024</td> <th>  Prob (F-statistic):</th> <td>1.05e-60</td>
+  <th>Date:</th>             <td>Tue, 19 Mar 2024</td> <th>  Prob (F-statistic):</th> <td>1.05e-60</td>
 </tr>
 <tr>
-  <th>Time:</th>                 <td>16:17:26</td>     <th>  Log-Likelihood:    </th> <td> -547.63</td>
+  <th>Time:</th>                 <td>15:13:20</td>     <th>  Log-Likelihood:    </th> <td> -547.63</td>
 </tr>
 <tr>
   <th>No. Observations:</th>      <td>   156</td>      <th>  AIC:               </th> <td>   1103.</td>
@@ -1072,6 +1075,79 @@ dtype: float64
 </section>
 <section id="t-tests-for-individual-parameters">
 <h3>T-tests for individual parameters<a class="headerlink" href="#t-tests-for-individual-parameters" title="Permalink to this heading">#</a></h3>
+<p>Hypothesis testing for slope coefficient</p>
+<p>Is there a non-zero slope coefficient?</p>
+<ul class="simple">
+<li><p><strong>null hypothesis <span class="math notranslate nohighlight">\(H_0\)</span></strong>: <code class="docutils literal notranslate"><span class="pre">alc</span></code> has no effect on <code class="docutils literal notranslate"><span class="pre">score</span></code>,
+which is equivalent to <span class="math notranslate nohighlight">\(\beta_{\texttt{alc}} = 0\)</span>:
+$<span class="math notranslate nohighlight">\( \large
+   H_0: \qquad
+   \textrm{score}
+   \sim \mathcal{N}(
+       {\color{red}
+           \beta_0
+            + \beta_{\texttt{weed}}\!\cdot\!\textrm{weed}
+            + \beta_{\texttt{exrc}}\!\cdot\!\textrm{exrc}
+        }, \ \sigma) \qquad \qquad 
+\)</span>$</p></li>
+<li><p><strong>alternative hypothesis <span class="math notranslate nohighlight">\(H_A\)</span></strong>: <code class="docutils literal notranslate"><span class="pre">alc</span></code> has an effect on <code class="docutils literal notranslate"><span class="pre">score</span></code>,
+and the slope is not zero, <span class="math notranslate nohighlight">\(\beta_{\texttt{alc}} \neq 0\)</span>:
+$<span class="math notranslate nohighlight">\( \large
+   H_A: \qquad
+   \textrm{score} 
+   \sim \mathcal{N}\left(
+        {\color{blue}
+           \beta_0
+            + \beta_{\texttt{alc}}\!\cdot\!\textrm{alc}
+            + \beta_{\texttt{weed}}\!\cdot\!\textrm{weed}
+            + \beta_{\texttt{exrc}}\!\cdot\!\textrm{exrc}
+        }, \ \sigma \right)
+\)</span>$</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lm2</span><span class="o">.</span><span class="n">tvalues</span><span class="p">[</span><span class="s2">&quot;alc&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-25.725653913106356
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lm2</span><span class="o">.</span><span class="n">pvalues</span><span class="p">[</span><span class="s2">&quot;alc&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.985012588755686e-57
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># to reproduce `alc` p-value</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">t</span> <span class="k">as</span> <span class="n">tdist</span>
+<span class="n">obst_alc</span> <span class="o">=</span> <span class="n">lm2</span><span class="o">.</span><span class="n">tvalues</span><span class="p">[</span><span class="s2">&quot;alc&quot;</span><span class="p">]</span>
+<span class="n">pleft</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">lm2</span><span class="o">.</span><span class="n">df_resid</span><span class="p">)</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">obst_alc</span><span class="p">)</span>
+<span class="n">pright</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">tdist</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">lm2</span><span class="o">.</span><span class="n">df_resid</span><span class="p">)</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">obst_alc</span><span class="p">)</span>
+<span class="n">pvalue</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="nb">min</span><span class="p">(</span><span class="n">pleft</span><span class="p">,</span> <span class="n">pright</span><span class="p">)</span>
+<span class="n">pvalue</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.985012588755686e-57
+</pre></div>
+</div>
+</div>
+</div>
+<section id="other-t-values-and-p-values">
+<h4>Other t-values and p-values<a class="headerlink" href="#other-t-values-and-p-values" title="Permalink to this heading">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lm2</span><span class="o">.</span><span class="n">tvalues</span>
@@ -1116,24 +1192,7 @@ dtype: float64
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># to reproduce `weed` p-value</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">t</span> <span class="k">as</span> <span class="n">tdist</span>
-<span class="n">t</span> <span class="o">=</span> <span class="n">lm2</span><span class="o">.</span><span class="n">tvalues</span><span class="p">[</span><span class="s2">&quot;weed&quot;</span><span class="p">]</span>
-<span class="n">pleft</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">lm2</span><span class="o">.</span><span class="n">df_resid</span><span class="p">)</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
-<span class="n">pright</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">tdist</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">lm2</span><span class="o">.</span><span class="n">df_resid</span><span class="p">)</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
-<span class="n">pvalue</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="nb">min</span><span class="p">(</span><span class="n">pleft</span><span class="p">,</span> <span class="n">pright</span><span class="p">)</span>
-<span class="n">pvalue</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.03351156181342315
-</pre></div>
-</div>
-</div>
-</div>
+</section>
 </section>
 </section>
 <section id="assumptions-checks-and-diagnostics">
@@ -1966,7 +2025,10 @@ dtype: float64
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#confidence-intervals-for-model-parameters">Confidence intervals for model parameters</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hypothesis-testing-for-linear-models">Hypothesis testing for linear models</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#f-test-for-the-overall-model">F-test for the overall model</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#t-tests-for-individual-parameters">T-tests for individual parameters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#t-tests-for-individual-parameters">T-tests for individual parameters</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#other-t-values-and-p-values">Other t-values and p-values</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assumptions-checks-and-diagnostics">Assumptions checks and diagnostics</a><ul class="nav section-nav flex-column">
