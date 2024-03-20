@@ -100,6 +100,15 @@ TODO: move detailed info to `students.md`
 An experiment whether training increases income.
 
 
+### Howell
+
+The dataset `howell30.csv` contains `age`, `sex`, `height`, and `weight` measurements
+from a sample of 270 individuals of the !Kung San people of Botswana.
+The dataset was compiled by Nancy Howell between 1967 and 1969.
+See [here](https://tspace.library.utoronto.ca/handle/1807/10395) for more info about the dataset.
+The specific data file I used was [`All_17996.xls`](https://tspace.library.utoronto.ca/handle/1807/17996).
+I have filtered the data to select only individuals of age 30 or less.
+
 
 
 ## Other datasets
