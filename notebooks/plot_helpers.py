@@ -972,6 +972,7 @@ def plot_lm_simple(xs, ys, ax=None, ci_mean=False, alpha_mean=0.1, lab_mean=True
     if lab_mean or lab_obs:
         ax.legend()
 
+
 def plot_residuals(xdata, ydata, b0, b1, xlims=None, ax=None):
     """
     Plot residuals between the points (x,y) and the line y = b0 + b1*x.
@@ -1018,6 +1019,28 @@ def plot_residuals2(xdata, ydata, b0, b1, xlims=None, ax=None):
     return ax
 
 
+def plot_lm_partial(lmfit, pred, others=None, ax=None):
+    """
+    Generate a partial regression plot from the best-fit line
+    of the predictor `pred`, where the intercept is calculated
+    from the average of the `other` predictors time their params.
+    """
+    ax = plt.gca() if ax is None else ax
+    data = lmfit.model.data.orig_exog
+    params = lmfit.params
+    allpreds = set(data.columns) - {"Intercept"}
+    assert pred in allpreds 
+    others = allpreds - {pred} if others is None else others
+    intercept = params["Intercept"]
+    for other in others:
+        intercept += params[other]*data[other].mean() 
+    slope = params[pred]
+    print(pred, "intercept=", intercept, "slope=", slope)
+    xs = np.linspace(data[pred].min(), data[pred].max())
+    ys = intercept + slope*xs
+    sns.lineplot(x=xs, y=ys, ax=ax)
+
+
 def plot_lm_ttest(data, x, y, ax=None):
     """
     Plot a combined scatterplot, means, and LM slope line
@@ -1062,7 +1085,6 @@ def plot_lm_ttest(data, x, y, ax=None):
     # Return axes
     ax.legend()
     return ax
-
 
 
 def plot_lm_anova(data, x, y, ax=None):
