@@ -589,8 +589,18 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot helper functions</span>
-<span class="kn">from</span> <span class="nn">plot_helpers</span> <span class="kn">import</span> <span class="n">plot_pdf</span>
-<span class="kn">from</span> <span class="nn">plot_helpers</span> <span class="kn">import</span> <span class="n">savefigure</span>
+<span class="kn">from</span> <span class="nn">ministats</span> <span class="kn">import</span> <span class="n">plot_pdf</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ImportError</span><span class="g g-Whitespace">                               </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">line</span> <span class="mi">2</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="c1"># Plot helper functions</span>
+<span class="ne">----&gt; </span><span class="mi">2</span> <span class="kn">from</span> <span class="nn">ministats</span> <span class="kn">import</span> <span class="n">plot_pdf</span>
+
+<span class="ne">ImportError</span>: cannot import name &#39;plot_pdf&#39; from &#39;ministats&#39; (/opt/hostedtoolcache/Python/3.8.18/x64/lib/python3.8/site-packages/ministats/__init__.py)
 </pre></div>
 </div>
 </div>
@@ -834,6 +844,26 @@ document.write(`
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">def</span> simulation_test<span class=" -Color -Color-Blue">(</span>sample<span class=" -Color -Color-Blue">,</span> rvH0<span class=" -Color -Color-Blue">,</span> estfunc<span class=" -Color -Color-Blue">,</span> alt<span class=" -Color -Color-Blue">=&quot;two-sided&quot;):</span>
+    <span class=" -Color -Color-Blue">&quot;&quot;&quot;</span>
+<span class=" -Color -Color-Blue">    Compute the p-value of the observed estimate `estfunc(sample)` under H0</span>
+<span class=" -Color -Color-Blue">    described by the random variable `rvH0`.</span>
+<span class=" -Color -Color-Blue">    &quot;&quot;&quot;</span>
+    <span class=" -Color -Color-Red"># 1. Compute the observed value of `estfunc`</span>
+    obsest <span class=" -Color -Color-Blue">=</span> estfunc<span class=" -Color -Color-Blue">(</span>sample<span class=" -Color -Color-Blue">)</span>
+    n <span class=" -Color -Color-Blue">=</span> len<span class=" -Color -Color-Blue">(</span>sample<span class=" -Color -Color-Blue">)</span>
+
+    <span class=" -Color -Color-Red"># 2. Get sampling distribution of `estfunc` under H0</span>
+    sampl_dist_H0 <span class=" -Color -Color-Blue">=</span> gen_sampling_dist<span class=" -Color -Color-Blue">(</span>rvH0<span class=" -Color -Color-Blue">,</span> estfunc<span class=" -Color -Color-Blue">,</span> n<span class=" -Color -Color-Blue">)</span>
+
+    <span class=" -Color -Color-Red"># 3. Compute the p-value</span>
+    tails <span class=" -Color -Color-Blue">=</span> tailvalues<span class=" -Color -Color-Blue">(</span>sampl_dist_H0<span class=" -Color -Color-Blue">,</span> obsest<span class=" -Color -Color-Blue">,</span> alt<span class=" -Color -Color-Blue">=</span>alt<span class=" -Color -Color-Blue">)</span>
+    pvalue <span class=" -Color -Color-Blue">=</span> len<span class=" -Color -Color-Blue">(</span>tails<span class=" -Color -Color-Blue">)</span> <span class=" -Color -Color-Blue">/</span> len<span class=" -Color -Color-Blue">(</span>sampl_dist_H0<span class=" -Color -Color-Blue">)</span>
+    <span class=" -Color -Color-Green">return</span> pvalue
+</pre></div>
+</div>
+</div>
 </div>
 </section>
 <section id="two-sample-permutation-test">
@@ -846,6 +876,29 @@ document.write(`
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">def</span> permutation_test<span class=" -Color -Color-Blue">(</span>xsample<span class=" -Color -Color-Blue">,</span> ysample<span class=" -Color -Color-Blue">,</span> estfunc<span class=" -Color -Color-Blue">,</span> P<span class=" -Color -Color-Blue">=</span><span class=" -Color -Color-Cyan">10000</span><span class=" -Color -Color-Blue">):</span>
+    <span class=" -Color -Color-Blue">&quot;&quot;&quot;</span>
+<span class=" -Color -Color-Blue">    Compute the p-value of the observed estimate `estfunc(xsample,ysample)`</span>
+<span class=" -Color -Color-Blue">    under the null hypothesis where the group membership is randomized.</span>
+<span class=" -Color -Color-Blue">    &quot;&quot;&quot;</span>
+    <span class=" -Color -Color-Red"># 1. Compute the observed value of `estfunc`</span>
+    obsest <span class=" -Color -Color-Blue">=</span> estfunc<span class=" -Color -Color-Blue">(</span>xsample<span class=" -Color -Color-Blue">,</span> ysample<span class=" -Color -Color-Blue">)</span>
+
+    <span class=" -Color -Color-Red"># 2. Get sampling dist. of `estfunc` under H0</span>
+    pestimates <span class=" -Color -Color-Blue">=</span> <span class=" -Color -Color-Blue">[]</span>
+    <span class=" -Color -Color-Green">for</span> i <span class=" -Color -Color-Green">in</span> range<span class=" -Color -Color-Blue">(</span><span class=" -Color -Color-Cyan">0</span><span class=" -Color -Color-Blue">,</span> P<span class=" -Color -Color-Blue">):</span>
+        rsx<span class=" -Color -Color-Blue">,</span> rsy <span class=" -Color -Color-Blue">=</span> resample_under_H0<span class=" -Color -Color-Blue">(</span>xsample<span class=" -Color -Color-Blue">,</span> ysample<span class=" -Color -Color-Blue">)</span>
+        pestimate <span class=" -Color -Color-Blue">=</span> estfunc<span class=" -Color -Color-Blue">(</span>rsx<span class=" -Color -Color-Blue">,</span> rsy<span class=" -Color -Color-Blue">)</span>
+        pestimates<span class=" -Color -Color-Blue">.</span>append<span class=" -Color -Color-Blue">(</span>pestimate<span class=" -Color -Color-Blue">)</span>
+
+    <span class=" -Color -Color-Red"># 3. Compute the p-value</span>
+    tails <span class=" -Color -Color-Blue">=</span> tailvalues<span class=" -Color -Color-Blue">(</span>pestimates<span class=" -Color -Color-Blue">,</span> obsest<span class=" -Color -Color-Blue">)</span>
+    pvalue <span class=" -Color -Color-Blue">=</span> len<span class=" -Color -Color-Blue">(</span>tails<span class=" -Color -Color-Blue">)</span> <span class=" -Color -Color-Blue">/</span> len<span class=" -Color -Color-Blue">(</span>pestimates<span class=" -Color -Color-Blue">)</span>
+    <span class=" -Color -Color-Green">return</span> pvalue
+</pre></div>
+</div>
+</div>
 </div>
 </section>
 <section id="permutation-anova">
@@ -855,6 +908,38 @@ document.write(`
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">stats_helpers</span> <span class="kn">import</span> <span class="n">permutation_anova</span>
 
 <span class="o">%</span><span class="k">psource</span> permutation_anova
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">def</span> permutation_anova<span class=" -Color -Color-Blue">(</span>samples<span class=" -Color -Color-Blue">,</span> P<span class=" -Color -Color-Blue">=</span><span class=" -Color -Color-Cyan">10000</span><span class=" -Color -Color-Blue">,</span> alt<span class=" -Color -Color-Blue">=&quot;greater&quot;):</span>
+    <span class=" -Color -Color-Blue">&quot;&quot;&quot;</span>
+<span class=" -Color -Color-Blue">    Compute the p-value of the observed F-statistic for `samples` list</span>
+<span class=" -Color -Color-Blue">    under the null hypothesis where the group membership is randomized.</span>
+<span class=" -Color -Color-Blue">    &quot;&quot;&quot;</span>
+    ns <span class=" -Color -Color-Blue">=</span> <span class=" -Color -Color-Blue">[</span>len<span class=" -Color -Color-Blue">(</span>sample<span class=" -Color -Color-Blue">)</span> <span class=" -Color -Color-Green">for</span> sample <span class=" -Color -Color-Green">in</span> samples<span class=" -Color -Color-Blue">]</span>
+
+    <span class=" -Color -Color-Red"># 1. Comptue the observed F-statistic</span>
+    obsfstat<span class=" -Color -Color-Blue">,</span> _ <span class=" -Color -Color-Blue">=</span> f_oneway<span class=" -Color -Color-Blue">(*</span>samples<span class=" -Color -Color-Blue">)</span>
+
+    <span class=" -Color -Color-Red"># 2. Get sampling dist. of F-statistic under H0</span>
+    pfstats <span class=" -Color -Color-Blue">=</span> <span class=" -Color -Color-Blue">[]</span>
+    <span class=" -Color -Color-Green">for</span> i <span class=" -Color -Color-Green">in</span> range<span class=" -Color -Color-Blue">(</span><span class=" -Color -Color-Cyan">0</span><span class=" -Color -Color-Blue">,</span> P<span class=" -Color -Color-Blue">):</span>
+        values <span class=" -Color -Color-Blue">=</span> np<span class=" -Color -Color-Blue">.</span>concatenate<span class=" -Color -Color-Blue">(</span>samples<span class=" -Color -Color-Blue">)</span>
+        pvalues <span class=" -Color -Color-Blue">=</span> np<span class=" -Color -Color-Blue">.</span>random<span class=" -Color -Color-Blue">.</span>permutation<span class=" -Color -Color-Blue">(</span>values<span class=" -Color -Color-Blue">)</span>
+        psamples <span class=" -Color -Color-Blue">=</span> <span class=" -Color -Color-Blue">[]</span>
+        nstart <span class=" -Color -Color-Blue">=</span> <span class=" -Color -Color-Cyan">0</span>
+        <span class=" -Color -Color-Green">for</span> nstep <span class=" -Color -Color-Green">in</span> ns<span class=" -Color -Color-Blue">:</span>
+            psample <span class=" -Color -Color-Blue">=</span> pvalues<span class=" -Color -Color-Blue">[</span>nstart<span class=" -Color -Color-Blue">:</span>nstart<span class=" -Color -Color-Blue">+</span>nstep<span class=" -Color -Color-Blue">]</span>
+            psamples<span class=" -Color -Color-Blue">.</span>append<span class=" -Color -Color-Blue">(</span>psample<span class=" -Color -Color-Blue">)</span>
+            nstart <span class=" -Color -Color-Blue">=</span> nstart <span class=" -Color -Color-Blue">+</span> nstep
+        pfstat<span class=" -Color -Color-Blue">,</span> _ <span class=" -Color -Color-Blue">=</span> f_oneway<span class=" -Color -Color-Blue">(*</span>psamples<span class=" -Color -Color-Blue">)</span>
+        pfstats<span class=" -Color -Color-Blue">.</span>append<span class=" -Color -Color-Blue">(</span>pfstat<span class=" -Color -Color-Blue">)</span>
+
+    <span class=" -Color -Color-Red"># 3. Compute the p-value</span>
+    tails <span class=" -Color -Color-Blue">=</span> tailvalues<span class=" -Color -Color-Blue">(</span>pfstats<span class=" -Color -Color-Blue">,</span> obsfstat<span class=" -Color -Color-Blue">,</span> alt<span class=" -Color -Color-Blue">=</span>alt<span class=" -Color -Color-Blue">)</span>
+    pvalue <span class=" -Color -Color-Blue">=</span> len<span class=" -Color -Color-Blue">(</span>tails<span class=" -Color -Color-Blue">)</span> <span class=" -Color -Color-Blue">/</span> len<span class=" -Color -Color-Blue">(</span>pfstats<span class=" -Color -Color-Blue">)</span>
+    <span class=" -Color -Color-Green">return</span> pvalue
 </pre></div>
 </div>
 </div>
