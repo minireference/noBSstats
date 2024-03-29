@@ -52,3 +52,8 @@ RCPARAMS = {
 #    plt.rc('text', usetex=True)            # enable latex for labels
 #    ALT palette="colorblind"
 #    ALT sns.color_palette('Blues', 4)
+
+
+# The plot helper functions that used to be in this file have been moved to
+# https://github.com/minireference/ministats/blob/main/ministats/plots.py
+# and https://github.com/minireference/ministats/blob/main/ministats/utils.py

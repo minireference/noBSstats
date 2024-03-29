@@ -66,7 +66,7 @@ Data frames full of samples or resamples (not currently used in user-facing code
 
 ### Sampling distribution generator (known RV)
 
-See function `gen_sampling_dist` in [`notebooks/stats_helpers.py`](./notebooks/stats_helpers.py).
+See function `gen_sampling_dist` in [`ministats/sampling.py`](https://github.com/minireference/ministats/blob/main/ministats/sampling.py).
 
 
 
@@ -74,25 +74,19 @@ See function `gen_sampling_dist` in [`notebooks/stats_helpers.py`](./notebooks/s
 
 ### Bootstrap sampling distribution
 
-See function `bootstrap_stat` in [`notebooks/stats_helpers.py`](./notebooks/stats_helpers.py).
+See function `gen_boot_dist` in [`ministats/sampling.py`](https://github.com/minireference/ministats/blob/main/ministats/sampling.py).
 
 
 
 ### Simulation-based hypothesis test
 
-See functions `simulation_test_mean` and `simulation_test` in [`notebooks/stats_helpers.py`](./notebooks/stats_helpers.py).
-
-
-### Bootstrap test for mean (variance estimated from sample)
-
-See functions `bootstrap_stat` and `bootstrap_test_mean` in [`notebooks/stats_helpers.py`](./notebooks/stats_helpers.py).
-
+See functions `simulation_test_mean` in [`ministats/hypothesis_tests.py`](https://github.com/minireference/ministats/blob/main/ministats/hypothesis_tests.py).
 
 
 
 ### Permutation test
 
-See functions `resample_under_H0` and `permutation_test` in [`notebooks/stats_helpers.py`](./notebooks/stats_helpers.py).
+See functions `resample_under_H0` and `permutation_test` in [`ministats/hypothesis_tests.py`](https://github.com/minireference/ministats/blob/main/ministats/hypothesis_tests.py).
 
 
 Below we save the old implementations (which were less good).
