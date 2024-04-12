@@ -1,4 +1,4 @@
-# Exercise 13 temp-is-very-hot
+# Exercise 7 temp-is-very-hot
 temp = 33
 
 if temp > 30:

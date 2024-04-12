@@ -1,4 +1,4 @@
-# Exercise 15 student-letter-grades
+# Exercise 9 student-letter-grades
 score = 91
 
 if score >= 90:

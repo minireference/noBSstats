@@ -1,4 +1,4 @@
-# Exercise 16 new-profile-dict
+# Exercise 10 new-profile-dict
 profile2 = {"first_name": "Alex",
             "last_name": "Fortin",
             "score": 31}

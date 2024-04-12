@@ -1,4 +1,4 @@
-# Exercise 18 str-prices-sum
+# Exercise 12 str-prices-sum
 prices = ["22.2", "10.1", "33.3"]
 total = 0
 for price in prices:

@@ -1,4 +1,4 @@
-# Exercise 14 water-phases
+# Exercise 8 water-phases
 temp = 90
 
 if temp >= 100:

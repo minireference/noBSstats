@@ -1,4 +1,4 @@
-# Exercise 17 sum-of-two-strings
+# Exercise 11 sum-of-two-strings
 mfloat = float(mstr)
 nfloat = float(nstr)
 print("The variable mfloat has value", mfloat, "and type", type(mfloat))
