@@ -1,11 +1,9 @@
 # Exercise 10 new-profile-dict
-profile2 = {"first_name": "Alex",
-            "last_name": "Fortin",
-            "score": 31}
+profile2 = {"name":"Alex", "age":42, "score":65}
 
 # ALT. can build up the dictionary 
 profile2 = {}
-profile2["first_name"] = "Alex"
-profile2["last_name"] = "Fortin"
-profile2["score"] = 31
+profile2["name"] = "Alex"
+profile2["age"] = 42
+profile2["score"] = 65
 profile2

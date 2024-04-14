@@ -1,4 +1,4 @@
-# Exercise 15 cause-exceptions
+# Exercise 13 cause-exceptions
 # SyntaxError if you forget to close the [ when creating a list
 # [1
 
