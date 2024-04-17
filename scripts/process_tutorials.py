@@ -97,15 +97,14 @@ def split_off_solutions(srcfilename: str, destfilename: str):
             if "outputID" in cell["metadata"]:
                 del cell["metadata"]["outputId"]
             if "outputs" in cell:
-                cell["outputs"] = []
+                del cell["outputs"]
             if "execution_count" in cell:
                 del cell["execution_count"]
 
-            # set cell content to markdown link to the solution .py
+            # set cell content to link to the solution .py
             cell["cell_type"] = "markdown"
             py_url = f"{GITHUB_TREE_URL}/tutorials/solutions/python/{filename}"
-            # new_source = f'<a href=\"{py_url}\" target=\"_blank\">Click for solution.</a>'
-            new_source = f"[*Click for solution*]({py_url})\n\n"
+            new_source = f'<a href=\"{py_url}\" target=\"_blank\">Click for solution.</a>\n'
             cell['source'] = new_source
 
     with open(destfilename, 'w', encoding='utf-8') as outf:
