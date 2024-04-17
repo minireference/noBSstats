@@ -104,8 +104,8 @@ def split_off_solutions(srcfilename: str, destfilename: str):
             # set cell content to markdown link to the solution .py
             cell["cell_type"] = "markdown"
             py_url = f"{GITHUB_TREE_URL}/tutorials/solutions/python/{filename}"
-            # <a href="http://example.com/" target="_blank">Hello, world!</a>
-            new_source = f'<a href=\"{py_url}\" target=\"_blank\">Click for solution.</a>'
+            # new_source = f'<a href=\"{py_url}\" target=\"_blank\">Click for solution.</a>'
+            new_source = f"[*Click for solution*]({py_url})\n\n"
             cell['source'] = new_source
 
     with open(destfilename, 'w', encoding='utf-8') as outf:
