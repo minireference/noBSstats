@@ -227,6 +227,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="43_interpreting_linear_models.html">Section 4.3 — Interpreting linear models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="44_regression_with_categorical_predictors.html">Section 4.4 — Regression with categorical predictors</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Section 4.5 — Model selection</a></li>
+
 <li class="toctree-l2"><a class="reference internal" href="46_generalized_linear_models.html">Section 4.6 — Generalized linear models</a></li>
 </ul>
 </li>
@@ -248,6 +249,7 @@ const thebe_selector_output = ".output, .cell_output"
 
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/seaborn_tutorial.html">Appendix E — Seaborn tutorial</a></li>
 
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/calculus_tutorial.html">Calculus tutorial</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../blogposts/README.html">Blog posts</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -498,7 +500,39 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Section 4.5 — Model selection</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebook-setup">Notebook setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fork">Fork</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pipe">Pipe</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Example</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#collider">Collider</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Example</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#selection-bias">Selection bias</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#benefits-of-random-assignment">Benefits of random assignment</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Example</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#variable-selection">Variable selection</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-metrics">Comparing metrics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#f-test-for-the-submodel">F-test for the submodel</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#likelihood-ratio-test">Likelihood ratio test</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lagrange-multiplier-test-optional">Lagrange multiplier test (optional)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanations">Explanations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#links">Links</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#cut-material">CUT MATERIAL</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#players-dataset">Players dataset</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-of-linear-model-for-time-1-age">Plot of linear model for <code class="docutils literal notranslate"><span class="pre">time</span> <span class="pre">~</span> <span class="pre">1</span> <span class="pre">+</span> <span class="pre">age</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-of-linear-model-for-time-1-age-jobstatus">Plot of linear model for <code class="docutils literal notranslate"><span class="pre">time</span> <span class="pre">~</span> <span class="pre">1</span> <span class="pre">+</span> <span class="pre">age</span> <span class="pre">+</span> <span class="pre">jobstatus</span></code></a><ul class="nav section-nav flex-column">
@@ -510,6 +544,9 @@ document.write(`
 </ul>
 </li>
 </ul>
+</li>
+</ul>
+
             </nav>
         </div>
     </div>
@@ -573,7 +610,533 @@ document.write(`
 </div>
 </div>
 </div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
+<span class="kn">import</span> <span class="nn">statsmodels.formula.api</span> <span class="k">as</span> <span class="nn">smf</span>
+
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">binom</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">bernoulli</span>
+</pre></div>
+</div>
+</div>
+</div>
 </section>
+<section id="fork">
+<h2>Fork<a class="headerlink" href="#fork" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># U = 2 * np.random.binomial(1, 0.5, N) - 1</span>
+<span class="c1"># G = np.random.normal(size=N)</span>
+<span class="c1"># P = np.random.normal(b_GP * G + b_U * U)</span>
+<span class="c1"># C = np.random.normal(b_PC * P + b_GC * G + b_U * U)</span>
+<span class="c1"># d = pd.DataFrame.from_dict({&quot;C&quot;: C, &quot;P&quot;: P, &quot;G&quot;: G, &quot;U&quot;: U})</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># n &lt;- 1000</span>
+<span class="c1"># Z &lt;- rbern( n , 0.5 )</span>
+<span class="c1"># X &lt;- rbern( n , (1-Z)*0.1 + Z*0.9 )</span>
+<span class="c1"># Y &lt;- rbern( n , (1-Z)*0.1 + Z*0.9 )</span>
+
+
+<span class="c1"># cols &lt;- c(4,2)</span>
+<span class="c1"># N &lt;- 300</span>
+<span class="c1"># Z &lt;- rbern(N)</span>
+<span class="c1"># X &lt;- rnorm(N,2*Z-1)</span>
+<span class="c1"># Y &lt;- rnorm(N,2*Z-1)</span>
+<span class="c1"># plot( X , Y , col=cols[Z+1] , lwd=3 )</span>
+<span class="c1"># abline(lm(Y[Z==1]~X[Z==1]),col=2,lwd=3)</span>
+<span class="c1"># abline(lm(Y[Z==0]~X[Z==0]),col=4,lwd=3)</span>
+<span class="c1"># abline(lm(Y~X),lwd=3)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="example">
+<h3>Example<a class="headerlink" href="#example" title="Permalink to this heading">#</a></h3>
+<p>Example 2 from <a class="reference external" href="https://www.tandfonline.com/doi/full/10.1080/10691898.2020.1752859">Why We Should Teach Causal Inference: Examples in Linear Regression With Simulated Data</a></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1897</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">iqs</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">15</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="n">ltimes</span> <span class="o">=</span> <span class="mi">200</span> <span class="o">-</span> <span class="n">iqs</span> <span class="o">+</span> <span class="n">norm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> 
+<span class="n">tscores</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">iqs</span> <span class="o">+</span> <span class="mf">0.1</span><span class="o">*</span><span class="n">ltimes</span> <span class="o">+</span> <span class="n">norm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+<span class="n">df2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s2">&quot;iq&quot;</span><span class="p">:</span><span class="n">iqs</span><span class="p">,</span>
+    <span class="s2">&quot;ltime&quot;</span><span class="p">:</span> <span class="n">ltimes</span><span class="p">,</span>
+    <span class="s2">&quot;tscore&quot;</span><span class="p">:</span> <span class="n">tscores</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lm2a</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;tscore ~ ltime&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df2</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">lm2a</span><span class="o">.</span><span class="n">params</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Intercept    99.602100
+ltime        -0.395873
+dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lm2b</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;tscore ~ ltime + iq&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df2</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">lm2b</span><span class="o">.</span><span class="n">params</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Intercept    3.580677
+ltime        0.081681
+iq           0.482373
+dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="pipe">
+<h2>Pipe<a class="headerlink" href="#pipe" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># SR example</span>
+<span class="c1"># cols &lt;- c(4,2)</span>
+<span class="c1"># N &lt;- 300</span>
+<span class="c1"># X &lt;- rnorm(N)</span>
+<span class="c1"># Z &lt;- rbern(N,inv_logit(X))</span>
+<span class="c1"># Y &lt;- rnorm(N,(2*Z-1))</span>
+<span class="c1"># plot( X , Y , col=cols[Z+1] , lwd=3 )</span>
+<span class="c1"># abline(lm(Y[Z==1]~X[Z==1]),col=2,lwd=3)</span>
+<span class="c1"># abline(lm(Y[Z==0]~X[Z==0]),col=4,lwd=3)</span>
+<span class="c1"># abline(lm(Y~X),lwd=3)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="id1">
+<h3>Example<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h3>
+<p>Example 1 from <a class="reference external" href="https://www.tandfonline.com/doi/full/10.1080/10691898.2020.1752859">Why We Should Teach Causal Inference: Examples in Linear Regression With Simulated Data</a></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1896</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">learns</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="n">knows</span> <span class="o">=</span> <span class="mi">5</span><span class="o">*</span><span class="n">learns</span> <span class="o">+</span> <span class="n">norm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="n">undstds</span> <span class="o">=</span> <span class="mi">3</span><span class="o">*</span><span class="n">knows</span> <span class="o">+</span> <span class="n">norm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+<span class="n">df1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s2">&quot;learn&quot;</span><span class="p">:</span><span class="n">learns</span><span class="p">,</span>
+    <span class="s2">&quot;know&quot;</span><span class="p">:</span> <span class="n">knows</span><span class="p">,</span>
+    <span class="s2">&quot;undstd&quot;</span><span class="p">:</span> <span class="n">undstds</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lm1a</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;undstd ~ learn&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df1</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">lm1a</span><span class="o">.</span><span class="n">params</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Intercept    -0.045587
+learn        14.890022
+dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lm1b</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;undstd ~ learn + know&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df1</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">lm1b</span><span class="o">.</span><span class="n">params</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Intercept   -0.036520
+learn        0.130609
+know         2.975806
+dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="collider">
+<h2>Collider<a class="headerlink" href="#collider" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># cols &lt;- c(4,2)</span>
+<span class="c1"># N &lt;- 300</span>
+<span class="c1"># X &lt;- rnorm(N)</span>
+<span class="c1"># Y &lt;- rnorm(N)</span>
+<span class="c1"># Z &lt;- rbern(N,inv_logit(2*X+2*Y-2))</span>
+<span class="c1">#  plot( X , Y , col=cols[Z+1] , lwd=3 )</span>
+<span class="c1"># abline(lm(Y[Z==1]~X[Z==1]),col=2,lwd=3)</span>
+<span class="c1"># abline(lm(Y[Z==0]~X[Z==0]),col=4,lwd=3)</span>
+<span class="c1"># abline(lm(Y~X),lwd=3)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="id2">
+<h3>Example<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h3>
+<p>Example 3 from <a class="reference external" href="https://www.tandfonline.com/doi/full/10.1080/10691898.2020.1752859">Why We Should Teach Causal Inference: Examples in Linear Regression With Simulated Data</a></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">1000</span>
+
+<span class="n">ntwks</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="n">comps</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="n">boths</span> <span class="o">=</span> <span class="p">((</span><span class="n">ntwks</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">comps</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">lucks</span> <span class="o">=</span> <span class="n">bernoulli</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="n">proms</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">lucks</span><span class="p">)</span><span class="o">*</span><span class="n">boths</span> <span class="o">+</span> <span class="n">lucks</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">boths</span><span class="p">)</span>
+
+<span class="n">df3</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s2">&quot;ntwk&quot;</span><span class="p">:</span><span class="n">ntwks</span><span class="p">,</span>
+    <span class="s2">&quot;comp&quot;</span><span class="p">:</span> <span class="n">comps</span><span class="p">,</span>
+    <span class="s2">&quot;prom&quot;</span><span class="p">:</span> <span class="n">proms</span><span class="p">,</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Without adjusting for the collider <code class="docutils literal notranslate"><span class="pre">prom</span></code>,
+there is almost no effect of the network ability on competence.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lm3a</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;comp ~ ntwk&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df3</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">lm3a</span><span class="o">.</span><span class="n">params</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Intercept    0.071632
+ntwk        -0.041152
+dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<p>But with adjustment for <code class="docutils literal notranslate"><span class="pre">prom</span></code>,
+there seems to be a negative effect.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lm3b</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;comp ~ ntwk + prom&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df3</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">lm3b</span><span class="o">.</span><span class="n">params</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Intercept   -0.290081
+ntwk        -0.239975
+prom         1.087964
+dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<p>The false negative effect can also appear from sampling bias,
+e.g. if we restrict our analysis only to people who were promoted.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df3proms</span> <span class="o">=</span> <span class="n">df3</span><span class="p">[</span><span class="n">df3</span><span class="p">[</span><span class="s2">&quot;prom&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">lm3c</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;comp ~ ntwk&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df3proms</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">lm3c</span><span class="o">.</span><span class="n">params</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Intercept    0.898530
+ntwk        -0.426244
+dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="selection-bias">
+<h2>Selection bias<a class="headerlink" href="#selection-bias" title="Permalink to this heading">#</a></h2>
+</section>
+<section id="benefits-of-random-assignment">
+<h2>Benefits of random assignment<a class="headerlink" href="#benefits-of-random-assignment" title="Permalink to this heading">#</a></h2>
+<section id="id3">
+<h3>Example<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h3>
+<p>Example 4 from <a class="reference external" href="https://www.tandfonline.com/doi/full/10.1080/10691898.2020.1752859">Why We Should Teach Causal Inference: Examples in Linear Regression With Simulated Data</a></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1896</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">1000</span>
+
+<span class="n">iqs</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">15</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="n">groups</span> <span class="o">=</span> <span class="n">bernoulli</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="n">ltimes_exp</span> <span class="o">=</span> <span class="mi">80</span><span class="o">*</span><span class="n">groups</span> <span class="o">+</span> <span class="mi">120</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">groups</span><span class="p">)</span>
+<span class="n">tscores</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">iqs</span> <span class="o">+</span> <span class="mf">0.1</span><span class="o">*</span><span class="n">ltimes_exp</span> <span class="o">+</span> <span class="n">norm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+<span class="n">df4</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s2">&quot;iq&quot;</span><span class="p">:</span><span class="n">iqs</span><span class="p">,</span>
+    <span class="s2">&quot;ltime&quot;</span><span class="p">:</span> <span class="n">ltimes_exp</span><span class="p">,</span>
+    <span class="s2">&quot;tscore&quot;</span><span class="p">:</span> <span class="n">tscores</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># non-randomized            # random assignment</span>
+<span class="n">df2</span><span class="o">.</span><span class="n">corr</span><span class="p">()[</span><span class="s2">&quot;iq&quot;</span><span class="p">][</span><span class="s2">&quot;ltime&quot;</span><span class="p">],</span>  <span class="n">df4</span><span class="o">.</span><span class="n">corr</span><span class="p">()[</span><span class="s2">&quot;iq&quot;</span><span class="p">][</span><span class="s2">&quot;ltime&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(-0.9979264589333364, -0.020129851374243963)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df4</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;ltime&quot;</span><span class="p">)[</span><span class="s2">&quot;iq&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ltime
+80     99.980423
+120    99.358152
+Name: iq, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lm4a</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;tscore ~ ltime&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df4</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">lm4a</span><span class="o">.</span><span class="n">params</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Intercept    50.688293
+ltime         0.091233
+dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lm4b</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;tscore ~ ltime + iq&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df4</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">lm4b</span><span class="o">.</span><span class="n">params</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Intercept   -0.303676
+ltime        0.099069
+iq           0.503749
+dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lm4c</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;tscore ~ iq&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df4</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">lm4c</span><span class="o">.</span><span class="n">params</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Intercept    9.896117
+iq           0.501168
+dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="variable-selection">
+<h2>Variable selection<a class="headerlink" href="#variable-selection" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># load the dataset</span>
+<span class="n">doctors</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/doctors.csv&quot;</span><span class="p">)</span>
+
+<span class="c1"># fit the short model</span>
+<span class="n">formula2</span> <span class="o">=</span> <span class="s2">&quot;score ~ 1 + alc + weed + exrc&quot;</span>
+<span class="n">lm2</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="n">formula2</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">doctors</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+<span class="c1"># fit long model with caffeine</span>
+<span class="n">formula2c</span> <span class="o">=</span> <span class="s2">&quot;score ~ 1 + alc + weed + exrc + caf&quot;</span>
+<span class="n">lm2c</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="n">formula2c</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">doctors</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+<span class="c1"># fit long model with useless varaible</span>
+<span class="n">formula2p</span> <span class="o">=</span> <span class="s2">&quot;score ~ 1 + alc + weed + exrc + permit&quot;</span>
+<span class="n">lm2p</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="n">formula2p</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">doctors</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="comparing-metrics">
+<h3>Comparing metrics<a class="headerlink" href="#comparing-metrics" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lm2</span><span class="o">.</span><span class="n">aic</span><span class="p">,</span> <span class="n">lm2c</span><span class="o">.</span><span class="n">aic</span><span class="p">,</span> <span class="n">lm2p</span><span class="o">.</span><span class="n">aic</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1103.2518084235273, 1092.066440497514, 1102.6030626936558)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lm2</span><span class="o">.</span><span class="n">bic</span><span class="p">,</span> <span class="n">lm2c</span><span class="o">.</span><span class="n">bic</span><span class="p">,</span> <span class="n">lm2p</span><span class="o">.</span><span class="n">bic</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1115.4512324525256, 1107.3157205337616, 1117.8523427299035)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lm2</span><span class="o">.</span><span class="n">fvalue</span><span class="p">,</span> <span class="n">lm2c</span><span class="o">.</span><span class="n">fvalue</span><span class="p">,</span> <span class="n">lm2p</span><span class="o">.</span><span class="n">fvalue</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(270.34350189265837, 222.5179385249417, 205.51932993062275)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="f-test-for-the-submodel">
+<h3>F-test for the submodel<a class="headerlink" href="#f-test-for-the-submodel" title="Permalink to this heading">#</a></h3>
+<p>cf. <a class="reference external" href="https://www.statsmodels.org/dev/generated/statsmodels.regression.linear_model.RegressionResults.compare_f_test.html">https://www.statsmodels.org/dev/generated/statsmodels.regression.linear_model.RegressionResults.compare_f_test.html</a></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">F</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">lm2c</span><span class="o">.</span><span class="n">compare_f_test</span><span class="p">(</span><span class="n">lm2</span><span class="p">)</span>
+<span class="n">F</span><span class="p">,</span> <span class="n">p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(13.317646938672294, 0.00036159809072859004)
+</pre></div>
+</div>
+</div>
+</div>
+<p>The <span class="math notranslate nohighlight">\(p\)</span>-value is smaller than <span class="math notranslate nohighlight">\(0.05\)</span>,
+so we conclude that adding the variable <code class="docutils literal notranslate"><span class="pre">caf</span></code> improves the model.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">F</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">lm2p</span><span class="o">.</span><span class="n">compare_f_test</span><span class="p">(</span><span class="n">lm2</span><span class="p">)</span>
+<span class="n">F</span><span class="p">,</span> <span class="n">p</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(2.5857397307381698, 0.10991892492566509)
+</pre></div>
+</div>
+</div>
+</div>
+<p>The <span class="math notranslate nohighlight">\(p\)</span>-value is greater than <span class="math notranslate nohighlight">\(0.05\)</span>,
+so we conclude that adding the variable <code class="docutils literal notranslate"><span class="pre">permit</span></code> doesn’t improve the model.</p>
+</section>
+<section id="likelihood-ratio-test">
+<h3>Likelihood ratio test<a class="headerlink" href="#likelihood-ratio-test" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lm2c</span><span class="o">.</span><span class="n">compare_lr_test</span><span class="p">(</span><span class="n">lm2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(13.185367926013441, 0.0002821434157606992, 1.0)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lm2p</span><span class="o">.</span><span class="n">compare_lr_test</span><span class="p">(</span><span class="n">lm2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(2.648745729871507, 0.10363163447814171, 1.0)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="lagrange-multiplier-test-optional">
+<h3>Lagrange multiplier test (optional)<a class="headerlink" href="#lagrange-multiplier-test-optional" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># workaround to avoid bug</span>
+<span class="n">lm2_np</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">lm2</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">endog</span><span class="p">,</span> <span class="n">lm2</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">exog</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">lm2c_np</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">lm2c</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">endog</span><span class="p">,</span> <span class="n">lm2c</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">exog</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+<span class="c1"># Lagrange Multiplier test to check short model</span>
+<span class="n">lm2c_np</span><span class="o">.</span><span class="n">compare_lm_test</span><span class="p">(</span><span class="n">lm2_np</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(12.643516756348609, 0.00037687035845298725, 1.0)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="explanations">
+<h2>Explanations<a class="headerlink" href="#explanations" title="Permalink to this heading">#</a></h2>
+</section>
+<section id="discussion">
+<h2>Discussion<a class="headerlink" href="#discussion" title="Permalink to this heading">#</a></h2>
+</section>
+<section id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this heading">#</a></h2>
+</section>
+<section id="links">
+<h2>Links<a class="headerlink" href="#links" title="Permalink to this heading">#</a></h2>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="cut-material">
+<h1>CUT MATERIAL<a class="headerlink" href="#cut-material" title="Permalink to this heading">#</a></h1>
 <section id="players-dataset">
 <h2>Players dataset<a class="headerlink" href="#players-dataset" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
@@ -592,10 +1155,10 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.FacetGrid at 0x7f111c809520&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.FacetGrid at 0x7f963e04bbb0&gt;
 </pre></div>
 </div>
-<img alt="../_images/56a7c20805ac120c1ac4295157df7465a19aa2196a4a8390ee47190372bd0454.png" src="../_images/56a7c20805ac120c1ac4295157df7465a19aa2196a4a8390ee47190372bd0454.png" />
+<img alt="../_images/81ceae3184a8b3a55b13be11fe4edf3df0fd4bf0d26940518e8765c88ef9a9ed.png" src="../_images/81ceae3184a8b3a55b13be11fe4edf3df0fd4bf0d26940518e8765c88ef9a9ed.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -625,10 +1188,10 @@ document.write(`
   <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>   3.516</td>
 </tr>
 <tr>
-  <th>Date:</th>             <td>Wed, 17 Apr 2024</td> <th>  Prob (F-statistic):</th>  <td>0.0902</td> 
+  <th>Date:</th>             <td>Fri, 03 May 2024</td> <th>  Prob (F-statistic):</th>  <td>0.0902</td> 
 </tr>
 <tr>
-  <th>Time:</th>                 <td>13:57:16</td>     <th>  Log-Likelihood:    </th> <td> -72.909</td>
+  <th>Time:</th>                 <td>17:35:45</td>     <th>  Log-Likelihood:    </th> <td> -72.909</td>
 </tr>
 <tr>
   <th>No. Observations:</th>      <td>    12</td>      <th>  AIC:               </th> <td>   149.8</td>
@@ -683,10 +1246,10 @@ one for <code class="docutils literal notranslate"><span class="pre">jobstatus=0
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.FacetGrid at 0x7f10d3f0a2b0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.FacetGrid at 0x7f963de08ac0&gt;
 </pre></div>
 </div>
-<img alt="../_images/21c0ce3a5dc3c1e97cb387e99f153de3bd0744c048165db8a0e4a6525089de9d.png" src="../_images/21c0ce3a5dc3c1e97cb387e99f153de3bd0744c048165db8a0e4a6525089de9d.png" />
+<img alt="../_images/3b8c36a631de70bfdadb3a5f991f1482ea602ad634b31203c9e01b4ad4036d29.png" src="../_images/3b8c36a631de70bfdadb3a5f991f1482ea602ad634b31203c9e01b4ad4036d29.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -754,10 +1317,10 @@ dtype: float64
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.FacetGrid at 0x7f10d3f0adf0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.FacetGrid at 0x7f963dd3a4f0&gt;
 </pre></div>
 </div>
-<img alt="../_images/123334c89184e0f06a389130b7347fe5bc19d5b86e3644a067fc1110c626ff9e.png" src="../_images/123334c89184e0f06a389130b7347fe5bc19d5b86e3644a067fc1110c626ff9e.png" />
+<img alt="../_images/2c387f3c3b81762c0a702d305ad25743f88dc438b45e33084175b1f16ba4c82a.png" src="../_images/2c387f3c3b81762c0a702d305ad25743f88dc438b45e33084175b1f16ba4c82a.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -772,8 +1335,8 @@ dtype: float64
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Intercept    2.028636
-exposure     0.670186
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Intercept    2.001411
+exposure     0.712343
 dtype: float64
 </pre></div>
 </div>
@@ -786,7 +1349,7 @@ dtype: float64
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/676870d7f8ad199d36fd4eb1126d88867ab8e78998748a24b52eefb82cd1d965.png" src="../_images/676870d7f8ad199d36fd4eb1126d88867ab8e78998748a24b52eefb82cd1d965.png" />
+<img alt="../_images/e277cfb35fa36fe6b792b2589b15d51dd7821345ead593a4d67ae66e41695a88.png" src="../_images/e277cfb35fa36fe6b792b2589b15d51dd7821345ead593a4d67ae66e41695a88.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -838,7 +1401,7 @@ dtype: float64
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/551fa744823d9043a3e8e468713b9d4d9371db968a64598d294767871e88a25a.png" src="../_images/551fa744823d9043a3e8e468713b9d4d9371db968a64598d294767871e88a25a.png" />
+<img alt="../_images/4706f20f57684df05f2e4da63f0d0d8fe412dc30be491d662e651360199d0d66.png" src="../_images/4706f20f57684df05f2e4da63f0d0d8fe412dc30be491d662e651360199d0d66.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -860,19 +1423,19 @@ dtype: float64
   <th>Model:</th>                   <td>OLS</td>       <th>  Adj. R-squared:    </th> <td>   1.000</td> 
 </tr>
 <tr>
-  <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>9.006e+30</td>
+  <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>6.228e+29</td>
 </tr>
 <tr>
-  <th>Date:</th>             <td>Wed, 17 Apr 2024</td> <th>  Prob (F-statistic):</th>  <td>  0.00</td>  
+  <th>Date:</th>             <td>Fri, 03 May 2024</td> <th>  Prob (F-statistic):</th>  <td>  0.00</td>  
 </tr>
 <tr>
-  <th>Time:</th>                 <td>13:57:19</td>     <th>  Log-Likelihood:    </th> <td>  3386.6</td> 
+  <th>Time:</th>                 <td>17:35:47</td>     <th>  Log-Likelihood:    </th> <td>  3246.2</td> 
 </tr>
 <tr>
-  <th>No. Observations:</th>      <td>   100</td>      <th>  AIC:               </th> <td>  -6765.</td> 
+  <th>No. Observations:</th>      <td>   100</td>      <th>  AIC:               </th> <td>  -6484.</td> 
 </tr>
 <tr>
-  <th>Df Residuals:</th>          <td>    96</td>      <th>  BIC:               </th> <td>  -6755.</td> 
+  <th>Df Residuals:</th>          <td>    96</td>      <th>  BIC:               </th> <td>  -6474.</td> 
 </tr>
 <tr>
   <th>Df Model:</th>              <td>     3</td>      <th>                     </th>     <td> </td>    
@@ -886,30 +1449,30 @@ dtype: float64
                <td></td>                 <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P>|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
 </tr>
 <tr>
-  <th>C(covariate)[0]</th>            <td>    2.0000</td> <td> 1.34e-16</td> <td> 1.49e+16</td> <td> 0.000</td> <td>    2.000</td> <td>    2.000</td>
+  <th>C(covariate)[0]</th>            <td>    2.0000</td> <td> 5.31e-16</td> <td> 3.77e+15</td> <td> 0.000</td> <td>    2.000</td> <td>    2.000</td>
 </tr>
 <tr>
-  <th>C(covariate)[1]</th>            <td>    2.2500</td> <td> 1.88e-16</td> <td>  1.2e+16</td> <td> 0.000</td> <td>    2.250</td> <td>    2.250</td>
+  <th>C(covariate)[1]</th>            <td>    2.2500</td> <td> 8.71e-16</td> <td> 2.58e+15</td> <td> 0.000</td> <td>    2.250</td> <td>    2.250</td>
 </tr>
 <tr>
-  <th>exposure</th>                   <td>    0.5000</td> <td> 2.36e-16</td> <td> 2.12e+15</td> <td> 0.000</td> <td>    0.500</td> <td>    0.500</td>
+  <th>exposure</th>                   <td>    0.5000</td> <td> 1.02e-15</td> <td> 4.89e+14</td> <td> 0.000</td> <td>    0.500</td> <td>    0.500</td>
 </tr>
 <tr>
-  <th>exposure:C(covariate)[T.1]</th> <td> 6.661e-16</td> <td> 3.24e-16</td> <td>    2.055</td> <td> 0.043</td> <td> 2.28e-17</td> <td> 1.31e-15</td>
+  <th>exposure:C(covariate)[T.1]</th> <td>-8.882e-16</td> <td> 1.41e-15</td> <td>   -0.630</td> <td> 0.530</td> <td>-3.69e-15</td> <td> 1.91e-15</td>
 </tr>
 </table>
 <table class="simpletable">
 <tr>
-  <th>Omnibus:</th>       <td> 0.401</td> <th>  Durbin-Watson:     </th> <td>   0.632</td>
+  <th>Omnibus:</th>       <td>1279.861</td> <th>  Durbin-Watson:     </th> <td>   2.085</td>
 </tr>
 <tr>
-  <th>Prob(Omnibus):</th> <td> 0.818</td> <th>  Jarque-Bera (JB):  </th> <td>   0.562</td>
+  <th>Prob(Omnibus):</th>  <td> 0.000</td>  <th>  Jarque-Bera (JB):  </th> <td>  14.912</td>
 </tr>
 <tr>
-  <th>Skew:</th>          <td> 0.060</td> <th>  Prob(JB):          </th> <td>   0.755</td>
+  <th>Skew:</th>           <td>-0.362</td>  <th>  Prob(JB):          </th> <td>0.000578</td>
 </tr>
 <tr>
-  <th>Kurtosis:</th>      <td> 2.653</td> <th>  Cond. No.          </th> <td>    9.70</td>
+  <th>Kurtosis:</th>       <td> 1.252</td>  <th>  Cond. No.          </th> <td>    10.9</td>
 </tr>
 </table><br/><br/>Notes:<br/>[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.</div></div>
 </div>
@@ -977,7 +1540,7 @@ dtype: float64
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/64f4f24e1450f6a03d4f040348b4d80112243dc3c0f3f48a2cfc491df3a2e545.png" src="../_images/64f4f24e1450f6a03d4f040348b4d80112243dc3c0f3f48a2cfc491df3a2e545.png" />
+<img alt="../_images/06a58a593e17aecc11afe435ee87e0d33d16a8b2188174bc88e35c2361416a1e.png" src="../_images/06a58a593e17aecc11afe435ee87e0d33d16a8b2188174bc88e35c2361416a1e.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1084,7 +1647,39 @@ dtype: float64
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Section 4.5 — Model selection</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebook-setup">Notebook setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fork">Fork</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pipe">Pipe</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Example</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#collider">Collider</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Example</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#selection-bias">Selection bias</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#benefits-of-random-assignment">Benefits of random assignment</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Example</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#variable-selection">Variable selection</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-metrics">Comparing metrics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#f-test-for-the-submodel">F-test for the submodel</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#likelihood-ratio-test">Likelihood ratio test</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lagrange-multiplier-test-optional">Lagrange multiplier test (optional)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanations">Explanations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#links">Links</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#cut-material">CUT MATERIAL</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#players-dataset">Players dataset</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-of-linear-model-for-time-1-age">Plot of linear model for <code class="docutils literal notranslate"><span class="pre">time</span> <span class="pre">~</span> <span class="pre">1</span> <span class="pre">+</span> <span class="pre">age</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-of-linear-model-for-time-1-age-jobstatus">Plot of linear model for <code class="docutils literal notranslate"><span class="pre">time</span> <span class="pre">~</span> <span class="pre">1</span> <span class="pre">+</span> <span class="pre">age</span> <span class="pre">+</span> <span class="pre">jobstatus</span></code></a><ul class="nav section-nav flex-column">
@@ -1096,6 +1691,9 @@ dtype: float64
 </ul>
 </li>
 </ul>
+</li>
+</ul>
+
   </nav></div>
 
 </div></div>

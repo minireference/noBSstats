@@ -225,6 +225,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="43_interpreting_linear_models.html">Section 4.3 — Interpreting linear models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="44_regression_with_categorical_predictors.html">Section 4.4 — Regression with categorical predictors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="45_model_selection.html">Section 4.5 — Model selection</a></li>
+
 <li class="toctree-l2"><a class="reference internal" href="46_generalized_linear_models.html">Section 4.6 — Generalized linear models</a></li>
 </ul>
 </li>
@@ -246,6 +247,7 @@ const thebe_selector_output = ".output, .cell_output"
 
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/seaborn_tutorial.html">Appendix E — Seaborn tutorial</a></li>
 
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/calculus_tutorial.html">Calculus tutorial</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../blogposts/README.html">Blog posts</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -497,6 +499,11 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">CUT MATERIAL</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resampling-methods-for-regression">Resampling methods for regression</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bootstrap-confidence-intervals-for-parameters">Bootstrap confidence intervals for parameters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Bootstrap confidence intervals for parameters</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grouping-and-aggregation">Grouping and aggregation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#side-note-about-long-python-expressions">Side note about long Python expressions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hypothesis-testing-decision-rule">Hypothesis testing decision rule</a></li>
@@ -528,7 +535,7 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2-samples-from-a-normal-distribution">Example 2: Samples from a normal distribution</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Sampling distribution of the mean</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Sampling distribution of the mean</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-do-we-need-probability-theory-in-statistics">Why do we need probability theory in statistics?</a></li>
@@ -677,6 +684,149 @@ document.write(`
 </div>
 </div>
 </div>
+<section id="resampling-methods-for-regression">
+<h2>Resampling methods for regression<a class="headerlink" href="#resampling-methods-for-regression" title="Permalink to this heading">#</a></h2>
+<p>We can use resampling methods for …</p>
+<section id="bootstrap-confidence-intervals-for-parameters">
+<h3>Bootstrap confidence intervals for parameters<a class="headerlink" href="#bootstrap-confidence-intervals-for-parameters" title="Permalink to this heading">#</a></h3>
+<p>The goal is quantify the uncertainty of the model parameter estimates.
+We use the bootstrap approach to repeatedly select subsets of the dataset
+and fit a linear model to obtain their sampling distribution,
+then construct the confidence intervals from the percentiles of bootstrapped sampling distribution.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="n">n</span> <span class="o">=</span> <span class="n">doctors</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">B</span> <span class="o">=</span> <span class="mi">1000</span>
+
+<span class="n">formula</span> <span class="o">=</span> <span class="s2">&quot;score ~ 1 + alc + weed + exrc&quot;</span>
+<span class="n">lm2</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="n">formula</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">bdoctor</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+<span class="n">bparams</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">(</span> <span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">lm2</span><span class="o">.</span><span class="n">params</span><span class="p">)))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">B</span><span class="p">):</span>
+    <span class="c1"># bootstrap dataset</span>
+    <span class="n">bdoctors</span> <span class="o">=</span> <span class="n">doctors</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="c1"># fit the model</span>
+    <span class="n">blm2</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="n">formula</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">bdoctors</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+    <span class="n">bparams</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">blm2</span><span class="o">.</span><span class="n">params</span>
+
+<span class="n">cis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">bparams</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.025</span><span class="p">,</span> <span class="mf">0.975</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">cis</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">blm2</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">line</span> <span class="mi">3</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="ne">----&gt; </span><span class="mi">3</span> <span class="n">n</span> <span class="o">=</span> <span class="n">doctors</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="n">B</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="n">formula</span> <span class="o">=</span> <span class="s2">&quot;score ~ 1 + alc + weed + exrc&quot;</span>
+
+<span class="ne">NameError</span>: name &#39;doctors&#39; is not defined
+</pre></div>
+</div>
+</div>
+</div>
+<p>much wider than the ones produced by statsmodels:  WHY?</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># cf. model </span>
+<span class="n">lm2</span><span class="o">.</span><span class="n">conf_int</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Intercept</th>
+      <td>60.290604</td>
+      <td>60.615197</td>
+    </tr>
+    <tr>
+      <th>alc</th>
+      <td>-1.808909</td>
+      <td>-1.791294</td>
+    </tr>
+    <tr>
+      <th>weed</th>
+      <td>-1.081487</td>
+      <td>-0.961616</td>
+    </tr>
+    <tr>
+      <th>exrc</th>
+      <td>1.750911</td>
+      <td>1.785666</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="id1">
+<h3>Bootstrap confidence intervals for parameters<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LinearRegression</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Observed samples</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+
+<span class="c1"># Observed statistic</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">observed_statistic</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">coef_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># Bootstrap</span>
+<span class="n">bstatistics</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10000</span><span class="p">):</span>
+    <span class="n">bsample_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">bx</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">bsample_indices</span><span class="p">]</span>
+    <span class="n">by</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">bsample_indices</span><span class="p">]</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">bx</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">by</span><span class="p">)</span>
+    <span class="n">bstatistic</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">coef_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">bstatistics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bstatistic</span><span class="p">)</span>
+
+<span class="c1"># Confidence interval</span>
+<span class="n">lower</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">bstatistics</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">)</span>
+<span class="n">upper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">bstatistics</span><span class="p">,</span> <span class="mf">97.5</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Confidence interval:&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Confidence interval: (1.925367935213949, 2.3061962272629444)
+</pre></div>
+</div>
+</div>
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -736,20 +886,15 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">line</span> <span class="mi">52</span>
-<span class="g g-Whitespace">     </span><span class="mi">49</span>     <span class="n">poly</span><span class="o">.</span><span class="n">set_alpha</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">50</span>     <span class="n">ax</span><span class="o">.</span><span class="n">add_collection3d</span><span class="p">(</span><span class="n">poly</span><span class="p">,</span> <span class="n">zs</span><span class="o">=</span><span class="n">x_pos</span><span class="p">,</span> <span class="n">zdir</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
-<span class="ne">---&gt; </span><span class="mi">52</span> <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;linear_model_3d.pdf&quot;</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">53</span> <span class="n">savefigure</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-
-<span class="ne">NameError</span>: name &#39;os&#39; is not defined
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/simple/linear_model_3d.pdf
+Saved figure to figures/lm/simple/linear_model_3d.png
 </pre></div>
 </div>
-<img alt="../_images/f2c35a7251e61ae7eade7123f10c1861322caeb7235d81e4e03a54f7a071bacf.png" src="../_images/f2c35a7251e61ae7eade7123f10c1861322caeb7235d81e4e03a54f7a071bacf.png" />
+<img alt="../_images/185abb838d79ee9bb424b8184fa3893e3351bc8d03e20e585c738560e169a1b1.png" src="../_images/185abb838d79ee9bb424b8184fa3893e3351bc8d03e20e585c738560e169a1b1.png" />
 </div>
 </div>
+</section>
+</section>
 <section id="grouping-and-aggregation">
 <h2>Grouping and aggregation<a class="headerlink" href="#grouping-and-aggregation" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
@@ -1861,8 +2006,8 @@ and the standard error is 0.09149
 <img alt="../_images/c8ccb2a4debf6521e759dc72d36d50250578e7b61f76c35db4255aa75cbc8f10.png" src="../_images/c8ccb2a4debf6521e759dc72d36d50250578e7b61f76c35db4255aa75cbc8f10.png" />
 </div>
 </div>
-<section id="id1">
-<h3>Sampling distribution of the mean<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h3>
+<section id="id2">
+<h3>Sampling distribution of the mean<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># compute the sampling distribution for samples of size n</span>
@@ -3830,6 +3975,11 @@ and the current bottling process only produces “up to spec” bottles only …
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">CUT MATERIAL</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resampling-methods-for-regression">Resampling methods for regression</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bootstrap-confidence-intervals-for-parameters">Bootstrap confidence intervals for parameters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Bootstrap confidence intervals for parameters</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grouping-and-aggregation">Grouping and aggregation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#side-note-about-long-python-expressions">Side note about long Python expressions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hypothesis-testing-decision-rule">Hypothesis testing decision rule</a></li>
@@ -3861,7 +4011,7 @@ and the current bottling process only produces “up to spec” bottles only …
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2-samples-from-a-normal-distribution">Example 2: Samples from a normal distribution</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Sampling distribution of the mean</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Sampling distribution of the mean</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-do-we-need-probability-theory-in-statistics">Why do we need probability theory in statistics?</a></li>
