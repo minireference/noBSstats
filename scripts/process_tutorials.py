@@ -5,9 +5,9 @@ Process tutorials
 Folder structure:
     tutorials/
         src/
-            python_tutorial.ipynb
-            pandas_tutorial.ipynb
-            seaborn_tutorial.ipynb
+            python_tutorial_src.ipynb
+            pandas_tutorial_src.ipynb
+            seaborn_tutorial_src.ipynb
             attachments/
                 my_figrue.png               image served via raw.gihub 
         python_tutorial.ipynb
@@ -112,7 +112,7 @@ def split_off_solutions(srcfilename: str, destfilename: str):
 
 
 if __name__ == "__main__":
-    srcfilename = os.path.join(PROJECT_DIR, "tutorials/src/python_tutorial.ipynb")
+    srcfilename = os.path.join(PROJECT_DIR, "tutorials/src/python_tutorial_src.ipynb")
     destfilename = os.path.join(PROJECT_DIR, "tutorials/python_tutorial.ipynb")
     print('Processing', srcfilename)
     clear_solutions_dir()
