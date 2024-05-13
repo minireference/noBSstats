@@ -1,3 +1,5 @@
+Let's use Python to perform some real-world calculations.
+
 
 				When using the cloud notebooks,
 				you should download the notebook to your computer at the end of the session
