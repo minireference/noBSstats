@@ -1,3 +1,54 @@
+### Lists and for-loops
+
+For example,
+a `list` is an ordered container for values
+that can be as large as the amount of memory you have in your computer.
+
+
+
+### Functions
+
+We can describe `fun(<arg>)` as *calling* the function `fun` with argument `<arg>`.
+Other synonyms for calling a function are *invoking*, *evaluating*, or *running* the function.
+
+The semantics of functions calls are the same as in math.
+Let's look at an example to show you how to add a new button to the Python calculator.
+The parentheses notation for calling functions is borrowed from mathematics,
+where $f(x)$ (read "$f$ of $x$") denotes the output of the function $f$ when the input is $x$.
+
+
+### Objects
+
+For example, every string object has a method `.upper()` that converts
+the string to uppercase (capital letters); calling `"Hello".upper()` produces `"HELLO"`.
+
+Different object types have different  *affordances* (what you can do with them).
+
+
+You wouldn't want to mix up numbers and text, for example.
+
+
+Other types of objects that are often used in Python include **dictionaries**, **tuples**, **sets**, **functions**, etc.
+
+The reason objects are so popular in programming
+is because they allow us to "attach" certain functions to the objects,
+which makes their use easier.
+
+
+We'll encounter some of these objects later in this tutorial,
+and talk more about *objects* and their *methods* as needed.
+
+An object is therefore a container for data with and associated functions,
+which are called *methods*.
+% A function attached to an object is called a "method"
+
+
+
+
+
+
+
+### Intro
 Let's use Python to perform some real-world calculations.
 
 
