@@ -229,6 +229,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="45_model_selection.html">Section 4.5 — Model selection</a></li>
 
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Section 4.6 — Generalized linear models</a></li>
+
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials/appendix.html">Appendix</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -500,15 +501,41 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Section 4.6 — Generalized linear models</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebook-setup">Notebook setup</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#logistic-regression">Logistic regression</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#poisson-regression">Poisson regression</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extra-examples">Extra examples</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-n-student-admissions">Example N: student admissions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definitions">Definitions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#logistic-regression">Logistic regression</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-generation-for-logistic-regression">Data generation for logistic regression</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#titanic">Titanic</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Logistic regression</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1-hiring-student-interns">Example 1: hiring student interns</a></li>
 </ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#poisson-regression">Poisson regression</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-generation-for-poisson-regression">Data generation for Poisson regression</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2-hard-disk-failures-over-time">Example 2: hard disk failures over time</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanations">Explanations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-n-students-pass-or-fail">Exercise N: students pass or fail</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#links">Links</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#cut-material">CUT MATERIAL</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extra-examples">Extra examples</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#extra-example-m-student-admissions">Extra example M: student admissions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#extra-example-n-titanic">Extra example N: Titanic</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
             </nav>
         </div>
     </div>
@@ -542,7 +569,7 @@ document.write(`
 <span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>  <span class="c1"># needed otherwise `sns.set_theme` doesn&#39;t work</span>
 <span class="kn">from</span> <span class="nn">plot_helpers</span> <span class="kn">import</span> <span class="n">RCPARAMS</span>
 <span class="c1"># RCPARAMS.update({&#39;figure.figsize&#39;: (10, 3)})   # good for screen</span>
-<span class="n">RCPARAMS</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mf">1.6</span><span class="p">)})</span>  <span class="c1"># good for print</span>
+<span class="n">RCPARAMS</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">)})</span>  <span class="c1"># good for print</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">set_theme</span><span class="p">(</span>
     <span class="n">context</span><span class="o">=</span><span class="s2">&quot;paper&quot;</span><span class="p">,</span>
     <span class="n">style</span><span class="o">=</span><span class="s2">&quot;whitegrid&quot;</span><span class="p">,</span>
@@ -566,8 +593,36 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># set random seed for repeatability</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># set random seed for reproducibility</span>
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="definitions">
+<h2>Definitions<a class="headerlink" href="#definitions" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">expit</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">p</span>
+
+<span class="k">def</span> <span class="nf">logit</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">p</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">p</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">x</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">expit</span><span class="p">(</span><span class="n">logit</span><span class="p">(</span><span class="mf">0.3</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.3
 </pre></div>
 </div>
 </div>
@@ -603,360 +658,282 @@ $<span class="math notranslate nohighlight">\(
 </div>
 </div>
 </div>
-<p>Here’s a Python code example to generate a synthetic dataset suitable for teaching logistic regression. The dataset will have an outcome variable (<code class="docutils literal notranslate"><span class="pre">Pass/Fail</span></code>) and four predictors (<code class="docutils literal notranslate"><span class="pre">Study</span> <span class="pre">Hours</span></code>, <code class="docutils literal notranslate"><span class="pre">Attendance</span></code>, <code class="docutils literal notranslate"><span class="pre">Previous</span> <span class="pre">Grades</span></code>, and <code class="docutils literal notranslate"><span class="pre">Sleep</span> <span class="pre">Hours</span></code>).</p>
+<section id="data-generation-for-logistic-regression">
+<h3>Data generation for logistic regression<a class="headerlink" href="#data-generation-for-logistic-regression" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">bernoulli</span>
+<span class="kn">from</span> <span class="nn">scipy.special</span> <span class="kn">import</span> <span class="n">expit</span>
 
-<span class="c1"># Set random seed for reproducibility</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">hours</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="n">prob_hired</span> <span class="o">=</span> <span class="n">expit</span><span class="p">(</span><span class="o">-</span><span class="mi">80</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">hours</span><span class="p">)</span>
+<span class="n">hired</span> <span class="o">=</span> <span class="n">bernoulli</span><span class="p">(</span><span class="n">prob_hired</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
 
-<span class="c1"># Number of samples</span>
-<span class="n">n_samples</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">interns</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;hours&quot;</span><span class="p">:</span><span class="n">hours</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+                        <span class="s2">&quot;hired&quot;</span><span class="p">:</span><span class="n">hired</span><span class="p">})</span>
 
-<span class="c1"># Generate predictor variables</span>
-<span class="n">study_hours</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n_samples</span><span class="p">)</span>  <span class="c1"># Study hours per week</span>
-<span class="n">attendance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">75</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n_samples</span><span class="p">)</span>  <span class="c1"># Attendance percentage</span>
-<span class="n">previous_grades</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">70</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n_samples</span><span class="p">)</span>  <span class="c1"># Previous grades percentage</span>
-<span class="n">sleep_hours</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n_samples</span><span class="p">)</span>  <span class="c1"># Sleep hours per night</span>
-
-<span class="c1"># Normalize variables to make them suitable for logistic regression</span>
-<span class="n">study_hours</span> <span class="o">=</span> <span class="p">(</span><span class="n">study_hours</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">study_hours</span><span class="p">))</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">study_hours</span><span class="p">)</span>
-<span class="n">attendance</span> <span class="o">=</span> <span class="p">(</span><span class="n">attendance</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">attendance</span><span class="p">))</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">attendance</span><span class="p">)</span>
-<span class="n">previous_grades</span> <span class="o">=</span> <span class="p">(</span><span class="n">previous_grades</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">previous_grades</span><span class="p">))</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">previous_grades</span><span class="p">)</span>
-<span class="n">sleep_hours</span> <span class="o">=</span> <span class="p">(</span><span class="n">sleep_hours</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">sleep_hours</span><span class="p">))</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">sleep_hours</span><span class="p">)</span>
-
-<span class="c1"># Define logistic regression coefficients</span>
-<span class="n">coefficients</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">])</span>
-<span class="n">intercept</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span>
-
-<span class="c1"># Linear combination of inputs</span>
-<span class="n">linear_combination</span> <span class="o">=</span> <span class="p">(</span><span class="n">coefficients</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">study_hours</span> <span class="o">+</span>
-                      <span class="n">coefficients</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">attendance</span> <span class="o">+</span>
-                      <span class="n">coefficients</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">previous_grades</span> <span class="o">+</span>
-                      <span class="n">coefficients</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">*</span> <span class="n">sleep_hours</span> <span class="o">+</span>
-                      <span class="n">intercept</span><span class="p">)</span>
-
-<span class="c1"># Apply the logistic function to get probabilities</span>
-<span class="n">probabilities</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">linear_combination</span><span class="p">))</span>
-
-<span class="c1"># Generate binary outcomes (Pass/Fail)</span>
-<span class="n">pass_fail</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">binomial</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">probabilities</span><span class="p">)</span>
-
-<span class="c1"># Create a DataFrame</span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-    <span class="s1">&#39;Study_Hours&#39;</span><span class="p">:</span> <span class="n">study_hours</span><span class="p">,</span>
-    <span class="s1">&#39;Attendance&#39;</span><span class="p">:</span> <span class="n">attendance</span><span class="p">,</span>
-    <span class="s1">&#39;Previous_Grades&#39;</span><span class="p">:</span> <span class="n">previous_grades</span><span class="p">,</span>
-    <span class="s1">&#39;Sleep_Hours&#39;</span><span class="p">:</span> <span class="n">sleep_hours</span><span class="p">,</span>
-    <span class="s1">&#39;Pass_Fail&#39;</span><span class="p">:</span> <span class="n">pass_fail</span>
-<span class="p">})</span>
-
-<span class="c1"># Display the first few rows of the dataset</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
-
-<span class="c1"># Save the dataset to a CSV file</span>
-<span class="n">data</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;synthetic_student_data.csv&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">interns</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/interns.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="id1">
+<h2>Logistic regression<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
+<section id="example-1-hiring-student-interns">
+<h3>Example 1: hiring student interns<a class="headerlink" href="#example-1-hiring-student-interns" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">interns</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/interns.csv&quot;</span><span class="p">)</span>
+<span class="n">interns</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>   Study_Hours  Attendance  Previous_Grades  Sleep_Hours  Pass_Fail
-0     0.487759    1.332576        -0.692816    -1.840107          1
-1    -0.161022    0.856405        -0.152959    -0.819843          1
-2     0.642015   -0.011240        -0.812090    -0.384647          1
-3     1.536382   -0.719965        -0.319235     1.856976          0
-4    -0.258995    0.629303        -1.932372     0.560356          0
-</pre></div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>hours</th>
+      <th>hired</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>42.5</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>39.3</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>43.2</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>47.6</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>38.8</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
 </div>
-</div>
-</div>
-<p>This code generates a synthetic dataset with 1000 samples. The predictors are:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">Study_Hours</span></code>: Normally distributed around 5 hours per week.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">Attendance</span></code>: Normally distributed around 75% attendance.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">Previous_Grades</span></code>: Normally distributed around 70% grades.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">Sleep_Hours</span></code>: Normally distributed around 7 hours per night.</p></li>
-</ul>
-<p>These predictors are normalized before creating the outcome variable (<code class="docutils literal notranslate"><span class="pre">Pass_Fail</span></code>). The logistic regression model is defined by specific coefficients and an intercept, and the probabilities are computed using the logistic function. The outcome is generated using these probabilities. Finally, the dataset is saved to a CSV file and printed for inspection.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
-<span class="kn">import</span> <span class="nn">statsmodels.formula.api</span> <span class="k">as</span> <span class="nn">smf</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">statsmodels.formula.api</span> <span class="k">as</span> <span class="nn">smf</span>
 
-<span class="c1"># Load the synthetic dataset</span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;synthetic_student_data.csv&#39;</span><span class="p">)</span>
-
-<span class="c1"># Fit the logistic regression model using statsmodels formula API</span>
-<span class="n">formula</span> <span class="o">=</span> <span class="s1">&#39;Pass_Fail ~ Study_Hours + Attendance + Previous_Grades + Sleep_Hours&#39;</span>
-<span class="n">logit_model</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">logit</span><span class="p">(</span><span class="n">formula</span><span class="o">=</span><span class="n">formula</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">logit_model</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-
-<span class="c1"># Print the summary of the logistic regression model</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Logistic Regression Model Summary:&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+<span class="n">lrhired</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">logit</span><span class="p">(</span><span class="s2">&quot;hired ~ 1 + hours&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">interns</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">lrhired</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Optimization terminated successfully.
-         Current function value: 0.370875
-         Iterations 7
-
-Logistic Regression Model Summary:
-                           Logit Regression Results                           
-==============================================================================
-Dep. Variable:              Pass_Fail   No. Observations:                 1000
-Model:                          Logit   Df Residuals:                      995
-Method:                           MLE   Df Model:                            4
-Date:                Wed, 29 May 2024   Pseudo R-squ.:                  0.4587
-Time:                        14:39:12   Log-Likelihood:                -370.88
-converged:                       True   LL-Null:                       -685.19
-Covariance Type:            nonrobust   LLR p-value:                9.871e-135
-===================================================================================
-                      coef    std err          z      P&gt;|z|      [0.025      0.975]
------------------------------------------------------------------------------------
-Intercept          -0.4893      0.094     -5.192      0.000      -0.674      -0.305
-Study_Hours         1.3810      0.118     11.729      0.000       1.150       1.612
-Attendance          1.1203      0.112     10.033      0.000       0.901       1.339
-Previous_Grades     2.0478      0.147     13.974      0.000       1.761       2.335
-Sleep_Hours        -0.9075      0.105     -8.626      0.000      -1.114      -0.701
-===================================================================================
+         Current function value: 0.138101
+         Iterations 10
+Intercept   -78.693205
+hours         1.981458
+dtype: float64
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># np.mean(study_hours)) / np.std(study_hours)</span>
-
-<span class="n">sns</span><span class="o">.</span><span class="n">stripplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">study_hours</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;Pass_Fail&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;h&quot;</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]);</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hours</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">hired_preds</span> <span class="o">=</span> <span class="n">lrhired</span><span class="o">.</span><span class="n">predict</span><span class="p">({</span><span class="s2">&quot;hours&quot;</span><span class="p">:</span> <span class="n">hours</span><span class="p">})</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">interns</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;hours&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;hired&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">hours</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">hired_preds</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/0e8536b153749165a539f0dba5b90973e420027ef2f6be7be18604141769e03f.png" src="../_images/0e8536b153749165a539f0dba5b90973e420027ef2f6be7be18604141769e03f.png" />
+<img alt="../_images/4ec325d01c5f94ed258932ee34523b31164051b5aaeb2faf82b2dc1f845ce9e5.png" src="../_images/4ec325d01c5f94ed258932ee34523b31164051b5aaeb2faf82b2dc1f845ce9e5.png" />
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">prev_grades_space</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">200</span><span class="p">)</span>
-<span class="n">zeros_space</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
-<span class="n">preds</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">predict</span><span class="p">({</span><span class="s2">&quot;Previous_Grades&quot;</span><span class="p">:</span> <span class="n">prev_grades_space</span><span class="p">,</span>
-                        <span class="s2">&quot;Study_Hours&quot;</span><span class="p">:</span><span class="n">zeros_space</span><span class="p">,</span> 
-                        <span class="s2">&quot;Attendance&quot;</span><span class="p">:</span><span class="n">zeros_space</span><span class="p">,</span>
-                        <span class="s2">&quot;Sleep_Hours&quot;</span><span class="p">:</span><span class="n">zeros_space</span><span class="p">})</span>
-
-<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;Previous_Grades&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;Pass_Fail&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">prev_grades_space</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">preds</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">);</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../_images/8c1189d3cf2da073056af198b01af0bd8788fe2511e1a894acdc2b407acd8368.png" src="../_images/8c1189d3cf2da073056af198b01af0bd8788fe2511e1a894acdc2b407acd8368.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">statsmodels.graphics.regressionplots</span> <span class="kn">import</span> <span class="n">plot_partregress_grid</span>
-
-
-<span class="c1"># Create partial regression plots</span>
-<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
-<span class="n">plot_partregress_grid</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">fig</span><span class="o">=</span><span class="n">fig</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Partial Regression Plots&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.02</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../_images/7bb1d1bd0c22baa026868d5adb18cf8b17221ab9f3a83b20f5a199bc100a76ad.png" src="../_images/7bb1d1bd0c22baa026868d5adb18cf8b17221ab9f3a83b20f5a199bc100a76ad.png" />
-</div>
-</div>
+</section>
 </section>
 <section id="poisson-regression">
 <h2>Poisson regression<a class="headerlink" href="#poisson-regression" title="Permalink to this heading">#</a></h2>
+<section id="data-generation-for-poisson-regression">
+<h3>Data generation for Poisson regression<a class="headerlink" href="#data-generation-for-poisson-regression" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span><span class="p">,</span> <span class="n">poisson</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">uniform</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">poisson</span>
+<span class="kn">from</span> <span class="nn">scipy.special</span> <span class="kn">import</span> <span class="n">expit</span>
 
-<span class="c1"># Set the random seed for reproducibility</span>
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">47</span><span class="p">)</span>
+<span class="n">age</span> <span class="o">=</span> <span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">15</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="n">lam</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mf">0.2</span><span class="o">*</span><span class="n">age</span><span class="p">)</span>
+<span class="n">failures</span> <span class="o">=</span> <span class="n">poisson</span><span class="p">(</span><span class="n">lam</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
 
-<span class="c1"># Number of observations</span>
-<span class="n">n</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">hdisks</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;age&quot;</span><span class="p">:</span><span class="n">age</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+                       <span class="s2">&quot;failures&quot;</span><span class="p">:</span><span class="n">failures</span><span class="p">})</span>
 
-<span class="c1"># Generate predictors</span>
-<span class="n">disk_age</span> <span class="o">=</span> <span class="n">norm</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>  <span class="c1"># Disk age in years</span>
-<span class="n">temperature</span> <span class="o">=</span> <span class="n">norm</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">35</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>  <span class="c1"># Temperature in Celsius</span>
-<span class="n">read_write_ops</span> <span class="o">=</span> <span class="n">norm</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>  <span class="c1"># Number of read/write operations (in millions)</span>
-
-<span class="c1"># Coefficients for the predictors</span>
-<span class="n">beta_0</span> <span class="o">=</span> <span class="mf">1.5</span>  <span class="c1"># Intercept</span>
-<span class="n">beta_1</span> <span class="o">=</span> <span class="mf">0.3</span>  <span class="c1"># Coefficient for disk age</span>
-<span class="n">beta_2</span> <span class="o">=</span> <span class="mf">0.1</span>  <span class="c1"># Coefficient for temperature</span>
-<span class="n">beta_3</span> <span class="o">=</span> <span class="mf">0.02</span>  <span class="c1"># Coefficient for read/write operations</span>
-
-<span class="c1"># Linear predictor</span>
-<span class="n">linear_predictor</span> <span class="o">=</span> <span class="n">beta_0</span> <span class="o">+</span> <span class="n">beta_1</span> <span class="o">*</span> <span class="n">disk_age</span> <span class="o">+</span> <span class="n">beta_2</span> <span class="o">*</span> <span class="n">temperature</span> <span class="o">+</span> <span class="n">beta_3</span> <span class="o">*</span> <span class="n">read_write_ops</span>
-
-<span class="c1"># Apply exponential function to get the Poisson rate parameter</span>
-<span class="n">lambda_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">linear_predictor</span><span class="p">)</span>
-
-<span class="c1"># Generate the outcome variable (number of hard disk failures) using the Poisson distribution</span>
-<span class="n">hard_disk_failures</span> <span class="o">=</span> <span class="n">poisson</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">mu</span><span class="o">=</span><span class="n">lambda_</span><span class="p">)</span>
-
-<span class="c1"># Create a DataFrame</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-    <span class="s1">&#39;disk_age&#39;</span><span class="p">:</span> <span class="n">disk_age</span><span class="p">,</span>
-    <span class="s1">&#39;temperature&#39;</span><span class="p">:</span> <span class="n">temperature</span><span class="p">,</span>
-    <span class="s1">&#39;read_write_ops&#39;</span><span class="p">:</span> <span class="n">read_write_ops</span><span class="p">,</span>
-    <span class="s1">&#39;hard_disk_failures&#39;</span><span class="p">:</span> <span class="n">hard_disk_failures</span>
-<span class="p">})</span>
-
-<span class="c1"># Display the first few rows of the DataFrame</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
-
-<span class="c1"># Save the dataset to a CSV file</span>
-<span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;synthetic_hard_disk_failures.csv&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">hdisks</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/hdisks.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>   disk_age  temperature  read_write_ops  hard_disk_failures
-0  5.993428    41.996777      166.241086               50094
-1  4.723471    39.623168      192.774066               45444
-2  6.295377    35.298152      160.379004               25074
-3  8.046060    31.765316      184.601924               47980
-4  4.531693    38.491117      105.319267                6673
+</div>
+</section>
+<section id="example-2-hard-disk-failures-over-time">
+<h3>Example 2: hard disk failures over time<a class="headerlink" href="#example-2-hard-disk-failures-over-time" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hdisks</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/hdisks.csv&quot;</span><span class="p">)</span>
+<span class="c1"># hdisks.head()</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">statsmodels.formula.api</span> <span class="k">as</span> <span class="nn">smf</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">statsmodels.formula.api</span> <span class="k">as</span> <span class="nn">smf</span>
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
-<span class="c1"># Assuming the synthetic dataset is already created and loaded into df</span>
-
-<span class="c1"># Fit the Poisson regression model using the formula API</span>
-<span class="n">poisson_model</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span><span class="s1">&#39;hard_disk_failures ~ disk_age + temperature + read_write_ops&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-
-<span class="c1"># Print the model summary</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">poisson_model</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
-
-<span class="c1"># Predict the number of hard disk failures</span>
-<span class="n">df</span><span class="p">[</span><span class="s1">&#39;predicted_failures&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">poisson_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="n">prhdisks</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span><span class="s2">&quot;failures ~ 1 + age&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">hdisks</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">prhdisks</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Optimization terminated successfully.
-         Current function value: 6.690405
-         Iterations 7
-                          Poisson Regression Results                          
-==============================================================================
-Dep. Variable:     hard_disk_failures   No. Observations:                 1000
-Model:                        Poisson   Df Residuals:                      996
-Method:                           MLE   Df Model:                            3
-Date:                Wed, 29 May 2024   Pseudo R-squ.:                  0.9999
-Time:                        14:39:13   Log-Likelihood:                -6690.4
-converged:                       True   LL-Null:                   -6.5522e+07
-Covariance Type:            nonrobust   LLR p-value:                     0.000
-==================================================================================
-                     coef    std err          z      P&gt;|z|      [0.025      0.975]
-----------------------------------------------------------------------------------
-Intercept          1.4992      0.001   1323.131      0.000       1.497       1.501
-disk_age           0.3000   5.62e-05   5341.496      0.000       0.300       0.300
-temperature        0.1000    2.3e-05   4347.431      0.000       0.100       0.100
-read_write_ops     0.0200   2.09e-06   9575.948      0.000       0.020       0.020
-==================================================================================
+         Current function value: 2.693129
+         Iterations 6
+Intercept    1.075999
+age          0.193828
+dtype: float64
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot 1: Actual vs Predicted values</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;predicted_failures&#39;</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;hard_disk_failures&#39;</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;predicted_failures&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;predicted_failures&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()],</span> 
-         <span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;predicted_failures&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;predicted_failures&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()],</span> 
-         <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Predicted Hard Disk Failures&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Actual Hard Disk Failures&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Actual vs Predicted Hard Disk Failures&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ages</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">failures_preds</span> <span class="o">=</span> <span class="n">prhdisks</span><span class="o">.</span><span class="n">predict</span><span class="p">({</span><span class="s2">&quot;age&quot;</span><span class="p">:</span><span class="n">ages</span><span class="p">})</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">hdisks</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;failures&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">ages</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">failures_preds</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/2c85bcc82d84c641ac9e845f3b6b69db94a9e8f2a1c89584ddea87e16a152da5.png" src="../_images/2c85bcc82d84c641ac9e845f3b6b69db94a9e8f2a1c89584ddea87e16a152da5.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot 2: Residuals vs Fitted</span>
-<span class="n">residuals</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;hard_disk_failures&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;predicted_failures&#39;</span><span class="p">]</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;predicted_failures&#39;</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">residuals</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Predicted Hard Disk Failures&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Residuals&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Residuals vs Fitted Values&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../_images/d4ed7acd14c13436e79e22728f1a66e2002453cc267c299751c88f5e2c4e56dd.png" src="../_images/d4ed7acd14c13436e79e22728f1a66e2002453cc267c299751c88f5e2c4e56dd.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot 3: QQ plot of residuals</span>
-<span class="n">sm</span><span class="o">.</span><span class="n">qqplot</span><span class="p">(</span><span class="n">residuals</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="s1">&#39;s&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;QQ Plot of Residuals&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../_images/b476568da9b1fef6351586339d4b94dd024764ccdda073a2aa48d30da8f2c864.png" src="../_images/b476568da9b1fef6351586339d4b94dd024764ccdda073a2aa48d30da8f2c864.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot 4: Scale-Location plot (Spread-Location plot)</span>
-<span class="n">sqrt_abs_residuals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">residuals</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;predicted_failures&#39;</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">sqrt_abs_residuals</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Predicted Hard Disk Failures&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Sqrt(|Residuals|)&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Scale-Location Plot&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../_images/d20ade741d3160d24745f71e3cf7c56073894cc78ec5e1ab3219e57f2052dd12.png" src="../_images/d20ade741d3160d24745f71e3cf7c56073894cc78ec5e1ab3219e57f2052dd12.png" />
+<img alt="../_images/56c3e5c906134fb08e9faeb2b4b8377fded9c26812774b4e41c0a9f6712a6440.png" src="../_images/56c3e5c906134fb08e9faeb2b4b8377fded9c26812774b4e41c0a9f6712a6440.png" />
 </div>
 </div>
 </section>
+</section>
+<section id="explanations">
+<h2>Explanations<a class="headerlink" href="#explanations" title="Permalink to this heading">#</a></h2>
+</section>
+<section id="discussion">
+<h2>Discussion<a class="headerlink" href="#discussion" title="Permalink to this heading">#</a></h2>
+</section>
+<section id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this heading">#</a></h2>
+<section id="exercise-n-students-pass-or-fail">
+<h3>Exercise N: students pass or fail<a class="headerlink" href="#exercise-n-students-pass-or-fail" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">students</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../datasets/students.csv&#39;</span><span class="p">)</span>
+<span class="n">students</span><span class="p">[</span><span class="s2">&quot;passing&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">students</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">70</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="c1"># students.head()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lmpass</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">logit</span><span class="p">(</span><span class="s2">&quot;passing ~ 1 + effort&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">students</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">lmpass</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+
+<span class="n">efforts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">passing_preds</span> <span class="o">=</span> <span class="n">lmpass</span><span class="o">.</span><span class="n">predict</span><span class="p">({</span><span class="s2">&quot;effort&quot;</span><span class="p">:</span> <span class="n">efforts</span><span class="p">})</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">students</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;effort&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;passing&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">efforts</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">passing_preds</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Optimization terminated successfully.
+         Current function value: 0.276583
+         Iterations 8
+Intercept   -16.257302
+effort        2.047882
+dtype: float64
+</pre></div>
+</div>
+<img alt="../_images/a24f413e7cd29c00fcd2c9f55e38a782d5d855c868dfd4186c11197be2cadb35.png" src="../_images/a24f413e7cd29c00fcd2c9f55e38a782d5d855c868dfd4186c11197be2cadb35.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lmpass</span><span class="o">.</span><span class="n">predict</span><span class="p">({</span><span class="s2">&quot;effort&quot;</span><span class="p">:</span><span class="mi">8</span><span class="p">})</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0    0.531396
+dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">intercept</span><span class="p">,</span> <span class="n">b_effort</span> <span class="o">=</span> <span class="n">lmpass</span><span class="o">.</span><span class="n">params</span>
+<span class="n">expit</span><span class="p">(</span><span class="n">intercept</span> <span class="o">+</span> <span class="n">b_effort</span><span class="o">*</span><span class="mi">8</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.5313963881248303
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="links">
+<h2>Links<a class="headerlink" href="#links" title="Permalink to this heading">#</a></h2>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="cut-material">
+<h1>CUT MATERIAL<a class="headerlink" href="#cut-material" title="Permalink to this heading">#</a></h1>
 <section id="extra-examples">
 <h2>Extra examples<a class="headerlink" href="#extra-examples" title="Permalink to this heading">#</a></h2>
-<section id="example-n-student-admissions">
-<h3>Example N: student admissions<a class="headerlink" href="#example-n-student-admissions" title="Permalink to this heading">#</a></h3>
+<section id="extra-example-m-student-admissions">
+<h3>Extra example M: student admissions<a class="headerlink" href="#extra-example-m-student-admissions" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># data = whether students got admitted (admit=1) or not (admit=0) based on their gre and gpa scores, and the rank of their instutution</span>
@@ -969,7 +946,7 @@ read_write_ops     0.0200   2.09e-06   9575.948      0.000       0.020       0.0
 <div class="cell_output docutils container">
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
 <span class="ne">FileNotFoundError</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">16</span><span class="p">],</span> <span class="n">line</span> <span class="mi">3</span>
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">19</span><span class="p">],</span> <span class="n">line</span> <span class="mi">3</span>
 <span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="c1"># data = whether students got admitted (admit=1) or not (admit=0) based on their gre and gpa scores, and the rank of their instutution</span>
 <span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="c1"># raw_data = pd.read_csv(&#39;https://stats.idre.ucla.edu/stat/data/binary.csv&#39;)</span>
 <span class="ne">----&gt; </span><span class="mi">3</span> <span class="n">binary</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;./explorations/data/binary.csv&#39;</span><span class="p">)</span>
@@ -1170,9 +1147,8 @@ rank[T.4] 	-1.551464</p>
 </div>
 </div>
 </section>
-</section>
-<section id="titanic">
-<h2>Titanic<a class="headerlink" href="#titanic" title="Permalink to this heading">#</a></h2>
+<section id="extra-example-n-titanic">
+<h3>Extra example N: Titanic<a class="headerlink" href="#extra-example-n-titanic" title="Permalink to this heading">#</a></h3>
 <p>cf. <span class="xref myst">Titanic_Logistic_Regression.ipynb</span></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1400,6 +1376,7 @@ dtype: float64
 </div>
 </section>
 </section>
+</section>
 
     <script type="text/x-thebe-config">
     {
@@ -1464,15 +1441,41 @@ dtype: float64
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Section 4.6 — Generalized linear models</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebook-setup">Notebook setup</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#logistic-regression">Logistic regression</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#poisson-regression">Poisson regression</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extra-examples">Extra examples</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-n-student-admissions">Example N: student admissions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definitions">Definitions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#logistic-regression">Logistic regression</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-generation-for-logistic-regression">Data generation for logistic regression</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#titanic">Titanic</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Logistic regression</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1-hiring-student-interns">Example 1: hiring student interns</a></li>
 </ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#poisson-regression">Poisson regression</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-generation-for-poisson-regression">Data generation for Poisson regression</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2-hard-disk-failures-over-time">Example 2: hard disk failures over time</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanations">Explanations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-n-students-pass-or-fail">Exercise N: students pass or fail</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#links">Links</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#cut-material">CUT MATERIAL</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extra-examples">Extra examples</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#extra-example-m-student-admissions">Extra example M: student admissions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#extra-example-n-titanic">Extra example N: Titanic</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
   </nav></div>
 
 </div></div>
