@@ -503,13 +503,18 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Section 4.6 — Generalized linear models</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebook-setup">Notebook setup</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definitions">Definitions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definitions">Definitions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#odds">Odds</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#log-odds">Log-odds</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#logistic-regression">Logistic regression</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-generation-for-logistic-regression">Data generation for logistic regression</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Logistic regression</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1-hiring-student-interns">Example 1: hiring student interns</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prediction">Prediction</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#poisson-regression">Poisson regression</a><ul class="nav section-nav flex-column">
@@ -517,23 +522,30 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2-hard-disk-failures-over-time">Example 2: hard disk failures over time</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanations">Explanations</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanations">Explanations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generalized-linear-families">Generalized linear families</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-diagnostics">Model diagnostics</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-n-students-pass-or-fail">Exercise N: students pass or fail</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-students-pass-or-fail">Exercise: students pass or fail</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-titanic-survival-data">Exercise: titanic survival data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-student-admissions-dataset">Exercise: student admissions dataset</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-la-high-schools-not-a-very-good-fit-for-poisson-model">Exercise: LA high schools (NOT A VERY GOOD FIT FOR POISSON MODEL)</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#diagnostics">Diagnostics</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-asthma-attacks">Exercise: asthma attacks</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-ship-accidents">Exercise: ship accidents</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#links">Links</a></li>
 </ul>
 </li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#cut-material">CUT MATERIAL</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extra-examples">Extra examples</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#extra-example-m-student-admissions">Extra example M: student admissions</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#extra-example-n-titanic">Extra example N: Titanic</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#cut-material">CUT MATERIAL</a></li>
 </ul>
 
             </nav>
@@ -558,7 +570,6 @@ document.write(`
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 </pre></div>
 </div>
 </div>
@@ -566,6 +577,7 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Figures setup</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>  <span class="c1"># needed otherwise `sns.set_theme` doesn&#39;t work</span>
 <span class="kn">from</span> <span class="nn">plot_helpers</span> <span class="kn">import</span> <span class="n">RCPARAMS</span>
 <span class="c1"># RCPARAMS.update({&#39;figure.figsize&#39;: (10, 3)})   # good for screen</span>
@@ -591,14 +603,6 @@ document.write(`
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># set random seed for reproducibility</span>
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
 </section>
 <section id="definitions">
 <h2>Definitions<a class="headerlink" href="#definitions" title="Permalink to this heading">#</a></h2>
@@ -617,57 +621,58 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.special</span> <span class="kn">import</span> <span class="n">logit</span>
+<span class="kn">from</span> <span class="nn">scipy.special</span> <span class="kn">import</span> <span class="n">expit</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">expit</span><span class="p">(</span><span class="n">logit</span><span class="p">(</span><span class="mf">0.3</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.3
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.30000000000000004
 </pre></div>
 </div>
 </div>
 </div>
-</section>
-<section id="logistic-regression">
-<h2>Logistic regression<a class="headerlink" href="#logistic-regression" title="Permalink to this heading">#</a></h2>
-<p>cdf(x) = 1/(1 + exp(-x))</p>
-<div class="math notranslate nohighlight">
-\[
-\Lambda\left(x^{\prime}\beta\right)=
-                  \text{Prob}\left(Y=1|x\right)=
-                  \frac{e^{x^{\prime}\beta}}{1+e^{x^{\prime}\beta}}
-\]</div>
-<p>PDF
-$<span class="math notranslate nohighlight">\( 
-\lambda\left(x^{\prime}\beta\right)=\frac{e^{-x^{\prime}\beta}}{\left(1+e^{-x^{\prime}\beta}\right)^{2}}
-\)</span>$</p>
-<p>pdf(x) = np.exp(-X)/(1+np.exp(-X))**2</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.special</span> <span class="kn">import</span> <span class="n">logit</span>
-<span class="kn">from</span> <span class="nn">scipy.special</span> <span class="kn">import</span> <span class="n">expit</span>
-
-
-<span class="n">expit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">logit</span><span class="p">(</span><span class="mf">0.268941</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">logit</span><span class="p">(</span><span class="n">expit</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(0.2689414213699951, -1.0000021431568107)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5.000000000000019
 </pre></div>
 </div>
 </div>
 </div>
+<section id="odds">
+<h3>Odds<a class="headerlink" href="#odds" title="Permalink to this heading">#</a></h3>
+</section>
+<section id="log-odds">
+<h3>Log-odds<a class="headerlink" href="#log-odds" title="Permalink to this heading">#</a></h3>
+</section>
+</section>
+<section id="logistic-regression">
+<h2>Logistic regression<a class="headerlink" href="#logistic-regression" title="Permalink to this heading">#</a></h2>
+<p>TODO FORMULA</p>
 <section id="data-generation-for-logistic-regression">
 <h3>Data generation for logistic regression<a class="headerlink" href="#data-generation-for-logistic-regression" title="Permalink to this heading">#</a></h3>
+<p>TODO: move to gen_interns.ipynb</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
 <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">bernoulli</span>
 <span class="kn">from</span> <span class="nn">scipy.special</span> <span class="kn">import</span> <span class="n">expit</span>
 
-<span class="n">n</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="n">n</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">hours</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
 <span class="n">prob_hired</span> <span class="o">=</span> <span class="n">expit</span><span class="p">(</span><span class="o">-</span><span class="mi">80</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">hours</span><span class="p">)</span>
 <span class="n">hired</span> <span class="o">=</span> <span class="n">bernoulli</span><span class="p">(</span><span class="n">prob_hired</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
@@ -689,7 +694,7 @@ $<span class="math notranslate nohighlight">\(
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">interns</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/interns.csv&quot;</span><span class="p">)</span>
-<span class="n">interns</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<span class="n">interns</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -732,16 +737,6 @@ $<span class="math notranslate nohighlight">\(
       <td>43.2</td>
       <td>1</td>
     </tr>
-    <tr>
-      <th>3</th>
-      <td>47.6</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>38.8</td>
-      <td>1</td>
-    </tr>
   </tbody>
 </table>
 </div></div></div>
@@ -750,8 +745,8 @@ $<span class="math notranslate nohighlight">\(
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">statsmodels.formula.api</span> <span class="k">as</span> <span class="nn">smf</span>
 
-<span class="n">lrhired</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">logit</span><span class="p">(</span><span class="s2">&quot;hired ~ 1 + hours&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">interns</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">lrhired</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+<span class="n">lr1</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">logit</span><span class="p">(</span><span class="s2">&quot;hired ~ 1 + hours&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">interns</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">lr1</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -769,7 +764,7 @@ dtype: float64
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hours</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
-<span class="n">hired_preds</span> <span class="o">=</span> <span class="n">lrhired</span><span class="o">.</span><span class="n">predict</span><span class="p">({</span><span class="s2">&quot;hours&quot;</span><span class="p">:</span> <span class="n">hours</span><span class="p">})</span>
+<span class="n">hired_preds</span> <span class="o">=</span> <span class="n">lr1</span><span class="o">.</span><span class="n">predict</span><span class="p">({</span><span class="s2">&quot;hours&quot;</span><span class="p">:</span> <span class="n">hours</span><span class="p">})</span>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">interns</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;hours&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;hired&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">hours</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">hired_preds</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">);</span>
 </pre></div>
@@ -779,21 +774,80 @@ dtype: float64
 <img alt="../_images/4ec325d01c5f94ed258932ee34523b31164051b5aaeb2faf82b2dc1f845ce9e5.png" src="../_images/4ec325d01c5f94ed258932ee34523b31164051b5aaeb2faf82b2dc1f845ce9e5.png" />
 </div>
 </div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lr1</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><table class="simpletable">
+<caption>Logit Regression Results</caption>
+<tr>
+  <th>Dep. Variable:</th>         <td>hired</td>      <th>  No. Observations:  </th>  <td>   100</td>  
+</tr>
+<tr>
+  <th>Model:</th>                 <td>Logit</td>      <th>  Df Residuals:      </th>  <td>    98</td>  
+</tr>
+<tr>
+  <th>Method:</th>                 <td>MLE</td>       <th>  Df Model:          </th>  <td>     1</td>  
+</tr>
+<tr>
+  <th>Date:</th>            <td>Sat, 15 Jun 2024</td> <th>  Pseudo R-squ.:     </th>  <td>0.8005</td>  
+</tr>
+<tr>
+  <th>Time:</th>                <td>13:17:20</td>     <th>  Log-Likelihood:    </th> <td> -13.810</td> 
+</tr>
+<tr>
+  <th>converged:</th>             <td>True</td>       <th>  LL-Null:           </th> <td> -69.235</td> 
+</tr>
+<tr>
+  <th>Covariance Type:</th>     <td>nonrobust</td>    <th>  LLR p-value:       </th> <td>6.385e-26</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+      <td></td>         <th>coef</th>     <th>std err</th>      <th>z</th>      <th>P>|z|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>Intercept</th> <td>  -78.6932</td> <td>   19.851</td> <td>   -3.964</td> <td> 0.000</td> <td> -117.600</td> <td>  -39.787</td>
+</tr>
+<tr>
+  <th>hours</th>     <td>    1.9815</td> <td>    0.500</td> <td>    3.959</td> <td> 0.000</td> <td>    1.001</td> <td>    2.962</td>
+</tr>
+</table><br/><br/>Possibly complete quasi-separation: A fraction 0.32 of observations can be<br/>perfectly predicted. This might indicate that there is complete<br/>quasi-separation. In this case some parameters will not be identified.</div></div>
+</div>
+</section>
+<section id="prediction">
+<h3>Prediction<a class="headerlink" href="#prediction" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">prob_hired</span> <span class="o">=</span> <span class="n">lr1</span><span class="o">.</span><span class="n">predict</span><span class="p">({</span><span class="s2">&quot;hours&quot;</span><span class="p">:</span><span class="mi">41</span><span class="p">})</span>
+<span class="n">prob_hired</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.9273422944341034
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 </section>
 <section id="poisson-regression">
 <h2>Poisson regression<a class="headerlink" href="#poisson-regression" title="Permalink to this heading">#</a></h2>
 <section id="data-generation-for-poisson-regression">
 <h3>Data generation for Poisson regression<a class="headerlink" href="#data-generation-for-poisson-regression" title="Permalink to this heading">#</a></h3>
+<p>TODO: mv to gen_hdisks.ipynb</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">uniform</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
 <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">poisson</span>
-<span class="kn">from</span> <span class="nn">scipy.special</span> <span class="kn">import</span> <span class="n">expit</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">47</span><span class="p">)</span>
 
 <span class="n">n</span> <span class="o">=</span> <span class="mi">100</span>
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">47</span><span class="p">)</span>
 <span class="n">age</span> <span class="o">=</span> <span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">15</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
 <span class="n">lam</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mf">0.2</span><span class="o">*</span><span class="n">age</span><span class="p">)</span>
 <span class="n">failures</span> <span class="o">=</span> <span class="n">poisson</span><span class="p">(</span><span class="n">lam</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
@@ -812,18 +866,59 @@ dtype: float64
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hdisks</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/hdisks.csv&quot;</span><span class="p">)</span>
-<span class="c1"># hdisks.head()</span>
+<span class="n">hdisks</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>age</th>
+      <th>failures</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1.7</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>14.6</td>
+      <td>46</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>10.9</td>
+      <td>23</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">statsmodels.formula.api</span> <span class="k">as</span> <span class="nn">smf</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
 
-<span class="n">prhdisks</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span><span class="s2">&quot;failures ~ 1 + age&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">hdisks</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">prhdisks</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+<span class="n">pr2</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span><span class="s2">&quot;failures ~ 1 + age&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">hdisks</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">pr2</span><span class="o">.</span><span class="n">params</span>
 </pre></div>
 </div>
 </div>
@@ -831,7 +926,9 @@ dtype: float64
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Optimization terminated successfully.
          Current function value: 2.693129
          Iterations 6
-Intercept    1.075999
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Intercept    1.075999
 age          0.193828
 dtype: float64
 </pre></div>
@@ -841,7 +938,7 @@ dtype: float64
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ages</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
-<span class="n">failures_preds</span> <span class="o">=</span> <span class="n">prhdisks</span><span class="o">.</span><span class="n">predict</span><span class="p">({</span><span class="s2">&quot;age&quot;</span><span class="p">:</span><span class="n">ages</span><span class="p">})</span>
+<span class="n">failures_preds</span> <span class="o">=</span> <span class="n">pr2</span><span class="o">.</span><span class="n">predict</span><span class="p">({</span><span class="s2">&quot;age&quot;</span><span class="p">:</span><span class="n">ages</span><span class="p">})</span>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">hdisks</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;failures&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">ages</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">failures_preds</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">);</span>
 </pre></div>
@@ -851,18 +948,141 @@ dtype: float64
 <img alt="../_images/56c3e5c906134fb08e9faeb2b4b8377fded9c26812774b4e41c0a9f6712a6440.png" src="../_images/56c3e5c906134fb08e9faeb2b4b8377fded9c26812774b4e41c0a9f6712a6440.png" />
 </div>
 </div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pr2</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><table class="simpletable">
+<caption>Poisson Regression Results</caption>
+<tr>
+  <th>Dep. Variable:</th>       <td>failures</td>     <th>  No. Observations:  </th>   <td>   100</td>  
+</tr>
+<tr>
+  <th>Model:</th>                <td>Poisson</td>     <th>  Df Residuals:      </th>   <td>    98</td>  
+</tr>
+<tr>
+  <th>Method:</th>                 <td>MLE</td>       <th>  Df Model:          </th>   <td>     1</td>  
+</tr>
+<tr>
+  <th>Date:</th>            <td>Sat, 15 Jun 2024</td> <th>  Pseudo R-squ.:     </th>   <td>0.6412</td>  
+</tr>
+<tr>
+  <th>Time:</th>                <td>13:17:20</td>     <th>  Log-Likelihood:    </th>  <td> -269.31</td> 
+</tr>
+<tr>
+  <th>converged:</th>             <td>True</td>       <th>  LL-Null:           </th>  <td> -750.68</td> 
+</tr>
+<tr>
+  <th>Covariance Type:</th>     <td>nonrobust</td>    <th>  LLR p-value:       </th> <td>2.271e-211</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+      <td></td>         <th>coef</th>     <th>std err</th>      <th>z</th>      <th>P>|z|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>Intercept</th> <td>    1.0760</td> <td>    0.076</td> <td>   14.114</td> <td> 0.000</td> <td>    0.927</td> <td>    1.225</td>
+</tr>
+<tr>
+  <th>age</th>       <td>    0.1938</td> <td>    0.007</td> <td>   28.603</td> <td> 0.000</td> <td>    0.181</td> <td>    0.207</td>
+</tr>
+</table></div></div>
+</div>
 </section>
 </section>
 <section id="explanations">
 <h2>Explanations<a class="headerlink" href="#explanations" title="Permalink to this heading">#</a></h2>
+<section id="generalized-linear-families">
+<h3>Generalized linear families<a class="headerlink" href="#generalized-linear-families" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
+
+<span class="n">Bin</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">families</span><span class="o">.</span><span class="n">Binomial</span><span class="p">()</span>
+<span class="n">Pois</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">families</span><span class="o">.</span><span class="n">Poisson</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#######################################################</span>
+<span class="n">formula</span> <span class="o">=</span> <span class="s2">&quot;hired ~ 1 + hours&quot;</span>
+<span class="n">glm1</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">glm</span><span class="p">(</span><span class="n">formula</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">interns</span><span class="p">,</span> <span class="n">family</span><span class="o">=</span><span class="n">Bin</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">glm1</span><span class="o">.</span><span class="n">params</span>
+<span class="c1"># glm1.summary()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Intercept   -78.693205
+hours         1.981458
+dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#######################################################</span>
+<span class="n">formula</span> <span class="o">=</span> <span class="s2">&quot;failures ~ 1 + age&quot;</span>
+<span class="n">glm2</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">glm</span><span class="p">(</span><span class="n">formula</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">hdisks</span><span class="p">,</span> <span class="n">family</span><span class="o">=</span><span class="n">Pois</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">glm2</span><span class="o">.</span><span class="n">params</span>
+<span class="c1"># glm2.summary()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Intercept    1.075999
+age          0.193828
+dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+</section>
 </section>
 <section id="discussion">
 <h2>Discussion<a class="headerlink" href="#discussion" title="Permalink to this heading">#</a></h2>
+<section id="model-diagnostics">
+<h3>Model diagnostics<a class="headerlink" href="#model-diagnostics" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Dispersion from GLM attributes</span>
+<span class="c1"># glm2.pearson_chi2 / glm2.df_resid</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate Pearson chi-squared statistic</span>
+<span class="n">observed</span> <span class="o">=</span> <span class="n">hdisks</span><span class="p">[</span><span class="s1">&#39;failures&#39;</span><span class="p">]</span>
+<span class="n">predicted</span> <span class="o">=</span> <span class="n">pr2</span><span class="o">.</span><span class="n">predict</span><span class="p">()</span>
+<span class="n">pearson_residuals</span> <span class="o">=</span> <span class="p">(</span><span class="n">observed</span> <span class="o">-</span> <span class="n">predicted</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">predicted</span><span class="p">)</span>
+<span class="n">pearson_chi2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">pearson_residuals</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">df_resid</span> <span class="o">=</span> <span class="n">pr2</span><span class="o">.</span><span class="n">df_resid</span>
+<span class="n">dispersion</span> <span class="o">=</span> <span class="n">pearson_chi2</span> <span class="o">/</span> <span class="n">df_resid</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Dispersion: </span><span class="si">{</span><span class="n">dispersion</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="c1"># If dispersion &gt; 1, consider Negative Binomial regression</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dispersion: 0.9869289289681199
+</pre></div>
+</div>
+</div>
+</div>
+</section>
 </section>
 <section id="exercises">
 <h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this heading">#</a></h2>
-<section id="exercise-n-students-pass-or-fail">
-<h3>Exercise N: students pass or fail<a class="headerlink" href="#exercise-n-students-pass-or-fail" title="Permalink to this heading">#</a></h3>
+<section id="exercise-students-pass-or-fail">
+<h3>Exercise: students pass or fail<a class="headerlink" href="#exercise-students-pass-or-fail" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">students</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../datasets/students.csv&#39;</span><span class="p">)</span>
@@ -923,34 +1143,25 @@ dtype: float64
 </div>
 </div>
 </section>
-</section>
-<section id="links">
-<h2>Links<a class="headerlink" href="#links" title="Permalink to this heading">#</a></h2>
-</section>
-</section>
-<section class="tex2jax_ignore mathjax_ignore" id="cut-material">
-<h1>CUT MATERIAL<a class="headerlink" href="#cut-material" title="Permalink to this heading">#</a></h1>
-<section id="extra-examples">
-<h2>Extra examples<a class="headerlink" href="#extra-examples" title="Permalink to this heading">#</a></h2>
-<section id="extra-example-m-student-admissions">
-<h3>Extra example M: student admissions<a class="headerlink" href="#extra-example-m-student-admissions" title="Permalink to this heading">#</a></h3>
+<section id="exercise-titanic-survival-data">
+<h3>Exercise: titanic survival data<a class="headerlink" href="#exercise-titanic-survival-data" title="Permalink to this heading">#</a></h3>
+<p>cf. <span class="xref myst">Titanic_Logistic_Regression.ipynb</span></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># data = whether students got admitted (admit=1) or not (admit=0) based on their gre and gpa scores, and the rank of their instutution</span>
-<span class="c1"># raw_data = pd.read_csv(&#39;https://stats.idre.ucla.edu/stat/data/binary.csv&#39;)</span>
-<span class="n">binary</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;./explorations/data/binary.csv&#39;</span><span class="p">)</span>
-<span class="n">binary</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">titanic_raw</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../datasets/exercises/titanic.csv&#39;</span><span class="p">)</span>
+<span class="n">titanic</span> <span class="o">=</span> <span class="n">titanic_raw</span><span class="p">[[</span><span class="s1">&#39;Survived&#39;</span><span class="p">,</span> <span class="s1">&#39;Age&#39;</span><span class="p">,</span> <span class="s1">&#39;Sex&#39;</span><span class="p">,</span> <span class="s1">&#39;Pclass&#39;</span><span class="p">]]</span>
+<span class="n">titanic</span> <span class="o">=</span> <span class="n">titanic</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+<span class="n">titanic</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
 <span class="ne">FileNotFoundError</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">19</span><span class="p">],</span> <span class="n">line</span> <span class="mi">3</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="c1"># data = whether students got admitted (admit=1) or not (admit=0) based on their gre and gpa scores, and the rank of their instutution</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="c1"># raw_data = pd.read_csv(&#39;https://stats.idre.ucla.edu/stat/data/binary.csv&#39;)</span>
-<span class="ne">----&gt; </span><span class="mi">3</span> <span class="n">binary</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;./explorations/data/binary.csv&#39;</span><span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="n">binary</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">27</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">titanic_raw</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../datasets/exercises/titanic.csv&#39;</span><span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="n">titanic</span> <span class="o">=</span> <span class="n">titanic_raw</span><span class="p">[[</span><span class="s1">&#39;Survived&#39;</span><span class="p">,</span> <span class="s1">&#39;Age&#39;</span><span class="p">,</span> <span class="s1">&#39;Sex&#39;</span><span class="p">,</span> <span class="s1">&#39;Pclass&#39;</span><span class="p">]]</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="n">titanic</span> <span class="o">=</span> <span class="n">titanic</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
 
 <span class="nn">File /opt/hostedtoolcache/Python/3.8.18/x64/lib/python3.8/site-packages/pandas/io/parsers/readers.py:912,</span> in <span class="ni">read_csv</span><span class="nt">(filepath_or_buffer, sep, delimiter, header, names, index_col, usecols, dtype, engine, converters, true_values, false_values, skipinitialspace, skiprows, skipfooter, nrows, na_values, keep_default_na, na_filter, verbose, skip_blank_lines, parse_dates, infer_datetime_format, keep_date_col, date_parser, date_format, dayfirst, cache_dates, iterator, chunksize, compression, thousands, decimal, lineterminator, quotechar, quoting, doublequote, escapechar, comment, encoding, encoding_errors, dialect, on_bad_lines, delim_whitespace, low_memory, memory_map, float_precision, storage_options, dtype_backend)</span>
 <span class="g g-Whitespace">    </span><span class="mi">899</span> <span class="n">kwds_defaults</span> <span class="o">=</span> <span class="n">_refine_defaults_read</span><span class="p">(</span>
@@ -1007,18 +1218,63 @@ dtype: float64
 <span class="g g-Whitespace">    </span><span class="mi">867</span>         <span class="c1"># Binary mode</span>
 <span class="g g-Whitespace">    </span><span class="mi">868</span>         <span class="n">handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="n">ioargs</span><span class="o">.</span><span class="n">mode</span><span class="p">)</span>
 
-<span class="ne">FileNotFoundError</span>: [Errno 2] No such file or directory: &#39;./explorations/data/binary.csv&#39;
+<span class="ne">FileNotFoundError</span>: [Errno 2] No such file or directory: &#39;../datasets/exercises/titanic.csv&#39;
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span>
-    <span class="n">binary</span><span class="p">[</span><span class="s1">&#39;admit&#39;</span><span class="p">],</span>
-    <span class="n">binary</span><span class="p">[</span><span class="s1">&#39;rank&#39;</span><span class="p">],</span> 
-    <span class="n">margins</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">formula</span> <span class="o">=</span> <span class="s2">&quot;Survived ~ Age + C(Sex) + C(Pclass)&quot;</span>
+<span class="n">lrtitanic</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">logit</span><span class="p">(</span><span class="n">formula</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">titanic</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">lrtitanic</span><span class="o">.</span><span class="n">params</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Optimization terminated successfully.
+         Current function value: 0.453279
+         Iterations 6
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Intercept         3.777013
+C(Sex)[T.male]   -2.522781
+C(Pclass)[T.2]   -1.309799
+C(Pclass)[T.3]   -2.580625
+Age              -0.036985
+dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Cross check with sklearn</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">titanic</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Sex&#39;</span><span class="p">,</span> <span class="s1">&#39;Pclass&#39;</span><span class="p">],</span> <span class="n">drop_first</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;Survived&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Survived&#39;</span><span class="p">]</span>
+<span class="n">sktitanic</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">penalty</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">sktitanic</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">sktitanic</span><span class="o">.</span><span class="n">intercept_</span><span class="p">,</span> <span class="n">sktitanic</span><span class="o">.</span><span class="n">coef_</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(array([3.77702703]),
+ array([[-0.03698571, -2.52276365, -1.30981349, -2.58063585]]))
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="exercise-student-admissions-dataset">
+<h3>Exercise: student admissions dataset<a class="headerlink" href="#exercise-student-admissions-dataset" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># data = whether students got admitted (admit=1) or not (admit=0) based on their gre and gpa scores, and the rank of their instutution</span>
+<span class="c1"># raw_data = pd.read_csv(&#39;https://stats.idre.ucla.edu/stat/data/binary.csv&#39;)</span>
+<span class="n">binary</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../datasets/exercises/binary.csv&#39;</span><span class="p">)</span>
+<span class="n">binary</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1040,34 +1296,34 @@ dtype: float64
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
-      <th>rank</th>
-      <th>1</th>
-      <th>2</th>
-      <th>3</th>
-      <th>4</th>
-    </tr>
-    <tr>
+      <th></th>
       <th>admit</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
+      <th>gre</th>
+      <th>gpa</th>
+      <th>rank</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>28</td>
-      <td>97</td>
-      <td>93</td>
-      <td>55</td>
+      <td>0</td>
+      <td>380</td>
+      <td>3.61</td>
+      <td>3</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>33</td>
-      <td>54</td>
-      <td>28</td>
-      <td>12</td>
+      <td>1</td>
+      <td>660</td>
+      <td>3.67</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1</td>
+      <td>800</td>
+      <td>4.00</td>
+      <td>1</td>
     </tr>
   </tbody>
 </table>
@@ -1075,9 +1331,8 @@ dtype: float64
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lrbin</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">logit</span><span class="p">(</span><span class="s1">&#39;admit ~ gre + gpa + C(rank)&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">binary</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-<span class="n">lrbin</span><span class="o">.</span><span class="n">params</span>
-<span class="c1"># lrbin.summary()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lrbinary</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">logit</span><span class="p">(</span><span class="s1">&#39;admit ~ gre + gpa + C(rank)&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">binary</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">lrbinary</span><span class="o">.</span><span class="n">params</span>
 </pre></div>
 </div>
 </div>
@@ -1101,7 +1356,7 @@ dtype: float64
 <p>The above model uses the rank=1 as the reference category an the log odds reported are with respect to this catrgory</p>
 <div class="math notranslate nohighlight">
 \[
-   log p(accept|rank=1) / log p(accept|rank=2) = rank[T.2] = -0.675443
+   \log p(accept|rank=1) / \log p(accept|rank=2) = \texttt{C(rank)rank[T.2]} = -0.675443
 \]</div>
 <p>etc. for others
 rank[T.3] 	-1.340204
@@ -1109,51 +1364,46 @@ rank[T.4] 	-1.551464</p>
 <p>See <span class="xref myst">LogisticRegressionChangeOfReferenceCategoricalValue.ipynb</span> for exercise recodign relative to different refrence level.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
-<span class="kn">from</span> <span class="nn">sklearn.compose</span> <span class="kn">import</span> <span class="n">ColumnTransformer</span>
-<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
-<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">OneHotEncoder</span>
-
-<span class="n">X</span> <span class="o">=</span> <span class="n">binary</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;admit&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">binary</span><span class="p">[</span><span class="s2">&quot;admit&quot;</span><span class="p">]</span>
-
-
-<span class="n">transformer</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">(</span><span class="s1">&#39;ohe&#39;</span><span class="p">,</span> 
-    <span class="n">OneHotEncoder</span><span class="p">(</span><span class="n">drop</span> <span class="o">=</span> <span class="s1">&#39;first&#39;</span><span class="p">,</span> 
-                  <span class="n">handle_unknown</span> <span class="o">=</span> <span class="s1">&#39;ignore&#39;</span><span class="p">,</span> 
-                  <span class="n">sparse_output</span> <span class="o">=</span> <span class="kc">False</span><span class="p">),</span> 
-    <span class="p">[</span><span class="s2">&quot;rank&quot;</span><span class="p">]),</span>
-<span class="p">]</span>
-<span class="n">preprocessor</span> <span class="o">=</span> <span class="n">ColumnTransformer</span><span class="p">(</span>
-    <span class="n">transformers</span> <span class="o">=</span> <span class="n">transformer</span><span class="p">,</span> 
-    <span class="n">remainder</span> <span class="o">=</span> <span class="s1">&#39;passthrough&#39;</span><span class="p">,</span> 
-<span class="p">)</span><span class="o">.</span><span class="n">set_output</span><span class="p">(</span><span class="n">transform</span><span class="o">=</span><span class="s1">&#39;pandas&#39;</span><span class="p">)</span>
-
-<span class="n">X_prep</span> <span class="o">=</span> <span class="n">preprocessor</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-
-
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Cross check with sklearn</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">binary</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;rank&#39;</span><span class="p">],</span> <span class="n">drop_first</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;admit&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;admit&quot;</span><span class="p">]</span>
 <span class="n">lr</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="s2">&quot;lbfgs&quot;</span><span class="p">,</span> <span class="n">penalty</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
-<span class="n">lr</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_prep</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">lr</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 <span class="n">lr</span><span class="o">.</span><span class="n">intercept_</span><span class="p">,</span>  <span class="n">lr</span><span class="o">.</span><span class="n">coef_</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(array([-3.99021277]),
- array([[-0.67551587, -1.34051977, -1.55172341,  0.0022647 ,  0.80409866]]))
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(array([-3.99001587]),
+ array([[ 0.00226442,  0.80404719, -0.67543916, -1.3401993 , -1.5514551 ]]))
 </pre></div>
 </div>
 </div>
 </div>
 </section>
-<section id="extra-example-n-titanic">
-<h3>Extra example N: Titanic<a class="headerlink" href="#extra-example-n-titanic" title="Permalink to this heading">#</a></h3>
-<p>cf. <span class="xref myst">Titanic_Logistic_Regression.ipynb</span></p>
+<section id="exercise-la-high-schools-not-a-very-good-fit-for-poisson-model">
+<h3>Exercise: LA high schools (NOT A VERY GOOD FIT FOR POISSON MODEL)<a class="headerlink" href="#exercise-la-high-schools-not-a-very-good-fit-for-poisson-model" title="Permalink to this heading">#</a></h3>
+<p>Dataset info:
+<a class="reference external" href="http://www.philender.com/courses/intro/assign/data.html">http://www.philender.com/courses/intro/assign/data.html</a></p>
+<p>This dataset consists of data from computer exercises collected from two high school in the Los Angeles area.</p>
+<p><a class="reference external" href="http://www.philender.com/courses/intro/code.html">http://www.philender.com/courses/intro/code.html</a></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">titanic</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;./explorations/data/titanic.csv&#39;</span><span class="p">)</span>
-<span class="n">titanic</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lahigh_raw</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_stata</span><span class="p">(</span><span class="s2">&quot;https://stats.idre.ucla.edu/stat/stata/notes/lahigh.dta&quot;</span><span class="p">)</span>
+<span class="n">lahigh</span> <span class="o">=</span> <span class="n">lahigh_raw</span><span class="o">.</span><span class="n">convert_dtypes</span><span class="p">()</span>
+
+<span class="n">lahigh</span><span class="p">[</span><span class="s2">&quot;gender&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lahigh</span><span class="p">[</span><span class="s2">&quot;gender&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">({</span><span class="mi">1</span><span class="p">:</span><span class="s2">&quot;F&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span><span class="s2">&quot;M&quot;</span><span class="p">})</span>
+<span class="n">lahigh</span><span class="p">[</span><span class="s2">&quot;ethnic&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lahigh</span><span class="p">[</span><span class="s2">&quot;ethnic&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">({</span>
+    <span class="mi">1</span><span class="p">:</span><span class="s2">&quot;Native American&quot;</span><span class="p">,</span>
+    <span class="mi">2</span><span class="p">:</span><span class="s2">&quot;Asian&quot;</span><span class="p">,</span>
+    <span class="mi">3</span><span class="p">:</span><span class="s2">&quot;African-American&quot;</span><span class="p">,</span>
+    <span class="mi">4</span><span class="p">:</span><span class="s2">&quot;Hispanic&quot;</span><span class="p">,</span>
+    <span class="mi">5</span><span class="p">:</span><span class="s2">&quot;White&quot;</span><span class="p">,</span>
+    <span class="mi">6</span><span class="p">:</span><span class="s2">&quot;Filipino&quot;</span><span class="p">,</span>
+    <span class="mi">7</span><span class="p">:</span><span class="s2">&quot;Pacific Islander&quot;</span><span class="p">})</span>
+<span class="n">lahigh</span><span class="p">[</span><span class="s2">&quot;school&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lahigh</span><span class="p">[</span><span class="s2">&quot;school&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">({</span><span class="mi">1</span><span class="p">:</span><span class="s2">&quot;Alpha&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span><span class="s2">&quot;Beta&quot;</span><span class="p">})</span>
+<span class="n">lahigh</span>
 </pre></div>
 </div>
 </div>
@@ -1176,199 +1426,505 @@ rank[T.4] 	-1.551464</p>
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>PassengerId</th>
-      <th>Survived</th>
-      <th>Pclass</th>
-      <th>Name</th>
-      <th>Sex</th>
-      <th>Age</th>
-      <th>SibSp</th>
-      <th>Parch</th>
-      <th>Ticket</th>
-      <th>Fare</th>
-      <th>Cabin</th>
-      <th>Embarked</th>
+      <th>id</th>
+      <th>gender</th>
+      <th>ethnic</th>
+      <th>school</th>
+      <th>mathpr</th>
+      <th>langpr</th>
+      <th>mathnce</th>
+      <th>langnce</th>
+      <th>biling</th>
+      <th>daysabs</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>1</td>
-      <td>0</td>
-      <td>3</td>
-      <td>Braund, Mr. Owen Harris</td>
-      <td>male</td>
-      <td>22.0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>A/5 21171</td>
-      <td>7.2500</td>
-      <td>NaN</td>
-      <td>S</td>
-    </tr>
-    <tr>
-      <th>1</th>
+      <td>1001</td>
+      <td>M</td>
+      <td>Hispanic</td>
+      <td>Alpha</td>
+      <td>63</td>
+      <td>36</td>
+      <td>56.988831</td>
+      <td>42.450859</td>
       <td>2</td>
-      <td>1</td>
-      <td>1</td>
-      <td>Cumings, Mrs. John Bradley (Florence Briggs Th...</td>
-      <td>female</td>
-      <td>38.0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>PC 17599</td>
-      <td>71.2833</td>
-      <td>C85</td>
-      <td>C</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>3</td>
-      <td>1</td>
-      <td>3</td>
-      <td>Heikkinen, Miss. Laina</td>
-      <td>female</td>
-      <td>26.0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>STON/O2. 3101282</td>
-      <td>7.9250</td>
-      <td>NaN</td>
-      <td>S</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">titanic</span><span class="p">[[</span><span class="s1">&#39;Survived&#39;</span><span class="p">,</span> <span class="s1">&#39;Age&#39;</span><span class="p">,</span> <span class="s1">&#39;Sex&#39;</span><span class="p">,</span> <span class="s1">&#39;Pclass&#39;</span><span class="p">]]</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Sex&#39;</span><span class="p">,</span> <span class="s1">&#39;Pclass&#39;</span><span class="p">],</span> <span class="n">drop_first</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Survived</th>
-      <th>Age</th>
-      <th>Sex_male</th>
-      <th>Pclass_2</th>
-      <th>Pclass_3</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>0</td>
-      <td>22.0</td>
-      <td>True</td>
-      <td>False</td>
-      <td>True</td>
+      <td>4</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>1</td>
-      <td>38.0</td>
-      <td>False</td>
-      <td>False</td>
-      <td>False</td>
+      <td>1002</td>
+      <td>M</td>
+      <td>Hispanic</td>
+      <td>Alpha</td>
+      <td>27</td>
+      <td>44</td>
+      <td>37.094158</td>
+      <td>46.820587</td>
+      <td>2</td>
+      <td>4</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>1</td>
-      <td>26.0</td>
-      <td>False</td>
-      <td>False</td>
-      <td>True</td>
+      <td>1003</td>
+      <td>F</td>
+      <td>Hispanic</td>
+      <td>Alpha</td>
+      <td>20</td>
+      <td>38</td>
+      <td>32.275455</td>
+      <td>43.566574</td>
+      <td>2</td>
+      <td>2</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>1</td>
-      <td>35.0</td>
-      <td>False</td>
-      <td>False</td>
-      <td>False</td>
+      <td>1004</td>
+      <td>F</td>
+      <td>Hispanic</td>
+      <td>Alpha</td>
+      <td>16</td>
+      <td>38</td>
+      <td>29.056717</td>
+      <td>43.566574</td>
+      <td>2</td>
+      <td>3</td>
     </tr>
     <tr>
       <th>4</th>
+      <td>1005</td>
+      <td>F</td>
+      <td>Hispanic</td>
+      <td>Alpha</td>
+      <td>2</td>
+      <td>14</td>
+      <td>6.748048</td>
+      <td>27.248474</td>
+      <td>3</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>311</th>
+      <td>2153</td>
+      <td>M</td>
+      <td>Hispanic</td>
+      <td>Beta</td>
+      <td>26</td>
+      <td>46</td>
+      <td>36.451145</td>
+      <td>47.884865</td>
+      <td>2</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>312</th>
+      <td>2154</td>
+      <td>F</td>
+      <td>White</td>
+      <td>Beta</td>
+      <td>79</td>
+      <td>81</td>
+      <td>66.983231</td>
+      <td>68.488495</td>
+      <td>2</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>313</th>
+      <td>2155</td>
+      <td>F</td>
+      <td>Hispanic</td>
+      <td>Beta</td>
+      <td>59</td>
+      <td>56</td>
+      <td>54.792099</td>
+      <td>53.179413</td>
       <td>0</td>
-      <td>35.0</td>
-      <td>True</td>
-      <td>False</td>
-      <td>True</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>314</th>
+      <td>2156</td>
+      <td>F</td>
+      <td>White</td>
+      <td>Beta</td>
+      <td>90</td>
+      <td>82</td>
+      <td>76.989479</td>
+      <td>69.277588</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>315</th>
+      <td>2157</td>
+      <td>F</td>
+      <td>White</td>
+      <td>Beta</td>
+      <td>77</td>
+      <td>84</td>
+      <td>65.560112</td>
+      <td>70.943283</td>
+      <td>0</td>
+      <td>2</td>
     </tr>
   </tbody>
 </table>
+<p>316 rows × 10 columns</p>
 </div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;Survived&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Survived&#39;</span><span class="p">]</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
-
-<span class="n">model</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">penalty</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-<span class="n">titresult</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">titresult</span><span class="o">.</span><span class="n">intercept_</span><span class="p">,</span> <span class="n">titresult</span><span class="o">.</span><span class="n">coef_</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lahigh</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(array([3.77702703]),
- array([[-0.03698571, -2.52276365, -1.30981349, -2.58063585]]))
-</pre></div>
-</div>
-</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>gender</th>
+      <th>ethnic</th>
+      <th>school</th>
+      <th>mathpr</th>
+      <th>langpr</th>
+      <th>mathnce</th>
+      <th>langnce</th>
+      <th>biling</th>
+      <th>daysabs</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1001</td>
+      <td>M</td>
+      <td>Hispanic</td>
+      <td>Alpha</td>
+      <td>63</td>
+      <td>36</td>
+      <td>56.988831</td>
+      <td>42.450859</td>
+      <td>2</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1002</td>
+      <td>M</td>
+      <td>Hispanic</td>
+      <td>Alpha</td>
+      <td>27</td>
+      <td>44</td>
+      <td>37.094158</td>
+      <td>46.820587</td>
+      <td>2</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1003</td>
+      <td>F</td>
+      <td>Hispanic</td>
+      <td>Alpha</td>
+      <td>20</td>
+      <td>38</td>
+      <td>32.275455</td>
+      <td>43.566574</td>
+      <td>2</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1004</td>
+      <td>F</td>
+      <td>Hispanic</td>
+      <td>Alpha</td>
+      <td>16</td>
+      <td>38</td>
+      <td>29.056717</td>
+      <td>43.566574</td>
+      <td>2</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1005</td>
+      <td>F</td>
+      <td>Hispanic</td>
+      <td>Alpha</td>
+      <td>2</td>
+      <td>14</td>
+      <td>6.748048</td>
+      <td>27.248474</td>
+      <td>3</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>311</th>
+      <td>2153</td>
+      <td>M</td>
+      <td>Hispanic</td>
+      <td>Beta</td>
+      <td>26</td>
+      <td>46</td>
+      <td>36.451145</td>
+      <td>47.884865</td>
+      <td>2</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>312</th>
+      <td>2154</td>
+      <td>F</td>
+      <td>White</td>
+      <td>Beta</td>
+      <td>79</td>
+      <td>81</td>
+      <td>66.983231</td>
+      <td>68.488495</td>
+      <td>2</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>313</th>
+      <td>2155</td>
+      <td>F</td>
+      <td>Hispanic</td>
+      <td>Beta</td>
+      <td>59</td>
+      <td>56</td>
+      <td>54.792099</td>
+      <td>53.179413</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>314</th>
+      <td>2156</td>
+      <td>F</td>
+      <td>White</td>
+      <td>Beta</td>
+      <td>90</td>
+      <td>82</td>
+      <td>76.989479</td>
+      <td>69.277588</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>315</th>
+      <td>2157</td>
+      <td>F</td>
+      <td>White</td>
+      <td>Beta</td>
+      <td>77</td>
+      <td>84</td>
+      <td>65.560112</td>
+      <td>70.943283</td>
+      <td>0</td>
+      <td>2</td>
+    </tr>
+  </tbody>
+</table>
+<p>316 rows × 10 columns</p>
+</div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lrtit</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">logit</span><span class="p">(</span><span class="s2">&quot;Survived ~ Age + Sex_male + Pclass_2 + Pclass_3&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-<span class="n">lrtit</span><span class="o">.</span><span class="n">params</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">formula</span> <span class="o">=</span> <span class="s2">&quot;daysabs ~ 1 + mathnce + langnce + C(gender)&quot;</span>
+<span class="n">prlahigh</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span><span class="n">formula</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">lahigh</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">prlahigh</span><span class="o">.</span><span class="n">params</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Optimization terminated successfully.
-         Current function value: 0.453279
-         Iterations 6
+         Current function value: 4.898642
+         Iterations 5
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Intercept           3.777013
-Sex_male[T.True]   -2.522781
-Pclass_2[T.True]   -1.309799
-Pclass_3[T.True]   -2.580625
-Age                -0.036985
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Intercept         2.687666
+C(gender)[T.M]   -0.400921
+mathnce          -0.003523
+langnce          -0.012152
+dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># IRR</span>
+<span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">prlahigh</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C(gender)[T.M]    0.669703
+mathnce           0.996483
+langnce           0.987921
+dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># CI for IRR F </span>
+<span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">prlahigh</span><span class="o">.</span><span class="n">conf_int</span><span class="p">()</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s2">&quot;C(gender)[T.M]&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0    0.609079
+1    0.736361
+Name: C(gender)[T.M], dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># prlahigh.summary()</span>
+<span class="c1"># prlahigh.aic, prlahigh.bic</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">prlahigh</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><table class="simpletable">
+<caption>Poisson Regression Results</caption>
+<tr>
+  <th>Dep. Variable:</th>        <td>daysabs</td>     <th>  No. Observations:  </th>  <td>   316</td>  
+</tr>
+<tr>
+  <th>Model:</th>                <td>Poisson</td>     <th>  Df Residuals:      </th>  <td>   312</td>  
+</tr>
+<tr>
+  <th>Method:</th>                 <td>MLE</td>       <th>  Df Model:          </th>  <td>     3</td>  
+</tr>
+<tr>
+  <th>Date:</th>            <td>Fri, 14 Jun 2024</td> <th>  Pseudo R-squ.:     </th>  <td>0.05358</td> 
+</tr>
+<tr>
+  <th>Time:</th>                <td>09:30:00</td>     <th>  Log-Likelihood:    </th> <td> -1548.0</td> 
+</tr>
+<tr>
+  <th>converged:</th>             <td>True</td>       <th>  LL-Null:           </th> <td> -1635.6</td> 
+</tr>
+<tr>
+  <th>Covariance Type:</th>     <td>nonrobust</td>    <th>  LLR p-value:       </th> <td>9.246e-38</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+         <td></td>           <th>coef</th>     <th>std err</th>      <th>z</th>      <th>P>|z|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>Intercept</th>      <td>    2.6877</td> <td>    0.073</td> <td>   36.994</td> <td> 0.000</td> <td>    2.545</td> <td>    2.830</td>
+</tr>
+<tr>
+  <th>C(gender)[T.M]</th> <td>   -0.4009</td> <td>    0.048</td> <td>   -8.281</td> <td> 0.000</td> <td>   -0.496</td> <td>   -0.306</td>
+</tr>
+<tr>
+  <th>mathnce</th>        <td>   -0.0035</td> <td>    0.002</td> <td>   -1.934</td> <td> 0.053</td> <td>   -0.007</td> <td> 4.66e-05</td>
+</tr>
+<tr>
+  <th>langnce</th>        <td>   -0.0122</td> <td>    0.002</td> <td>   -6.623</td> <td> 0.000</td> <td>   -0.016</td> <td>   -0.009</td>
+</tr>
+</table></div></div>
+</div>
+<section id="diagnostics">
+<h4>Diagnostics<a class="headerlink" href="#diagnostics" title="Permalink to this heading">#</a></h4>
+<p>via <a class="reference external" href="https://www.statsmodels.org/dev/examples/notebooks/generated/postestimation_poisson.html">https://www.statsmodels.org/dev/examples/notebooks/generated/postestimation_poisson.html</a></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">prdiag</span> <span class="o">=</span> <span class="n">prlahigh</span><span class="o">.</span><span class="n">get_diagnostic</span><span class="p">()</span>
+<span class="c1"># Plot observed versus predicted frequencies for entire sample</span>
+<span class="c1"># prdiag.plot_probs();</span>
+
+<span class="c1"># Other:</span>
+<span class="c1"># [&#39;plot_probs&#39;,</span>
+<span class="c1">#  &#39;probs_predicted&#39;,</span>
+<span class="c1">#  &#39;results&#39;,</span>
+<span class="c1">#  &#39;test_chisquare_prob&#39;,</span>
+<span class="c1">#  &#39;test_dispersion&#39;,</span>
+<span class="c1">#  &#39;test_poisson_zeroinflation&#39;,</span>
+<span class="c1">#  &#39;y_max&#39;]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Code to get exactly the same numbers as in</span>
+<span class="c1"># https://stats.oarc.ucla.edu/stata/output/poisson-regression/  </span>
+<span class="n">formula2</span> <span class="o">=</span> <span class="s2">&quot;daysabs ~ 1 + mathnce + langnce + C(gender, Treatment(1))&quot;</span>
+<span class="n">prlahigh2</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span><span class="n">formula2</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">lahigh</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">prlahigh2</span><span class="o">.</span><span class="n">params</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Optimization terminated successfully.
+         Current function value: 4.898642
+         Iterations 5
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Intercept                       2.286745
+C(gender, Treatment(1))[T.F]    0.400921
+mathnce                        -0.003523
+langnce                        -0.012152
 dtype: float64
 </pre></div>
 </div>
@@ -1376,6 +1932,139 @@ dtype: float64
 </div>
 </section>
 </section>
+<section id="exercise-asthma-attacks">
+<h3>Exercise: asthma attacks<a class="headerlink" href="#exercise-asthma-attacks" title="Permalink to this heading">#</a></h3>
+<p>data <a class="github reference external" href="https://github.com/drkamarul/multivar_data_analysis/blob/main/data/asthma.csv">drkamarul/multivar_data_analysis</a></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">asthma</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/exercises/asthma.csv&quot;</span><span class="p">)</span>
+<span class="n">asthma</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>gender</th>
+      <th>res_inf</th>
+      <th>ghq12</th>
+      <th>attack</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>female</td>
+      <td>yes</td>
+      <td>21</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>male</td>
+      <td>no</td>
+      <td>17</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>male</td>
+      <td>yes</td>
+      <td>30</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>female</td>
+      <td>yes</td>
+      <td>22</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>male</td>
+      <td>yes</td>
+      <td>27</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>115</th>
+      <td>male</td>
+      <td>yes</td>
+      <td>0</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>116</th>
+      <td>female</td>
+      <td>yes</td>
+      <td>31</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>117</th>
+      <td>female</td>
+      <td>yes</td>
+      <td>18</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>118</th>
+      <td>female</td>
+      <td>yes</td>
+      <td>21</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>119</th>
+      <td>female</td>
+      <td>yes</td>
+      <td>11</td>
+      <td>2</td>
+    </tr>
+  </tbody>
+</table>
+<p>120 rows × 4 columns</p>
+</div></div></div>
+</div>
+<p>cf. <a class="reference external" href="https://bookdown.org/drki_musa/dataanalysis/poisson-regression.html#multivariable-analysis-1">https://bookdown.org/drki_musa/dataanalysis/poisson-regression.html#multivariable-analysis-1</a></p>
+</section>
+<section id="exercise-ship-accidents">
+<h3>Exercise: ship accidents<a class="headerlink" href="#exercise-ship-accidents" title="Permalink to this heading">#</a></h3>
+<p><a class="reference external" href="https://rdrr.io/cran/AER/man/ShipAccidents.html">https://rdrr.io/cran/AER/man/ShipAccidents.html</a></p>
+<p><a class="reference external" href="https://pages.stern.nyu.edu/~wgreene/Text/tables/tablelist5.htm">https://pages.stern.nyu.edu/~wgreene/Text/tables/tablelist5.htm</a></p>
+<p><a class="reference external" href="https://pages.stern.nyu.edu/~wgreene/Text/tables/TableF21-3.txt">https://pages.stern.nyu.edu/~wgreene/Text/tables/TableF21-3.txt</a></p>
+</section>
+</section>
+<section id="links">
+<h2>Links<a class="headerlink" href="#links" title="Permalink to this heading">#</a></h2>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="cut-material">
+<h1>CUT MATERIAL<a class="headerlink" href="#cut-material" title="Permalink to this heading">#</a></h1>
 </section>
 
     <script type="text/x-thebe-config">
@@ -1443,13 +2132,18 @@ dtype: float64
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Section 4.6 — Generalized linear models</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebook-setup">Notebook setup</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definitions">Definitions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definitions">Definitions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#odds">Odds</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#log-odds">Log-odds</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#logistic-regression">Logistic regression</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-generation-for-logistic-regression">Data generation for logistic regression</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Logistic regression</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1-hiring-student-interns">Example 1: hiring student interns</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prediction">Prediction</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#poisson-regression">Poisson regression</a><ul class="nav section-nav flex-column">
@@ -1457,23 +2151,30 @@ dtype: float64
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2-hard-disk-failures-over-time">Example 2: hard disk failures over time</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanations">Explanations</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanations">Explanations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generalized-linear-families">Generalized linear families</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-diagnostics">Model diagnostics</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-n-students-pass-or-fail">Exercise N: students pass or fail</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-students-pass-or-fail">Exercise: students pass or fail</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-titanic-survival-data">Exercise: titanic survival data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-student-admissions-dataset">Exercise: student admissions dataset</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-la-high-schools-not-a-very-good-fit-for-poisson-model">Exercise: LA high schools (NOT A VERY GOOD FIT FOR POISSON MODEL)</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#diagnostics">Diagnostics</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-asthma-attacks">Exercise: asthma attacks</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-ship-accidents">Exercise: ship accidents</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#links">Links</a></li>
 </ul>
 </li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#cut-material">CUT MATERIAL</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extra-examples">Extra examples</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#extra-example-m-student-admissions">Extra example M: student admissions</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#extra-example-n-titanic">Extra example N: Titanic</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#cut-material">CUT MATERIAL</a></li>
 </ul>
 
   </nav></div>
