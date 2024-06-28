@@ -14,6 +14,6 @@ to check all the probability calculations for yourself.
 - Multiple linear regression [42_multiple_linear_regression.ipynb](./42_multiple_linear_regression.ipynb)
 - Interpreting linear models [43_interpreting_linear_models.ipynb](./43_interpreting_linear_models.ipynb)
 - Regression with categorical predictors [44_regression_with_categorical_predictors.ipynb](./44_regression_with_categorical_predictors.ipynb)
-- Causal effects and confounders [45_causal_effects_and_confounders.ipynb](./45_causal_effects_and_confounders.ipynb)
+- Causal effects and confounders [45_model_selection.ipynb](./45_model_selection.ipynb)
 - Generalized linear models [46_generalized_linear_models.ipynb](./46_generalized_linear_models.ipynb)
 

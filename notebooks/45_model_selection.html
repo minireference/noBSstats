@@ -519,20 +519,18 @@ document.write(`
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pattern-2-the-pipe">Pattern 2: the pipe</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-3-simple-pipe">Example 3: simple pipe</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-4-competency-as-a-mediator">Example 4: competency as a mediator</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-4-student-competency-as-a-mediator">Example 4: student competency as a mediator</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pattern-3-the-collider">Pattern 3: the collider</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-5-simple-collider">Example 5: simple collider</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-6-student-gpa-as-a-collider">Example 6: student GPA as a collider</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#selection-bias-as-a-collider">Selection bias as a collider</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-6b-selection-bias">Example 6B: selection bias</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-6sb-selection-bias">Example 6SB: selection bias</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanations">Explanations</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conditional-independence">Conditional independence</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#backdoor-path-criterion">Backdoor path criterion</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#backdoor-path-adjustment">Backdoor path adjustment</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#three-different-goals-when-building-models">Three different goals when building models</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-table-2-fallacy">The Table 2 fallacy</a></li>
 </ul>
@@ -545,7 +543,6 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stepwise-regression">Stepwise regression</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rules-of-thumb">Rules of thumb</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#uses-and-limitations-of-causal-graphs">Uses and limitations of causal graphs</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#further-reading-on-causal-inference">Further reading on causal inference</a></li>
 </ul>
@@ -941,34 +938,35 @@ dtype: float64
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">statsmodels.graphics.api</span> <span class="kn">import</span> <span class="n">plot_partregress</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ministats</span> <span class="kn">import</span> <span class="n">plot_partreg</span>
 
-
-<span class="k">with</span> <span class="n">plt</span><span class="o">.</span><span class="n">rc_context</span><span class="p">({</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:(</span><span class="mi">3</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">)}):</span>
-
-    <span class="n">plot_partregress</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span>  <span class="n">exog_others</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;m&quot;</span><span class="p">],</span> <span class="n">data</span><span class="o">=</span><span class="n">df3</span><span class="p">,</span> <span class="n">obs_labels</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    
-    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Partial regression plot&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;e(x | m)&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;e(y | m)&quot;</span><span class="p">)</span>
-    
-    <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;simple_pipe_partregress_y_vs_x.pdf&quot;</span><span class="p">)</span>
-    <span class="n">savefigure</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">(),</span> <span class="n">filename</span><span class="p">)</span>
+<span class="n">plot_partreg</span><span class="p">(</span><span class="n">lm3b</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/modelselection/simple_pipe_partregress_y_vs_x.pdf
-Saved figure to figures/lm/modelselection/simple_pipe_partregress_y_vs_x.png
-</pre></div>
-</div>
-<img alt="../_images/2c229a8cdf76202a291276f85d850b6a8e75659f3554372d5b12c260ca580b4f.png" src="../_images/2c229a8cdf76202a291276f85d850b6a8e75659f3554372d5b12c260ca580b4f.png" />
+<img alt="../_images/af049ca09d94e8e7ef035df78d68bed60db2d920628f708a624de29085f355a5.png" src="../_images/af049ca09d94e8e7ef035df78d68bed60db2d920628f708a624de29085f355a5.png" />
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># # ALT. using plot_lm_partial not a good plot,</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ALT</span>
+<span class="c1"># from statsmodels.graphics.api import plot_partregress</span>
+<span class="c1"># with plt.rc_context({&quot;figure.figsize&quot;:(3, 2.5)}):</span>
+<span class="c1">#     plot_partregress(&quot;y&quot;, &quot;x&quot;,  exog_others=[&quot;m&quot;], data=df3, obs_labels=False)</span>
+<span class="c1">#     ax = plt.gca()</span>
+<span class="c1">#     ax.set_title(&quot;Partial regression plot&quot;)</span>
+<span class="c1">#     ax.set_xlabel(&quot;e(x | m)&quot;)</span>
+<span class="c1">#     ax.set_ylabel(&quot;e(y | m)&quot;)</span>
+<span class="c1">#     filename = os.path.join(DESTDIR, &quot;simple_pipe_partregress_y_vs_x.pdf&quot;)</span>
+<span class="c1">#     savefigure(plt.gcf(), filename)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># # OLD ALT. using plot_lm_partial not a good plot,</span>
 <span class="c1"># #      since it still shows the trend</span>
 <span class="c1"># from ministats import plot_lm_partial</span>
 <span class="c1"># sns.scatterplot(data=df3, x=&quot;x&quot;, y=&quot;y&quot;)</span>
@@ -980,8 +978,8 @@ Saved figure to figures/lm/modelselection/simple_pipe_partregress_y_vs_x.png
 </div>
 </div>
 </section>
-<section id="example-4-competency-as-a-mediator">
-<h3>Example 4: competency as a mediator<a class="headerlink" href="#example-4-competency-as-a-mediator" title="Permalink to this heading">#</a></h3>
+<section id="example-4-student-competency-as-a-mediator">
+<h3>Example 4: student competency as a mediator<a class="headerlink" href="#example-4-student-competency-as-a-mediator" title="Permalink to this heading">#</a></h3>
 <p>Students <code class="docutils literal notranslate"><span class="pre">score</span></code> as a function of <code class="docutils literal notranslate"><span class="pre">effort</span></code>.
 We assume the final scores for the course was mediated through improvements in competency with the material (<code class="docutils literal notranslate"><span class="pre">comp</span></code>).</p>
 <p><img alt="" src="../_images/score_comp_pipe_DAG.png" /></p>
@@ -1116,15 +1114,15 @@ dtype: float64
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">statsmodels.graphics.api</span> <span class="kn">import</span> <span class="n">plot_partregress</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ministats</span> <span class="kn">import</span> <span class="n">plot_partreg</span>
 
 <span class="k">with</span> <span class="n">plt</span><span class="o">.</span><span class="n">rc_context</span><span class="p">({</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:(</span><span class="mi">3</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">)}):</span>
-    <span class="n">plot_partregress</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span>  <span class="n">exog_others</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;z&quot;</span><span class="p">],</span> <span class="n">data</span><span class="o">=</span><span class="n">df5</span><span class="p">,</span> <span class="n">obs_labels</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">plot_partreg</span><span class="p">(</span><span class="n">lm5b</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">)</span>
 
     <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Partial regression plot&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;e(x | z)&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;e(y | z)&quot;</span><span class="p">)</span>
+    <span class="c1"># ax.set_xlabel(&quot;e(x | z)&quot;)</span>
+    <span class="c1"># ax.set_ylabel(&quot;e(y | z)&quot;)</span>
     <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;simple_collider_partregress_y_vs_x.pdf&quot;</span><span class="p">)</span>
     <span class="n">savefigure</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">(),</span> <span class="n">filename</span><span class="p">)</span>
 </pre></div>
@@ -1135,7 +1133,7 @@ dtype: float64
 Saved figure to figures/lm/modelselection/simple_collider_partregress_y_vs_x.png
 </pre></div>
 </div>
-<img alt="../_images/449bc35b1cbfb4e4591bcb38b8b1b50529cafc68540156717f86f4ec484f7481.png" src="../_images/449bc35b1cbfb4e4591bcb38b8b1b50529cafc68540156717f86f4ec484f7481.png" />
+<img alt="../_images/1e9df898dbfbad7aa17aa0029c9063ad96cece02860d977e4096f0efa0f2663d.png" src="../_images/1e9df898dbfbad7aa17aa0029c9063ad96cece02860d977e4096f0efa0f2663d.png" />
 </div>
 </div>
 <p>If we choose to control for <code class="docutils literal notranslate"><span class="pre">z</span></code> using stratification,we’ll find there is a negative association,
@@ -1254,16 +1252,16 @@ dtype: float64
 <h3>Selection bias as a collider<a class="headerlink" href="#selection-bias-as-a-collider" title="Permalink to this heading">#</a></h3>
 <p><a class="reference external" href="https://en.wikipedia.org/wiki/Berkson's_paradox">https://en.wikipedia.org/wiki/Berkson’s_paradox</a></p>
 </section>
-<section id="example-6b-selection-bias">
-<h3>Example 6B: selection bias<a class="headerlink" href="#example-6b-selection-bias" title="Permalink to this heading">#</a></h3>
+<section id="example-6sb-selection-bias">
+<h3>Example 6SB: selection bias<a class="headerlink" href="#example-6sb-selection-bias" title="Permalink to this heading">#</a></h3>
 <p>Suppose the study was conducted only on students who obtained an <code class="docutils literal notranslate"><span class="pre">award</span></code>,
 which is given to students with GPA 3.4 or greater.</p>
-<p><img alt="" src="../_images/score_award_selection_bias_DAG.png" /></p>
+<p><img alt=" " src="../_images/score_award_selection_bias_DAG.png" /></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df6b</span> <span class="o">=</span> <span class="n">df6</span><span class="p">[</span><span class="n">df6</span><span class="p">[</span><span class="s2">&quot;gpa&quot;</span><span class="p">]</span><span class="o">&gt;=</span><span class="mf">3.4</span><span class="p">]</span>
-<span class="n">lm6b</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;score ~ 1 + effort&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df6b</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-<span class="n">lm6b</span><span class="o">.</span><span class="n">params</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df6sb</span> <span class="o">=</span> <span class="n">df6</span><span class="p">[</span><span class="n">df6</span><span class="p">[</span><span class="s2">&quot;gpa&quot;</span><span class="p">]</span><span class="o">&gt;=</span><span class="mf">3.4</span><span class="p">]</span>
+<span class="n">lm6sb</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;score ~ 1 + effort&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df6sb</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">lm6sb</span><span class="o">.</span><span class="n">params</span>
 </pre></div>
 </div>
 </div>
@@ -1281,14 +1279,8 @@ which is very misleading.</p>
 </section>
 <section id="explanations">
 <h2>Explanations<a class="headerlink" href="#explanations" title="Permalink to this heading">#</a></h2>
-<section id="conditional-independence">
-<h3>Conditional independence<a class="headerlink" href="#conditional-independence" title="Permalink to this heading">#</a></h3>
-</section>
 <section id="backdoor-path-criterion">
 <h3>Backdoor path criterion<a class="headerlink" href="#backdoor-path-criterion" title="Permalink to this heading">#</a></h3>
-</section>
-<section id="backdoor-path-adjustment">
-<h3>Backdoor path adjustment<a class="headerlink" href="#backdoor-path-adjustment" title="Permalink to this heading">#</a></h3>
 </section>
 <section id="three-different-goals-when-building-models">
 <h3>Three different goals when building models<a class="headerlink" href="#three-different-goals-when-building-models" title="Permalink to this heading">#</a></h3>
@@ -1320,16 +1312,7 @@ which is very misleading.</p>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">formula2</span> <span class="o">=</span> <span class="s2">&quot;score ~ 1 + alc + weed + exrc&quot;</span>
 <span class="n">lm2</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="n">formula2</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">doctors</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-<span class="n">lm2</span><span class="o">.</span><span class="n">params</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Intercept    60.452901
-alc          -1.800101
-weed         -1.021552
-exrc          1.768289
-dtype: float64
+<span class="c1"># lm2.params</span>
 </pre></div>
 </div>
 </div>
@@ -1339,17 +1322,7 @@ dtype: float64
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">formula3</span> <span class="o">=</span> <span class="s2">&quot;score ~ 1 + alc + weed + exrc + C(loc)&quot;</span>
 <span class="n">lm3</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="n">formula3</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">doctors</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-<span class="n">lm3</span><span class="o">.</span><span class="n">params</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Intercept        63.606961
-C(loc)[T.urb]    -5.002404
-alc              -1.784915
-weed             -0.840668
-exrc              1.783107
-dtype: float64
+<span class="c1"># lm3.params</span>
 </pre></div>
 </div>
 </div>
@@ -1359,17 +1332,7 @@ dtype: float64
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">formula2p</span> <span class="o">=</span> <span class="s2">&quot;score ~ 1 + alc + weed + exrc + permit&quot;</span>
 <span class="n">lm2p</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="n">formula2p</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">doctors</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-<span class="n">lm2p</span><span class="o">.</span><span class="n">params</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Intercept    57.529853
-alc          -1.802886
-weed         -0.980503
-exrc          1.793265
-permit        0.000047
-dtype: float64
+<span class="c1"># lm2p.params</span>
 </pre></div>
 </div>
 </div>
@@ -1452,9 +1415,6 @@ so we conclude that adding the variable <code class="docutils literal notranslat
 </section>
 <section id="stepwise-regression">
 <h3>Stepwise regression<a class="headerlink" href="#stepwise-regression" title="Permalink to this heading">#</a></h3>
-</section>
-<section id="rules-of-thumb">
-<h3>Rules of thumb<a class="headerlink" href="#rules-of-thumb" title="Permalink to this heading">#</a></h3>
 </section>
 <section id="uses-and-limitations-of-causal-graphs">
 <h3>Uses and limitations of causal graphs<a class="headerlink" href="#uses-and-limitations-of-causal-graphs" title="Permalink to this heading">#</a></h3>
@@ -1848,20 +1808,18 @@ dtype: float64
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pattern-2-the-pipe">Pattern 2: the pipe</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-3-simple-pipe">Example 3: simple pipe</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-4-competency-as-a-mediator">Example 4: competency as a mediator</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-4-student-competency-as-a-mediator">Example 4: student competency as a mediator</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pattern-3-the-collider">Pattern 3: the collider</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-5-simple-collider">Example 5: simple collider</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-6-student-gpa-as-a-collider">Example 6: student GPA as a collider</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#selection-bias-as-a-collider">Selection bias as a collider</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-6b-selection-bias">Example 6B: selection bias</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-6sb-selection-bias">Example 6SB: selection bias</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanations">Explanations</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conditional-independence">Conditional independence</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#backdoor-path-criterion">Backdoor path criterion</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#backdoor-path-adjustment">Backdoor path adjustment</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#three-different-goals-when-building-models">Three different goals when building models</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-table-2-fallacy">The Table 2 fallacy</a></li>
 </ul>
@@ -1874,7 +1832,6 @@ dtype: float64
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stepwise-regression">Stepwise regression</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rules-of-thumb">Rules of thumb</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#uses-and-limitations-of-causal-graphs">Uses and limitations of causal graphs</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#further-reading-on-causal-inference">Further reading on causal inference</a></li>
 </ul>
