@@ -515,23 +515,32 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#logistic-regression">Logistic regression</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-generation-for-logistic-regression">Data generation for logistic regression</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1-hiring-student-interns">Example 1: hiring student interns</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prediction">Prediction</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#poisson-regression">Poisson regression</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-generation-for-poisson-regression">Data generation for Poisson regression</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2-hard-disk-failures-over-time">Example 2: hard disk failures over time</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanations">Explanations</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generalized-linear-families">Generalized linear families</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-exponential-family-of-distributions">The exponential family of distributions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-generalized-linear-model-template">The generalized linear model template</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generalized-linear-models-using-statsmodels">Generalized linear models using statsmodels</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-model">Linear model</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Logistic regression</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Poisson regression</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fitting-generalized-linear-models">Fitting generalized linear models</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#standardization-of-predictors">Standardization of predictors</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-diagnostics">Model diagnostics</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scikit-learn-models">Scikit Learn models</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-diagnostics-and-validation">Model diagnostics and validation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scikitlearn-models">ScikitLearn models</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#logistic-regression-as-a-building-blocks-for-neural-networks">Logistic regression as a building blocks for neural networks</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#limitations-of-glms">Limitations of GLMs</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a><ul class="nav section-nav flex-column">
@@ -632,6 +641,13 @@ document.write(`
 </div>
 </div>
 </div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#######################################################</span>
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 <section id="definitions">
 <h2>Definitions<a class="headerlink" href="#definitions" title="Permalink to this heading">#</a></h2>
@@ -639,9 +655,33 @@ document.write(`
 <h3>Probability representations and link functions<a class="headerlink" href="#probability-representations-and-link-functions" title="Permalink to this heading">#</a></h3>
 <section id="odds">
 <h4>Odds<a class="headerlink" href="#odds" title="Permalink to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mf">0.5</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="mf">0.5</span><span class="p">),</span> <span class="mf">0.9</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="mf">0.9</span><span class="p">),</span> <span class="mf">0.2</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="mf">0.2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1.0, 9.000000000000002, 0.25)
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 <section id="log-odds">
 <h4>Log-odds<a class="headerlink" href="#log-odds" title="Permalink to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">0.5</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">0.9</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="mf">0.9</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">0.2</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="mf">0.2</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(0.0, 2.1972245773362196, -1.3862943611198906)
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 <section id="the-logit-function">
 <h4>The logit function<a class="headerlink" href="#the-logit-function" title="Permalink to this heading">#</a></h4>
@@ -659,12 +699,12 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">logit</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">logit</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span> <span class="n">logit</span><span class="p">(</span><span class="mf">0.9</span><span class="p">),</span> <span class="n">logit</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.0
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(0.0, 2.1972245773362196, -1.3862943611198906)
 </pre></div>
 </div>
 </div>
@@ -686,12 +726,12 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">expit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">expit</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">expit</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">expit</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.5
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(0.5, 0.8807970779778823, 0.11920292202211755)
 </pre></div>
 </div>
 </div>
@@ -722,7 +762,7 @@ document.write(`
 <div class="cell_output docutils container">
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
 <span class="ne">ValueError</span><span class="g g-Whitespace">                                </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span> <span class="n">line</span> <span class="mi">18</span>
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">11</span><span class="p">],</span> <span class="n">line</span> <span class="mi">18</span>
 <span class="g g-Whitespace">     </span><span class="mi">14</span> <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$x$&quot;</span><span class="p">)</span>
 <span class="g g-Whitespace">     </span><span class="mi">17</span> <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;logistic_and_logit_functions.pdf&quot;</span><span class="p">)</span>
 <span class="ne">---&gt; </span><span class="mi">18</span> <span class="n">savefigure</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">tight_layout_kwargs</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">w_pad</span><span class="o">=</span><span class="mi">3</span><span class="p">))</span>
@@ -967,7 +1007,7 @@ document.write(`
 <span class="ne">ParseFatalException</span>: Unknown symbol: \text, found &#39;\&#39;  (at char 0), (line:1, col:1)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Error in callback &lt;function _draw_all_if_interactive at 0x7f2292671430&gt; (for post_execute):
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Error in callback &lt;function _draw_all_if_interactive at 0x7f87254b2430&gt; (for post_execute):
 </pre></div>
 </div>
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
@@ -1521,12 +1561,12 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">logit</span><span class="p">(</span><span class="n">expit</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">9</span><span class="p">))),</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">logit</span><span class="p">(</span><span class="n">expit</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(2.1972245773362182, 2.1972245773362196)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>3.000000000000003
 </pre></div>
 </div>
 </div>
@@ -1537,30 +1577,6 @@ document.write(`
 <section id="logistic-regression">
 <h2>Logistic regression<a class="headerlink" href="#logistic-regression" title="Permalink to this heading">#</a></h2>
 <p>TODO FORMULA</p>
-<section id="data-generation-for-logistic-regression">
-<h3>Data generation for logistic regression<a class="headerlink" href="#data-generation-for-logistic-regression" title="Permalink to this heading">#</a></h3>
-<p>TODO: move to gen_interns.ipynb</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">bernoulli</span>
-<span class="kn">from</span> <span class="nn">scipy.special</span> <span class="kn">import</span> <span class="n">expit</span>
-
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
-
-<span class="n">n</span> <span class="o">=</span> <span class="mi">100</span>
-<span class="n">hours</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-<span class="n">prob_hired</span> <span class="o">=</span> <span class="n">expit</span><span class="p">(</span><span class="o">-</span><span class="mi">80</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">hours</span><span class="p">)</span>
-<span class="n">hired</span> <span class="o">=</span> <span class="n">bernoulli</span><span class="p">(</span><span class="n">prob_hired</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-
-<span class="n">interns</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;hours&quot;</span><span class="p">:</span><span class="n">hours</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
-                        <span class="s2">&quot;hired&quot;</span><span class="p">:</span><span class="n">hired</span><span class="p">})</span>
-
-<span class="n">interns</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/interns.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># FIGURES ONLY</span>
@@ -1635,18 +1651,20 @@ Saved figure to figures/lm/generalized/logistic_regression_xy_with_stemplots.png
 </div>
 </div>
 </div>
-</section>
 <section id="example-1-hiring-student-interns">
 <h3>Example 1: hiring student interns<a class="headerlink" href="#example-1-hiring-student-interns" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">interns</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/interns.csv&quot;</span><span class="p">)</span>
-
+<span class="nb">print</span><span class="p">(</span><span class="n">interns</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 <span class="n">interns</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(100, 2)
+</pre></div>
+</div>
 <div class="output text_html"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -1665,7 +1683,7 @@ Saved figure to figures/lm/generalized/logistic_regression_xy_with_stemplots.png
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>hours</th>
+      <th>work</th>
       <th>hired</th>
     </tr>
   </thead>
@@ -1691,21 +1709,9 @@ Saved figure to figures/lm/generalized/logistic_regression_xy_with_stemplots.png
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">interns</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">statsmodels.formula.api</span> <span class="k">as</span> <span class="nn">smf</span>
 
-<span class="n">lr1</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">logit</span><span class="p">(</span><span class="s2">&quot;hired ~ 1 + hours&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">interns</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">lr1</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">logit</span><span class="p">(</span><span class="s2">&quot;hired ~ 1 + work&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">interns</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">lr1</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1715,31 +1721,10 @@ Saved figure to figures/lm/generalized/logistic_regression_xy_with_stemplots.png
          Current function value: 0.138101
          Iterations 10
 Intercept   -78.693205
-hours         1.981458
+work          1.981458
 dtype: float64
 </pre></div>
 </div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hours</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">27</span><span class="p">,</span> <span class="mi">48</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
-<span class="n">hired_preds</span> <span class="o">=</span> <span class="n">lr1</span><span class="o">.</span><span class="n">predict</span><span class="p">({</span><span class="s2">&quot;hours&quot;</span><span class="p">:</span> <span class="n">hours</span><span class="p">})</span>
-<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">interns</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;hours&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;hired&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">hours</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">hired_preds</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">);</span>
-
-<span class="c1"># FIGURES ONLY</span>
-<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;logistic_regression_interns_hired_vs_hours.pdf&quot;</span><span class="p">)</span>
-<span class="n">savefigure</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">(),</span> <span class="n">filename</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/generalized/logistic_regression_interns_hired_vs_hours.pdf
-Saved figure to figures/lm/generalized/logistic_regression_interns_hired_vs_hours.png
-</pre></div>
-</div>
-<img alt="../_images/379b2ef9ee0bca23f71da038ee0acbf9b5ef8e9467679067fecf4968035bc7b1.png" src="../_images/379b2ef9ee0bca23f71da038ee0acbf9b5ef8e9467679067fecf4968035bc7b1.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1761,10 +1746,10 @@ Saved figure to figures/lm/generalized/logistic_regression_interns_hired_vs_hour
   <th>Method:</th>                 <td>MLE</td>       <th>  Df Model:          </th>  <td>     1</td>  
 </tr>
 <tr>
-  <th>Date:</th>            <td>Fri, 12 Jul 2024</td> <th>  Pseudo R-squ.:     </th>  <td>0.8005</td>  
+  <th>Date:</th>            <td>Mon, 15 Jul 2024</td> <th>  Pseudo R-squ.:     </th>  <td>0.8005</td>  
 </tr>
 <tr>
-  <th>Time:</th>                <td>15:30:54</td>     <th>  Log-Likelihood:    </th> <td> -13.810</td> 
+  <th>Time:</th>                <td>13:55:24</td>     <th>  Log-Likelihood:    </th> <td> -13.810</td> 
 </tr>
 <tr>
   <th>converged:</th>             <td>True</td>       <th>  LL-Null:           </th> <td> -69.235</td> 
@@ -1781,7 +1766,82 @@ Saved figure to figures/lm/generalized/logistic_regression_interns_hired_vs_hour
   <th>Intercept</th> <td>  -78.6932</td> <td>   19.851</td> <td>   -3.964</td> <td> 0.000</td> <td> -117.600</td> <td>  -39.787</td>
 </tr>
 <tr>
-  <th>hours</th>     <td>    1.9815</td> <td>    0.500</td> <td>    3.959</td> <td> 0.000</td> <td>    1.001</td> <td>    2.962</td>
+  <th>work</th>      <td>    1.9815</td> <td>    0.500</td> <td>    3.959</td> <td> 0.000</td> <td>    1.001</td> <td>    2.962</td>
+</tr>
+</table><br/><br/>Possibly complete quasi-separation: A fraction 0.32 of observations can be<br/>perfectly predicted. This might indicate that there is complete<br/>quasi-separation. In this case some parameters will not be identified.</div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">interns</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;work&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;hired&quot;</span><span class="p">)</span>
+<span class="n">wgrid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">27</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">hired_preds</span> <span class="o">=</span> <span class="n">lr1</span><span class="o">.</span><span class="n">predict</span><span class="p">({</span><span class="s2">&quot;work&quot;</span><span class="p">:</span> <span class="n">wgrid</span><span class="p">})</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">wgrid</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">hired_preds</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/1b9740419120924fb9e3bfd519a61117ca1fbfc349dfd752b92786a539efbb19.png" src="../_images/1b9740419120924fb9e3bfd519a61117ca1fbfc349dfd752b92786a539efbb19.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ministats</span> <span class="kn">import</span> <span class="n">plot_reg</span>
+<span class="n">plot_reg</span><span class="p">(</span><span class="n">lr1</span><span class="p">)</span>
+
+<span class="c1"># FIGURES ONLY</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;logistic_regression_interns_hired_vs_work.pdf&quot;</span><span class="p">)</span>
+<span class="n">savefigure</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">(),</span> <span class="n">filename</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/generalized/logistic_regression_interns_hired_vs_work.pdf
+Saved figure to figures/lm/generalized/logistic_regression_interns_hired_vs_work.png
+</pre></div>
+</div>
+<img alt="../_images/bd2bd272719ce132266d37adb340c89f3c3d5c06a3434e7adfbcb0084e373a28.png" src="../_images/bd2bd272719ce132266d37adb340c89f3c3d5c06a3434e7adfbcb0084e373a28.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lr1</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><table class="simpletable">
+<caption>Logit Regression Results</caption>
+<tr>
+  <th>Dep. Variable:</th>         <td>hired</td>      <th>  No. Observations:  </th>  <td>   100</td>  
+</tr>
+<tr>
+  <th>Model:</th>                 <td>Logit</td>      <th>  Df Residuals:      </th>  <td>    98</td>  
+</tr>
+<tr>
+  <th>Method:</th>                 <td>MLE</td>       <th>  Df Model:          </th>  <td>     1</td>  
+</tr>
+<tr>
+  <th>Date:</th>            <td>Mon, 15 Jul 2024</td> <th>  Pseudo R-squ.:     </th>  <td>0.8005</td>  
+</tr>
+<tr>
+  <th>Time:</th>                <td>13:55:25</td>     <th>  Log-Likelihood:    </th> <td> -13.810</td> 
+</tr>
+<tr>
+  <th>converged:</th>             <td>True</td>       <th>  LL-Null:           </th> <td> -69.235</td> 
+</tr>
+<tr>
+  <th>Covariance Type:</th>     <td>nonrobust</td>    <th>  LLR p-value:       </th> <td>6.385e-26</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+      <td></td>         <th>coef</th>     <th>std err</th>      <th>z</th>      <th>P>|z|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>Intercept</th> <td>  -78.6932</td> <td>   19.851</td> <td>   -3.964</td> <td> 0.000</td> <td> -117.600</td> <td>  -39.787</td>
+</tr>
+<tr>
+  <th>work</th>      <td>    1.9815</td> <td>    0.500</td> <td>    3.959</td> <td> 0.000</td> <td>    1.001</td> <td>    2.962</td>
 </tr>
 </table><br/><br/>Possibly complete quasi-separation: A fraction 0.32 of observations can be<br/>perfectly predicted. This might indicate that there is complete<br/>quasi-separation. In this case some parameters will not be identified.</div></div>
 </div>
@@ -1790,13 +1850,13 @@ Saved figure to figures/lm/generalized/logistic_regression_interns_hired_vs_hour
 <h3>Prediction<a class="headerlink" href="#prediction" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p40</span> <span class="o">=</span> <span class="n">lr1</span><span class="o">.</span><span class="n">predict</span><span class="p">({</span><span class="s2">&quot;hours&quot;</span><span class="p">:</span><span class="mi">40</span><span class="p">})[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">p40</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p42</span> <span class="o">=</span> <span class="n">lr1</span><span class="o">.</span><span class="n">predict</span><span class="p">({</span><span class="s2">&quot;work&quot;</span><span class="p">:</span><span class="mi">42</span><span class="p">})[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">p42</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.6376330361376764
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.9893134055105761
 </pre></div>
 </div>
 </div>
@@ -1873,30 +1933,6 @@ Saved figure to figures/lm/generalized/poisson_regression_xy_with_stemplots.png
 <img alt="../_images/c961c561af9d17021ad227e137826aa831fa034f668dec63cd26fc29dc3aaa07.png" src="../_images/c961c561af9d17021ad227e137826aa831fa034f668dec63cd26fc29dc3aaa07.png" />
 </div>
 </div>
-<section id="data-generation-for-poisson-regression">
-<h3>Data generation for Poisson regression<a class="headerlink" href="#data-generation-for-poisson-regression" title="Permalink to this heading">#</a></h3>
-<p>TODO: mv to gen_hdisks.ipynb</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">uniform</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">poisson</span>
-
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">47</span><span class="p">)</span>
-
-<span class="n">n</span> <span class="o">=</span> <span class="mi">100</span>
-<span class="n">age</span> <span class="o">=</span> <span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">15</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-<span class="n">lam</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mf">0.2</span><span class="o">*</span><span class="n">age</span><span class="p">)</span>
-<span class="n">failures</span> <span class="o">=</span> <span class="n">poisson</span><span class="p">(</span><span class="n">lam</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-
-<span class="n">hdisks</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;age&quot;</span><span class="p">:</span><span class="n">age</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
-                       <span class="s2">&quot;failures&quot;</span><span class="p">:</span><span class="n">failures</span><span class="p">})</span>
-
-<span class="n">hdisks</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/hdisks.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-</section>
 <section id="example-2-hard-disk-failures-over-time">
 <h3>Example 2: hard disk failures over time<a class="headerlink" href="#example-2-hard-disk-failures-over-time" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
@@ -1973,10 +2009,51 @@ dtype: float64
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ages</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
-<span class="n">failures_preds</span> <span class="o">=</span> <span class="n">pr2</span><span class="o">.</span><span class="n">predict</span><span class="p">({</span><span class="s2">&quot;age&quot;</span><span class="p">:</span><span class="n">ages</span><span class="p">})</span>
-<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">hdisks</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;failures&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">ages</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">failures_preds</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">);</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pr2</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><table class="simpletable">
+<caption>Poisson Regression Results</caption>
+<tr>
+  <th>Dep. Variable:</th>       <td>failures</td>     <th>  No. Observations:  </th>   <td>   100</td>  
+</tr>
+<tr>
+  <th>Model:</th>                <td>Poisson</td>     <th>  Df Residuals:      </th>   <td>    98</td>  
+</tr>
+<tr>
+  <th>Method:</th>                 <td>MLE</td>       <th>  Df Model:          </th>   <td>     1</td>  
+</tr>
+<tr>
+  <th>Date:</th>            <td>Mon, 15 Jul 2024</td> <th>  Pseudo R-squ.:     </th>   <td>0.6412</td>  
+</tr>
+<tr>
+  <th>Time:</th>                <td>13:55:26</td>     <th>  Log-Likelihood:    </th>  <td> -269.31</td> 
+</tr>
+<tr>
+  <th>converged:</th>             <td>True</td>       <th>  LL-Null:           </th>  <td> -750.68</td> 
+</tr>
+<tr>
+  <th>Covariance Type:</th>     <td>nonrobust</td>    <th>  LLR p-value:       </th> <td>2.271e-211</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+      <td></td>         <th>coef</th>     <th>std err</th>      <th>z</th>      <th>P>|z|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>Intercept</th> <td>    1.0760</td> <td>    0.076</td> <td>   14.114</td> <td> 0.000</td> <td>    0.927</td> <td>    1.225</td>
+</tr>
+<tr>
+  <th>age</th>       <td>    0.1938</td> <td>    0.007</td> <td>   28.603</td> <td> 0.000</td> <td>    0.181</td> <td>    0.207</td>
+</tr>
+</table></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ministats</span> <span class="kn">import</span> <span class="n">plot_reg</span>
+<span class="n">plot_reg</span><span class="p">(</span><span class="n">pr2</span><span class="p">)</span>
 
 <span class="c1"># FIGURES ONLY</span>
 <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;poisson_regression_hdisks_failures_vs_age.pdf&quot;</span><span class="p">)</span>
@@ -1989,7 +2066,7 @@ dtype: float64
 Saved figure to figures/lm/generalized/poisson_regression_hdisks_failures_vs_age.png
 </pre></div>
 </div>
-<img alt="../_images/bb41d75566797944e87fef2ec42e11eab6d851f79496d3fbfc9301fe6c8dbee7.png" src="../_images/bb41d75566797944e87fef2ec42e11eab6d851f79496d3fbfc9301fe6c8dbee7.png" />
+<img alt="../_images/d39e6b60d9ac4d4790c082b3889e86bb422068c5aff44e4fcc075fc60a1a6008.png" src="../_images/d39e6b60d9ac4d4790c082b3889e86bb422068c5aff44e4fcc075fc60a1a6008.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2011,10 +2088,10 @@ Saved figure to figures/lm/generalized/poisson_regression_hdisks_failures_vs_age
   <th>Method:</th>                 <td>MLE</td>       <th>  Df Model:          </th>   <td>     1</td>  
 </tr>
 <tr>
-  <th>Date:</th>            <td>Fri, 12 Jul 2024</td> <th>  Pseudo R-squ.:     </th>   <td>0.6412</td>  
+  <th>Date:</th>            <td>Mon, 15 Jul 2024</td> <th>  Pseudo R-squ.:     </th>   <td>0.6412</td>  
 </tr>
 <tr>
-  <th>Time:</th>                <td>15:30:56</td>     <th>  Log-Likelihood:    </th>  <td> -269.31</td> 
+  <th>Time:</th>                <td>13:55:27</td>     <th>  Log-Likelihood:    </th>  <td> -269.31</td> 
 </tr>
 <tr>
   <th>converged:</th>             <td>True</td>       <th>  LL-Null:           </th>  <td> -750.68</td> 
@@ -2039,23 +2116,51 @@ Saved figure to figures/lm/generalized/poisson_regression_hdisks_failures_vs_age
 </section>
 <section id="explanations">
 <h2>Explanations<a class="headerlink" href="#explanations" title="Permalink to this heading">#</a></h2>
-<section id="generalized-linear-families">
-<h3>Generalized linear families<a class="headerlink" href="#generalized-linear-families" title="Permalink to this heading">#</a></h3>
+<section id="the-exponential-family-of-distributions">
+<h3>The exponential family of distributions<a class="headerlink" href="#the-exponential-family-of-distributions" title="Permalink to this heading">#</a></h3>
+</section>
+<section id="the-generalized-linear-model-template">
+<h3>The generalized linear model template<a class="headerlink" href="#the-generalized-linear-model-template" title="Permalink to this heading">#</a></h3>
+</section>
+<section id="generalized-linear-models-using-statsmodels">
+<h3>Generalized linear models using statsmodels<a class="headerlink" href="#generalized-linear-models-using-statsmodels" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
 
+<span class="n">Norm</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">families</span><span class="o">.</span><span class="n">Gaussian</span><span class="p">()</span>
 <span class="n">Bin</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">families</span><span class="o">.</span><span class="n">Binomial</span><span class="p">()</span>
 <span class="n">Pois</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">families</span><span class="o">.</span><span class="n">Poisson</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 </div>
+<section id="linear-model">
+<h4>Linear model<a class="headerlink" href="#linear-model" title="Permalink to this heading">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#######################################################</span>
-<span class="n">formula</span> <span class="o">=</span> <span class="s2">&quot;hired ~ 1 + hours&quot;</span>
-<span class="n">glm1</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">glm</span><span class="p">(</span><span class="n">formula</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">interns</span><span class="p">,</span> <span class="n">family</span><span class="o">=</span><span class="n">Bin</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">students</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../datasets/students.csv&#39;</span><span class="p">)</span>
+<span class="n">formula0</span> <span class="o">=</span> <span class="s2">&quot;score ~ 1 + effort&quot;</span>
+<span class="n">glm0</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">glm</span><span class="p">(</span><span class="n">formula0</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">students</span><span class="p">,</span> <span class="n">family</span><span class="o">=</span><span class="n">Norm</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">glm0</span><span class="o">.</span><span class="n">params</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Intercept    32.465809
+effort        4.504850
+dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id1">
+<h4>Logistic regression<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">formula1</span> <span class="o">=</span> <span class="s2">&quot;hired ~ 1 + work&quot;</span>
+<span class="n">glm1</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">glm</span><span class="p">(</span><span class="n">formula1</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">interns</span><span class="p">,</span> <span class="n">family</span><span class="o">=</span><span class="n">Bin</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 <span class="n">glm1</span><span class="o">.</span><span class="n">params</span>
 <span class="c1"># glm1.summary()</span>
 </pre></div>
@@ -2063,17 +2168,19 @@ Saved figure to figures/lm/generalized/poisson_regression_hdisks_failures_vs_age
 </div>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Intercept   -78.693205
-hours         1.981458
+work          1.981458
 dtype: float64
 </pre></div>
 </div>
 </div>
 </div>
+</section>
+<section id="id2">
+<h4>Poisson regression<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#######################################################</span>
-<span class="n">formula</span> <span class="o">=</span> <span class="s2">&quot;failures ~ 1 + age&quot;</span>
-<span class="n">glm2</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">glm</span><span class="p">(</span><span class="n">formula</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">hdisks</span><span class="p">,</span> <span class="n">family</span><span class="o">=</span><span class="n">Pois</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">formula2</span> <span class="o">=</span> <span class="s2">&quot;failures ~ 1 + age&quot;</span>
+<span class="n">glm2</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">glm</span><span class="p">(</span><span class="n">formula2</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">hdisks</span><span class="p">,</span> <span class="n">family</span><span class="o">=</span><span class="n">Pois</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 <span class="n">glm2</span><span class="o">.</span><span class="n">params</span>
 <span class="c1"># glm2.summary()</span>
 </pre></div>
@@ -2089,10 +2196,72 @@ dtype: float64
 </div>
 </section>
 </section>
+<section id="fitting-generalized-linear-models">
+<h3>Fitting generalized linear models<a class="headerlink" href="#fitting-generalized-linear-models" title="Permalink to this heading">#</a></h3>
+</section>
+<section id="standardization-of-predictors">
+<h3>Standardization of predictors<a class="headerlink" href="#standardization-of-predictors" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">standardize</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="n">datamean</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">datastd</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+    <span class="n">zdata</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">-</span> <span class="n">datamean</span><span class="p">)</span> <span class="o">/</span> <span class="n">datastd</span>
+    <span class="k">return</span> <span class="n">zdata</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ALT. use zscore(data, ddof=1)</span>
+<span class="c1"># from scipy.stats import zscore</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#######################################################</span>
+<span class="n">students</span><span class="p">[</span><span class="s2">&quot;zeffort&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">standardize</span><span class="p">(</span><span class="n">students</span><span class="p">[</span><span class="s2">&quot;effort&quot;</span><span class="p">])</span>
+<span class="n">students</span><span class="p">[</span><span class="s2">&quot;zscore&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">standardize</span><span class="p">(</span><span class="n">students</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">])</span>
+
+<span class="n">lm1s</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;zscore~1+zeffort&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">students</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">lm1s</span><span class="o">.</span><span class="n">params</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Intercept    1.942890e-16
+zeffort      8.794375e-01
+dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">effort_std</span> <span class="o">=</span> <span class="n">students</span><span class="p">[</span><span class="s2">&quot;effort&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+<span class="n">score_std</span> <span class="o">=</span> <span class="n">students</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+
+<span class="c1">#######################################################</span>
+<span class="n">lm1s</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;zeffort&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">score_std</span> <span class="o">/</span> <span class="n">effort_std</span>
+<span class="c1"># == glm0.params[&quot;effort&quot;]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4.50485034420907
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
 <section id="discussion">
 <h2>Discussion<a class="headerlink" href="#discussion" title="Permalink to this heading">#</a></h2>
-<section id="model-diagnostics">
-<h3>Model diagnostics<a class="headerlink" href="#model-diagnostics" title="Permalink to this heading">#</a></h3>
+<section id="model-diagnostics-and-validation">
+<h3>Model diagnostics and validation<a class="headerlink" href="#model-diagnostics-and-validation" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Dispersion from GLM attributes</span>
@@ -2122,13 +2291,13 @@ dtype: float64
 </div>
 </div>
 </section>
-<section id="scikit-learn-models">
-<h3>Scikit Learn models<a class="headerlink" href="#scikit-learn-models" title="Permalink to this heading">#</a></h3>
+<section id="scikitlearn-models">
+<h3>ScikitLearn models<a class="headerlink" href="#scikitlearn-models" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Cross check with sklearn</span>
 <span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
-<span class="n">X1_skl</span> <span class="o">=</span> <span class="n">interns</span><span class="p">[[</span><span class="s2">&quot;hours&quot;</span><span class="p">]]</span>
+<span class="n">X1_skl</span> <span class="o">=</span> <span class="n">interns</span><span class="p">[[</span><span class="s2">&quot;work&quot;</span><span class="p">]]</span>
 <span class="n">y1_skl</span> <span class="o">=</span> <span class="n">interns</span><span class="p">[</span><span class="s2">&quot;hired&quot;</span><span class="p">]</span>
 <span class="n">lr1_skl</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">penalty</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X1_skl</span><span class="p">,</span> <span class="n">y1_skl</span><span class="p">)</span>
 <span class="n">lr1_skl</span><span class="o">.</span><span class="n">intercept_</span><span class="p">,</span> <span class="n">lr1_skl</span><span class="o">.</span><span class="n">coef_</span>
@@ -2149,7 +2318,7 @@ dtype: float64
 </div>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Intercept   -78.693205
-hours         1.981458
+work          1.981458
 dtype: float64
 </pre></div>
 </div>
@@ -2174,8 +2343,8 @@ dtype: object
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">PoissonRegressor</span>
 <span class="n">X2_skl</span> <span class="o">=</span> <span class="n">hdisks</span><span class="p">[[</span><span class="s2">&quot;age&quot;</span><span class="p">]]</span>
 <span class="n">y2_skl</span> <span class="o">=</span> <span class="n">hdisks</span><span class="p">[</span><span class="s2">&quot;failures&quot;</span><span class="p">]</span>
-<span class="n">pr2_sk</span> <span class="o">=</span> <span class="n">PoissonRegressor</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X2_skl</span><span class="p">,</span> <span class="n">y2_skl</span><span class="p">)</span>
-<span class="n">pr2_sk</span><span class="o">.</span><span class="n">intercept_</span><span class="p">,</span> <span class="n">pr2_sk</span><span class="o">.</span><span class="n">coef_</span>
+<span class="n">pr2_skl</span> <span class="o">=</span> <span class="n">PoissonRegressor</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X2_skl</span><span class="p">,</span> <span class="n">y2_skl</span><span class="p">)</span>
+<span class="n">pr2_skl</span><span class="o">.</span><span class="n">intercept_</span><span class="p">,</span> <span class="n">pr2_sk</span><span class="o">.</span><span class="n">coef_</span>
 </pre></div>
 </div>
 </div>
@@ -2199,6 +2368,12 @@ dtype: float64
 </div>
 </div>
 </div>
+</section>
+<section id="logistic-regression-as-a-building-blocks-for-neural-networks">
+<h3>Logistic regression as a building blocks for neural networks<a class="headerlink" href="#logistic-regression-as-a-building-blocks-for-neural-networks" title="Permalink to this heading">#</a></h3>
+</section>
+<section id="limitations-of-glms">
+<h3>Limitations of GLMs<a class="headerlink" href="#limitations-of-glms" title="Permalink to this heading">#</a></h3>
 </section>
 </section>
 <section id="exercises">
@@ -2978,10 +3153,10 @@ Name: C(gender)[T.M], dtype: float64
   <th>Method:</th>                 <td>MLE</td>       <th>  Df Model:          </th>  <td>     3</td>  
 </tr>
 <tr>
-  <th>Date:</th>            <td>Fri, 12 Jul 2024</td> <th>  Pseudo R-squ.:     </th>  <td>0.05358</td> 
+  <th>Date:</th>            <td>Mon, 15 Jul 2024</td> <th>  Pseudo R-squ.:     </th>  <td>0.05358</td> 
 </tr>
 <tr>
-  <th>Time:</th>                <td>15:30:59</td>     <th>  Log-Likelihood:    </th> <td> -1548.0</td> 
+  <th>Time:</th>                <td>13:55:30</td>     <th>  Log-Likelihood:    </th> <td> -1548.0</td> 
 </tr>
 <tr>
   <th>converged:</th>             <td>True</td>       <th>  LL-Null:           </th> <td> -1635.6</td> 
@@ -3645,13 +3820,13 @@ dtype: float64
   <th>Intercept</th> <td>  -78.6932</td> <td>   19.851</td> <td>   -3.964</td> <td> 0.000</td> <td> -117.600</td> <td>  -39.787</td>
 </tr>
 <tr>
-  <th>hours</th>     <td>    1.9815</td> <td>    0.500</td> <td>    3.959</td> <td> 0.000</td> <td>    1.001</td> <td>    2.962</td>
+  <th>work</th>      <td>    1.9815</td> <td>    0.500</td> <td>    3.959</td> <td> 0.000</td> <td>    1.001</td> <td>    2.962</td>
 </tr>
 </table></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lr1</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;hours&quot;</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lr1</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;work&quot;</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
@@ -3703,7 +3878,7 @@ dtype: float64
   <tbody>
     <tr>
       <th>0</th>
-      <td>hours</td>
+      <td>work</td>
       <td>mean(dY/dX)</td>
       <td>0.08077</td>
       <td>0.00422</td>
@@ -3752,7 +3927,7 @@ dtype: float64
   </thead>
   <tbody>
     <tr>
-      <th>hours</th>
+      <th>work</th>
       <td>0.08077</td>
       <td>0.00422</td>
       <td>19.139418</td>
@@ -3770,7 +3945,7 @@ dtype: float64
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># using `marginaleffects`</span>
-<span class="n">dg40</span> <span class="o">=</span> <span class="n">me</span><span class="o">.</span><span class="n">datagrid</span><span class="p">(</span><span class="n">lr1</span><span class="p">,</span> <span class="n">hours</span><span class="o">=</span><span class="p">[</span><span class="mi">40</span><span class="p">])</span>
+<span class="n">dg40</span> <span class="o">=</span> <span class="n">me</span><span class="o">.</span><span class="n">datagrid</span><span class="p">(</span><span class="n">lr1</span><span class="p">,</span> <span class="n">work</span><span class="o">=</span><span class="p">[</span><span class="mi">40</span><span class="p">])</span>
 <span class="n">me</span><span class="o">.</span><span class="n">slopes</span><span class="p">(</span><span class="n">lr1</span><span class="p">,</span> <span class="n">newdata</span><span class="o">=</span><span class="n">dg40</span><span class="p">)</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -3808,7 +3983,7 @@ dtype: float64
   <tbody>
     <tr>
       <th>0</th>
-      <td>hours</td>
+      <td>work</td>
       <td>dY/dX</td>
       <td>0.45783</td>
       <td>0.112263</td>
@@ -3858,7 +4033,7 @@ dtype: float64
   </thead>
   <tbody>
     <tr>
-      <th>hours</th>
+      <th>work</th>
       <td>0.45783</td>
       <td>0.112623</td>
       <td>4.065157</td>
@@ -3873,8 +4048,8 @@ dtype: float64
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># manual calculation plugging into derivative of `expit`</span>
-<span class="n">p40</span> <span class="o">=</span> <span class="n">lr1</span><span class="o">.</span><span class="n">predict</span><span class="p">({</span><span class="s2">&quot;hours&quot;</span><span class="p">:</span><span class="mi">40</span><span class="p">})</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
-<span class="n">marg_effect_at_40</span> <span class="o">=</span> <span class="n">p40</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">p40</span><span class="p">)</span> <span class="o">*</span> <span class="n">lr1</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;hours&#39;</span><span class="p">]</span>
+<span class="n">p40</span> <span class="o">=</span> <span class="n">lr1</span><span class="o">.</span><span class="n">predict</span><span class="p">({</span><span class="s2">&quot;work&quot;</span><span class="p">:</span><span class="mi">40</span><span class="p">})</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+<span class="n">marg_effect_at_40</span> <span class="o">=</span> <span class="n">p40</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">p40</span><span class="p">)</span> <span class="o">*</span> <span class="n">lr1</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;work&#39;</span><span class="p">]</span>
 <span class="n">marg_effect_at_40</span>
 </pre></div>
 </div>
@@ -3927,7 +4102,7 @@ dtype: float64
   <tbody>
     <tr>
       <th>0</th>
-      <td>hours</td>
+      <td>work</td>
       <td>dY/dX</td>
       <td>0.47034</td>
       <td>0.121818</td>
@@ -3976,7 +4151,7 @@ dtype: float64
   </thead>
   <tbody>
     <tr>
-      <th>hours</th>
+      <th>work</th>
       <td>0.47034</td>
       <td>0.121697</td>
       <td>3.864838</td>
@@ -3990,22 +4165,22 @@ dtype: float64
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">me</span><span class="o">.</span><span class="n">plot_predictions</span><span class="p">(</span><span class="n">lr1</span><span class="p">,</span> <span class="n">condition</span><span class="o">=</span><span class="s2">&quot;hours&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">me</span><span class="o">.</span><span class="n">plot_predictions</span><span class="p">(</span><span class="n">lr1</span><span class="p">,</span> <span class="n">condition</span><span class="o">=</span><span class="s2">&quot;work&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/5a052231fd08b0b1567ffa1c1b7a9ecfbcf585c37c346f5b135116cc7fe4d29a.png" src="../_images/5a052231fd08b0b1567ffa1c1b7a9ecfbcf585c37c346f5b135116cc7fe4d29a.png" />
+<img alt="../_images/97a60f4ee7b9f61d3ddb1d31c1022cd2206bd2aeace5a57882bd9a59987dc319.png" src="../_images/97a60f4ee7b9f61d3ddb1d31c1022cd2206bd2aeace5a57882bd9a59987dc319.png" />
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">me</span><span class="o">.</span><span class="n">plot_slopes</span><span class="p">(</span><span class="n">lr1</span><span class="p">,</span> <span class="n">condition</span><span class="o">=</span><span class="s2">&quot;hours&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">me</span><span class="o">.</span><span class="n">plot_slopes</span><span class="p">(</span><span class="n">lr1</span><span class="p">,</span> <span class="n">condition</span><span class="o">=</span><span class="s2">&quot;work&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/2bea9460e1bfe2d07ba363dd33a9b0ea30ad065208309ad5c755c9890f323a38.png" src="../_images/2bea9460e1bfe2d07ba363dd33a9b0ea30ad065208309ad5c755c9890f323a38.png" />
+<img alt="../_images/8c340d5c3f93353532c73bb1eeadafdc30e7992e59e6e8113de0eb61c3d35fcc.png" src="../_images/8c340d5c3f93353532c73bb1eeadafdc30e7992e59e6e8113de0eb61c3d35fcc.png" />
 </div>
 </div>
 </section>
@@ -4089,23 +4264,32 @@ dtype: float64
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#logistic-regression">Logistic regression</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-generation-for-logistic-regression">Data generation for logistic regression</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1-hiring-student-interns">Example 1: hiring student interns</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prediction">Prediction</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#poisson-regression">Poisson regression</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-generation-for-poisson-regression">Data generation for Poisson regression</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2-hard-disk-failures-over-time">Example 2: hard disk failures over time</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanations">Explanations</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generalized-linear-families">Generalized linear families</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-exponential-family-of-distributions">The exponential family of distributions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-generalized-linear-model-template">The generalized linear model template</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generalized-linear-models-using-statsmodels">Generalized linear models using statsmodels</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-model">Linear model</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Logistic regression</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Poisson regression</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fitting-generalized-linear-models">Fitting generalized linear models</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#standardization-of-predictors">Standardization of predictors</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-diagnostics">Model diagnostics</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scikit-learn-models">Scikit Learn models</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-diagnostics-and-validation">Model diagnostics and validation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scikitlearn-models">ScikitLearn models</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#logistic-regression-as-a-building-blocks-for-neural-networks">Logistic regression as a building blocks for neural networks</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#limitations-of-glms">Limitations of GLMs</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a><ul class="nav section-nav flex-column">
