@@ -514,12 +514,15 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-diagnostics">Model diagnostics</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scatter-plots">Scatter plots</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scatter-plots">Scatter plots</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#examples-of-nonlinear-patterns">Examples of nonlinear patterns</a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#residuals-plots">Residuals plots</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#residuals-versus-the-predicted-values">Residuals versus the predicted values</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#residuals-versus-the-predictor-bonus">Residuals versus the predictor (bonus)</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#qq-plot-of-the-residuals">QQ-plot of the residuals</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#residuals-plots-that-show-violated-assumptions">Residuals plots that show violated assumptions</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#residual-plots-that-show-violated-assumptions">Residual plots that show violated assumptions</a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sum-of-squares-quantities">Sum of squares quantities</a><ul class="nav section-nav flex-column">
@@ -536,7 +539,9 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#confidence-interval-for-observations">Confidence interval for observations</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-predicting-students-scores">Example:predicting students’ scores</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#confidence-interval-for-the-mean-score">Confidence interval for the mean score</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#prediction-band-for-the-mean-score">Prediction band for the mean score</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#confidence-interval-for-predicted-scores">Confidence interval for predicted scores</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#prediction-band-for-scores">Prediction band for scores</a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prediction-caveats">Prediction caveats</a></li>
@@ -562,7 +567,7 @@ document.write(`
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaborn-functions-for-plotting-linear-models">Seaborn functions for plotting linear models</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Regression plot</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Residuals plot</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#residual-plot">Residual plot</a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pearson-correlation-coefficient-revisited">Pearson correlation coefficient revisited</a><ul class="nav section-nav flex-column">
@@ -586,7 +591,7 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#links">Links</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bonus-formula-for-standard-error-of-coefficients">(bonus) Formula for standard error of coefficients</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bonus-material-formula-for-standard-error-of-coefficients">(BONUS MATERIAL) Formula for standard error of coefficients</a></li>
 </ul>
 </li>
 </ul>
@@ -649,7 +654,6 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ministats.plots.figures</span> <span class="kn">import</span> <span class="n">plot_residuals</span>
 <span class="kn">from</span> <span class="nn">ministats.plots.figures</span> <span class="kn">import</span> <span class="n">plot_residuals2</span>
-<span class="kn">from</span> <span class="nn">ministats.utils</span> <span class="kn">import</span> <span class="n">savefigure</span>
 </pre></div>
 </div>
 </div>
@@ -697,67 +701,7 @@ document.write(`
 </section>
 <section id="linear-model">
 <h2>Linear model<a class="headerlink" href="#linear-model" title="Permalink to this heading">#</a></h2>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
-
-<span class="c1"># Define the linear model function</span>
-<span class="k">def</span> <span class="nf">linear_model</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-    <span class="k">return</span> <span class="mi">30</span> <span class="o">+</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">x</span>
-
-<span class="c1"># Define sigma for the normal distribution</span>
-<span class="n">sigma</span> <span class="o">=</span> <span class="mi">8</span>
-
-<span class="n">onepixel</span> <span class="o">=</span> <span class="mf">0.02</span>
-
-<span class="k">with</span> <span class="n">sns</span><span class="o">.</span><span class="n">axes_style</span><span class="p">(</span><span class="s2">&quot;ticks&quot;</span><span class="p">):</span>
-    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-
-    <span class="c1"># Plot the linear model</span>
-    <span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
-    <span class="n">ys</span> <span class="o">=</span> <span class="n">linear_model</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>
-    <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">xs</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">ys</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\mu_Y(x) = \beta_0 + \beta_1x$&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-    
-    <span class="c1"># Plot Gaussian distributions at specified x positions and add sigma lines</span>
-    <span class="n">x_positions</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">x_pos</span> <span class="ow">in</span> <span class="n">x_positions</span><span class="p">:</span>
-        <span class="n">y_pos</span> <span class="o">=</span> <span class="n">linear_model</span><span class="p">(</span><span class="n">x_pos</span><span class="p">)</span>
-        <span class="n">ys</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">y_pos</span><span class="o">-</span><span class="mf">3.5</span><span class="o">*</span><span class="n">sigma</span><span class="p">,</span> <span class="n">y_pos</span><span class="o">+</span><span class="mf">3.5</span><span class="o">*</span><span class="n">sigma</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
-        <span class="n">pdf</span> <span class="o">=</span> <span class="mf">0.7</span><span class="o">*</span><span class="n">norm</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">y_pos</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">sigma</span><span class="p">)</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">ys</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">fill_betweenx</span><span class="p">(</span><span class="n">ys</span><span class="p">,</span> <span class="n">x_pos</span> <span class="o">-</span> <span class="n">pdf</span> <span class="o">*</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">x_pos</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;grey&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-        <span class="c1"># Draw vertical sigma line and label it on the opposite side of the Gaussian shape</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">x_pos</span><span class="o">+</span><span class="n">onepixel</span><span class="p">,</span> <span class="n">x_pos</span><span class="o">+</span><span class="n">onepixel</span><span class="p">],</span> <span class="p">[</span><span class="n">y_pos</span><span class="p">,</span> <span class="n">y_pos</span> <span class="o">-</span> <span class="n">sigma</span><span class="p">],</span> <span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x_pos</span> <span class="o">+</span> <span class="mf">0.06</span><span class="p">,</span> <span class="n">y_pos</span> <span class="o">-</span> <span class="n">sigma</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$\sigma$&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
-
-    <span class="c1"># y-intercept</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">0</span> <span class="o">-</span> <span class="mf">0.15</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$\beta_0$&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
-
-    <span class="c1"># Set up x-axis</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">])</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$x$&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
-    
-    <span class="c1"># Set up y-axis</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">])</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$y$&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">110</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">([])</span>
-    
-    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper left&quot;</span><span class="p">)</span>
-
-<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;linear_model_xy_with_gaussians.pdf&quot;</span><span class="p">)</span>
-<span class="n">savefigure</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/simple/linear_model_xy_with_gaussians.pdf
-Saved figure to figures/lm/simple/linear_model_xy_with_gaussians.png
-</pre></div>
-</div>
-<img alt="../_images/dda231406ae018abd44c3f1d23fd44c4be5d5fef8547faf3cb9e46264de77092.png" src="../_images/dda231406ae018abd44c3f1d23fd44c4be5d5fef8547faf3cb9e46264de77092.png" />
-</div>
-</div>
+<p><img alt="The regression line describes the expected value of the outcome variable Y at different values of x" src="../_images/linear_model_xy_with_gaussians.png" /></p>
 </section>
 <section id="example-students-score-as-a-function-of-effort">
 <h2>Example: students score as a function of effort<a class="headerlink" href="#example-students-score-as-a-function-of-effort" title="Permalink to this heading">#</a></h2>
@@ -843,21 +787,12 @@ Saved figure to figures/lm/simple/linear_model_xy_with_gaussians.png
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">efforts</span> <span class="o">=</span> <span class="n">students</span><span class="p">[</span><span class="s2">&quot;effort&quot;</span><span class="p">]</span>
 <span class="n">scores</span> <span class="o">=</span> <span class="n">students</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">]</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">efforts</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">scores</span><span class="p">)</span>
-
-<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;students_scores_vs_effort_scatterplot.pdf&quot;</span><span class="p">)</span>
-<span class="n">savefigure</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">(),</span> <span class="n">filename</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">efforts</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">scores</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/simple/students_scores_vs_effort_scatterplot.pdf
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/simple/students_scores_vs_effort_scatterplot.png
-</pre></div>
-</div>
-<img alt="../_images/759e6f91a60e9f32d58b94da8d5e96523f29a3088c8440536e9e2913643ed7c8.png" src="../_images/759e6f91a60e9f32d58b94da8d5e96523f29a3088c8440536e9e2913643ed7c8.png" />
+<img alt="../_images/16a4a467f55265f67f0060ecb5d230a6d96966f02b72cbf9e073a7a43908fb81.png" src="../_images/16a4a467f55265f67f0060ecb5d230a6d96966f02b72cbf9e073a7a43908fb81.png" />
 </div>
 </div>
 <section id="compute-the-correlation">
@@ -915,21 +850,12 @@ Saved figure to figures/lm/simple/linear_model_xy_with_gaussians.png
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">es</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
 <span class="n">scorehats</span> <span class="o">=</span> <span class="n">b0</span> <span class="o">+</span> <span class="n">b1</span><span class="o">*</span><span class="n">es</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">es</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">scorehats</span><span class="p">)</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">efforts</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">scores</span><span class="p">)</span>
-
-<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;students_scores_vs_effort_with_line.pdf&quot;</span><span class="p">)</span>
-<span class="n">savefigure</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">(),</span> <span class="n">filename</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">efforts</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">scores</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/simple/students_scores_vs_effort_with_line.pdf
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/simple/students_scores_vs_effort_with_line.png
-</pre></div>
-</div>
-<img alt="../_images/61a3c06de42cbcfe46df39c25b636d34ef0eabee28416694685586039e7730b4.png" src="../_images/61a3c06de42cbcfe46df39c25b636d34ef0eabee28416694685586039e7730b4.png" />
+<img alt="../_images/26bfbed6ab523c37e3e76773ebad59c2ddef5d15aa3107478560eb796752bb62.png" src="../_images/26bfbed6ab523c37e3e76773ebad59c2ddef5d15aa3107478560eb796752bb62.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -950,20 +876,11 @@ Saved figure to figures/lm/simple/linear_model_xy_with_gaussians.png
 <span class="n">es</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mf">12.2</span><span class="p">)</span>
 <span class="n">scorehats</span> <span class="o">=</span> <span class="n">b0</span> <span class="o">+</span> <span class="n">b1</span><span class="o">*</span><span class="n">es</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">es</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">scorehats</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C4&quot;</span><span class="p">);</span>
-
-<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;students_scores_with_residuals.pdf&quot;</span><span class="p">)</span>
-<span class="n">savefigure</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">(),</span> <span class="n">filename</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/simple/students_scores_with_residuals.pdf
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/simple/students_scores_with_residuals.png
-</pre></div>
-</div>
-<img alt="../_images/203e343df45068dd09ccd23c6af606c9000608331c09924a1b16bb49fe428a4a.png" src="../_images/203e343df45068dd09ccd23c6af606c9000608331c09924a1b16bb49fe428a4a.png" />
+<img alt="../_images/b47e0f4549b2cd19e9ee0e3594175c78913a22dd95ddc0ab8d9e90702b009806.png" src="../_images/b47e0f4549b2cd19e9ee0e3594175c78913a22dd95ddc0ab8d9e90702b009806.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -973,20 +890,11 @@ Saved figure to figures/lm/simple/linear_model_xy_with_gaussians.png
 <span class="n">scorehats</span> <span class="o">=</span> <span class="n">b0</span> <span class="o">+</span> <span class="n">b1</span><span class="o">*</span><span class="n">es</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">es</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">scorehats</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C4&quot;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 <span class="n">plot_residuals2</span><span class="p">(</span><span class="n">efforts</span><span class="p">,</span> <span class="n">scores</span><span class="p">,</span> <span class="n">b0</span><span class="p">,</span> <span class="n">b1</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">);</span>
-
-<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;students_scores_with_residuals_squared.pdf&quot;</span><span class="p">)</span>
-<span class="n">savefigure</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">(),</span> <span class="n">filename</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/simple/students_scores_with_residuals_squared.pdf
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/simple/students_scores_with_residuals_squared.png
-</pre></div>
-</div>
-<img alt="../_images/811ccbf355f782a09ddb6395a0572b537309e1ee964de24fe596f3627df7527a.png" src="../_images/811ccbf355f782a09ddb6395a0572b537309e1ee964de24fe596f3627df7527a.png" />
+<img alt="../_images/1a2944a337223bb1e02c34c5ae29ac4e7c8fa01bbe27d617728024646ae902e3.png" src="../_images/1a2944a337223bb1e02c34c5ae29ac4e7c8fa01bbe27d617728024646ae902e3.png" />
 </div>
 </div>
 </section>
@@ -1041,47 +949,10 @@ dtype: float64
 <img alt="../_images/16a4a467f55265f67f0060ecb5d230a6d96966f02b72cbf9e073a7a43908fb81.png" src="../_images/16a4a467f55265f67f0060ecb5d230a6d96966f02b72cbf9e073a7a43908fb81.png" />
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># FIGURES ONLY</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">uniform</span><span class="p">,</span> <span class="n">norm</span>
-
-<span class="n">n</span> <span class="o">=</span> <span class="mi">100</span>
-
-<span class="c1"># (a) quadratic</span>
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
-<span class="n">xqs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mf">6.5</span><span class="p">,</span> <span class="mi">13</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
-<span class="n">yqs</span> <span class="o">=</span> <span class="mf">0.4</span><span class="o">*</span><span class="n">xqs</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">norm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-
-<span class="c1"># (b) logarithmic</span>
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">44</span><span class="p">)</span>
-<span class="n">xls</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">50</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
-<span class="n">yls</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">xls</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.2</span><span class="o">*</span><span class="n">norm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-
-<span class="k">with</span> <span class="n">plt</span><span class="o">.</span><span class="n">rc_context</span><span class="p">({</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:(</span><span class="mi">6</span><span class="p">,</span><span class="mi">2</span><span class="p">)}):</span>
-    <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-    <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">xqs</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">yqs</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;(a) Quadratic relationship&quot;</span><span class="p">)</span>
-    <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">xls</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">yls</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-    <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;(b) Logarithmic relationship&quot;</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axs</span><span class="p">:</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">([])</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
-    <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;scatter_plots_of_nonlinear_relationships.pdf&quot;</span><span class="p">)</span>
-    <span class="n">savefigure</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/simple/scatter_plots_of_nonlinear_relationships.pdf
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/simple/scatter_plots_of_nonlinear_relationships.png
-</pre></div>
-</div>
-<img alt="../_images/ed3a825c5c3ccf6dc2da7576fd783b609b8260be6b4b4fab5ef97de1c1da5acb.png" src="../_images/ed3a825c5c3ccf6dc2da7576fd783b609b8260be6b4b4fab5ef97de1c1da5acb.png" />
-</div>
-</div>
+<section id="examples-of-nonlinear-patterns">
+<h4>Examples of nonlinear patterns<a class="headerlink" href="#examples-of-nonlinear-patterns" title="Permalink to this heading">#</a></h4>
+<p><img alt="Examples of scatter plots showing nonlinear patterns. " src="../_images/scatter_plots_of_nonlinear_relationships.png" /></p>
+</section>
 </section>
 <section id="residuals-plots">
 <h3>Residuals plots<a class="headerlink" href="#residuals-plots" title="Permalink to this heading">#</a></h3>
@@ -1101,21 +972,11 @@ dtype: float64
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;model predictions ($</span><span class="se">\\</span><span class="s2">hat</span><span class="si">{s}</span><span class="s2">_i$)&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;residuals ($r_i = s_i - </span><span class="se">\\</span><span class="s2">hat</span><span class="si">{s}</span><span class="s2">_i$)&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;dotted&quot;</span><span class="p">);</span>
-
-<span class="c1"># FIGURES ONLY</span>
-<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;residuals_plot_vs_scorehats.pdf&quot;</span><span class="p">)</span>
-<span class="n">savefigure</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">(),</span> <span class="n">filename</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/simple/residuals_plot_vs_scorehats.pdf
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/simple/residuals_plot_vs_scorehats.png
-</pre></div>
-</div>
-<img alt="../_images/13a3ffb712063a88a80a6f9e99ad68d03fe45861597ad5bbfea05b13a42418a5.png" src="../_images/13a3ffb712063a88a80a6f9e99ad68d03fe45861597ad5bbfea05b13a42418a5.png" />
+<img alt="../_images/637c9817a053b8aa8ef2bff5e592f2e06e81c71a5e457a613e5ba0b7fa729e67.png" src="../_images/637c9817a053b8aa8ef2bff5e592f2e06e81c71a5e457a613e5ba0b7fa729e67.png" />
 </div>
 </div>
 </section>
@@ -1123,14 +984,10 @@ dtype: float64
 <h4>Residuals versus the predictor (bonus)<a class="headerlink" href="#residuals-versus-the-predictor-bonus" title="Permalink to this heading">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># with plt.rc_context({&quot;text.usetex&quot;:True}):</span>
-<span class="c1">#     ax = sns.scatterplot(x=efforts, y=residuals)</span>
-<span class="c1">#     ax.set_xticks(range(5,12+1))</span>
-<span class="c1">#     ax.set_ylabel(&quot;residuals ($r_i = s_i - \\hat{s}_i$)&quot;)</span>
-<span class="c1">#     ax.axhline(y=0, color=&quot;b&quot;, linestyle=&quot;dotted&quot;);</span>
-<span class="c1">#</span>
-<span class="c1"># filename = os.path.join(DESTDIR, &quot;residuals_plot_vs_effort.pdf&quot;)</span>
-<span class="c1"># savefigure(plt.gcf(), filename)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ax = sns.scatterplot(x=efforts, y=residuals)</span>
+<span class="c1"># ax.set_xticks(range(5,12+1))</span>
+<span class="c1"># ax.set_ylabel(&quot;residuals ($r_i = s_i - \\hat{s}_i$)&quot;)</span>
+<span class="c1"># ax.axhline(y=0, color=&quot;b&quot;, linestyle=&quot;dotted&quot;);</span>
 </pre></div>
 </div>
 </div>
@@ -1141,113 +998,19 @@ dtype: float64
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">statsmodels.graphics.api</span> <span class="kn">import</span> <span class="n">qqplot</span>
-<span class="k">with</span> <span class="n">plt</span><span class="o">.</span><span class="n">rc_context</span><span class="p">({</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:(</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">)}):</span>
-    <span class="n">qqplot</span><span class="p">(</span><span class="n">residuals</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">)</span>
 
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;theoretical quantiles (normal)&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;residuals quantiles&quot;</span><span class="p">)</span>
-<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;residuals_plot_vs_effort_qqplot.pdf&quot;</span><span class="p">)</span>
-<span class="n">savefigure</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">(),</span> <span class="n">filename</span><span class="p">)</span>
+<span class="n">qqplot</span><span class="p">(</span><span class="n">residuals</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/simple/residuals_plot_vs_effort_qqplot.pdf
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/simple/residuals_plot_vs_effort_qqplot.png
-</pre></div>
-</div>
-<img alt="../_images/99c800deedb80065ed060affb2cdb287944afb80e5e78de370806675460ecffb.png" src="../_images/99c800deedb80065ed060affb2cdb287944afb80e5e78de370806675460ecffb.png" />
+<img alt="../_images/09dc8f2a3a24b3103835c5e16b2525ae1730a532e50111b14ed5e29ebb9bff24.png" src="../_images/09dc8f2a3a24b3103835c5e16b2525ae1730a532e50111b14ed5e29ebb9bff24.png" />
 </div>
 </div>
 </section>
-<section id="residuals-plots-that-show-violated-assumptions">
-<h4>Residuals plots that show violated assumptions<a class="headerlink" href="#residuals-plots-that-show-violated-assumptions" title="Permalink to this heading">#</a></h4>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">uniform</span><span class="p">,</span> <span class="n">lognorm</span><span class="p">,</span> <span class="n">randint</span><span class="p">,</span> <span class="n">norm</span>
-
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
-<span class="n">n</span> <span class="o">=</span> <span class="mi">100</span>
-<span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
-
-<span class="c1"># (a) quadratic</span>
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">43</span><span class="p">)</span>
-<span class="n">y1s</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="n">xs</span> <span class="o">+</span> <span class="mf">0.1</span><span class="o">*</span><span class="n">xs</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">norm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-
-<span class="c1"># (b) clusters</span>
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">44</span><span class="p">)</span>
-<span class="n">y2s</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">K</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># number of clusters</span>
-<span class="n">batch_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="o">/</span><span class="n">K</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">K</span><span class="p">):</span>
-    <span class="n">r</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">y2s_batch</span> <span class="o">=</span> <span class="mi">35</span><span class="o">*</span><span class="n">r</span> <span class="o">-</span> <span class="mi">10</span> <span class="o">+</span> <span class="mi">6</span><span class="o">*</span><span class="n">norm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">batch_size</span><span class="p">)</span>
-    <span class="n">y2s</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">y2s_batch</span><span class="p">)</span>
-
-<span class="c1"># (c) log-normal error term</span>
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">45</span><span class="p">)</span>
-<span class="n">y3s</span> <span class="o">=</span> <span class="mf">2.5</span><span class="o">*</span><span class="n">xs</span> <span class="o">-</span><span class="mi">3</span> <span class="o">+</span> <span class="n">lognorm</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-
-<span class="c1"># (d) heteroscedasticity</span>
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">47</span><span class="p">)</span>
-<span class="n">sigmas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
-<span class="n">y4s</span> <span class="o">=</span> <span class="mf">1.7</span><span class="o">*</span><span class="n">xs</span> <span class="o">+</span> <span class="mf">0.9</span><span class="o">*</span><span class="n">norm</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">sigmas</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-
-<span class="n">ysdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;x&quot;</span><span class="p">:</span><span class="n">xs</span><span class="p">,</span> <span class="s2">&quot;y1&quot;</span><span class="p">:</span><span class="n">y1s</span><span class="p">,</span> <span class="s2">&quot;y2&quot;</span><span class="p">:</span><span class="n">y2s</span><span class="p">,</span> <span class="s2">&quot;y3&quot;</span><span class="p">:</span><span class="n">y3s</span><span class="p">,</span> <span class="s2">&quot;y4&quot;</span><span class="p">:</span><span class="n">y4s</span><span class="p">})</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ministats</span> <span class="kn">import</span> <span class="n">plot_resid</span>
-<span class="kn">import</span> <span class="nn">statsmodels.formula.api</span> <span class="k">as</span> <span class="nn">smf</span>
-
-<span class="k">with</span> <span class="n">plt</span><span class="o">.</span><span class="n">rc_context</span><span class="p">({</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:(</span><span class="mi">6</span><span class="p">,</span><span class="mi">4</span><span class="p">)}):</span>
-    <span class="n">fig</span><span class="p">,</span> <span class="n">axs_matrix</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">axs</span> <span class="o">=</span> <span class="p">[</span><span class="n">ax</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">axs_matrix</span> <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">row</span><span class="p">]</span>
-
-    <span class="n">lmy1s</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;y1 ~ 1 + x&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">ysdf</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-    <span class="n">plot_resid</span><span class="p">(</span><span class="n">lmy1s</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
-    <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;(a) Nonlinear relationship&quot;</span><span class="p">)</span>
-    
-    <span class="n">lmy2s</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;y2 ~ 1 + x&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">ysdf</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-    <span class="n">plot_resid</span><span class="p">(</span><span class="n">lmy2s</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-    <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
-    <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
-    <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;(b) Clustered residuals&quot;</span><span class="p">)</span>
-
-    <span class="n">lmy3s</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;y3 ~ 1 + x&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">ysdf</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-    <span class="n">plot_resid</span><span class="p">(</span><span class="n">lmy3s</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
-    <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;(c) Skewed distribution&quot;</span><span class="p">)</span>
-
-    <span class="n">lmy4s</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;y4 ~ 1 + x&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">ysdf</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-    <span class="n">plot_resid</span><span class="p">(</span><span class="n">lmy4s</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
-    <span class="n">axs</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
-    <span class="n">axs</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;(d) Heteroscedasticity&quot;</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axs</span><span class="p">:</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">([])</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([])</span>
-
-    <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;residuals_plots_with_violated_assumptions.pdf&quot;</span><span class="p">)</span>
-    <span class="n">savefigure</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/simple/residuals_plots_with_violated_assumptions.pdf
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/simple/residuals_plots_with_violated_assumptions.png
-</pre></div>
-</div>
-<img alt="../_images/1acdedb47039f6d5973dd64805dfd2a0279cef5ca88ba2b5eae51a9d0b91889e.png" src="../_images/1acdedb47039f6d5973dd64805dfd2a0279cef5ca88ba2b5eae51a9d0b91889e.png" />
-</div>
-</div>
+<section id="residual-plots-that-show-violated-assumptions">
+<h4>Residual plots that show violated assumptions<a class="headerlink" href="#residual-plots-that-show-violated-assumptions" title="Permalink to this heading">#</a></h4>
+<p><img alt="Examples of residual plots showing violated modeling assumptions." src="../_images/residuals_plots_with_violated_assumptions.png" /></p>
 </section>
 </section>
 <section id="sum-of-squares-quantities">
@@ -1380,7 +1143,7 @@ dtype: float64
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.4971579034779462
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.2744485881877106
 </pre></div>
 </div>
 </div>
@@ -1395,37 +1158,15 @@ dtype: float64
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[72.17444383831662, 73.82555616168338]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[70.74303643371016, 75.25696356628984]
 </pre></div>
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># FIGURES ONLY</span>
-<span class="kn">from</span> <span class="nn">ministats</span> <span class="kn">import</span> <span class="n">plot_reg</span>
-<span class="kn">from</span> <span class="nn">ministats</span> <span class="kn">import</span> <span class="n">plot_pred_bands</span>
-<span class="kn">import</span> <span class="nn">statsmodels.formula.api</span> <span class="k">as</span> <span class="nn">smf</span>
-
-<span class="n">lm1</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;score ~ 1 + effort&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">students</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-<span class="n">plot_reg</span><span class="p">(</span><span class="n">lm1</span><span class="p">)</span>
-<span class="n">plot_pred_bands</span><span class="p">(</span><span class="n">lm1</span><span class="p">,</span> <span class="n">ci_mean</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha_mean</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
-
-<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;prediction_mean_score_vs_effort.pdf&quot;</span><span class="p">)</span>
-<span class="n">savefigure</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">(),</span> <span class="n">filename</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/simple/prediction_mean_score_vs_effort.pdf
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/simple/prediction_mean_score_vs_effort.png
-</pre></div>
-</div>
-<img alt="../_images/c02b4b94487f8dfd708d6566e58f1b5283d226f0de915adc8729eaec1685d20c.png" src="../_images/c02b4b94487f8dfd708d6566e58f1b5283d226f0de915adc8729eaec1685d20c.png" />
-</div>
-</div>
+</section>
+<section id="prediction-band-for-the-mean-score">
+<h4>Prediction band for the mean score<a class="headerlink" href="#prediction-band-for-the-mean-score" title="Permalink to this heading">#</a></h4>
+<p><img alt="Plot of the 90% confidence interval for the mean" src="../_images/prediction_mean_score_vs_effort.png" /></p>
 </section>
 <section id="confidence-interval-for-predicted-scores">
 <h4>Confidence interval for predicted scores<a class="headerlink" href="#confidence-interval-for-predicted-scores" title="Permalink to this heading">#</a></h4>
@@ -1437,7 +1178,7 @@ dtype: float64
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4.954604445301113
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5.0916754052414435
 </pre></div>
 </div>
 </div>
@@ -1451,32 +1192,15 @@ dtype: float64
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[64.77262555838334, 81.22737444161666]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[63.98298198333331, 82.0170180166667]
 </pre></div>
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># FIGURES ONLY</span>
-<span class="n">plot_reg</span><span class="p">(</span><span class="n">lm1</span><span class="p">)</span>
-<span class="n">plot_pred_bands</span><span class="p">(</span><span class="n">lm1</span><span class="p">,</span> <span class="n">ci_obs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha_obs</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
-
-<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;prediction_values_score_vs_effort.pdf&quot;</span><span class="p">)</span>
-<span class="n">savefigure</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">(),</span> <span class="n">filename</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/simple/prediction_values_score_vs_effort.pdf
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/simple/prediction_values_score_vs_effort.png
-</pre></div>
-</div>
-<img alt="../_images/472ac58a1730f1f22d840a2765bd0eb326e6dedc7e51351d33748f26fed706bf.png" src="../_images/472ac58a1730f1f22d840a2765bd0eb326e6dedc7e51351d33748f26fed706bf.png" />
-</div>
-</div>
+</section>
+<section id="prediction-band-for-scores">
+<h4>Prediction band for scores<a class="headerlink" href="#prediction-band-for-scores" title="Permalink to this heading">#</a></h4>
+<p><img alt="Plot of the 90% confidence interval for the outcomes." src="../_images/prediction_values_score_vs_effort.png" /></p>
 </section>
 </section>
 <section id="prediction-caveats">
@@ -1753,10 +1477,10 @@ dtype: float64
   <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>   44.37</td>
 </tr>
 <tr>
-  <th>Date:</th>             <td>Wed, 17 Jul 2024</td> <th>  Prob (F-statistic):</th> <td>1.56e-05</td>
+  <th>Date:</th>             <td>Fri, 19 Jul 2024</td> <th>  Prob (F-statistic):</th> <td>1.56e-05</td>
 </tr>
 <tr>
-  <th>Time:</th>                 <td>13:38:37</td>     <th>  Log-Likelihood:    </th> <td> -44.140</td>
+  <th>Time:</th>                 <td>13:56:34</td>     <th>  Log-Likelihood:    </th> <td> -44.140</td>
 </tr>
 <tr>
   <th>No. Observations:</th>      <td>    15</td>      <th>  AIC:               </th> <td>   92.28</td>
@@ -1814,19 +1538,12 @@ or <code class="docutils literal notranslate"><span class="pre">ci_obs=True</spa
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ministats</span> <span class="kn">import</span> <span class="n">plot_reg</span>
 
-<span class="n">plot_reg</span><span class="p">(</span><span class="n">lm1</span><span class="p">)</span>
-
-<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;ministats_plot_reg_students_score_vs_effort.pdf&quot;</span><span class="p">)</span>
-<span class="n">savefigure</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">(),</span> <span class="n">filename</span><span class="p">)</span>
+<span class="n">plot_reg</span><span class="p">(</span><span class="n">lm1</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/simple/ministats_plot_reg_students_score_vs_effort.pdf
-Saved figure to figures/lm/simple/ministats_plot_reg_students_score_vs_effort.png
-</pre></div>
-</div>
-<img alt="../_images/641e9d8723c8c2b5ce02b6401ea2e9e552d315687022a2b9fe98b47e0200a4fa.png" src="../_images/641e9d8723c8c2b5ce02b6401ea2e9e552d315687022a2b9fe98b47e0200a4fa.png" />
+<img alt="../_images/aca273b549b29460c68dccca613878aa062f9731b030856aa463209ea65832ad.png" src="../_images/aca273b549b29460c68dccca613878aa062f9731b030856aa463209ea65832ad.png" />
 </div>
 </div>
 </section>
@@ -1862,31 +1579,22 @@ Saved figure to figures/lm/simple/ministats_plot_reg_students_score_vs_effort.pn
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ministats</span> <span class="kn">import</span> <span class="n">plot_resid</span>
 
-<span class="n">plot_resid</span><span class="p">(</span><span class="n">lm1</span><span class="p">)</span>
-
-<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;ministats_plot_resid_students_score_vs_effort.pdf&quot;</span><span class="p">)</span>
-<span class="n">savefigure</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">(),</span> <span class="n">filename</span><span class="p">)</span>
+<span class="n">plot_resid</span><span class="p">(</span><span class="n">lm1</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/simple/ministats_plot_resid_students_score_vs_effort.pdf
-Saved figure to figures/lm/simple/ministats_plot_resid_students_score_vs_effort.png
-</pre></div>
-</div>
-<img alt="../_images/02389abfaa2492745f6792523ad4bb56c49c6174cacdaa58b7d1e7b4e2b64ab2.png" src="../_images/02389abfaa2492745f6792523ad4bb56c49c6174cacdaa58b7d1e7b4e2b64ab2.png" />
+<img alt="../_images/a09fbadb44891285a9b2de3dc8a61b1079c42fdfdfc04f62a70c49bd16f5d019.png" src="../_images/a09fbadb44891285a9b2de3dc8a61b1079c42fdfdfc04f62a70c49bd16f5d019.png" />
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_resid</span><span class="p">(</span><span class="n">lm1</span><span class="p">,</span> <span class="n">pred</span><span class="o">=</span><span class="s2">&quot;effort&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># BONUS plot residuals against predictor variable</span>
+<span class="n">plot_resid</span><span class="p">(</span><span class="n">lm1</span><span class="p">,</span> <span class="n">pred</span><span class="o">=</span><span class="s2">&quot;effort&quot;</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: xlabel=&#39;effort&#39;, ylabel=&#39;residuals $r_i$&#39;&gt;
-</pre></div>
-</div>
 <img alt="../_images/dd5558a197907ab8487a427e56393e73402b0ff94550795c62ac997ad371c8f6.png" src="../_images/dd5558a197907ab8487a427e56393e73402b0ff94550795c62ac997ad371c8f6.png" />
 </div>
 </div>
@@ -1895,7 +1603,9 @@ Saved figure to figures/lm/simple/ministats_plot_resid_students_score_vs_effort.
 <h4>Prediction band plots<a class="headerlink" href="#prediction-band-plots" title="Permalink to this heading">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_reg</span><span class="p">(</span><span class="n">lm1</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ministats</span> <span class="kn">import</span> <span class="n">plot_pred_bands</span>
+
+<span class="n">plot_reg</span><span class="p">(</span><span class="n">lm1</span><span class="p">)</span>
 <span class="n">plot_pred_bands</span><span class="p">(</span><span class="n">lm1</span><span class="p">,</span> <span class="n">ci_mean</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha_mean</span><span class="o">=</span><span class="mf">0.1</span><span class="p">);</span>
 </pre></div>
 </div>
@@ -1924,42 +1634,24 @@ Saved figure to figures/lm/simple/ministats_plot_resid_students_score_vs_effort.
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">regplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;effort&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;score&quot;</span><span class="p">,</span> <span class="n">ci</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">students</span><span class="p">);</span>
-
-<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;regplot_students_score_vs_effort.pdf&quot;</span><span class="p">)</span>
-<span class="n">savefigure</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">(),</span> <span class="n">filename</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/simple/regplot_students_score_vs_effort.pdf
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/simple/regplot_students_score_vs_effort.png
-</pre></div>
-</div>
-<img alt="../_images/caa83d0ce712ad5ad873cac73346badf43cc016f9260d1f45379777ff7d4ccee.png" src="../_images/caa83d0ce712ad5ad873cac73346badf43cc016f9260d1f45379777ff7d4ccee.png" />
+<img alt="../_images/c69ba08d10750a1bcd7d7076a05d71577e5cd5a06aabb8776a92225abdda321d.png" src="../_images/c69ba08d10750a1bcd7d7076a05d71577e5cd5a06aabb8776a92225abdda321d.png" />
 </div>
 </div>
 </section>
-<section id="id2">
-<h4>Residuals plot<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h4>
+<section id="residual-plot">
+<h4>Residual plot<a class="headerlink" href="#residual-plot" title="Permalink to this heading">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">residplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;effort&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;score&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">students</span><span class="p">);</span>
-
-<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;residplot_students_score_vs_effort.pdf&quot;</span><span class="p">)</span>
-<span class="n">savefigure</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">(),</span> <span class="n">filename</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/simple/residplot_students_score_vs_effort.pdf
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/simple/residplot_students_score_vs_effort.png
-</pre></div>
-</div>
-<img alt="../_images/fe6d401d4f4ec000ad71b0e22769298c10ad3a3193e84cb2b7cc51537886255e.png" src="../_images/fe6d401d4f4ec000ad71b0e22769298c10ad3a3193e84cb2b7cc51537886255e.png" />
+<img alt="../_images/074f86fd915800385bf1df6b596582eae8ab860c5c736ed3f40f5ebd6acd80db.png" src="../_images/074f86fd915800385bf1df6b596582eae8ab860c5c736ed3f40f5ebd6acd80db.png" />
 </div>
 </div>
 </section>
@@ -2211,8 +1903,8 @@ Saved figure to figures/lm/simple/ministats_plot_resid_students_score_vs_effort.
 </section>
 <section id="links">
 <h2>Links<a class="headerlink" href="#links" title="Permalink to this heading">#</a></h2>
-<section id="bonus-formula-for-standard-error-of-coefficients">
-<h3>(bonus) Formula for standard error of coefficients<a class="headerlink" href="#bonus-formula-for-standard-error-of-coefficients" title="Permalink to this heading">#</a></h3>
+<section id="bonus-material-formula-for-standard-error-of-coefficients">
+<h3>(BONUS MATERIAL) Formula for standard error of coefficients<a class="headerlink" href="#bonus-material-formula-for-standard-error-of-coefficients" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lm1</span><span class="o">.</span><span class="n">bse</span>
@@ -2367,12 +2059,15 @@ dtype: float64
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-diagnostics">Model diagnostics</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scatter-plots">Scatter plots</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scatter-plots">Scatter plots</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#examples-of-nonlinear-patterns">Examples of nonlinear patterns</a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#residuals-plots">Residuals plots</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#residuals-versus-the-predicted-values">Residuals versus the predicted values</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#residuals-versus-the-predictor-bonus">Residuals versus the predictor (bonus)</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#qq-plot-of-the-residuals">QQ-plot of the residuals</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#residuals-plots-that-show-violated-assumptions">Residuals plots that show violated assumptions</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#residual-plots-that-show-violated-assumptions">Residual plots that show violated assumptions</a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sum-of-squares-quantities">Sum of squares quantities</a><ul class="nav section-nav flex-column">
@@ -2389,7 +2084,9 @@ dtype: float64
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#confidence-interval-for-observations">Confidence interval for observations</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-predicting-students-scores">Example:predicting students’ scores</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#confidence-interval-for-the-mean-score">Confidence interval for the mean score</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#prediction-band-for-the-mean-score">Prediction band for the mean score</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#confidence-interval-for-predicted-scores">Confidence interval for predicted scores</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#prediction-band-for-scores">Prediction band for scores</a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prediction-caveats">Prediction caveats</a></li>
@@ -2415,7 +2112,7 @@ dtype: float64
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seaborn-functions-for-plotting-linear-models">Seaborn functions for plotting linear models</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Regression plot</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Residuals plot</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#residual-plot">Residual plot</a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pearson-correlation-coefficient-revisited">Pearson correlation coefficient revisited</a><ul class="nav section-nav flex-column">
@@ -2439,7 +2136,7 @@ dtype: float64
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#links">Links</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bonus-formula-for-standard-error-of-coefficients">(bonus) Formula for standard error of coefficients</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bonus-material-formula-for-standard-error-of-coefficients">(BONUS MATERIAL) Formula for standard error of coefficients</a></li>
 </ul>
 </li>
 </ul>
