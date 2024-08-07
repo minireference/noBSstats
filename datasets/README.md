@@ -93,6 +93,30 @@ TODO: move detailed info to `students.md`
 
 
 
+
+## Datasets used in exercises
+
+
+### Asthma
+- Dataset: [`exercises/asthma.csv`](./exercises/asthma.csv)
+
+
+### Admissions (binary decision)
+
+- Dataset: [`exercises/binary.csv`](./exercises/binary.csv)
+
+### Honors class
+
+- Dataset: [`exercises/honors.csv`](./exercises/honors.csv)
+
+
+### Titanic
+
+- Dataset: [`exercises/titanic.csv`](./exercises/titanic.csv)
+
+
+
+
 ## Real-world datasets
 
 ### Lalonde
