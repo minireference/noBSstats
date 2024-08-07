@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Section 4.5 — Model selection &#8212; No BS Stats Notebooks</title>
+    <title>Section 4.5 — Model selection for causal inference &#8212; No BS Stats Notebooks</title>
   
   
   
@@ -226,10 +226,9 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="42_multiple_linear_regression.html">Section 4.2 — Multiple linear regression</a></li>
 <li class="toctree-l2"><a class="reference internal" href="43_interpreting_linear_models.html">Section 4.3 — Interpreting linear models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="44_regression_with_categorical_predictors.html">Section 4.4 — Regression with categorical predictors</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">Section 4.5 — Model selection</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Section 4.5 — Model selection for causal inference</a></li>
 
 <li class="toctree-l2"><a class="reference internal" href="46_generalized_linear_models.html">Section 4.6 — Generalized linear models</a></li>
-
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials/appendix.html">Appendix</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -491,7 +490,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Section 4.5 — Model selection</h1>
+    <h1>Section 4.5 — Model selection for causal inference</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -501,7 +500,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Section 4.5 — Model selection</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Section 4.5 — Model selection for causal inference</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebook-setup">Notebook setup</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definitions">Definitions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#causal-graphs">Causal graphs</a><ul class="nav section-nav flex-column">
@@ -576,9 +575,9 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="section-4-5-model-selection">
-<h1>Section 4.5 — Model selection<a class="headerlink" href="#section-4-5-model-selection" title="Permalink to this heading">#</a></h1>
-<p>This notebook contains the code examples from <span class="xref myst">Section 4.5 Model selection</span> from the <strong>No Bullshit Guide to Statistics</strong>.</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="section-4-5-model-selection-for-causal-inference">
+<h1>Section 4.5 — Model selection for causal inference<a class="headerlink" href="#section-4-5-model-selection-for-causal-inference" title="Permalink to this heading">#</a></h1>
+<p>This notebook contains the code examples from <span class="xref myst">Section 4.5 Model selection for causal inference</span> from the <strong>No Bullshit Guide to Statistics</strong>.</p>
 <section id="notebook-setup">
 <h2>Notebook setup<a class="headerlink" href="#notebook-setup" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
@@ -623,15 +622,6 @@ document.write(`
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">bernoulli</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
-<span class="kn">import</span> <span class="nn">statsmodels.formula.api</span> <span class="k">as</span> <span class="nn">smf</span>
-</pre></div>
-</div>
-</div>
-</div>
 </section>
 <section id="definitions">
 <h2>Definitions<a class="headerlink" href="#definitions" title="Permalink to this heading">#</a></h2>
@@ -658,7 +648,8 @@ document.write(`
 <p>Consider a dataset where there is zero causal effect between <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">41</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">41</span><span class="p">)</span>
 
 <span class="n">n</span> <span class="o">=</span> <span class="mi">200</span>
 <span class="n">ws</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
@@ -673,7 +664,8 @@ document.write(`
 <p>First let’s fit a native model <code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">~</span> <span class="pre">x</span></code> to see what happens.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lm1a</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;y ~ 1 + x&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df1</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">statsmodels.formula.api</span> <span class="k">as</span> <span class="nn">smf</span>
+<span class="n">lm1a</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;y ~ 1 + x&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df1</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 <span class="n">lm1a</span><span class="o">.</span><span class="n">params</span>
 </pre></div>
 </div>
@@ -725,6 +717,24 @@ dtype: float64
 </div>
 </div>
 <p>The model <code class="docutils literal notranslate"><span class="pre">lm1b</span></code> correctly recovers causal association close to zero.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ministats</span> <span class="kn">import</span> <span class="n">plot_partreg</span>
+<span class="n">plot_partreg</span><span class="p">(</span><span class="n">lm1b</span><span class="p">,</span> <span class="n">pred</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+
+<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;simple_fork_y_vs_x_given_m.pdf&quot;</span><span class="p">)</span>
+<span class="n">savefigure</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">(),</span> <span class="n">filename</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/modelselection/simple_fork_y_vs_x_given_m.pdf
+Saved figure to figures/lm/modelselection/simple_fork_y_vs_x_given_m.png
+</pre></div>
+</div>
+<img alt="../_images/3dafd5958cdc26570a9a9721f411b477d6d0d9cbdad99a9de2ffee6c85e2a76f.png" src="../_images/3dafd5958cdc26570a9a9721f411b477d6d0d9cbdad99a9de2ffee6c85e2a76f.png" />
+</div>
+</div>
 </section>
 <section id="example-2-student-s-memory-capacity">
 <h3>Example 2: student’s memory capacity<a class="headerlink" href="#example-2-student-s-memory-capacity" title="Permalink to this heading">#</a></h3>
@@ -794,7 +804,8 @@ which is close to the true value <span class="math notranslate nohighlight">\(2\
 and high effort (15h/week) groups by flipping a coin.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">47</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">bernoulli</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">47</span><span class="p">)</span>
 
 <span class="n">n</span> <span class="o">=</span> <span class="mi">300</span>
 <span class="n">mems</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
@@ -941,13 +952,19 @@ dtype: float64
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ministats</span> <span class="kn">import</span> <span class="n">plot_partreg</span>
+<span class="n">plot_partreg</span><span class="p">(</span><span class="n">lm3b</span><span class="p">,</span> <span class="n">pred</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">);</span>
 
-<span class="n">plot_partreg</span><span class="p">(</span><span class="n">lm3b</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">);</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;simple_pipe_y_vs_x_given_m.pdf&quot;</span><span class="p">)</span>
+<span class="n">savefigure</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">(),</span> <span class="n">filename</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/766684b78766290a1895634853d2f483da915309238257f5240eb26b19dec67c.png" src="../_images/766684b78766290a1895634853d2f483da915309238257f5240eb26b19dec67c.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/modelselection/simple_pipe_y_vs_x_given_m.pdf
+Saved figure to figures/lm/modelselection/simple_pipe_y_vs_x_given_m.png
+</pre></div>
+</div>
+<img alt="../_images/dbd95e41dcb10eab5c7f1f3e60802c76f2ba47ddf2acc23682d3ebc336b41506.png" src="../_images/dbd95e41dcb10eab5c7f1f3e60802c76f2ba47ddf2acc23682d3ebc336b41506.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1116,80 +1133,19 @@ dtype: float64
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ministats</span> <span class="kn">import</span> <span class="n">plot_partreg</span>
+<span class="n">plot_partreg</span><span class="p">(</span><span class="n">lm5b</span><span class="p">,</span> <span class="n">pred</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">);</span>
 
-<span class="k">with</span> <span class="n">plt</span><span class="o">.</span><span class="n">rc_context</span><span class="p">({</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:(</span><span class="mi">3</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">)}):</span>
-    <span class="n">plot_partreg</span><span class="p">(</span><span class="n">lm5b</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">)</span>
-
-    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Partial regression plot&quot;</span><span class="p">)</span>
-    <span class="c1"># ax.set_xlabel(&quot;e(x | z)&quot;)</span>
-    <span class="c1"># ax.set_ylabel(&quot;e(y | z)&quot;)</span>
-    <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;simple_collider_partregress_y_vs_x.pdf&quot;</span><span class="p">)</span>
-    <span class="n">savefigure</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">(),</span> <span class="n">filename</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/modelselection/simple_collider_partregress_y_vs_x.pdf
-Saved figure to figures/lm/modelselection/simple_collider_partregress_y_vs_x.png
-</pre></div>
-</div>
-<img alt="../_images/daad6de53219102ffbfc122807f23a51251ab77ae0f782fd074d0d71c1edfe15.png" src="../_images/daad6de53219102ffbfc122807f23a51251ab77ae0f782fd074d0d71c1edfe15.png" />
-</div>
-</div>
-<p>If we choose to control for <code class="docutils literal notranslate"><span class="pre">z</span></code> using stratification,we’ll find there is a negative association,
-in both sub-samples.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df5z0</span> <span class="o">=</span> <span class="n">df5</span><span class="p">[</span><span class="n">df5</span><span class="p">[</span><span class="s2">&quot;z&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">lm5z0</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;y ~ 1 + x&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df5z0</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-<span class="n">lm5z0</span><span class="o">.</span><span class="n">params</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Intercept   -0.164016
-x           -0.197910
-dtype: float64
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df5z1</span> <span class="o">=</span> <span class="n">df5</span><span class="p">[</span><span class="n">df5</span><span class="p">[</span><span class="s2">&quot;z&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">]</span>
-<span class="n">lm5z1</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;y ~ 1 + x&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df5z1</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-<span class="n">lm5z1</span><span class="o">.</span><span class="n">params</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Intercept    2.032647
-x           -0.666737
-dtype: float64
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">regplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df5z0</span><span class="p">,</span> <span class="n">ci</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;z=0&quot;</span><span class="p">)</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">regplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df5z1</span><span class="p">,</span> <span class="n">ci</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">line_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;linestyle&quot;</span><span class="p">:</span><span class="s2">&quot;dashed&quot;</span><span class="p">},</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;z=1&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
-
-<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Regression plots&quot;</span><span class="p">)</span>
-<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;simple_collider_y_vs_x_groupby_z.pdf&quot;</span><span class="p">)</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DESTDIR</span><span class="p">,</span> <span class="s2">&quot;simple_collider_y_vs_x_given_z.pdf&quot;</span><span class="p">)</span>
 <span class="n">savefigure</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">(),</span> <span class="n">filename</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/modelselection/simple_collider_y_vs_x_groupby_z.pdf
-Saved figure to figures/lm/modelselection/simple_collider_y_vs_x_groupby_z.png
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved figure to figures/lm/modelselection/simple_collider_y_vs_x_given_z.pdf
+Saved figure to figures/lm/modelselection/simple_collider_y_vs_x_given_z.png
 </pre></div>
 </div>
-<img alt="../_images/546700bd76b7a888ce2847d9b1c35a8a11837e6bb6a8c004652a6bdd6a56a000.png" src="../_images/546700bd76b7a888ce2847d9b1c35a8a11837e6bb6a8c004652a6bdd6a56a000.png" />
+<img alt="../_images/6f2366f673d5114eb4273c2595ddc34720ecbbb3974ee21a066ad6ef7213b3b3.png" src="../_images/6f2366f673d5114eb4273c2595ddc34720ecbbb3974ee21a066ad6ef7213b3b3.png" />
 </div>
 </div>
 </section>
@@ -1789,7 +1745,7 @@ dtype: float64
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Section 4.5 — Model selection</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Section 4.5 — Model selection for causal inference</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebook-setup">Notebook setup</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definitions">Definitions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#causal-graphs">Causal graphs</a><ul class="nav section-nav flex-column">
