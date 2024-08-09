@@ -119,6 +119,33 @@ TODO: move detailed info to `students.md`
 
 ## Real-world datasets
 
+### Forced expiratory volume (FEV) dataset
+
+- Dataset: [`smokefev.csv`](./smokefev.csv)
+- Description: Sample of 654 youths, aged 3 to 19, in the area of East Boston
+  during middle to late 1970's. Interest concerns the relationship
+  between smoking and FEV. Since the study is necessarily
+  observational, statistical adjustment via regression models
+  clarifies the relationship.
+- Format: A CSV file with 654 observations and 5 variables:
+  - `age`: positive integer (years)
+  - `fev`: continuous measure (liters)
+  - `height`: continuous measure (inches)
+  - `sex`: categorical (Female coded `F`, Male coded `M`)
+  - `smoke`: categorical (Nonsmoker coded `NS`, Smoker coded `SM`)
+- Source: Rosner, B. (1999), Fundamentals of Biostatistics, 5th Ed., Pacific Grove, CA: Duxbury
+
+<!--
+# # Original data source
+# smokefev_raw = pd.read_fwf("http://jse.amstat.org/datasets/fev.dat.txt",
+#                        colspecs=[(0,3),(4,10),(11,15), (18,19),(24,25)],
+#                        names=["age", "fev", "height", "sex", "smoke"])
+# smokefev_raw["sex"] = smokefev_raw["sex"].replace({0:"F", 1:"M"})
+# smokefev_raw["smoke"] = smokefev_raw["smoke"].replace({0:"NS", 1:"SM"})
+# smokefev_raw.to_csv("../datasets/smokefev.csv", index=False)
+-->
+
+
 ### Lalonde
 
 An experiment whether training increases income.
