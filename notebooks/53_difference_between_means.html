@@ -1,0 +1,2533 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Section 5.3 — Bayesian difference between means &#8212; No BS Stats Notebooks</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
+  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/53_difference_between_means';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="No BS Stats Notebooks - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="No BS Stats Notebooks - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    No Bullshit Stats Notebooks
+                </a>
+            </li>
+        </ul>
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../stats_overview/README.html">Statistics overview</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../stats_overview/00_Introduction.html">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stats_overview/01_DATA.html">Chapter 1: DATA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stats_overview/02_PROB.html">Chapter 2: Probability theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stats_overview/03_STATS.html">Chapter 3: Inferential statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stats_overview/04_LINEAR_MODELS.html">Chapter 4: Linear models</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="10_DATA.html">Chapter 1 — Data</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="11_intro_to_data.html">Section 1.1 — Introduction to data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="12_data_in_practice.html">Section 1.2 — Data in practice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="13_descriptive_statistics.html">Section 1.3 — Descriptive statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../exercises/exercises_13_descr_stats.html">Descriptive statistics exercises</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="20_PROB.html">Chapter 2 — Probability theory</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="21_discrete_random_vars.html">Section 2.1 — Discrete random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../exercises/exercises_21_discrete_RVs.html">Exercises for Section 2.1 Discrete random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="22_multiple_random_vars.html">Section 2.2 — Multiple random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="23_inventory_discrete_dists.html">Section 2.3 — Inventory of discrete distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="24_calculus_prerequisites.html">Section 2.4 — Calculus prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="25_continuous_random_vars.html">Section 2.5 — Continuous random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="26_inventory_continuous_dists.html">Section 2.6 — Inventory of continuous distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="27_random_var_generation.html">Section 2.7 — Random variable generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="28_random_samples.html">Section 2.8 — Probability models for random samples</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="30_STATS.html">Chapter 3 — Inferential statistics</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="31_estimators.html">Section 3.1 — Estimators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../exercises/exercises_31_estimtors.html">Exercises for Section 3.1 Estimates and estimators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="32_confidence_intervals.html">Section 3.2 — Confidence intervals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../exercises/exercises_32_confidence_intervals.html">Exercises for Section 3.2 Confidence intervals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="33_intro_to_NHST.html">Section 3.3 — Introduction to hypothesis testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="34_analytical_approx.html">Section 3.4 — Hypothesis testing using analytical approximations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="35_two_sample_tests.html">Section 3.5 — Two-sample hypothesis tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="36_design.html">Section 3.6 — Statistical design and error analysis</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="37_inventory_stats_tests.html">Section 3.7 — Inventory of statistical tests</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../examples/README.html">Statistical analysis examples</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../examples/statistical_design.html">Statistical design examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/one_sample_z-test.html">One-sample z-test for the mean</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/one_sample_t-test.html">One-sample t-test for the mean</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/two_sample_t-test.html">Welch’s two-sample <span class="math notranslate nohighlight">\(t\)</span>-test</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/ANOVA.html">Analysis of variance (ANOVA)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/two_sample_equivalence_test.html">Two-sample equivalence test</a></li>
+
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="40_LINEAR_MODELS.html">Chapter 4 — Linear models</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="41_simple_linear_regression.html">Section 4.1 — Simple linear regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="42_multiple_linear_regression.html">Section 4.2 — Multiple linear regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="43_interpreting_linear_models.html">Section 4.3 — Interpreting linear models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="44_regression_with_categorical_predictors.html">Section 4.4 — Regression with categorical predictors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="45_model_selection.html">Section 4.5 — Model selection for causal inference</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="46_generalized_linear_models.html">Section 4.6 — Generalized linear models</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials/appendix.html">Appendix</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/python_tutorial.html">Appendix C — Python tutorial</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/pandas_tutorial.html">Appendix D — Pandas tutorial</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/seaborn_tutorial.html">Appendix E — Seaborn tutorial</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/calculus_tutorial.html">Calculus tutorial</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../blogposts/README.html">Blog posts</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../blogposts/python_for_stats.html">Using Python for learning statistics Part 1</a></li>
+</ul>
+</li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/minireference/noBSstats/main?urlpath=lab/tree/./notebooks/53_difference_between_means.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onBinder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/minireference/noBSstats" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/minireference/noBSstats/issues/new?title=Issue%20on%20page%20%2Fnotebooks/53_difference_between_means.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/notebooks/53_difference_between_means.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Section 5.3 — Bayesian difference between means</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebook-setup">Notebook setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-movies-genres">Example movies genres</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#regression-assuming-unequal-variances">Regression, assuming unequal variances</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#best">BEST</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#best-with-priors-on-variables-instead-of-difference">BEST with priors on variables instead of difference</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-from-original-best-paper">Example from original BEST paper</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data">Data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#equal-variances-t-test">Equal variances t-test</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unequal-variances-t-test">Unequal variances t-test</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-model">Linear model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#alternative-linear-model">Alternative linear model</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bayesian-equal-variances-model">Bayesian equal variances model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bayesian-unequal-variances-model">Bayesian unequal variances model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#robust-bayesian-estimation">Robust Bayesian Estimation</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="section-5-3-bayesian-difference-between-means">
+<h1>Section 5.3 — Bayesian difference between means<a class="headerlink" href="#section-5-3-bayesian-difference-between-means" title="Permalink to this heading">#</a></h1>
+<p>This notebook contains the code examples from <span class="xref myst">Section 5.3 Bayesian difference between means</span> from the <strong>No Bullshit Guide to Statistics</strong>.</p>
+<p>See also <span class="xref myst">t-test.ipynb</span></p>
+<section id="notebook-setup">
+<h2>Notebook setup<a class="headerlink" href="#notebook-setup" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># load Python modules</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Figures setup</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>  <span class="c1"># needed otherwise `sns.set_theme` doesn&quot;t work</span>
+<span class="kn">from</span> <span class="nn">plot_helpers</span> <span class="kn">import</span> <span class="n">RCPARAMS</span>
+<span class="n">RCPARAMS</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">)})</span>   <span class="c1"># good for screen</span>
+<span class="c1"># RCPARAMS.update({&quot;figure.figsize&quot;: (5, 1.6)})  # good for print</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set_theme</span><span class="p">(</span>
+    <span class="n">context</span><span class="o">=</span><span class="s2">&quot;paper&quot;</span><span class="p">,</span>
+    <span class="n">style</span><span class="o">=</span><span class="s2">&quot;whitegrid&quot;</span><span class="p">,</span>
+    <span class="n">palette</span><span class="o">=</span><span class="s2">&quot;colorblind&quot;</span><span class="p">,</span>
+    <span class="n">rc</span><span class="o">=</span><span class="n">RCPARAMS</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># High-resolution please</span>
+<span class="o">%</span><span class="k">config</span> InlineBackend.figure_format = &quot;retina&quot;
+
+<span class="c1"># Where to store figures</span>
+<span class="n">DESTDIR</span> <span class="o">=</span> <span class="s2">&quot;figures/bayesian/dmeans&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Figure size 640x480 with 0 Axes&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># set random seed for repeatability</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="c1">#######################################################</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="example-movies-genres">
+<h2>Example movies genres<a class="headerlink" href="#example-movies-genres" title="Permalink to this heading">#</a></h2>
+<p>see <a class="reference external" href="https://www.andrewheiss.com/blog/2019/01/29/diff-means-half-dozen-ways/">https://www.andrewheiss.com/blog/2019/01/29/diff-means-half-dozen-ways/</a></p>
+<p>see also <a class="reference external" href="https://bookdown.org/content/3686/metric-predicted-variable-on-one-or-two-groups.html#two-groups">https://bookdown.org/content/3686/metric-predicted-variable-on-one-or-two-groups.html#two-groups</a></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">movies</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/movies.csv&quot;</span><span class="p">)</span>
+<span class="n">movies</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>title</th>
+      <th>year</th>
+      <th>rating</th>
+      <th>genre</th>
+      <th>genre_numeric</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Blowing Wild</td>
+      <td>1953</td>
+      <td>5.6</td>
+      <td>Action</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>No Way Back</td>
+      <td>1995</td>
+      <td>5.2</td>
+      <td>Action</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>New Jack City</td>
+      <td>1991</td>
+      <td>6.1</td>
+      <td>Action</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Noigwon</td>
+      <td>1983</td>
+      <td>4.2</td>
+      <td>Action</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Tarzan and the Jungle Boy</td>
+      <td>1968</td>
+      <td>5.2</td>
+      <td>Action</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">movies</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;genre&quot;</span><span class="p">)[</span><span class="s2">&quot;rating&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>genre
+Action    5.2845
+Comedy    5.9670
+Name: rating, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">ttest_ind</span>
+
+<span class="n">actions</span> <span class="o">=</span> <span class="n">movies</span><span class="p">[</span><span class="n">movies</span><span class="p">[</span><span class="s2">&quot;genre&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;Action&quot;</span><span class="p">][</span><span class="s2">&quot;rating&quot;</span><span class="p">]</span>
+<span class="n">comedies</span> <span class="o">=</span> <span class="n">movies</span><span class="p">[</span><span class="n">movies</span><span class="p">[</span><span class="s2">&quot;genre&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;Comedy&quot;</span><span class="p">][</span><span class="s2">&quot;rating&quot;</span><span class="p">]</span>
+
+<span class="n">ttest_ind</span><span class="p">(</span><span class="n">actions</span><span class="p">,</span> <span class="n">comedies</span><span class="p">,</span> <span class="n">equal_var</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Ttest_indResult(statistic=-4.47525173500199, pvalue=9.976981171112132e-06)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ttest_ind</span><span class="p">(</span><span class="n">actions</span><span class="p">,</span> <span class="n">comedies</span><span class="p">,</span> <span class="n">equal_var</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Ttest_indResult(statistic=-4.47525173500199, pvalue=9.978285839671782e-06)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bambi</span> <span class="k">as</span> <span class="nn">bmb</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Model formula</span>
+<span class="n">levels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Comedy&quot;</span><span class="p">,</span> <span class="s2">&quot;Action&quot;</span><span class="p">]</span>
+<span class="n">formula</span> <span class="o">=</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Formula</span><span class="p">(</span><span class="s2">&quot;rating ~ 1 + C(genre, levels=levels)&quot;</span><span class="p">)</span>
+
+<span class="c1"># Choose custom priors </span>
+<span class="n">priors</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;Intercept&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Normal&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+    <span class="s2">&quot;C(genre, levels=levels)&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Normal&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1"># Build model</span>
+<span class="n">model_eq</span> <span class="o">=</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">formula</span><span class="p">,</span> <span class="n">priors</span><span class="o">=</span><span class="n">priors</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">movies</span><span class="p">)</span>
+
+<span class="c1"># Get model description</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model_eq</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>       Formula: rating ~ 1 + C(genre, levels=levels)
+        Family: gaussian
+          Link: mu = identity
+  Observations: 400
+        Priors: 
+    target = mu
+        Common-level effects
+            Intercept ~ Normal(mu: 0.0, sigma: 5.0)
+            C(genre, levels=levels) ~ Normal(mu: 0.0, sigma: 1.0)
+        
+        Auxiliary parameters
+            sigma ~ HalfStudentT(nu: 4.0, sigma: 1.559)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># model_eq.build()</span>
+<span class="c1"># model_eq.graph()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fit the model using 1000 on each chain</span>
+<span class="n">idata_eq</span> <span class="o">=</span> <span class="n">model_eq</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">draws</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Auto-assigning NUTS sampler...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Initializing NUTS using jitter+adapt_diag...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Multiprocess sampling (2 chains in 2 jobs)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>NUTS: [rating_sigma, Intercept, C(genre, levels=levels)]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='4000' class='' max='4000' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [4000/4000 00:02&lt;00:00 Sampling 2 chains, 0 divergences]
+    </div>
+    </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 2 chains for 1_000 tune and 1_000 draw iterations (2_000 + 2_000 draws total) took 2 seconds.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>We recommend running at least 4 chains for robust computation of convergence diagnostics
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">arviz</span> <span class="k">as</span> <span class="nn">az</span>
+<span class="n">az</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">idata_eq</span><span class="p">,</span> <span class="n">stat_focus</span><span class="o">=</span><span class="s2">&quot;median&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>median</th>
+      <th>mad</th>
+      <th>eti_3%</th>
+      <th>eti_97%</th>
+      <th>mcse_median</th>
+      <th>ess_median</th>
+      <th>ess_tail</th>
+      <th>r_hat</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Intercept</th>
+      <td>5.959</td>
+      <td>0.070</td>
+      <td>5.758</td>
+      <td>6.159</td>
+      <td>0.003</td>
+      <td>2891.153</td>
+      <td>1635.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>C(genre, levels=levels)[Action]</th>
+      <td>-0.663</td>
+      <td>0.101</td>
+      <td>-0.961</td>
+      <td>-0.362</td>
+      <td>0.004</td>
+      <td>2584.164</td>
+      <td>1335.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>rating_sigma</th>
+      <td>1.527</td>
+      <td>0.038</td>
+      <td>1.429</td>
+      <td>1.629</td>
+      <td>0.001</td>
+      <td>2429.451</td>
+      <td>1399.0</td>
+      <td>1.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<section id="regression-assuming-unequal-variances">
+<h3>Regression, assuming unequal variances<a class="headerlink" href="#regression-assuming-unequal-variances" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">levels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Comedy&quot;</span><span class="p">,</span> <span class="s2">&quot;Action&quot;</span><span class="p">]</span>
+<span class="n">formula_uneq</span> <span class="o">=</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Formula</span><span class="p">(</span><span class="s2">&quot;rating ~ 1 + C(genre,levels=levels)&quot;</span><span class="p">,</span> <span class="s2">&quot;sigma ~ C(genre,levels=levels)&quot;</span><span class="p">)</span>
+
+<span class="n">priors</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;Intercept&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Normal&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+    <span class="s2">&quot;C(genre, levels=levels)&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Normal&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="s2">&quot;sigma&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;C(genre, levels=levels)&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Cauchy&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mi">1</span><span class="p">)},</span>
+<span class="p">}</span>
+
+<span class="c1"># Build model</span>
+<span class="n">model_uneq</span> <span class="o">=</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">formula_uneq</span><span class="p">,</span> <span class="n">priors</span><span class="o">=</span><span class="n">priors</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">movies</span><span class="p">)</span>
+
+<span class="c1"># Get model description</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model_uneq</span><span class="p">)</span>
+<span class="c1"># model_uneq.build()</span>
+<span class="c1"># model_uneq.graph()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>       Formula: rating ~ 1 + C(genre,levels=levels)
+                sigma ~ C(genre,levels=levels)
+        Family: gaussian
+          Link: mu = identity
+                sigma = log
+  Observations: 400
+        Priors: 
+    target = mu
+        Common-level effects
+            Intercept ~ Normal(mu: 0.0, sigma: 5.0)
+            C(genre, levels=levels) ~ Normal(mu: 0.0, sigma: 1.0)
+    target = sigma
+        Common-level effects
+            sigma_Intercept ~ Normal(mu: 0.0, sigma: 1.0)
+            sigma_C(genre, levels=levels) ~ Cauchy(alpha: 0.0, beta: 1.0)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">idata_uneq</span> <span class="o">=</span> <span class="n">model_uneq</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">draws</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Auto-assigning NUTS sampler...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Initializing NUTS using jitter+adapt_diag...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Multiprocess sampling (2 chains in 2 jobs)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>NUTS: [Intercept, C(genre, levels=levels), sigma_Intercept, sigma_C(genre, levels=levels)]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='4000' class='' max='4000' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [4000/4000 00:02&lt;00:00 Sampling 2 chains, 0 divergences]
+    </div>
+    </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 2 chains for 1_000 tune and 1_000 draw iterations (2_000 + 2_000 draws total) took 2 seconds.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>We recommend running at least 4 chains for robust computation of convergence diagnostics
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">az</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">idata_uneq</span><span class="p">,</span> <span class="n">stat_focus</span><span class="o">=</span><span class="s2">&quot;median&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>median</th>
+      <th>mad</th>
+      <th>eti_3%</th>
+      <th>eti_97%</th>
+      <th>mcse_median</th>
+      <th>ess_median</th>
+      <th>ess_tail</th>
+      <th>r_hat</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Intercept</th>
+      <td>5.958</td>
+      <td>0.076</td>
+      <td>5.752</td>
+      <td>6.158</td>
+      <td>0.003</td>
+      <td>2601.232</td>
+      <td>1480.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>C(genre, levels=levels)[Action]</th>
+      <td>-0.666</td>
+      <td>0.098</td>
+      <td>-0.953</td>
+      <td>-0.382</td>
+      <td>0.003</td>
+      <td>2806.545</td>
+      <td>1527.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>sigma_Intercept</th>
+      <td>0.434</td>
+      <td>0.034</td>
+      <td>0.343</td>
+      <td>0.543</td>
+      <td>0.001</td>
+      <td>3218.118</td>
+      <td>1644.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>sigma_C(genre, levels=levels)[Action]</th>
+      <td>-0.024</td>
+      <td>0.051</td>
+      <td>-0.163</td>
+      <td>0.110</td>
+      <td>0.002</td>
+      <td>2837.967</td>
+      <td>1694.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>sigma[0]</th>
+      <td>1.508</td>
+      <td>0.049</td>
+      <td>1.383</td>
+      <td>1.660</td>
+      <td>0.002</td>
+      <td>3350.767</td>
+      <td>1539.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>sigma[395]</th>
+      <td>1.544</td>
+      <td>0.053</td>
+      <td>1.409</td>
+      <td>1.722</td>
+      <td>0.002</td>
+      <td>3218.118</td>
+      <td>1644.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>sigma[396]</th>
+      <td>1.544</td>
+      <td>0.053</td>
+      <td>1.409</td>
+      <td>1.722</td>
+      <td>0.002</td>
+      <td>3218.118</td>
+      <td>1644.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>sigma[397]</th>
+      <td>1.544</td>
+      <td>0.053</td>
+      <td>1.409</td>
+      <td>1.722</td>
+      <td>0.002</td>
+      <td>3218.118</td>
+      <td>1644.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>sigma[398]</th>
+      <td>1.544</td>
+      <td>0.053</td>
+      <td>1.409</td>
+      <td>1.722</td>
+      <td>0.002</td>
+      <td>3218.118</td>
+      <td>1644.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>sigma[399]</th>
+      <td>1.544</td>
+      <td>0.053</td>
+      <td>1.409</td>
+      <td>1.722</td>
+      <td>0.002</td>
+      <td>3218.118</td>
+      <td>1644.0</td>
+      <td>1.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>404 rows × 8 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">az</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">idata_uneq</span><span class="p">,</span> <span class="n">stat_focus</span><span class="o">=</span><span class="s2">&quot;median&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s2">&quot;sigma_C(genre, levels=levels)[Action]&quot;</span><span class="p">,</span><span class="s2">&quot;median&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.9762857097579093
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="best">
+<h3>BEST<a class="headerlink" href="#best" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">levels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Comedy&quot;</span><span class="p">,</span> <span class="s2">&quot;Action&quot;</span><span class="p">]</span>
+<span class="n">formula_best</span> <span class="o">=</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Formula</span><span class="p">(</span><span class="s2">&quot;rating ~ 1 + C(genre,levels=levels)&quot;</span><span class="p">,</span> <span class="s2">&quot;sigma ~ C(genre,levels=levels)&quot;</span><span class="p">)</span>
+
+<span class="n">priors</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;Intercept&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Normal&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+    <span class="s2">&quot;C(genre, levels=levels)&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Normal&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="s2">&quot;sigma&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;C(genre, levels=levels)&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Cauchy&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mi">1</span><span class="p">)},</span>
+    <span class="s2">&quot;nu&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Exponential&quot;</span><span class="p">,</span> <span class="n">lam</span><span class="o">=</span><span class="mi">1</span><span class="o">/</span><span class="mi">29</span><span class="p">),</span>
+<span class="p">}</span>
+
+<span class="c1"># Build model</span>
+<span class="n">model_best</span> <span class="o">=</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">formula_best</span><span class="p">,</span> <span class="n">priors</span><span class="o">=</span><span class="n">priors</span><span class="p">,</span> <span class="n">family</span><span class="o">=</span><span class="s2">&quot;t&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">movies</span><span class="p">)</span>
+
+<span class="c1"># Get model description</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model_best</span><span class="p">)</span>
+<span class="c1"># model_best.build()</span>
+<span class="c1"># model_best.graph()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>       Formula: rating ~ 1 + C(genre,levels=levels)
+                sigma ~ C(genre,levels=levels)
+        Family: t
+          Link: mu = identity
+                sigma = log
+  Observations: 400
+        Priors: 
+    target = mu
+        Common-level effects
+            Intercept ~ Normal(mu: 0.0, sigma: 5.0)
+            C(genre, levels=levels) ~ Normal(mu: 0.0, sigma: 1.0)
+        
+        Auxiliary parameters
+            nu ~ Exponential(lam: 0.0345)
+    target = sigma
+        Common-level effects
+            sigma_Intercept ~ Normal(mu: 0.0, sigma: 1.0)
+            sigma_C(genre, levels=levels) ~ Cauchy(alpha: 0.0, beta: 1.0)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">idata_best</span> <span class="o">=</span> <span class="n">model_best</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">draws</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Auto-assigning NUTS sampler...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Initializing NUTS using jitter+adapt_diag...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Multiprocess sampling (2 chains in 2 jobs)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>NUTS: [rating_nu, Intercept, C(genre, levels=levels), sigma_Intercept, sigma_C(genre, levels=levels)]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='4000' class='' max='4000' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [4000/4000 00:03&lt;00:00 Sampling 2 chains, 6 divergences]
+    </div>
+    </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 2 chains for 1_000 tune and 1_000 draw iterations (2_000 + 2_000 draws total) took 4 seconds.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>We recommend running at least 4 chains for robust computation of convergence diagnostics
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">az</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">idata_best</span><span class="p">,</span> <span class="n">stat_focus</span><span class="o">=</span><span class="s2">&quot;median&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>median</th>
+      <th>mad</th>
+      <th>eti_3%</th>
+      <th>eti_97%</th>
+      <th>mcse_median</th>
+      <th>ess_median</th>
+      <th>ess_tail</th>
+      <th>r_hat</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Intercept</th>
+      <td>5.978</td>
+      <td>0.072</td>
+      <td>5.774</td>
+      <td>6.175</td>
+      <td>0.003</td>
+      <td>1960.321</td>
+      <td>1340.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>C(genre, levels=levels)[Action]</th>
+      <td>-0.680</td>
+      <td>0.099</td>
+      <td>-0.950</td>
+      <td>-0.381</td>
+      <td>0.006</td>
+      <td>1847.065</td>
+      <td>1631.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>sigma_Intercept</th>
+      <td>0.386</td>
+      <td>0.038</td>
+      <td>0.267</td>
+      <td>0.489</td>
+      <td>0.001</td>
+      <td>1890.536</td>
+      <td>1062.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>sigma_C(genre, levels=levels)[Action]</th>
+      <td>-0.002</td>
+      <td>0.051</td>
+      <td>-0.137</td>
+      <td>0.140</td>
+      <td>0.002</td>
+      <td>2222.471</td>
+      <td>1604.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>rating_nu</th>
+      <td>30.456</td>
+      <td>12.903</td>
+      <td>9.856</td>
+      <td>109.208</td>
+      <td>0.489</td>
+      <td>1725.582</td>
+      <td>1105.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>sigma[395]</th>
+      <td>1.471</td>
+      <td>0.055</td>
+      <td>1.307</td>
+      <td>1.630</td>
+      <td>0.002</td>
+      <td>1890.536</td>
+      <td>1062.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>sigma[396]</th>
+      <td>1.471</td>
+      <td>0.055</td>
+      <td>1.307</td>
+      <td>1.630</td>
+      <td>0.002</td>
+      <td>1890.536</td>
+      <td>1062.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>sigma[397]</th>
+      <td>1.471</td>
+      <td>0.055</td>
+      <td>1.307</td>
+      <td>1.630</td>
+      <td>0.002</td>
+      <td>1890.536</td>
+      <td>1062.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>sigma[398]</th>
+      <td>1.471</td>
+      <td>0.055</td>
+      <td>1.307</td>
+      <td>1.630</td>
+      <td>0.002</td>
+      <td>1890.536</td>
+      <td>1062.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>sigma[399]</th>
+      <td>1.471</td>
+      <td>0.055</td>
+      <td>1.307</td>
+      <td>1.630</td>
+      <td>0.002</td>
+      <td>1890.536</td>
+      <td>1062.0</td>
+      <td>1.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>405 rows × 8 columns</p>
+</div></div></div>
+</div>
+</section>
+<section id="best-with-priors-on-variables-instead-of-difference">
+<h3>BEST with priors on variables instead of difference<a class="headerlink" href="#best-with-priors-on-variables-instead-of-difference" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">levels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Comedy&quot;</span><span class="p">,</span> <span class="s2">&quot;Action&quot;</span><span class="p">]</span>
+<span class="n">formula_best2</span> <span class="o">=</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Formula</span><span class="p">(</span><span class="s2">&quot;rating ~ 0 + C(genre,levels=levels)&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;sigma ~ 0 + C(genre,levels=levels)&quot;</span><span class="p">)</span>
+
+<span class="n">priors</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;C(genre, levels=levels)&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;TruncatedNormal&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">upper</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
+    <span class="s2">&quot;sigma&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;C(genre, levels=levels)&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Cauchy&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mi">1</span><span class="p">)},</span>
+    <span class="s2">&quot;nu&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Exponential&quot;</span><span class="p">,</span> <span class="n">lam</span><span class="o">=</span><span class="mi">1</span><span class="o">/</span><span class="mi">29</span><span class="p">),</span>
+<span class="p">}</span>
+
+<span class="c1"># Build model</span>
+<span class="n">model_best2</span> <span class="o">=</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">formula_best2</span><span class="p">,</span> <span class="n">priors</span><span class="o">=</span><span class="n">priors</span><span class="p">,</span> <span class="n">family</span><span class="o">=</span><span class="s2">&quot;t&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">movies</span><span class="p">)</span>
+
+<span class="c1"># Get model description</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model_best2</span><span class="p">)</span>
+<span class="c1"># model_best2.build()</span>
+<span class="c1"># model_best2.graph()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>       Formula: rating ~ 0 + C(genre,levels=levels)
+                sigma ~ 0 + C(genre,levels=levels)
+        Family: t
+          Link: mu = identity
+                sigma = log
+  Observations: 400
+        Priors: 
+    target = mu
+        Common-level effects
+            C(genre, levels=levels) ~ TruncatedNormal(mu: 6.0, sigma: 2.0, lower: 1.0, upper: 10.0)
+        
+        Auxiliary parameters
+            nu ~ Exponential(lam: 0.0345)
+    target = sigma
+        Common-level effects
+            sigma_C(genre, levels=levels) ~ Cauchy(alpha: 0.0, beta: 1.0)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">idata_best2</span> <span class="o">=</span> <span class="n">model_best2</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">draws</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Auto-assigning NUTS sampler...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Initializing NUTS using jitter+adapt_diag...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Multiprocess sampling (2 chains in 2 jobs)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>NUTS: [rating_nu, C(genre, levels=levels), sigma_C(genre, levels=levels)]
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='4000' class='' max='4000' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [4000/4000 00:03&lt;00:00 Sampling 2 chains, 9 divergences]
+    </div>
+    </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 2 chains for 1_000 tune and 1_000 draw iterations (2_000 + 2_000 draws total) took 3 seconds.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>We recommend running at least 4 chains for robust computation of convergence diagnostics
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">az</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">idata_best2</span><span class="p">,</span> <span class="n">stat_focus</span><span class="o">=</span><span class="s2">&quot;median&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>median</th>
+      <th>mad</th>
+      <th>eti_3%</th>
+      <th>eti_97%</th>
+      <th>mcse_median</th>
+      <th>ess_median</th>
+      <th>ess_tail</th>
+      <th>r_hat</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>sigma_C(genre, levels=levels)[Comedy]</th>
+      <td>0.384</td>
+      <td>0.040</td>
+      <td>0.260</td>
+      <td>0.494</td>
+      <td>0.002</td>
+      <td>2159.017</td>
+      <td>770.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>sigma_C(genre, levels=levels)[Action]</th>
+      <td>0.385</td>
+      <td>0.038</td>
+      <td>0.270</td>
+      <td>0.485</td>
+      <td>0.001</td>
+      <td>2035.420</td>
+      <td>757.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>rating_nu</th>
+      <td>30.312</td>
+      <td>13.026</td>
+      <td>9.449</td>
+      <td>107.329</td>
+      <td>0.524</td>
+      <td>1823.599</td>
+      <td>623.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>C(genre, levels=levels)[Comedy]</th>
+      <td>5.988</td>
+      <td>0.073</td>
+      <td>5.796</td>
+      <td>6.181</td>
+      <td>0.003</td>
+      <td>1611.842</td>
+      <td>1177.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>C(genre, levels=levels)[Action]</th>
+      <td>5.297</td>
+      <td>0.068</td>
+      <td>5.100</td>
+      <td>5.483</td>
+      <td>0.003</td>
+      <td>1663.670</td>
+      <td>1336.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>sigma[395]</th>
+      <td>1.468</td>
+      <td>0.059</td>
+      <td>1.297</td>
+      <td>1.639</td>
+      <td>0.002</td>
+      <td>2159.017</td>
+      <td>770.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>sigma[396]</th>
+      <td>1.468</td>
+      <td>0.059</td>
+      <td>1.297</td>
+      <td>1.639</td>
+      <td>0.002</td>
+      <td>2159.017</td>
+      <td>770.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>sigma[397]</th>
+      <td>1.468</td>
+      <td>0.059</td>
+      <td>1.297</td>
+      <td>1.639</td>
+      <td>0.002</td>
+      <td>2159.017</td>
+      <td>770.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>sigma[398]</th>
+      <td>1.468</td>
+      <td>0.059</td>
+      <td>1.297</td>
+      <td>1.639</td>
+      <td>0.002</td>
+      <td>2159.017</td>
+      <td>770.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>sigma[399]</th>
+      <td>1.468</td>
+      <td>0.059</td>
+      <td>1.297</td>
+      <td>1.639</td>
+      <td>0.002</td>
+      <td>2159.017</td>
+      <td>770.0</td>
+      <td>1.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>405 rows × 8 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">az</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">idata_best2</span><span class="p">,</span> <span class="n">stat_focus</span><span class="o">=</span><span class="s2">&quot;median&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s2">&quot;sigma_C(genre, levels=levels)[Action]&quot;</span><span class="p">,</span><span class="s2">&quot;median&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.4696143214411443
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="example-from-original-best-paper">
+<h2>Example from original BEST paper<a class="headerlink" href="#example-from-original-best-paper" title="Permalink to this heading">#</a></h2>
+<p>Data taken from <code class="docutils literal notranslate"><span class="pre">BESTexample-original.R</span></code> in <code class="docutils literal notranslate"><span class="pre">BEST.zip</span></code>
+via <a class="reference external" href="https://web.archive.org/web/20170708173718/https://www.indiana.edu/~kruschke/BEST/">https://web.archive.org/web/20170708173718/https://www.indiana.edu/~kruschke/BEST/</a></p>
+<p>Steps following Matti Vuorre’s <a class="reference external" href="https://mvuorre.github.io/posts/2017-01-02-how-to-compare-two-groups-with-robust-bayesian-estimation-using-r-stan-and-brms/">blog post</a> see also <a class="reference external" href="https://github.com/mvuorre/mvuorre.github.io/tree/main/posts/2017-01-02-how-to-compare-two-groups-with-robust-bayesian-estimation-using-r-stan-and-brms">src</a> notebook.</p>
+<section id="data">
+<h3>Data<a class="headerlink" href="#data" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">treated</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">101</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">102</span><span class="p">,</span> <span class="mi">104</span><span class="p">,</span> <span class="mi">102</span><span class="p">,</span>  <span class="mi">97</span><span class="p">,</span> <span class="mi">105</span><span class="p">,</span> <span class="mi">105</span><span class="p">,</span>  <span class="mi">98</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">123</span><span class="p">,</span> <span class="mi">105</span><span class="p">,</span>
+                    <span class="mi">103</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span>  <span class="mi">95</span><span class="p">,</span> <span class="mi">102</span><span class="p">,</span> <span class="mi">106</span><span class="p">,</span> <span class="mi">109</span><span class="p">,</span> <span class="mi">102</span><span class="p">,</span>  <span class="mi">82</span><span class="p">,</span> <span class="mi">102</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">102</span><span class="p">,</span> <span class="mi">102</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span>
+                    <span class="mi">102</span><span class="p">,</span> <span class="mi">102</span><span class="p">,</span> <span class="mi">103</span><span class="p">,</span> <span class="mi">103</span><span class="p">,</span>  <span class="mi">97</span><span class="p">,</span>  <span class="mi">97</span><span class="p">,</span> <span class="mi">103</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span>  <span class="mi">97</span><span class="p">,</span> <span class="mi">104</span><span class="p">,</span>  <span class="mi">96</span><span class="p">,</span> <span class="mi">103</span><span class="p">,</span> <span class="mi">124</span><span class="p">,</span>
+                    <span class="mi">101</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">104</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">101</span><span class="p">])</span>
+<span class="n">controls</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span> <span class="mi">99</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">102</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span>  <span class="mi">97</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">104</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">102</span><span class="p">,</span> <span class="mi">102</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span>
+                     <span class="mi">105</span><span class="p">,</span>  <span class="mi">88</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">104</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">102</span><span class="p">,</span> <span class="mi">103</span><span class="p">,</span>  <span class="mi">97</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span>
+                     <span class="mi">101</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span>  <span class="mi">99</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span>  <span class="mi">99</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">102</span><span class="p">,</span>
+                      <span class="mi">99</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span>  <span class="mi">99</span><span class="p">])</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;treatment&quot;</span><span class="p">]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">treated</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;control&quot;</span><span class="p">]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">controls</span><span class="p">),</span> 
+    <span class="s2">&quot;iq&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">treated</span><span class="p">,</span> <span class="n">controls</span><span class="p">])</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">d</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;iq&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;group&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/bf7fd9435be6ed01b7b11fbe8242df0666f61e30a04d9f746bcbaee1f946cbc0.png" src="../_images/bf7fd9435be6ed01b7b11fbe8242df0666f61e30a04d9f746bcbaee1f946cbc0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">d</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;group&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>iq</th>
+    </tr>
+    <tr>
+      <th>group</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>control</th>
+      <td>100.357143</td>
+    </tr>
+    <tr>
+      <th>treatment</th>
+      <td>101.914894</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="equal-variances-t-test">
+<h3>Equal variances t-test<a class="headerlink" href="#equal-variances-t-test" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">ttest_ind</span>
+
+<span class="n">res_eqvar</span> <span class="o">=</span> <span class="n">ttest_ind</span><span class="p">(</span><span class="n">treated</span><span class="p">,</span> <span class="n">controls</span><span class="p">,</span> <span class="n">equal_var</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">res_eqvar</span><span class="o">.</span><span class="n">statistic</span><span class="p">,</span> <span class="n">res_eqvar</span><span class="o">.</span><span class="n">pvalue</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1.5586953301521096, 0.12269895509665575)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ci_eqvar</span> <span class="o">=</span> <span class="n">res_eqvar</span><span class="o">.</span><span class="n">confidence_interval</span><span class="p">(</span><span class="n">confidence_level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span>
+<span class="p">[</span><span class="n">ci_eqvar</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="n">ci_eqvar</span><span class="o">.</span><span class="n">high</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">AttributeError</span><span class="g g-Whitespace">                            </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">28</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">ci_eqvar</span> <span class="o">=</span> <span class="n">res_eqvar</span><span class="o">.</span><span class="n">confidence_interval</span><span class="p">(</span><span class="n">confidence_level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="p">[</span><span class="n">ci_eqvar</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="n">ci_eqvar</span><span class="o">.</span><span class="n">high</span><span class="p">]</span>
+
+<span class="ne">AttributeError</span>: &#39;Ttest_indResult&#39; object has no attribute &#39;confidence_interval&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="unequal-variances-t-test">
+<h3>Unequal variances t-test<a class="headerlink" href="#unequal-variances-t-test" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">res_uneqvar</span> <span class="o">=</span> <span class="n">ttest_ind</span><span class="p">(</span><span class="n">treated</span><span class="p">,</span> <span class="n">controls</span><span class="p">,</span> <span class="n">equal_var</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">res_uneqvar</span><span class="o">.</span><span class="n">statistic</span><span class="p">,</span> <span class="n">res_uneqvar</span><span class="o">.</span><span class="n">pvalue</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1.622190457290228, 0.10975381983712831)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ci_uneqvar</span> <span class="o">=</span> <span class="n">res_uneqvar</span><span class="o">.</span><span class="n">confidence_interval</span><span class="p">(</span><span class="n">confidence_level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span>
+<span class="p">[</span><span class="n">ci_uneqvar</span><span class="o">.</span><span class="n">low</span><span class="p">,</span> <span class="n">ci_uneqvar</span><span class="o">.</span><span class="n">high</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[-0.3611847716497789, 3.476686291406612]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="linear-model">
+<h3>Linear model<a class="headerlink" href="#linear-model" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">statsmodels.formula.api</span> <span class="k">as</span> <span class="nn">smf</span>
+<span class="n">res_ols</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;iq ~ 1 + C(group)&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">d</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">res_ols</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                     iq   R-squared:                       0.027
+Model:                            OLS   Adj. R-squared:                  0.016
+Method:                 Least Squares   F-statistic:                     2.430
+Date:                Mon, 19 Aug 2024   Prob (F-statistic):              0.123
+Time:                        22:59:33   Log-Likelihood:                -263.13
+No. Observations:                  89   AIC:                             530.3
+Df Residuals:                      87   BIC:                             535.2
+Df Model:                           1                                         
+Covariance Type:            nonrobust                                         
+=========================================================================================
+                            coef    std err          t      P&gt;|t|      [0.025      0.975]
+-----------------------------------------------------------------------------------------
+Intercept               100.3571      0.726    138.184      0.000      98.914     101.801
+C(group)[T.treatment]     1.5578      0.999      1.559      0.123      -0.429       3.544
+==============================================================================
+Omnibus:                       46.068   Durbin-Watson:                   2.025
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              553.494
+Skew:                           1.108   Prob(JB):                    6.46e-121
+Kurtosis:                      15.014   Cond. No.                         2.69
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="alternative-linear-model">
+<h3>Alternative linear model<a class="headerlink" href="#alternative-linear-model" title="Permalink to this heading">#</a></h3>
+<p>Using generalized least squares to reproduce the unequal variance case.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_t</span><span class="p">,</span> <span class="n">var_t</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">treated</span><span class="p">),</span> <span class="n">treated</span><span class="o">.</span><span class="n">var</span><span class="p">()</span>
+<span class="n">n_c</span><span class="p">,</span> <span class="n">var_c</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">controls</span><span class="p">),</span> <span class="n">controls</span><span class="o">.</span><span class="n">var</span><span class="p">()</span>
+<span class="n">sigma2s</span> <span class="o">=</span> <span class="p">[</span><span class="n">var_t</span><span class="p">]</span><span class="o">*</span><span class="n">n_t</span> <span class="o">+</span> <span class="p">[</span><span class="n">var_c</span><span class="p">]</span><span class="o">*</span><span class="n">n_c</span>
+
+<span class="n">res_gls</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">gls</span><span class="p">(</span><span class="s2">&quot;iq ~ 1 + C(group)&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">d</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">sigma2s</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">res_gls</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                            GLS Regression Results                            
+==============================================================================
+Dep. Variable:                     iq   R-squared:                       0.029
+Model:                            GLS   Adj. R-squared:                  0.018
+Method:                 Least Squares   F-statistic:                     2.629
+Date:                Mon, 19 Aug 2024   Prob (F-statistic):              0.109
+Time:                        22:59:33   Log-Likelihood:                -248.41
+No. Observations:                  89   AIC:                             500.8
+Df Residuals:                      87   BIC:                             505.8
+Df Model:                           1                                         
+Covariance Type:            nonrobust                                         
+=========================================================================================
+                            coef    std err          t      P&gt;|t|      [0.025      0.975]
+-----------------------------------------------------------------------------------------
+Intercept               100.3571      0.388    258.627      0.000      99.586     101.128
+C(group)[T.treatment]     1.5578      0.961      1.622      0.109      -0.352       3.467
+==============================================================================
+Omnibus:                       33.582   Durbin-Watson:                   2.234
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              346.198
+Skew:                          -0.648   Prob(JB):                     6.67e-76
+Kurtosis:                      12.575   Cond. No.                         2.79
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="bayesian-equal-variances-model">
+<h2>Bayesian equal variances model<a class="headerlink" href="#bayesian-equal-variances-model" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bambi</span> <span class="k">as</span> <span class="nn">bmb</span>
+
+<span class="n">mod_eqvar</span> <span class="o">=</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="s2">&quot;iq ~ 1 + group&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">d</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">mod_eqvar</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>       Formula: iq ~ 1 + group
+        Family: gaussian
+          Link: mu = identity
+  Observations: 89
+        Priors: 
+    target = mu
+        Common-level effects
+            Intercept ~ Normal(mu: 101.1798, sigma: 17.17)
+            group ~ Normal(mu: 0.0, sigma: 23.6275)
+        
+        Auxiliary parameters
+            sigma ~ HalfStudentT(nu: 4.0, sigma: 4.718)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">idata_eqvar</span> <span class="o">=</span> <span class="n">mod_eqvar</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">draws</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Auto-assigning NUTS sampler...
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 4 jobs)
+NUTS: [iq_sigma, Intercept, group]
+WARNING (pytensor.tensor.blas): Using NumPy C-API based implementation for BLAS functions.
+WARNING (pytensor.tensor.blas): Using NumPy C-API based implementation for BLAS functions.
+WARNING (pytensor.tensor.blas): Using NumPy C-API based implementation for BLAS functions.
+WARNING (pytensor.tensor.blas): Using NumPy C-API based implementation for BLAS functions.
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='12000' class='' max='12000' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [12000/12000 00:08&lt;00:00 Sampling 4 chains, 0 divergences]
+    </div>
+    </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 1_000 tune and 2_000 draw iterations (4_000 + 8_000 draws total) took 20 seconds.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">arviz</span> <span class="k">as</span> <span class="nn">az</span>
+
+<span class="n">az</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">idata_eqvar</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;stats&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>mean</th>
+      <th>sd</th>
+      <th>hdi_3%</th>
+      <th>hdi_97%</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Intercept</th>
+      <td>100.358</td>
+      <td>0.727</td>
+      <td>98.973</td>
+      <td>101.722</td>
+    </tr>
+    <tr>
+      <th>group[treatment]</th>
+      <td>1.554</td>
+      <td>1.002</td>
+      <td>-0.358</td>
+      <td>3.365</td>
+    </tr>
+    <tr>
+      <th>iq_sigma</th>
+      <td>4.742</td>
+      <td>0.360</td>
+      <td>4.079</td>
+      <td>5.411</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="bayesian-unequal-variances-model">
+<h2>Bayesian unequal variances model<a class="headerlink" href="#bayesian-unequal-variances-model" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">formula</span> <span class="o">=</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Formula</span><span class="p">(</span><span class="s2">&quot;iq ~ 1 + group&quot;</span><span class="p">,</span> <span class="s2">&quot;sigma ~ group&quot;</span><span class="p">)</span>
+<span class="n">mod_uneqvar</span> <span class="o">=</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">formula</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">d</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">mod_uneqvar</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>       Formula: iq ~ 1 + group
+                sigma ~ group
+        Family: gaussian
+          Link: mu = identity
+                sigma = log
+  Observations: 89
+        Priors: 
+    target = mu
+        Common-level effects
+            Intercept ~ Normal(mu: 101.1798, sigma: 17.17)
+            group ~ Normal(mu: 0.0, sigma: 23.6275)
+    target = sigma
+        Common-level effects
+            sigma_Intercept ~ Normal(mu: 0.0, sigma: 1.0)
+            sigma_group ~ Normal(mu: 0.0, sigma: 1.0)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">idata_uneqvar</span> <span class="o">=</span> <span class="n">mod_uneqvar</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">draws</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Auto-assigning NUTS sampler...
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 4 jobs)
+NUTS: [Intercept, group, sigma_Intercept, sigma_group]
+WARNING (pytensor.tensor.blas): Using NumPy C-API based implementation for BLAS functions.
+WARNING (pytensor.tensor.blas): Using NumPy C-API based implementation for BLAS functions.
+WARNING (pytensor.tensor.blas): Using NumPy C-API based implementation for BLAS functions.
+WARNING (pytensor.tensor.blas): Using NumPy C-API based implementation for BLAS functions.
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='12000' class='' max='12000' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [12000/12000 00:10&lt;00:00 Sampling 4 chains, 0 divergences]
+    </div>
+    </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 1_000 tune and 2_000 draw iterations (4_000 + 8_000 draws total) took 22 seconds.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">az</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">idata_uneqvar</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;stats&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>mean</th>
+      <th>sd</th>
+      <th>hdi_3%</th>
+      <th>hdi_97%</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Intercept</th>
+      <td>100.357</td>
+      <td>0.397</td>
+      <td>99.617</td>
+      <td>101.105</td>
+    </tr>
+    <tr>
+      <th>group[treatment]</th>
+      <td>1.553</td>
+      <td>0.965</td>
+      <td>-0.177</td>
+      <td>3.434</td>
+    </tr>
+    <tr>
+      <th>sigma_Intercept</th>
+      <td>0.939</td>
+      <td>0.109</td>
+      <td>0.741</td>
+      <td>1.150</td>
+    </tr>
+    <tr>
+      <th>sigma_group[treatment]</th>
+      <td>0.849</td>
+      <td>0.151</td>
+      <td>0.566</td>
+      <td>1.133</td>
+    </tr>
+    <tr>
+      <th>sigma[0]</th>
+      <td>6.013</td>
+      <td>0.637</td>
+      <td>4.881</td>
+      <td>7.212</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>sigma[84]</th>
+      <td>2.574</td>
+      <td>0.285</td>
+      <td>2.068</td>
+      <td>3.121</td>
+    </tr>
+    <tr>
+      <th>sigma[85]</th>
+      <td>2.574</td>
+      <td>0.285</td>
+      <td>2.068</td>
+      <td>3.121</td>
+    </tr>
+    <tr>
+      <th>sigma[86]</th>
+      <td>2.574</td>
+      <td>0.285</td>
+      <td>2.068</td>
+      <td>3.121</td>
+    </tr>
+    <tr>
+      <th>sigma[87]</th>
+      <td>2.574</td>
+      <td>0.285</td>
+      <td>2.068</td>
+      <td>3.121</td>
+    </tr>
+    <tr>
+      <th>sigma[88]</th>
+      <td>2.574</td>
+      <td>0.285</td>
+      <td>2.068</td>
+      <td>3.121</td>
+    </tr>
+  </tbody>
+</table>
+<p>93 rows × 4 columns</p>
+</div></div></div>
+</div>
+</section>
+<section id="robust-bayesian-estimation">
+<h2>Robust Bayesian Estimation<a class="headerlink" href="#robust-bayesian-estimation" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">formula</span> <span class="o">=</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Formula</span><span class="p">(</span><span class="s2">&quot;iq ~ 1 + group&quot;</span><span class="p">,</span> <span class="s2">&quot;sigma ~ group&quot;</span><span class="p">)</span>
+<span class="n">mod_robust</span> <span class="o">=</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">formula</span><span class="p">,</span> <span class="n">family</span><span class="o">=</span><span class="s2">&quot;t&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">d</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">mod_robust</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>       Formula: iq ~ 1 + group
+                sigma ~ group
+        Family: t
+          Link: mu = identity
+                sigma = log
+  Observations: 89
+        Priors: 
+    target = mu
+        Common-level effects
+            Intercept ~ Normal(mu: 101.1798, sigma: 17.17)
+            group ~ Normal(mu: 0.0, sigma: 23.6275)
+        
+        Auxiliary parameters
+            nu ~ Gamma(alpha: 2.0, beta: 0.1)
+    target = sigma
+        Common-level effects
+            sigma_Intercept ~ Normal(mu: 0.0, sigma: 1.0)
+            sigma_group ~ Normal(mu: 0.0, sigma: 1.0)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">idata_robust</span> <span class="o">=</span> <span class="n">mod_robust</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">draws</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">az</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">idata_robust</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;stats&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Auto-assigning NUTS sampler...
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 4 jobs)
+NUTS: [iq_nu, Intercept, group, sigma_Intercept, sigma_group]
+WARNING (pytensor.tensor.blas): Using NumPy C-API based implementation for BLAS functions.
+WARNING (pytensor.tensor.blas): Using NumPy C-API based implementation for BLAS functions.
+WARNING (pytensor.tensor.blas): Using NumPy C-API based implementation for BLAS functions.
+WARNING (pytensor.tensor.blas): Using NumPy C-API based implementation for BLAS functions.
+</pre></div>
+</div>
+<div class="output text_html">
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div><div class="output text_html">
+    <div>
+      <progress value='8000' class='' max='8000' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [8000/8000 00:08&lt;00:00 Sampling 4 chains, 0 divergences]
+    </div>
+    </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 1_000 tune and 1_000 draw iterations (4_000 + 4_000 draws total) took 20 seconds.
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>mean</th>
+      <th>sd</th>
+      <th>hdi_3%</th>
+      <th>hdi_97%</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Intercept</th>
+      <td>100.525</td>
+      <td>0.211</td>
+      <td>100.142</td>
+      <td>100.931</td>
+    </tr>
+    <tr>
+      <th>group[treatment]</th>
+      <td>1.026</td>
+      <td>0.414</td>
+      <td>0.248</td>
+      <td>1.799</td>
+    </tr>
+    <tr>
+      <th>sigma_Intercept</th>
+      <td>0.009</td>
+      <td>0.196</td>
+      <td>-0.364</td>
+      <td>0.361</td>
+    </tr>
+    <tr>
+      <th>sigma_group[treatment]</th>
+      <td>0.624</td>
+      <td>0.252</td>
+      <td>0.156</td>
+      <td>1.090</td>
+    </tr>
+    <tr>
+      <th>iq_nu</th>
+      <td>1.827</td>
+      <td>0.487</td>
+      <td>1.090</td>
+      <td>2.768</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>sigma[84]</th>
+      <td>1.029</td>
+      <td>0.204</td>
+      <td>0.677</td>
+      <td>1.416</td>
+    </tr>
+    <tr>
+      <th>sigma[85]</th>
+      <td>1.029</td>
+      <td>0.204</td>
+      <td>0.677</td>
+      <td>1.416</td>
+    </tr>
+    <tr>
+      <th>sigma[86]</th>
+      <td>1.029</td>
+      <td>0.204</td>
+      <td>0.677</td>
+      <td>1.416</td>
+    </tr>
+    <tr>
+      <th>sigma[87]</th>
+      <td>1.029</td>
+      <td>0.204</td>
+      <td>0.677</td>
+      <td>1.416</td>
+    </tr>
+    <tr>
+      <th>sigma[88]</th>
+      <td>1.029</td>
+      <td>0.204</td>
+      <td>0.677</td>
+      <td>1.416</td>
+    </tr>
+  </tbody>
+</table>
+<p>94 rows × 4 columns</p>
+</div></div></div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "minireference/noBSstats",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebook-setup">Notebook setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-movies-genres">Example movies genres</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#regression-assuming-unequal-variances">Regression, assuming unequal variances</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#best">BEST</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#best-with-priors-on-variables-instead-of-difference">BEST with priors on variables instead of difference</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-from-original-best-paper">Example from original BEST paper</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data">Data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#equal-variances-t-test">Equal variances t-test</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unequal-variances-t-test">Unequal variances t-test</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-model">Linear model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#alternative-linear-model">Alternative linear model</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bayesian-equal-variances-model">Bayesian equal variances model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bayesian-unequal-variances-model">Bayesian unequal variances model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#robust-bayesian-estimation">Robust Bayesian Estimation</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Ivan Savov
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
