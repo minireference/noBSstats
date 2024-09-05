@@ -184,13 +184,6 @@ of the [Stats overview](https://nobsstats.com/stats_overview/README.html) tutori
 
 
 
-
-
-
-
-
-
-
 ## Chapter 5: Bayesian statistics
 
 Coming soon.
