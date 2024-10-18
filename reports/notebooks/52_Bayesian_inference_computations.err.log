@@ -15,144 +15,34 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
-import bambi as bmb
-
-formula = "heads ~ 1"
-
-priors1 = {
-    "Intercept": bmb.Prior("Uniform", lower=0, upper=1),
-    # "Intercept": bmb.Prior("Beta", alpha=1, beta=1),
-}
-
-#######################################################
-mod1 = bmb.Model(formula,
-                 priors=priors1,
-                 family="bernoulli",
-                 link="identity",
-                 data=df1)
-mod1.set_alias({"Intercept":"p prior"})
-mod1
+idata1_pred = idata1.copy()
+# MAYBE: alt notation _rep instead of _pred ?
+mod1.predict(idata1_pred, kind="response")
+preds1 = az.extract(idata1_pred, group="posterior_predictive", var_names="heads").values
+sns.histplot(x=preds1.sum(axis=0), stat="density", bins=range(15,50));
 ------------------
 
------ stderr -----
-WARNING (pytensor.tensor.blas): Using NumPy C-API based implementation for BLAS functions.
-------------------
 
 [0;31m---------------------------------------------------------------------------[0m
-[0;31mImportError[0m                               Traceback (most recent call last)
-Cell [0;32mIn[10], line 1[0m
-[0;32m----> 1[0m [38;5;28;01mimport[39;00m [38;5;21;01mbambi[39;00m [38;5;28;01mas[39;00m [38;5;21;01mbmb[39;00m
-[1;32m      3[0m formula [38;5;241m=[39m [38;5;124m"[39m[38;5;124mheads ~ 1[39m[38;5;124m"[39m
-[1;32m      5[0m priors1 [38;5;241m=[39m {
-[1;32m      6[0m     [38;5;124m"[39m[38;5;124mIntercept[39m[38;5;124m"[39m: bmb[38;5;241m.[39mPrior([38;5;124m"[39m[38;5;124mUniform[39m[38;5;124m"[39m, lower[38;5;241m=[39m[38;5;241m0[39m, upper[38;5;241m=[39m[38;5;241m1[39m),
-[1;32m      7[0m     [38;5;66;03m# "Intercept": bmb.Prior("Beta", alpha=1, beta=1),[39;00m
-[1;32m      8[0m }
+[0;31mValueError[0m                                Traceback (most recent call last)
+Cell [0;32mIn[24], line 3[0m
+[1;32m      1[0m idata1_pred [38;5;241m=[39m idata1[38;5;241m.[39mcopy()
+[1;32m      2[0m [38;5;66;03m# MAYBE: alt notation _rep instead of _pred ?[39;00m
+[0;32m----> 3[0m [43mmod1[49m[38;5;241;43m.[39;49m[43mpredict[49m[43m([49m[43midata1_pred[49m[43m,[49m[43m [49m[43mkind[49m[38;5;241;43m=[39;49m[38;5;124;43m"[39;49m[38;5;124;43mresponse[39;49m[38;5;124;43m"[39;49m[43m)[49m
+[1;32m      4[0m preds1 [38;5;241m=[39m az[38;5;241m.[39mextract(idata1_pred, group[38;5;241m=[39m[38;5;124m"[39m[38;5;124mposterior_predictive[39m[38;5;124m"[39m, var_names[38;5;241m=[39m[38;5;124m"[39m[38;5;124mheads[39m[38;5;124m"[39m)[38;5;241m.[39mvalues
+[1;32m      5[0m sns[38;5;241m.[39mhistplot(x[38;5;241m=[39mpreds1[38;5;241m.[39msum(axis[38;5;241m=[39m[38;5;241m0[39m), stat[38;5;241m=[39m[38;5;124m"[39m[38;5;124mdensity[39m[38;5;124m"[39m, bins[38;5;241m=[39m[38;5;28mrange[39m([38;5;241m15[39m,[38;5;241m50[39m));
 
-File [0;32m/opt/hostedtoolcache/Python/3.9.20/x64/lib/python3.9/site-packages/bambi/__init__.py:3[0m
-[1;32m      1[0m [38;5;28;01mimport[39;00m [38;5;21;01mlogging[39;00m
-[0;32m----> 3[0m [38;5;28;01mfrom[39;00m [38;5;21;01mpymc[39;00m [38;5;28;01mimport[39;00m math
-[1;32m      5[0m [38;5;28;01mfrom[39;00m [38;5;21;01m.[39;00m[38;5;21;01mbackend[39;00m [38;5;28;01mimport[39;00m PyMCModel
-[1;32m      6[0m [38;5;28;01mfrom[39;00m [38;5;21;01m.[39;00m[38;5;21;01mdata[39;00m [38;5;28;01mimport[39;00m clear_data_home, load_data
-
-File [0;32m/opt/hostedtoolcache/Python/3.9.20/x64/lib/python3.9/site-packages/pymc/__init__.py:48[0m
-[1;32m     43[0m     pytensor[38;5;241m.[39mconfig[38;5;241m.[39mgcc__cxxflags [38;5;241m=[39m augmented
-[1;32m     46[0m __set_compiler_flags()
-[0;32m---> 48[0m [38;5;28;01mfrom[39;00m [38;5;21;01mpymc[39;00m [38;5;28;01mimport[39;00m _version, gp, ode, sampling
-[1;32m     49[0m [38;5;28;01mfrom[39;00m [38;5;21;01mpymc[39;00m[38;5;21;01m.[39;00m[38;5;21;01mbackends[39;00m [38;5;28;01mimport[39;00m [38;5;241m*[39m
-[1;32m     50[0m [38;5;28;01mfrom[39;00m [38;5;21;01mpymc[39;00m[38;5;21;01m.[39;00m[38;5;21;01mblocking[39;00m [38;5;28;01mimport[39;00m [38;5;241m*[39m
-
-File [0;32m/opt/hostedtoolcache/Python/3.9.20/x64/lib/python3.9/site-packages/pymc/gp/__init__.py:15[0m
-[1;32m      1[0m [38;5;66;03m#   Copyright 2024 The PyMC Developers[39;00m
-[1;32m      2[0m [38;5;66;03m#[39;00m
-[1;32m      3[0m [38;5;66;03m#   Licensed under the Apache License, Version 2.0 (the "License");[39;00m
+File [0;32m/opt/hostedtoolcache/Python/3.9.20/x64/lib/python3.9/site-packages/bambi/models.py:811[0m, in [0;36mModel.predict[0;34m(self, idata, kind, data, inplace, include_group_specific, sample_new_groups)[0m
+[1;32m    772[0m [38;5;250m[39m[38;5;124;03m"""Predict method for Bambi models[39;00m
+[1;32m    773[0m 
+[1;32m    774[0m [38;5;124;03mObtains in-sample and out-of-sample predictions from a fitted Bambi model.[39;00m
 [0;32m   (...)[0m
-[1;32m     12[0m [38;5;66;03m#   See the License for the specific language governing permissions and[39;00m
-[1;32m     13[0m [38;5;66;03m#   limitations under the License.[39;00m
-[0;32m---> 15[0m [38;5;28;01mfrom[39;00m [38;5;21;01mpymc[39;00m[38;5;21;01m.[39;00m[38;5;21;01mgp[39;00m [38;5;28;01mimport[39;00m cov, mean, util
-[1;32m     16[0m [38;5;28;01mfrom[39;00m [38;5;21;01mpymc[39;00m[38;5;21;01m.[39;00m[38;5;21;01mgp[39;00m[38;5;21;01m.[39;00m[38;5;21;01mgp[39;00m [38;5;28;01mimport[39;00m (
-[1;32m     17[0m     TP,
-[1;32m     18[0m     Latent,
-[0;32m   (...)[0m
-[1;32m     23[0m     MarginalSparse,
-[1;32m     24[0m )
-[1;32m     25[0m [38;5;28;01mfrom[39;00m [38;5;21;01mpymc[39;00m[38;5;21;01m.[39;00m[38;5;21;01mgp[39;00m[38;5;21;01m.[39;00m[38;5;21;01mhsgp_approx[39;00m [38;5;28;01mimport[39;00m HSGP, HSGPPeriodic
+[1;32m    808[0m [38;5;124;03mInferenceData or None[39;00m
+[1;32m    809[0m [38;5;124;03m"""[39;00m
+[1;32m    810[0m [38;5;28;01mif[39;00m kind [38;5;129;01mnot[39;00m [38;5;129;01min[39;00m ([38;5;124m"[39m[38;5;124mmean[39m[38;5;124m"[39m, [38;5;124m"[39m[38;5;124mpps[39m[38;5;124m"[39m):
+[0;32m--> 811[0m     [38;5;28;01mraise[39;00m [38;5;167;01mValueError[39;00m([38;5;124m"[39m[38;5;124m'[39m[38;5;124mkind[39m[38;5;124m'[39m[38;5;124m must be one of [39m[38;5;124m'[39m[38;5;124mmean[39m[38;5;124m'[39m[38;5;124m or [39m[38;5;124m'[39m[38;5;124mpps[39m[38;5;124m'[39m[38;5;124m"[39m)
+[1;32m    813[0m [38;5;28;01mif[39;00m [38;5;129;01mnot[39;00m inplace:
+[1;32m    814[0m     idata [38;5;241m=[39m deepcopy(idata)
 
-File [0;32m/opt/hostedtoolcache/Python/3.9.20/x64/lib/python3.9/site-packages/pymc/gp/cov.py:52[0m
-[1;32m     29[0m [38;5;28;01mfrom[39;00m [38;5;21;01mpytensor[39;00m[38;5;21;01m.[39;00m[38;5;21;01mtensor[39;00m[38;5;21;01m.[39;00m[38;5;21;01mvariable[39;00m [38;5;28;01mimport[39;00m TensorConstant, TensorVariable
-[1;32m     31[0m __all__ [38;5;241m=[39m [
-[1;32m     32[0m     [38;5;124m"[39m[38;5;124mConstant[39m[38;5;124m"[39m,
-[1;32m     33[0m     [38;5;124m"[39m[38;5;124mWhiteNoise[39m[38;5;124m"[39m,
-[0;32m   (...)[0m
-[1;32m     49[0m     [38;5;124m"[39m[38;5;124mKron[39m[38;5;124m"[39m,
-[1;32m     50[0m ]
-[0;32m---> 52[0m [38;5;28;01mfrom[39;00m [38;5;21;01mpymc[39;00m[38;5;21;01m.[39;00m[38;5;21;01mpytensorf[39;00m [38;5;28;01mimport[39;00m constant_fold
-[1;32m     54[0m TensorLike [38;5;241m=[39m Union[np[38;5;241m.[39mndarray, TensorVariable]
-[1;32m     55[0m IntSequence [38;5;241m=[39m Union[np[38;5;241m.[39mndarray, Sequence[[38;5;28mint[39m]]
-
-File [0;32m/opt/hostedtoolcache/Python/3.9.20/x64/lib/python3.9/site-packages/pymc/pytensorf.py:59[0m
-[1;32m     56[0m [38;5;28;01mfrom[39;00m [38;5;21;01mpytensor[39;00m[38;5;21;01m.[39;00m[38;5;21;01mtensor[39;00m[38;5;21;01m.[39;00m[38;5;21;01mvariable[39;00m [38;5;28;01mimport[39;00m TensorConstant, TensorVariable
-[1;32m     58[0m [38;5;28;01mfrom[39;00m [38;5;21;01mpymc[39;00m[38;5;21;01m.[39;00m[38;5;21;01mexceptions[39;00m [38;5;28;01mimport[39;00m NotConstantValueError
-[0;32m---> 59[0m [38;5;28;01mfrom[39;00m [38;5;21;01mpymc[39;00m[38;5;21;01m.[39;00m[38;5;21;01mutil[39;00m [38;5;28;01mimport[39;00m makeiter
-[1;32m     60[0m [38;5;28;01mfrom[39;00m [38;5;21;01mpymc[39;00m[38;5;21;01m.[39;00m[38;5;21;01mvartypes[39;00m [38;5;28;01mimport[39;00m continuous_types, isgenerator, typefilter
-[1;32m     62[0m PotentialShapeType [38;5;241m=[39m Union[[38;5;28mint[39m, np[38;5;241m.[39mndarray, Sequence[Union[[38;5;28mint[39m, Variable]], TensorVariable]
-
-File [0;32m/opt/hostedtoolcache/Python/3.9.20/x64/lib/python3.9/site-packages/pymc/util.py:21[0m
-[1;32m     18[0m [38;5;28;01mfrom[39;00m [38;5;21;01mcollections[39;00m[38;5;21;01m.[39;00m[38;5;21;01mabc[39;00m [38;5;28;01mimport[39;00m Sequence
-[1;32m     19[0m [38;5;28;01mfrom[39;00m [38;5;21;01mtyping[39;00m [38;5;28;01mimport[39;00m Any, NewType, Optional, Union, cast
-[0;32m---> 21[0m [38;5;28;01mimport[39;00m [38;5;21;01marviz[39;00m
-[1;32m     22[0m [38;5;28;01mimport[39;00m [38;5;21;01mcloudpickle[39;00m
-[1;32m     23[0m [38;5;28;01mimport[39;00m [38;5;21;01mnumpy[39;00m [38;5;28;01mas[39;00m [38;5;21;01mnp[39;00m
-
-File [0;32m/opt/hostedtoolcache/Python/3.9.20/x64/lib/python3.9/site-packages/arviz/__init__.py:34[0m
-[1;32m     30[0m _log [38;5;241m=[39m Logger([38;5;124m"[39m[38;5;124marviz[39m[38;5;124m"[39m)
-[1;32m     33[0m [38;5;28;01mfrom[39;00m [38;5;21;01m.[39;00m[38;5;21;01mdata[39;00m [38;5;28;01mimport[39;00m [38;5;241m*[39m
-[0;32m---> 34[0m [38;5;28;01mfrom[39;00m [38;5;21;01m.[39;00m[38;5;21;01mplots[39;00m [38;5;28;01mimport[39;00m [38;5;241m*[39m
-[1;32m     35[0m [38;5;28;01mfrom[39;00m [38;5;21;01m.[39;00m[38;5;21;01mplots[39;00m[38;5;21;01m.[39;00m[38;5;21;01mbackends[39;00m [38;5;28;01mimport[39;00m [38;5;241m*[39m
-[1;32m     36[0m [38;5;28;01mfrom[39;00m [38;5;21;01m.[39;00m[38;5;21;01mstats[39;00m [38;5;28;01mimport[39;00m [38;5;241m*[39m
-
-File [0;32m/opt/hostedtoolcache/Python/3.9.20/x64/lib/python3.9/site-packages/arviz/plots/__init__.py:2[0m
-[1;32m      1[0m [38;5;124;03m"""Plotting functions."""[39;00m
-[0;32m----> 2[0m [38;5;28;01mfrom[39;00m [38;5;21;01m.[39;00m[38;5;21;01mautocorrplot[39;00m [38;5;28;01mimport[39;00m plot_autocorr
-[1;32m      3[0m [38;5;28;01mfrom[39;00m [38;5;21;01m.[39;00m[38;5;21;01mbpvplot[39;00m [38;5;28;01mimport[39;00m plot_bpv
-[1;32m      4[0m [38;5;28;01mfrom[39;00m [38;5;21;01m.[39;00m[38;5;21;01mbfplot[39;00m [38;5;28;01mimport[39;00m plot_bf
-
-File [0;32m/opt/hostedtoolcache/Python/3.9.20/x64/lib/python3.9/site-packages/arviz/plots/autocorrplot.py:7[0m
-[1;32m      5[0m [38;5;28;01mfrom[39;00m [38;5;21;01m.[39;00m[38;5;21;01m.[39;00m[38;5;21;01mrcparams[39;00m [38;5;28;01mimport[39;00m rcParams
-[1;32m      6[0m [38;5;28;01mfrom[39;00m [38;5;21;01m.[39;00m[38;5;21;01m.[39;00m[38;5;21;01mutils[39;00m [38;5;28;01mimport[39;00m _var_names
-[0;32m----> 7[0m [38;5;28;01mfrom[39;00m [38;5;21;01m.[39;00m[38;5;21;01mplot_utils[39;00m [38;5;28;01mimport[39;00m default_grid, filter_plotters_list, get_plotting_function
-[1;32m     10[0m [38;5;28;01mdef[39;00m [38;5;21mplot_autocorr[39m(
-[1;32m     11[0m     data,
-[1;32m     12[0m     var_names[38;5;241m=[39m[38;5;28;01mNone[39;00m,
-[0;32m   (...)[0m
-[1;32m     24[0m     show[38;5;241m=[39m[38;5;28;01mNone[39;00m,
-[1;32m     25[0m ):
-[1;32m     26[0m [38;5;250m    [39m[38;5;124mr[39m[38;5;124;03m"""Bar plot of the autocorrelation function (ACF) for a sequence of data.[39;00m
-[1;32m     27[0m 
-[1;32m     28[0m [38;5;124;03m    The ACF plots are helpful as a convergence diagnostic for posteriors from MCMC[39;00m
-[0;32m   (...)[0m
-[1;32m    117[0m [38;5;124;03m        >>> az.plot_autocorr(data, var_names=['mu', 'tau'], max_lag=200, combined=True)[39;00m
-[1;32m    118[0m [38;5;124;03m    """[39;00m
-
-File [0;32m/opt/hostedtoolcache/Python/3.9.20/x64/lib/python3.9/site-packages/arviz/plots/plot_utils.py:15[0m
-[1;32m     11[0m [38;5;28;01mfrom[39;00m [38;5;21;01mscipy[39;00m[38;5;21;01m.[39;00m[38;5;21;01minterpolate[39;00m [38;5;28;01mimport[39;00m CubicSpline
-[1;32m     14[0m [38;5;28;01mfrom[39;00m [38;5;21;01m.[39;00m[38;5;21;01m.[39;00m[38;5;21;01mrcparams[39;00m [38;5;28;01mimport[39;00m rcParams
-[0;32m---> 15[0m [38;5;28;01mfrom[39;00m [38;5;21;01m.[39;00m[38;5;21;01m.[39;00m[38;5;21;01mstats[39;00m[38;5;21;01m.[39;00m[38;5;21;01mdensity_utils[39;00m [38;5;28;01mimport[39;00m kde
-[1;32m     16[0m [38;5;28;01mfrom[39;00m [38;5;21;01m.[39;00m[38;5;21;01m.[39;00m[38;5;21;01mstats[39;00m [38;5;28;01mimport[39;00m hdi
-[1;32m     18[0m KwargSpec [38;5;241m=[39m Dict[[38;5;28mstr[39m, Any]
-
-File [0;32m/opt/hostedtoolcache/Python/3.9.20/x64/lib/python3.9/site-packages/arviz/stats/__init__.py:3[0m
-[1;32m      1[0m [38;5;66;03m# pylint: disable=wildcard-import[39;00m
-[1;32m      2[0m [38;5;124;03m"""Statistical tests and diagnostics for ArviZ."""[39;00m
-[0;32m----> 3[0m [38;5;28;01mfrom[39;00m [38;5;21;01m.[39;00m[38;5;21;01mdensity_utils[39;00m [38;5;28;01mimport[39;00m [38;5;241m*[39m
-[1;32m      4[0m [38;5;28;01mfrom[39;00m [38;5;21;01m.[39;00m[38;5;21;01mdiagnostics[39;00m [38;5;28;01mimport[39;00m [38;5;241m*[39m
-[1;32m      5[0m [38;5;28;01mfrom[39;00m [38;5;21;01m.[39;00m[38;5;21;01mstats[39;00m [38;5;28;01mimport[39;00m [38;5;241m*[39m
-
-File [0;32m/opt/hostedtoolcache/Python/3.9.20/x64/lib/python3.9/site-packages/arviz/stats/density_utils.py:8[0m
-[1;32m      6[0m [38;5;28;01mfrom[39;00m [38;5;21;01mscipy[39;00m[38;5;21;01m.[39;00m[38;5;21;01mfftpack[39;00m [38;5;28;01mimport[39;00m fft
-[1;32m      7[0m [38;5;28;01mfrom[39;00m [38;5;21;01mscipy[39;00m[38;5;21;01m.[39;00m[38;5;21;01moptimize[39;00m [38;5;28;01mimport[39;00m brentq
-[0;32m----> 8[0m [38;5;28;01mfrom[39;00m [38;5;21;01mscipy[39;00m[38;5;21;01m.[39;00m[38;5;21;01msignal[39;00m [38;5;28;01mimport[39;00m convolve, convolve2d, gaussian  [38;5;66;03m# pylint: disable=no-name-in-module[39;00m
-[1;32m      9[0m [38;5;28;01mfrom[39;00m [38;5;21;01mscipy[39;00m[38;5;21;01m.[39;00m[38;5;21;01msparse[39;00m [38;5;28;01mimport[39;00m coo_matrix
-[1;32m     10[0m [38;5;28;01mfrom[39;00m [38;5;21;01mscipy[39;00m[38;5;21;01m.[39;00m[38;5;21;01mspecial[39;00m [38;5;28;01mimport[39;00m ive  [38;5;66;03m# pylint: disable=no-name-in-module[39;00m
-
-[0;31mImportError[0m: cannot import name 'gaussian' from 'scipy.signal' (/opt/hostedtoolcache/Python/3.9.20/x64/lib/python3.9/site-packages/scipy/signal/__init__.py)
+[0;31mValueError[0m: 'kind' must be one of 'mean' or 'pps'
 

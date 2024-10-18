@@ -15,66 +15,31 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
-from ministats.hpdi import hpdi_from_grid
+# verify computation against the R package `BayesFactor`
+import rpy2.robjects as robjects
+from rpy2.robjects import r as runr, pandas2ri
+from rpy2.robjects.packages import importr
+pandas2ri.activate()
 
+# import the BayesFactor package
+BayesFactor = importr('BayesFactor')
 
-heads = 4
-n = 5
+# copy the data sample into the R workspace
+robjects.globalenv["iqs"] = np.array(iqs)
 
-eps = 0.001
-ps = np.linspace(0-eps, 1.0+eps, 1000)
-
-
-# prior (slightly sloped uniform)
-slope = -1
-prior = np.ones_like(ps) - slope/2 + slope*ps
-prior[(ps < 0) | (ps > 1)] = 0
-# likelihood
-likelihood = binom(n, p=ps).pmf(heads)
-likelihood[np.isnan(likelihood)] = 0
-# posterior
-numerator = likelihood * prior
-posterior = numerator / np.sum(numerator)
-
-# calculate mean, median, mode
-pmean = np.sum(ps*posterior)
-pmedian = ps[np.cumsum(posterior).searchsorted(0.5)]
-pmode = ps[np.argmax(posterior)]
-bci90 = hpdi_from_grid(ps, posterior, hdi_prob=0.9)
-
-with plt.rc_context({"figure.figsize":(5.5,2.5)}):
-
-    # plot the posteior
-    porteriord = posterior / (ps[1] - ps[0])
-    ax = sns.lineplot(x=ps, y=porteriord, color="C0", label="posterior")
-    ax.set_ylabel("$f_{\\Theta|\\mathbf{x}}$")
-    ax.set_xlabel("$\\theta$")
-    ax.set_xticks(np.linspace(0,1,11))
-    ax.set_ylim([-0.1,2.4])
-
-    # add mean marker
-    ax.plot(pmean, 0, marker="D", color="C0", ls=" ", label="posterior mean")
-    # add median line
-    post_at_median = porteriord[np.nancumsum(posterior).searchsorted(0.5)]
-    ax.vlines(x=pmedian, ymin=0, ymax=post_at_median, color="C0", lw=0.7)
-    ax.plot(pmedian, post_at_median/2, marker="s", color="C0", ls=" ", label="posterior median")
-    # add mode marker
-    ax.plot(pmode, np.nanmax(porteriord), marker="^", color="C0", ls=" ", label="posterior mode")
-    # plot 90% credible interval
-    ax.hlines(0.15, bci90[0], bci90[1], color="C4", lw=2.2, zorder=0, label="90% bci for $\\theta$")
-    ax.legend()
-    
-    filename = os.path.join(DESTDIR, "posterior_visualization.pdf")
-    savefigure(plt.gcf(), filename)
+# compute the Bayes factor
+runr('bf = ttestBF(iqs, mu=100)')
+runr('print(bf)')
 ------------------
 
 
 [0;31m---------------------------------------------------------------------------[0m
 [0;31mModuleNotFoundError[0m                       Traceback (most recent call last)
-Cell [0;32mIn[8], line 1[0m
-[0;32m----> 1[0m [38;5;28;01mfrom[39;00m [38;5;21;01mministats[39;00m[38;5;21;01m.[39;00m[38;5;21;01mhpdi[39;00m [38;5;28;01mimport[39;00m hpdi_from_grid
-[1;32m      4[0m heads [38;5;241m=[39m [38;5;241m4[39m
-[1;32m      5[0m n [38;5;241m=[39m [38;5;241m5[39m
+Cell [0;32mIn[72], line 2[0m
+[1;32m      1[0m [38;5;66;03m# verify computation against the R package `BayesFactor`[39;00m
+[0;32m----> 2[0m [38;5;28;01mimport[39;00m [38;5;21;01mrpy2[39;00m[38;5;21;01m.[39;00m[38;5;21;01mrobjects[39;00m [38;5;28;01mas[39;00m [38;5;21;01mrobjects[39;00m
+[1;32m      3[0m [38;5;28;01mfrom[39;00m [38;5;21;01mrpy2[39;00m[38;5;21;01m.[39;00m[38;5;21;01mrobjects[39;00m [38;5;28;01mimport[39;00m r [38;5;28;01mas[39;00m runr, pandas2ri
+[1;32m      4[0m [38;5;28;01mfrom[39;00m [38;5;21;01mrpy2[39;00m[38;5;21;01m.[39;00m[38;5;21;01mrobjects[39;00m[38;5;21;01m.[39;00m[38;5;21;01mpackages[39;00m [38;5;28;01mimport[39;00m importr
 
-[0;31mModuleNotFoundError[0m: No module named 'ministats.hpdi'
+[0;31mModuleNotFoundError[0m: No module named 'rpy2'
 
