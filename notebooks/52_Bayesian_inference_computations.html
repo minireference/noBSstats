@@ -690,9 +690,9 @@
 <p>The model is</p>
 <div class="math notranslate nohighlight">
 \[
-    C \sim \textrm{Bernoulli}(p),
+    C \sim \textrm{Bernoulli}(P),
     \qquad
-    p \sim \mathcal{U}(0,1).
+    P \sim \mathcal{U}(0,1).
 \]</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -751,18 +751,16 @@
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bambi</span> <span class="k">as</span> <span class="nn">bmb</span>
 
-<span class="n">formula1</span> <span class="o">=</span> <span class="s2">&quot;heads ~ 1&quot;</span>
-
 <span class="n">priors1</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;Intercept&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Uniform&quot;</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">upper</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
     <span class="c1"># &quot;Intercept&quot;: bmb.Prior(&quot;Beta&quot;, alpha=1, beta=1),</span>
 <span class="p">}</span>
 
 <span class="c1">#######################################################</span>
-<span class="n">mod1</span> <span class="o">=</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">formula1</span><span class="p">,</span>
-                 <span class="n">priors</span><span class="o">=</span><span class="n">priors1</span><span class="p">,</span>
+<span class="n">mod1</span> <span class="o">=</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">formula</span><span class="o">=</span><span class="s2">&quot;heads ~ 1&quot;</span><span class="p">,</span>
                  <span class="n">family</span><span class="o">=</span><span class="s2">&quot;bernoulli&quot;</span><span class="p">,</span>
                  <span class="n">link</span><span class="o">=</span><span class="s2">&quot;identity&quot;</span><span class="p">,</span>
+                 <span class="n">priors</span><span class="o">=</span><span class="n">priors1</span><span class="p">,</span>
                  <span class="n">data</span><span class="o">=</span><span class="n">df1</span><span class="p">)</span>
 <span class="n">mod1</span><span class="o">.</span><span class="n">set_alias</span><span class="p">({</span><span class="s2">&quot;Intercept&quot;</span><span class="p">:</span><span class="s2">&quot;P&quot;</span><span class="p">})</span>
 <span class="n">mod1</span>
@@ -930,14 +928,14 @@
 <span class="ne">ExecutableNotFound</span>: failed to execute PosixPath(&#39;dot&#39;), make sure the Graphviz executables are on your systems&#39; PATH
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;graphviz.graphs.Digraph at 0x7f9aa20c2d30&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;graphviz.graphs.Digraph at 0x7f453bb59760&gt;
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">idata1</span> <span class="o">=</span> <span class="n">mod1</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">draws</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">idata1</span> <span class="o">=</span> <span class="n">mod1</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -975,10 +973,10 @@
 </style>
 </div><div class="output text_html">
     <div>
-      <progress value='6000' class='' max='6000' style='width:300px; height:20px; vertical-align: middle;'></progress>
-      100.00% [6000/6000 00:01&lt;00:00 Sampling 2 chains, 0 divergences]
+      <progress value='4000' class='' max='4000' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      100.00% [4000/4000 00:01&lt;00:00 Sampling 2 chains, 0 divergences]
     </div>
-    </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 2 chains for 1_000 tune and 2_000 draw iterations (2_000 + 4_000 draws total) took 2 seconds.
+    </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 2 chains for 1_000 tune and 1_000 draw iterations (2_000 + 2_000 draws total) took 1 seconds.
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>We recommend running at least 4 chains for robust computation of convergence diagnostics
@@ -1002,8 +1000,25 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.80066103, 0.70509313, 0.63487042, ..., 0.67857519, 0.66790983,
-       0.66790983])
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.68139178, 0.7903452 , 0.7899339 , ..., 0.67881697, 0.68913068,
+       0.68913068])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">idata1</span><span class="p">[</span><span class="s2">&quot;posterior&quot;</span><span class="p">][</span><span class="s2">&quot;P&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">indexes</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Indexes:
+    chain    Index([0, 1], dtype=&#39;int64&#39;, name=&#39;chain&#39;)
+    draw     Index([  0,   1,   2,   3,   4,   5,   6,   7,   8,   9,
+       ...
+       990, 991, 992, 993, 994, 995, 996, 997, 998, 999],
+      dtype=&#39;int64&#39;, name=&#39;draw&#39;, length=1000)
 </pre></div>
 </div>
 </div>
@@ -1011,14 +1026,17 @@
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ALT. manually extract</span>
-<span class="n">post1</span> <span class="o">=</span> <span class="n">idata1</span><span class="p">[</span><span class="s2">&quot;posterior&quot;</span><span class="p">][</span><span class="s2">&quot;P&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">sample</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;chain&quot;</span><span class="p">,</span> <span class="s2">&quot;draw&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">values</span>
+<span class="n">post1</span> <span class="o">=</span> <span class="p">(</span><span class="n">idata1</span><span class="p">[</span><span class="s2">&quot;posterior&quot;</span><span class="p">]</span>    <span class="c1"># select posterior</span>
+               <span class="p">[</span><span class="s2">&quot;P&quot;</span><span class="p">]</span>            <span class="c1"># choose variable</span>
+               <span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">sample</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;chain&quot;</span><span class="p">,</span> <span class="s2">&quot;draw&quot;</span><span class="p">))</span>
+               <span class="o">.</span><span class="n">values</span><span class="p">)</span>
 <span class="n">post1</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.80066103, 0.70509313, 0.63487042, ..., 0.67857519, 0.66790983,
-       0.66790983])
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.68139178, 0.7903452 , 0.7899339 , ..., 0.67881697, 0.68913068,
+       0.68913068])
 </pre></div>
 </div>
 </div>
@@ -1035,12 +1053,24 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="../_images/63a33c9c31d5f14fad5c5b5b87e34394324543f885013617fe62bec9e3578315.png"><img alt="../_images/63a33c9c31d5f14fad5c5b5b87e34394324543f885013617fe62bec9e3578315.png" src="../_images/63a33c9c31d5f14fad5c5b5b87e34394324543f885013617fe62bec9e3578315.png" style="width: 464px; height: 293px;" /></a>
+<a class="reference internal image-reference" href="../_images/633d5f5a5ee6551bea37511ec0240b7a58c4556f3ca87c5e192f3659f7503066.png"><img alt="../_images/633d5f5a5ee6551bea37511ec0240b7a58c4556f3ca87c5e192f3659f7503066.png" src="../_images/633d5f5a5ee6551bea37511ec0240b7a58c4556f3ca87c5e192f3659f7503066.png" style="width: 464px; height: 293px;" /></a>
 </div>
 </div>
 </section>
 <section id="summarize-the-posterior">
 <h3>Summarize the posterior<a class="headerlink" href="#summarize-the-posterior" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">post1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2000
+</pre></div>
+</div>
+</div>
+</div>
 <section id="posterior-mean">
 <h4>Posterior mean<a class="headerlink" href="#posterior-mean" title="Link to this heading">#</a></h4>
 <div class="cell docutils container">
@@ -1051,7 +1081,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.6715663712647658
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.6746519201013501
 </pre></div>
 </div>
 </div>
@@ -1068,7 +1098,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.06414520284650903
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.06609987391790657
 </pre></div>
 </div>
 </div>
@@ -1083,7 +1113,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.6738769782450511
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.6777811415938563
 </pre></div>
 </div>
 </div>
@@ -1098,7 +1128,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.6294191 , 0.67387698, 0.71613347])
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.63024166, 0.67778114, 0.71993275])
 </pre></div>
 </div>
 </div>
@@ -1113,7 +1143,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.54684035, 0.78715492])
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.54701824, 0.79603041])
 </pre></div>
 </div>
 </div>
@@ -1135,7 +1165,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.677
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.6865
 </pre></div>
 </div>
 </div>
@@ -1152,7 +1182,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[0.5707547085274514, 0.7811567778034616]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[0.5679088853735103, 0.7843720075775701]
 </pre></div>
 </div>
 </div>
@@ -1173,7 +1203,7 @@
 <div class="cell_output docutils container">
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
 <span class="ne">ValueError</span><span class="g g-Whitespace">                                </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">24</span><span class="p">],</span> <span class="n">line</span> <span class="mi">3</span>
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">26</span><span class="p">],</span> <span class="n">line</span> <span class="mi">3</span>
 <span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="n">idata1_pred</span> <span class="o">=</span> <span class="n">idata1</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 <span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="c1"># MAYBE: alt notation _rep instead of _pred ?</span>
 <span class="ne">----&gt; </span><span class="mi">3</span> <span class="n">mod1</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">idata1_pred</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;response&quot;</span><span class="p">)</span>
@@ -1252,17 +1282,16 @@
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bambi</span> <span class="k">as</span> <span class="nn">bmb</span>
 
-<span class="n">formula2</span> <span class="o">=</span> <span class="s2">&quot;iq ~ 1&quot;</span>
-
 <span class="n">priors2</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;Intercept&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Normal&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">40</span><span class="p">),</span>
     <span class="s2">&quot;sigma&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Data&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">15</span><span class="p">),</span>
+    <span class="c1"># &quot;sigma&quot;: 15,  # CHANGE WHEN https://github.com/bambinos/bambi/pull/851/files LANDS</span>
 <span class="p">}</span>
 
-<span class="n">mod2</span> <span class="o">=</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">formula2</span><span class="p">,</span>
-                 <span class="n">priors</span><span class="o">=</span><span class="n">priors2</span><span class="p">,</span>
+<span class="n">mod2</span> <span class="o">=</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">formula</span><span class="o">=</span><span class="s2">&quot;iq ~ 1&quot;</span><span class="p">,</span>
                  <span class="n">family</span><span class="o">=</span><span class="s2">&quot;gaussian&quot;</span><span class="p">,</span>
                  <span class="n">link</span><span class="o">=</span><span class="s2">&quot;identity&quot;</span><span class="p">,</span>
+                 <span class="n">priors</span><span class="o">=</span><span class="n">priors2</span><span class="p">,</span>
                  <span class="n">data</span><span class="o">=</span><span class="n">df2</span><span class="p">)</span>
 
 <span class="n">mod2</span><span class="o">.</span><span class="n">set_alias</span><span class="p">({</span><span class="s2">&quot;Intercept&quot;</span><span class="p">:</span><span class="s2">&quot;M&quot;</span><span class="p">})</span>
@@ -1294,7 +1323,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/c4216f62604aa2980d9fa9d9cccf3c36eae838fabd145745ab8d6941e7ce4ed9.svg" src="../_images/c4216f62604aa2980d9fa9d9cccf3c36eae838fabd145745ab8d6941e7ce4ed9.svg" />
+<img alt="../_images/171b69dd46e9b2dfa0385a0179b0506b85fcbc9b1904306c50283335e4d35dbe.svg" src="../_images/171b69dd46e9b2dfa0385a0179b0506b85fcbc9b1904306c50283335e4d35dbe.svg" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1325,10 +1354,22 @@ Multiprocess sampling (4 chains in 4 jobs)
 NUTS: [M]
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "6766039cd69c4fa097fa304ab5a6e184", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "75ec03e2225543f99fb1b5327aa8db5f", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
 </pre>
 </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 1_000 tune and 2_000 draw iterations (4_000 + 8_000 draws total) took 1 seconds.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">idata2</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;posterior&#39;, &#39;sample_stats&#39;, &#39;observed_data&#39;, &#39;constant_data&#39;]
 </pre></div>
 </div>
 </div>
@@ -1342,8 +1383,8 @@ NUTS: [M]
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([105.78975236, 106.05993415, 103.60179907, ..., 102.77372777,
-       107.57079739, 102.11817756])
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([105.99820749, 106.90200915, 106.90200915, ..., 112.68222734,
+       103.13812325, 105.58049389])
 </pre></div>
 </div>
 </div>
@@ -1360,7 +1401,7 @@ NUTS: [M]
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>107.82728101451683
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>107.73439669016274
 </pre></div>
 </div>
 </div>
@@ -1377,7 +1418,7 @@ NUTS: [M]
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.707519811955393
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.7550616929518763
 </pre></div>
 </div>
 </div>
@@ -1392,7 +1433,7 @@ NUTS: [M]
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>107.85456874244214
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>107.70975180992005
 </pre></div>
 </div>
 </div>
@@ -1407,7 +1448,7 @@ NUTS: [M]
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([105.9427669 , 107.85456874, 109.68024587])
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([105.93781378, 107.70975181, 109.58750929])
 </pre></div>
 </div>
 </div>
@@ -1422,7 +1463,7 @@ NUTS: [M]
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([102.78281672, 112.88258315])
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([102.48032423, 112.94934187])
 </pre></div>
 </div>
 </div>
@@ -1444,7 +1485,7 @@ NUTS: [M]
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>108.06
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>107.60000000000001
 </pre></div>
 </div>
 </div>
@@ -1461,7 +1502,7 @@ NUTS: [M]
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[103.36091671206084, 112.22329877607842]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[103.13039063842261, 112.19714776682018]
 </pre></div>
 </div>
 </div>
@@ -1503,7 +1544,7 @@ NUTS: [M]
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="../_images/196a69d459035433a1a3fcdcf30ade0afc571ce9176682d3e5098b416c759444.png"><img alt="../_images/196a69d459035433a1a3fcdcf30ade0afc571ce9176682d3e5098b416c759444.png" src="../_images/196a69d459035433a1a3fcdcf30ade0afc571ce9176682d3e5098b416c759444.png" style="width: 459px; height: 274px;" /></a>
+<a class="reference internal image-reference" href="../_images/409471f39a7cadeb8ee3c53a6e5496ec7f7c6dec0d3ea44bf645f2068c7ea90d.png"><img alt="../_images/409471f39a7cadeb8ee3c53a6e5496ec7f7c6dec0d3ea44bf645f2068c7ea90d.png" src="../_images/409471f39a7cadeb8ee3c53a6e5496ec7f7c6dec0d3ea44bf645f2068c7ea90d.png" style="width: 459px; height: 274px;" /></a>
 </div>
 </div>
 </section>
@@ -1526,7 +1567,7 @@ NUTS: [M]
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="../_images/d66996c312d79f143b91da1f35e2ea6e5f2535ff8edd3b45cd91c77227fad4bf.png"><img alt="../_images/d66996c312d79f143b91da1f35e2ea6e5f2535ff8edd3b45cd91c77227fad4bf.png" src="../_images/d66996c312d79f143b91da1f35e2ea6e5f2535ff8edd3b45cd91c77227fad4bf.png" style="width: 413px; height: 289px;" /></a>
+<a class="reference internal image-reference" href="../_images/52a9f9daeb2078f38be93882f131bea50f6efaccea78302be146a882232d7294.png"><img alt="../_images/52a9f9daeb2078f38be93882f131bea50f6efaccea78302be146a882232d7294.png" src="../_images/52a9f9daeb2078f38be93882f131bea50f6efaccea78302be146a882232d7294.png" style="width: 407px; height: 289px;" /></a>
 </div>
 </div>
 <p>Options:</p>
@@ -1570,10 +1611,10 @@ e.g., <code class="docutils literal notranslate"><span class="pre">rope=[97,103]
   <tbody>
     <tr>
       <th>P</th>
-      <td>0.671</td>
-      <td>0.065</td>
-      <td>0.568</td>
-      <td>0.779</td>
+      <td>0.673</td>
+      <td>0.064</td>
+      <td>0.567</td>
+      <td>0.777</td>
     </tr>
   </tbody>
 </table>
@@ -1589,7 +1630,7 @@ e.g., <code class="docutils literal notranslate"><span class="pre">rope=[97,103]
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="../_images/f0dc117f63d6e903a81462ed9fc1bd0350ee753a81626241736962289dfb6abe.png"><img alt="../_images/f0dc117f63d6e903a81462ed9fc1bd0350ee753a81626241736962289dfb6abe.png" src="../_images/f0dc117f63d6e903a81462ed9fc1bd0350ee753a81626241736962289dfb6abe.png" style="width: 412px; height: 289px;" /></a>
+<a class="reference internal image-reference" href="../_images/f09d902d3f597d95bf9794bb4bc9ac1bd4b4f45ebf492ece32dd926ec4d40370.png"><img alt="../_images/f09d902d3f597d95bf9794bb4bc9ac1bd4b4f45ebf492ece32dd926ec4d40370.png" src="../_images/f09d902d3f597d95bf9794bb4bc9ac1bd4b4f45ebf492ece32dd926ec4d40370.png" style="width: 407px; height: 289px;" /></a>
 </div>
 </div>
 <div class="cell docutils container">
@@ -1626,10 +1667,10 @@ e.g., <code class="docutils literal notranslate"><span class="pre">rope=[97,103]
   <tbody>
     <tr>
       <th>M</th>
-      <td>107.827</td>
-      <td>2.708</td>
-      <td>103.361</td>
-      <td>112.223</td>
+      <td>107.734</td>
+      <td>2.755</td>
+      <td>103.13</td>
+      <td>112.197</td>
     </tr>
   </tbody>
 </table>
@@ -1688,7 +1729,7 @@ e.g., <code class="docutils literal notranslate"><span class="pre">rope=[97,103]
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>FrozenMappingWarningOnValuesAccess({&#39;chain&#39;: 4, &#39;draw&#39;: 2000})
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>FrozenMappingWarningOnValuesAccess({&#39;chain&#39;: 4, &#39;draw&#39;: 1000})
 </pre></div>
 </div>
 </div>
@@ -1725,7 +1766,7 @@ e.g., <code class="docutils literal notranslate"><span class="pre">rope=[97,103]
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>((&#39;chain&#39;, &#39;draw&#39;), (4, 2000))
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>((&#39;chain&#39;, &#39;draw&#39;), (4, 1000))
 </pre></div>
 </div>
 </div>
@@ -1743,7 +1784,15 @@ e.g., <code class="docutils literal notranslate"><span class="pre">rope=[97,103]
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="../_images/23c23be16b4d68788bd21e9c878ac32a20b2bdcceff3cadd972a9706b88c092d.png"><img alt="../_images/23c23be16b4d68788bd21e9c878ac32a20b2bdcceff3cadd972a9706b88c092d.png" src="../_images/23c23be16b4d68788bd21e9c878ac32a20b2bdcceff3cadd972a9706b88c092d.png" style="width: 950px; height: 218px;" /></a>
+<a class="reference internal image-reference" href="../_images/5114ff382d9e74854faaf7bd05b2524b574ada3c918943386fdb980d71d8ed9e.png"><img alt="../_images/5114ff382d9e74854faaf7bd05b2524b574ada3c918943386fdb980d71d8ed9e.png" src="../_images/5114ff382d9e74854faaf7bd05b2524b574ada3c918943386fdb980d71d8ed9e.png" style="width: 950px; height: 218px;" /></a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># FIGURES ONLY</span>
+<span class="c1"># az.plot_trace(idata2, backend_kwargs={&quot;layout&quot;: &quot;constrained&quot;})</span>
+</pre></div>
+</div>
 </div>
 </div>
 <div class="cell docutils container">
@@ -1753,7 +1802,7 @@ e.g., <code class="docutils literal notranslate"><span class="pre">rope=[97,103]
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="../_images/a4f02965c7fa6ea9fff23228132162d26a6daf806945d3a65e38a9a8a3fb1ec7.png"><img alt="../_images/a4f02965c7fa6ea9fff23228132162d26a6daf806945d3a65e38a9a8a3fb1ec7.png" src="../_images/a4f02965c7fa6ea9fff23228132162d26a6daf806945d3a65e38a9a8a3fb1ec7.png" style="width: 950px; height: 237px;" /></a>
+<a class="reference internal image-reference" href="../_images/b5afbfc3352afd3ead91f065262289e96dcfe50ccc816083a2e2af94f61c94aa.png"><img alt="../_images/b5afbfc3352afd3ead91f065262289e96dcfe50ccc816083a2e2af94f61c94aa.png" src="../_images/b5afbfc3352afd3ead91f065262289e96dcfe50ccc816083a2e2af94f61c94aa.png" style="width: 950px; height: 237px;" /></a>
 </div>
 </div>
 <div class="cell docutils container">
@@ -1791,10 +1840,10 @@ e.g., <code class="docutils literal notranslate"><span class="pre">rope=[97,103]
   <tbody>
     <tr>
       <th>P</th>
+      <td>0.002</td>
       <td>0.001</td>
-      <td>0.001</td>
-      <td>3157.0</td>
-      <td>4753.0</td>
+      <td>1813.0</td>
+      <td>2692.0</td>
       <td>1.0</td>
     </tr>
   </tbody>
@@ -1836,10 +1885,10 @@ e.g., <code class="docutils literal notranslate"><span class="pre">rope=[97,103]
   <tbody>
     <tr>
       <th>M</th>
-      <td>0.044</td>
-      <td>0.031</td>
-      <td>3829.0</td>
-      <td>5572.0</td>
+      <td>0.048</td>
+      <td>0.034</td>
+      <td>3303.0</td>
+      <td>5404.0</td>
       <td>1.0</td>
     </tr>
   </tbody>
@@ -1902,7 +1951,7 @@ e.g., <code class="docutils literal notranslate"><span class="pre">rope=[97,103]
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling: [M, sigma]
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="../_images/4f070134026ca420c49079c86a910319382accfbf33f9c4a260b0cba742b9557.png"><img alt="../_images/4f070134026ca420c49079c86a910319382accfbf33f9c4a260b0cba742b9557.png" src="../_images/4f070134026ca420c49079c86a910319382accfbf33f9c4a260b0cba742b9557.png" style="width: 939px; height: 324px;" /></a>
+<a class="reference internal image-reference" href="../_images/4fe6b79249560a134991cb6750026f931c333e137dd02101d9461793f2be3fea.png"><img alt="../_images/4fe6b79249560a134991cb6750026f931c333e137dd02101d9461793f2be3fea.png" src="../_images/4fe6b79249560a134991cb6750026f931c333e137dd02101d9461793f2be3fea.png" style="width: 932px; height: 324px;" /></a>
 </div>
 </div>
 </section>
@@ -1922,7 +1971,14 @@ e.g., <code class="docutils literal notranslate"><span class="pre">rope=[97,103]
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling: [P]
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="../_images/7910566e11304b58b85d0dfe472193457daa51831b85d28af8d08cea68c85c74.png"><img alt="../_images/7910566e11304b58b85d0dfe472193457daa51831b85d28af8d08cea68c85c74.png" src="../_images/7910566e11304b58b85d0dfe472193457daa51831b85d28af8d08cea68c85c74.png" style="width: 407px; height: 289px;" /></a>
+<a class="reference internal image-reference" href="../_images/523e592a62651fbd55df9bdbedf4734bd082cc3748c16052c4ded3b4d32e853e.png"><img alt="../_images/523e592a62651fbd55df9bdbedf4734bd082cc3748c16052c4ded3b4d32e853e.png" src="../_images/523e592a62651fbd55df9bdbedf4734bd082cc3748c16052c4ded3b4d32e853e.png" style="width: 416px; height: 289px;" /></a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># mod1.prior_predictive()</span>
+</pre></div>
+</div>
 </div>
 </div>
 </section>
