@@ -161,6 +161,23 @@ The specific data file I used was [`All_17996.xls`](https://tspace.library.utoro
 I have filtered the data to select only individuals of age 30 or less.
 
 
+### Radon
+
+- Dataset: [`radon.csv`](./radon.csv)
+- Description: Radon measurements of 919 homes in 85 Minnesota counties.
+- Format: A CSV file with 919 observations and 6 variables:
+  - `idnum`: unique identifier from each house.
+  - `state`: `MN` constant for all observations.
+  - `county`: county name (this is the grouping variable).
+  - `floor`: where the radon measurement was taken: `basement` or `ground` floor
+  - `log_radon`: Radon measurement (in log pCi/L, i.e., log picoCurie per liter)
+  - `log_uranium`: Average county-level soil uranium content.
+- Source:
+  - Gelman, A. and Hill, J. (2007) Data analysis using regression and multilevel/hierarchical models. Cambridge University Press. 
+  - Price, P. N., Nero, A. V. and Gelman, A. (1996) Bayesian prediction of mean indoor radon concentrations for Minnesota counties. Health Physics. 71(6), 922–936.
+
+
+
 
 ## Other datasets
 
