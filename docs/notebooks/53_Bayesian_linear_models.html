@@ -540,9 +540,9 @@
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanations">Explanations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#robust-linear-regression">Robust linear regression</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shrinkage-priors">Shrinkage priors</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#standardizing-predictors">Standardizing predictors</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#robust-linear-regression">Robust linear regression</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a><ul class="nav section-nav flex-column">
@@ -888,7 +888,7 @@ and <a class="reference external" href="http://localhost:8888/lab/tree/notebooks
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../_images/20afec86adef4cf1e766cae6840b5e04a4231c88444276272762b13dbc0e0a14.svg" src="../../_images/20afec86adef4cf1e766cae6840b5e04a4231c88444276272762b13dbc0e0a14.svg" />
+<img alt="../../_images/30755f749a9fc911cd6867da523b31e2f1426a16d41ff5e49eb9c780b523935a.svg" src="../../_images/30755f749a9fc911cd6867da523b31e2f1426a16d41ff5e49eb9c780b523935a.svg" />
 </div>
 </div>
 </section>
@@ -910,7 +910,7 @@ and <a class="reference external" href="http://localhost:8888/lab/tree/notebooks
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>NUTS: [sigma, Intercept, effort]
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "dc51641becda43ebb80f636d8e4c6192"}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "2c456d0f3e2d42789fb136cf5f4533a2"}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 2 chains for 1_000 tune and 1_000 draw iterations (2_000 + 2_000 draws total) took 2 seconds.
 </pre></div>
 </div>
@@ -1020,6 +1020,34 @@ and <a class="reference external" href="http://localhost:8888/lab/tree/notebooks
 <span class="c1"># az.plot_lm(y=&quot;score&quot;, idata=idata1, x=efforts);</span>
 <span class="c1"># az.plot_lm(y=&quot;score&quot;, idata=idata1, y_model=&quot;score_pred&quot;, x=efforts);</span>
 <span class="n">az</span><span class="o">.</span><span class="n">plot_lm</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="s2">&quot;score&quot;</span><span class="p">,</span> <span class="n">idata</span><span class="o">=</span><span class="n">idata1_rep</span><span class="p">,</span> <span class="n">y_model</span><span class="o">=</span><span class="s2">&quot;score_model&quot;</span><span class="p">,</span>
+           <span class="n">x</span><span class="o">=</span><span class="n">efforts</span><span class="p">,</span> <span class="n">kind_pp</span><span class="o">=</span><span class="s2">&quot;samples&quot;</span><span class="p">,</span> <span class="n">kind_model</span><span class="o">=</span><span class="s2">&quot;lines&quot;</span><span class="p">);</span>
+
+<span class="c1"># # FIGURES ONLY</span>
+<span class="c1"># filename = os.path.join(DESTDIR, &quot;example1_plot_predictions_scatter.pdf&quot;)</span>
+<span class="c1"># savefigure(plt.gcf(), filename)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../../_images/f62a6ac0a987fbf77959ea3e5d91d63fea6b02d38155120eb537cc481f5383e8.png"><img alt="../../_images/f62a6ac0a987fbf77959ea3e5d91d63fea6b02d38155120eb537cc481f5383e8.png" src="../../_images/f62a6ac0a987fbf77959ea3e5d91d63fea6b02d38155120eb537cc481f5383e8.png" style="width: 531px; height: 293px;" /></a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
+
+<span class="c1"># Generate samples form the posterior predictive distribution</span>
+<span class="n">idata1_rep</span> <span class="o">=</span> <span class="n">mod1</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">idata1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;response&quot;</span><span class="p">)</span>
+
+<span class="c1"># Calculate the model mean</span>
+<span class="n">post1</span> <span class="o">=</span> <span class="n">idata1_rep</span><span class="p">[</span><span class="s2">&quot;posterior&quot;</span><span class="p">]</span>
+<span class="n">efforts</span> <span class="o">=</span> <span class="n">students</span><span class="p">[</span><span class="s2">&quot;effort&quot;</span><span class="p">]</span>
+<span class="n">post1</span><span class="p">[</span><span class="s2">&quot;score_model&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">post1</span><span class="p">[</span><span class="s2">&quot;Intercept&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">post1</span><span class="p">[</span><span class="s2">&quot;effort&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">efforts</span><span class="p">)</span>
+
+<span class="c1"># Plot</span>
+<span class="c1"># az.plot_lm(y=&quot;score&quot;, idata=idata1, x=efforts);</span>
+<span class="c1"># az.plot_lm(y=&quot;score&quot;, idata=idata1, y_model=&quot;score_pred&quot;, x=efforts);</span>
+<span class="n">az</span><span class="o">.</span><span class="n">plot_lm</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="s2">&quot;score&quot;</span><span class="p">,</span> <span class="n">idata</span><span class="o">=</span><span class="n">idata1_rep</span><span class="p">,</span> <span class="n">y_model</span><span class="o">=</span><span class="s2">&quot;score_model&quot;</span><span class="p">,</span>
            <span class="n">x</span><span class="o">=</span><span class="n">efforts</span><span class="p">,</span> <span class="n">kind_pp</span><span class="o">=</span><span class="s2">&quot;hdi&quot;</span><span class="p">,</span> <span class="n">kind_model</span><span class="o">=</span><span class="s2">&quot;hdi&quot;</span><span class="p">);</span>
 
 <span class="c1"># # FIGURES ONLY</span>
@@ -1029,7 +1057,7 @@ and <a class="reference external" href="http://localhost:8888/lab/tree/notebooks
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="../../_images/3ccd1063d66c4cc613963dba81fef91408d5c83d0e51cdf3d7311f4b071dee70.png"><img alt="../../_images/3ccd1063d66c4cc613963dba81fef91408d5c83d0e51cdf3d7311f4b071dee70.png" src="../../_images/3ccd1063d66c4cc613963dba81fef91408d5c83d0e51cdf3d7311f4b071dee70.png" style="width: 538px; height: 295px;" /></a>
+<a class="reference internal image-reference" href="../../_images/33a22480ae85b35a4dee7c1356de0c4b9527ba4dfade2ce5e285838fcc8c084c.png"><img alt="../../_images/33a22480ae85b35a4dee7c1356de0c4b9527ba4dfade2ce5e285838fcc8c084c.png" src="../../_images/33a22480ae85b35a4dee7c1356de0c4b9527ba4dfade2ce5e285838fcc8c084c.png" style="width: 538px; height: 293px;" /></a>
 </div>
 </div>
 </section>
@@ -1317,7 +1345,7 @@ however Bayesian models allow for simpler interpretation.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../_images/7b5d161e71af704d704d20ae8a5885fe7aacc68148a681ac45ab1c01d56aa52c.svg" src="../../_images/7b5d161e71af704d704d20ae8a5885fe7aacc68148a681ac45ab1c01d56aa52c.svg" />
+<img alt="../../_images/ee0f60ecd536540c083f614a8b5f8d98ccc879c92bb0c4478a2811e791717c40.svg" src="../../_images/ee0f60ecd536540c083f614a8b5f8d98ccc879c92bb0c4478a2811e791717c40.svg" />
 </div>
 </div>
 </section>
@@ -1339,7 +1367,7 @@ however Bayesian models allow for simpler interpretation.</p>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>NUTS: [sigma, Intercept, alc, weed, exrc]
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "b8f35962da5f4c46ac8dff50cfe5c318"}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "6826c448c71d4198a7572b2dfe0d2b96"}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 2 chains for 1_000 tune and 1_000 draw iterations (2_000 + 2_000 draws total) took 2 seconds.
 </pre></div>
 </div>
@@ -1599,7 +1627,7 @@ however Bayesian models allow for simpler interpretation.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../_images/76dfafdb85bb98a4cd56b96f2df79fd0dc1d8493180231e585f8318cd797f8ba.svg" src="../../_images/76dfafdb85bb98a4cd56b96f2df79fd0dc1d8493180231e585f8318cd797f8ba.svg" />
+<img alt="../../_images/61b76ba3dcc6c442810ff120365a19f63a52d0bf99b9a7e048ba42f12e9cc301.svg" src="../../_images/61b76ba3dcc6c442810ff120365a19f63a52d0bf99b9a7e048ba42f12e9cc301.svg" />
 </div>
 </div>
 </section>
@@ -1624,7 +1652,7 @@ however Bayesian models allow for simpler interpretation.</p>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>NUTS: [Intercept, work]
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "493c1a78e8b7437ebe9bfc5535c23c56"}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "58864733fd434e69a14b6262d44a7346"}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 2 chains for 1_000 tune and 1_000 draw iterations (2_000 + 2_000 draws total) took 1 seconds.
 </pre></div>
 </div>
@@ -1701,7 +1729,7 @@ however Bayesian models allow for simpler interpretation.</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># # FIGURES ONLY</span>
 <span class="c1"># az.plot_posterior(idata3, round_to=2, figsize=(5,2));</span>
 <span class="c1"># filename = os.path.join(DESTDIR, &quot;example3_posterior.pdf&quot;)</span>
-<span class="c1"># savefigure(plt.gcf(), filename)</span>
+<span class="c1"># savefigure(plt.gcf(), filename, tight_layout_kwargs={&quot;w_pad&quot;:5})</span>
 </pre></div>
 </div>
 </div>
@@ -1797,22 +1825,6 @@ dtype: float64
 </section>
 <section id="explanations">
 <h2>Explanations<a class="headerlink" href="#explanations" title="Link to this heading">#</a></h2>
-<section id="shrinkage-priors">
-<h3>Shrinkage priors<a class="headerlink" href="#shrinkage-priors" title="Link to this heading">#</a></h3>
-<p>Shrinkage priors = Prior distributions for a parameter that shrink its posterior estimate towards a particular value.
-Sparsity = A situation where most parameter values are zero and only a few are non-zero.</p>
-<ul class="simple">
-<li><p>Laplace priors L1 regularization = lasso regression <a class="reference external" href="https://en.wikipedia.org/wiki/Lasso_(statistics)">https://en.wikipedia.org/wiki/Lasso_(statistics)</a></p></li>
-<li><p>Gaussian priors L2 regularization = ridge regression <a class="reference external" href="https://en.wikipedia.org/wiki/Ridge_regression">https://en.wikipedia.org/wiki/Ridge_regression</a></p></li>
-<li><p>Reference priors Reference prior ppal pha, beta, sigmaq91{sigma Produces the same results as frequentist linear regression</p></li>
-<li><p>Spike-and-slab priors Specialized for spike-and-slab prior = mix- ture of two distributions: one peaked around zero (spike) and the other a diffuse distribution (slab. The spike component identifies the zero elements whereas the slab component captures the non-zero coefficients.</p></li>
-</ul>
-</section>
-<section id="standardizing-predictors">
-<h3>Standardizing predictors<a class="headerlink" href="#standardizing-predictors" title="Link to this heading">#</a></h3>
-<p>We make choosing priors easier makes inference more efficient cf. 04_lm/cut_material/standardized_predictors.tex
-Robust linear regression</p>
-</section>
 <section id="robust-linear-regression">
 <h3>Robust linear regression<a class="headerlink" href="#robust-linear-regression" title="Link to this heading">#</a></h3>
 <p>We swap out the Normal distribution for Student’s <span class="math notranslate nohighlight">\(t\)</span>-distribution to handle outliers better
@@ -1853,8 +1865,8 @@ very useful when data has outliers; see EXX</p>
             effort ~ Normal(mu: 0.0, sigma: 10.0)
         
         Auxiliary parameters
-            nu ~ Gamma(alpha: 2.0, beta: 0.1)
             sigma ~ HalfStudentT(nu: 4.0, sigma: 10.0)
+            nu ~ Gamma(alpha: 2.0, beta: 0.1)
 </pre></div>
 </div>
 </div>
@@ -1872,10 +1884,10 @@ very useful when data has outliers; see EXX</p>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Multiprocess sampling (2 chains in 2 jobs)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>NUTS: [nu, sigma, Intercept, effort]
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>NUTS: [sigma, nu, Intercept, effort]
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "7f39a490399f46368e674f8341abbb00"}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "a502a4d8d5a34e29bc17de7d6d276d04"}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 2 chains for 1_000 tune and 1_000 draw iterations (2_000 + 2_000 draws total) took 2 seconds.
 </pre></div>
 </div>
@@ -1886,71 +1898,39 @@ very useful when data has outliers; see EXX</p>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">az</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">idata1r</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;stats&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">az</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">idata1r</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;stats&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>mean</th>
-      <th>sd</th>
-      <th>hdi_3%</th>
-      <th>hdi_97%</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>nu</th>
-      <td>19.296</td>
-      <td>13.898</td>
-      <td>1.869</td>
-      <td>43.840</td>
-    </tr>
-    <tr>
-      <th>sigma</th>
-      <td>4.870</td>
-      <td>1.215</td>
-      <td>2.730</td>
-      <td>6.992</td>
-    </tr>
-    <tr>
-      <th>Intercept</th>
-      <td>33.786</td>
-      <td>6.406</td>
-      <td>21.475</td>
-      <td>45.375</td>
-    </tr>
-    <tr>
-      <th>effort</th>
-      <td>4.332</td>
-      <td>0.725</td>
-      <td>2.930</td>
-      <td>5.599</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>             mean      sd  hdi_3%  hdi_97%
+sigma       4.889   1.191   2.791    7.040
+nu         20.010  13.860   2.083   46.017
+Intercept  34.021   6.445  20.855   45.766
+effort      4.312   0.727   2.869    5.685
+</pre></div>
 </div>
-<p>The mean of the slope <span class="math notranslate nohighlight">\(4.324\)</span> is slightly less than the mean slope we found in <code class="docutils literal notranslate"><span class="pre">mod1</span></code> (<span class="math notranslate nohighlight">\(4.462\)</span>),
+</div>
+</div>
+<p>The mean of the slope <span class="math notranslate nohighlight">\(4.303\)</span> is slightly less than the mean slope we found in <code class="docutils literal notranslate"><span class="pre">mod1</span></code> (<span class="math notranslate nohighlight">\(4.497\)</span>),
 which shows the robust model doesn’t care as much about the one outlier.</p>
 <p>We also found a slightly smaller <code class="docutils literal notranslate"><span class="pre">sigma</span></code>, since we’re using the <span class="math notranslate nohighlight">\(t\)</span>-distribution.</p>
+</section>
+<section id="shrinkage-priors">
+<h3>Shrinkage priors<a class="headerlink" href="#shrinkage-priors" title="Link to this heading">#</a></h3>
+<p>Shrinkage priors = Prior distributions for a parameter that shrink its posterior estimate towards a particular value.
+Sparsity = A situation where most parameter values are zero and only a few are non-zero.</p>
+<ul class="simple">
+<li><p>Laplace priors L1 regularization = lasso regression <a class="reference external" href="https://en.wikipedia.org/wiki/Lasso_(statistics)">https://en.wikipedia.org/wiki/Lasso_(statistics)</a></p></li>
+<li><p>Gaussian priors L2 regularization = ridge regression <a class="reference external" href="https://en.wikipedia.org/wiki/Ridge_regression">https://en.wikipedia.org/wiki/Ridge_regression</a></p></li>
+<li><p>Reference priors Reference prior ppal pha, beta, sigmaq91{sigma Produces the same results as frequentist linear regression</p></li>
+<li><p>Spike-and-slab priors Specialized for spike-and-slab prior = mix- ture of two distributions: one peaked around zero (spike) and the other a diffuse distribution (slab. The spike component identifies the zero elements whereas the slab component captures the non-zero coefficients.</p></li>
+</ul>
+</section>
+<section id="standardizing-predictors">
+<h3>Standardizing predictors<a class="headerlink" href="#standardizing-predictors" title="Link to this heading">#</a></h3>
+<p>We make choosing priors easier makes inference more efficient cf. 04_lm/cut_material/standardized_predictors.tex
+Robust linear regression</p>
 </section>
 </section>
 <section id="discussion">
@@ -2049,7 +2029,7 @@ y_i &amp;\sim \text{Binom}(n_i, p_i) \\
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>NUTS: [Intercept, log_dose]
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "5c4d7b61249948ebbe255605829ccb6f"}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "44da154d9bbd4a5ea7f5e25b0e06454d"}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 2 chains for 1_000 tune and 1_000 draw iterations (2_000 + 2_000 draws total) took 2 seconds.
 </pre></div>
 </div>
@@ -2088,38 +2068,38 @@ y_i &amp;\sim \text{Binom}(n_i, p_i) \\
   <tbody>
     <tr>
       <th>Intercept</th>
-      <td>0.587</td>
-      <td>0.801</td>
-      <td>-0.861</td>
-      <td>2.056</td>
-      <td>0.023</td>
-      <td>0.020</td>
-      <td>1262.0</td>
-      <td>1280.0</td>
+      <td>0.645</td>
+      <td>0.798</td>
+      <td>-0.764</td>
+      <td>2.218</td>
+      <td>0.022</td>
+      <td>0.018</td>
+      <td>1342.0</td>
+      <td>1121.0</td>
       <td>1.0</td>
     </tr>
     <tr>
       <th>log_dose</th>
-      <td>6.426</td>
-      <td>2.613</td>
-      <td>2.029</td>
-      <td>11.249</td>
-      <td>0.085</td>
-      <td>0.065</td>
-      <td>1090.0</td>
-      <td>780.0</td>
+      <td>6.593</td>
+      <td>2.545</td>
+      <td>1.975</td>
+      <td>11.199</td>
+      <td>0.071</td>
+      <td>0.052</td>
+      <td>1348.0</td>
+      <td>1248.0</td>
       <td>1.0</td>
     </tr>
     <tr>
       <th>LD50</th>
-      <td>-0.081</td>
-      <td>0.131</td>
-      <td>-0.305</td>
-      <td>0.192</td>
+      <td>-0.087</td>
+      <td>0.129</td>
+      <td>-0.311</td>
+      <td>0.166</td>
       <td>0.004</td>
       <td>0.003</td>
-      <td>1381.0</td>
-      <td>1248.0</td>
+      <td>1427.0</td>
+      <td>1110.0</td>
       <td>1.0</td>
     </tr>
   </tbody>
@@ -2201,7 +2181,7 @@ y_i &amp;\sim \text{Binom}(n_i, p_i) \\
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>NUTS: [sigma, Intercept, x]
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "49dc97efc30e4b729e57f42555e393c4"}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "41539d82e48a47fba6f6d70cd3a19fb8"}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 2 chains for 1_000 tune and 1_000 draw iterations (2_000 + 2_000 draws total) took 2 seconds.
 </pre></div>
 </div>
@@ -2220,7 +2200,7 @@ y_i &amp;\sim \text{Binom}(n_i, p_i) \\
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling: [Intercept, sigma, x]
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="../../_images/1b47673b496b683acd2ea42791d023dc8da998bcc0dbdf514bef23ce967de3f2.png"><img alt="../../_images/1b47673b496b683acd2ea42791d023dc8da998bcc0dbdf514bef23ce967de3f2.png" src="../../_images/1b47673b496b683acd2ea42791d023dc8da998bcc0dbdf514bef23ce967de3f2.png" style="width: 1626px; height: 325px;" /></a>
+<a class="reference internal image-reference" href="../../_images/8c1d99d06af922625329b9b5ed2449ffdabfe1404c97c443b8ff9604db44751e.png"><img alt="../../_images/8c1d99d06af922625329b9b5ed2449ffdabfe1404c97c443b8ff9604db44751e.png" src="../../_images/8c1d99d06af922625329b9b5ed2449ffdabfe1404c97c443b8ff9604db44751e.png" style="width: 1624px; height: 325px;" /></a>
 </div>
 </div>
 <section id="summary-using-mean">
@@ -2261,24 +2241,24 @@ y_i &amp;\sim \text{Binom}(n_i, p_i) \\
   <tbody>
     <tr>
       <th>sigma</th>
-      <td>0.957</td>
-      <td>0.070</td>
-      <td>0.828</td>
+      <td>0.958</td>
+      <td>0.068</td>
+      <td>0.836</td>
       <td>1.088</td>
     </tr>
     <tr>
       <th>Intercept</th>
-      <td>3.008</td>
-      <td>0.095</td>
-      <td>2.823</td>
-      <td>3.178</td>
+      <td>3.009</td>
+      <td>0.098</td>
+      <td>2.825</td>
+      <td>3.192</td>
     </tr>
     <tr>
       <th>x</th>
-      <td>1.856</td>
-      <td>0.109</td>
-      <td>1.658</td>
-      <td>2.061</td>
+      <td>1.860</td>
+      <td>0.105</td>
+      <td>1.650</td>
+      <td>2.049</td>
     </tr>
   </tbody>
 </table>
@@ -2322,24 +2302,24 @@ y_i &amp;\sim \text{Binom}(n_i, p_i) \\
   <tbody>
     <tr>
       <th>sigma</th>
-      <td>0.953</td>
-      <td>0.046</td>
-      <td>0.837</td>
-      <td>1.104</td>
+      <td>0.955</td>
+      <td>0.044</td>
+      <td>0.840</td>
+      <td>1.094</td>
     </tr>
     <tr>
       <th>Intercept</th>
-      <td>3.011</td>
-      <td>0.065</td>
-      <td>2.825</td>
-      <td>3.181</td>
+      <td>3.006</td>
+      <td>0.066</td>
+      <td>2.824</td>
+      <td>3.191</td>
     </tr>
     <tr>
       <th>x</th>
-      <td>1.858</td>
-      <td>0.075</td>
-      <td>1.653</td>
-      <td>2.058</td>
+      <td>1.860</td>
+      <td>0.068</td>
+      <td>1.655</td>
+      <td>2.059</td>
     </tr>
   </tbody>
 </table>
@@ -2353,7 +2333,7 @@ y_i &amp;\sim \text{Binom}(n_i, p_i) \\
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="../../_images/5492a152a5620fee98a0e13d6c2979915edce139fbd3d1c98d8e119b44405a17.png"><img alt="../../_images/5492a152a5620fee98a0e13d6c2979915edce139fbd3d1c98d8e119b44405a17.png" src="../../_images/5492a152a5620fee98a0e13d6c2979915edce139fbd3d1c98d8e119b44405a17.png" style="width: 1624px; height: 325px;" /></a>
+<a class="reference internal image-reference" href="../../_images/df00fce7c87f87b052d98ade6bdfb03bcc2d574c458e77910cd86afd448d487a.png"><img alt="../../_images/df00fce7c87f87b052d98ade6bdfb03bcc2d574c458e77910cd86afd448d487a.png" src="../../_images/df00fce7c87f87b052d98ade6bdfb03bcc2d574c458e77910cd86afd448d487a.png" style="width: 1624px; height: 325px;" /></a>
 </div>
 </div>
 <p>Investigare further</p>
@@ -2415,7 +2395,7 @@ y_i &amp;\sim \text{Binom}(n_i, p_i) \\
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>NUTS: [beta0, beta1, sigma]
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "aa2017bc4be1418a9ea830f4319002f1"}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "03173525eb3d49299c431b50f3abe14b"}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 2 chains for 1_000 tune and 1_000 draw iterations (2_000 + 2_000 draws total) took 1 seconds.
 </pre></div>
 </div>
@@ -2454,38 +2434,38 @@ y_i &amp;\sim \text{Binom}(n_i, p_i) \\
   <tbody>
     <tr>
       <th>beta0</th>
-      <td>3.008</td>
-      <td>0.101</td>
-      <td>2.831</td>
-      <td>3.206</td>
+      <td>3.006</td>
+      <td>0.100</td>
+      <td>2.821</td>
+      <td>3.194</td>
       <td>0.002</td>
       <td>0.001</td>
-      <td>3060.0</td>
-      <td>1306.0</td>
+      <td>3020.0</td>
+      <td>1451.0</td>
       <td>1.0</td>
     </tr>
     <tr>
       <th>beta1</th>
-      <td>1.858</td>
+      <td>1.856</td>
       <td>0.108</td>
-      <td>1.657</td>
-      <td>2.059</td>
+      <td>1.647</td>
+      <td>2.046</td>
       <td>0.002</td>
-      <td>0.001</td>
-      <td>2737.0</td>
-      <td>1513.0</td>
+      <td>0.002</td>
+      <td>2294.0</td>
+      <td>1211.0</td>
       <td>1.0</td>
     </tr>
     <tr>
       <th>sigma</th>
-      <td>0.957</td>
+      <td>0.956</td>
       <td>0.069</td>
-      <td>0.819</td>
-      <td>1.082</td>
+      <td>0.834</td>
+      <td>1.084</td>
       <td>0.001</td>
       <td>0.001</td>
-      <td>2855.0</td>
-      <td>1570.0</td>
+      <td>3016.0</td>
+      <td>1617.0</td>
       <td>1.0</td>
     </tr>
   </tbody>
@@ -2597,7 +2577,7 @@ y_i &amp;\sim \text{Binom}(n_i, p_i) \\
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>NUTS: [party_id, party_id:age]
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "7da7db1d922a42149dcf6f1cdf934a53"}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "ce9a5d4b7fe14fdc8f7a4c8eec7b92a8"}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 2 chains for 1_000 tune and 1_000 draw iterations (2_000 + 2_000 draws total) took 4 seconds.
 </pre></div>
 </div>
@@ -2679,18 +2659,18 @@ y_i &amp;\sim \text{Binom}(n_i, p_i) \\
 <h3>Defining the Problem<a class="headerlink" href="#defining-the-problem" title="Link to this heading">#</a></h3>
 <p>Our problem is the following: we want to perform multiple linear regression to predict an outcome variable <span class="math notranslate nohighlight">\(Y\)</span> which depends on variables <span class="math notranslate nohighlight">\(\bf{x}_1\)</span> and <span class="math notranslate nohighlight">\(\bf{x}_2\)</span>.</p>
 <p>We will model <span class="math notranslate nohighlight">\(Y\)</span> as normally distributed observations with an expected value <span class="math notranslate nohighlight">\(mu\)</span> that is a linear function of the two predictor variables, <span class="math notranslate nohighlight">\(\bf{x}_1\)</span> and <span class="math notranslate nohighlight">\(\bf{x}_2\)</span>.</p>
-<div class="amsmath math notranslate nohighlight" id="equation-bfc33c0f-6a4f-432d-bacc-88cfd71076ad">
-<span class="eqno">()<a class="headerlink" href="#equation-bfc33c0f-6a4f-432d-bacc-88cfd71076ad" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-4bb5a997-9273-45c7-8ecf-6ae37aa91e51">
+<span class="eqno">()<a class="headerlink" href="#equation-4bb5a997-9273-45c7-8ecf-6ae37aa91e51" title="Permalink to this equation">#</a></span>\[\begin{equation}
 Y \sim  \mathcal{N}(\mu,\,\sigma^{2})
 \end{equation} \]</div>
-<div class="amsmath math notranslate nohighlight" id="equation-9cbecab4-b546-401a-8943-82ab69673fbb">
-<span class="eqno">()<a class="headerlink" href="#equation-9cbecab4-b546-401a-8943-82ab69673fbb" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-98ca5500-5bd1-4d6c-8558-5c7f0e8df4eb">
+<span class="eqno">()<a class="headerlink" href="#equation-98ca5500-5bd1-4d6c-8558-5c7f0e8df4eb" title="Permalink to this equation">#</a></span>\[\begin{equation}
 \mu = \beta_0 + \beta_1 \bf{x}_1 + \beta_2 x_2 
 \end{equation}\]</div>
 <p>where <span class="math notranslate nohighlight">\(\sigma^2\)</span> represents the measurement error (in this example, we will use <span class="math notranslate nohighlight">\(\sigma^2 = 10\)</span>)</p>
 <p>We also choose the parameters to have normal distributions with those parameters set by us.</p>
-<div class="amsmath math notranslate nohighlight" id="equation-729eef12-d655-4a5f-8ad8-9e8c2dcd8747">
-<span class="eqno">()<a class="headerlink" href="#equation-729eef12-d655-4a5f-8ad8-9e8c2dcd8747" title="Permalink to this equation">#</a></span>\[\begin{eqnarray}
+<div class="amsmath math notranslate nohighlight" id="equation-2daf0fed-0a2a-4368-97d6-9791a37d7c8f">
+<span class="eqno">()<a class="headerlink" href="#equation-2daf0fed-0a2a-4368-97d6-9791a37d7c8f" title="Permalink to this equation">#</a></span>\[\begin{eqnarray}
 \beta_i \sim  \mathcal{N}(0,\,10) \\
 \sigma^2 \sim  |\mathcal{N}(0,\,10)|
 \end{eqnarray}   \]</div>
@@ -2743,7 +2723,7 @@ Y \sim  \mathcal{N}(\mu,\,\sigma^{2})
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../_images/e0a46ef8cdbbd22d36c433369f89c998420d0722fcc3434c17c8eae009ecaeb7.svg" src="../../_images/e0a46ef8cdbbd22d36c433369f89c998420d0722fcc3434c17c8eae009ecaeb7.svg" />
+<img alt="../../_images/4de28464c1e4b6c382f2ea819c674c7b9e960bf073e5b69f0e39e506e02b9177.svg" src="../../_images/4de28464c1e4b6c382f2ea819c674c7b9e960bf073e5b69f0e39e506e02b9177.svg" />
 </div>
 </div>
 </section>
@@ -2783,10 +2763,10 @@ Y \sim  \mathcal{N}(\mu,\,\sigma^{2})
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Starting MCMC process
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Initializing NUTS using jitter+adapt_diag...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Initializing NUTS using jitter+adapt_diag...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Starting MCMC process
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Multiprocess sampling (2 chains in 2 jobs)
@@ -2795,11 +2775,20 @@ Y \sim  \mathcal{N}(\mu,\,\sigma^{2})
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>NUTS: [beta0, betas, sigma]
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "9132f42b958b449d81806cc6a5d418ef"}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
-</div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 2 chains for 1_000 tune and 644 draw iterations (2_000 + 1_288 draws total) took 18 seconds.
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "ef58490c8bb5452791d0ff68e942ddc9"}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+</div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 2 chains for 1_000 tune and 755 draw iterations (2_000 + 1_510 draws total) took 18 seconds.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>There were 56 divergences after tuning. Increase `target_accept` or reparameterize.
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>We recommend running at least 4 chains for robust computation of convergence diagnostics
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The rhat statistic is larger than 1.01 for some parameters. This indicates problems during sampling. See https://arxiv.org/abs/1903.08008 for details
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The effective sample size per chain is smaller than 100 for some parameters.  A higher number is needed for reliable rhat and ess computation. See https://arxiv.org/abs/1903.08008 for details
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DONE
@@ -2827,7 +2816,7 @@ Y \sim  \mathcal{N}(\mu,\,\sigma^{2})
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="../../_images/6456bb68a78d3e27b05d64989cb9812efd9b1e43529bd17822f8d208a89cd35b.png"><img alt="../../_images/6456bb68a78d3e27b05d64989cb9812efd9b1e43529bd17822f8d208a89cd35b.png" src="../../_images/6456bb68a78d3e27b05d64989cb9812efd9b1e43529bd17822f8d208a89cd35b.png" style="width: 950px; height: 526px;" /></a>
+<a class="reference internal image-reference" href="../../_images/b0e93c99e9c442cddd652065e3a5dcdf9552b2d49b0e90a27162d8b274cd472a.png"><img alt="../../_images/b0e93c99e9c442cddd652065e3a5dcdf9552b2d49b0e90a27162d8b274cd472a.png" src="../../_images/b0e93c99e9c442cddd652065e3a5dcdf9552b2d49b0e90a27162d8b274cd472a.png" style="width: 950px; height: 526px;" /></a>
 </div>
 </div>
 <div class="cell docutils container">
@@ -2872,51 +2861,51 @@ Y \sim  \mathcal{N}(\mu,\,\sigma^{2})
   <tbody>
     <tr>
       <th>beta0</th>
-      <td>1.014</td>
-      <td>0.218</td>
-      <td>0.624</td>
-      <td>1.441</td>
-      <td>0.004</td>
+      <td>1.006</td>
+      <td>0.224</td>
+      <td>0.569</td>
+      <td>1.420</td>
+      <td>0.005</td>
       <td>0.003</td>
-      <td>2628.0</td>
-      <td>2193.0</td>
-      <td>1.00</td>
+      <td>2291.0</td>
+      <td>1726.0</td>
+      <td>1.0</td>
     </tr>
     <tr>
       <th>betas[0]</th>
-      <td>1.612</td>
-      <td>8.918</td>
-      <td>-15.090</td>
-      <td>18.606</td>
-      <td>0.253</td>
-      <td>0.179</td>
-      <td>1253.0</td>
-      <td>1770.0</td>
-      <td>1.01</td>
+      <td>1.345</td>
+      <td>9.035</td>
+      <td>-15.817</td>
+      <td>18.175</td>
+      <td>0.229</td>
+      <td>0.180</td>
+      <td>1559.0</td>
+      <td>1726.0</td>
+      <td>1.0</td>
     </tr>
     <tr>
       <th>betas[1]</th>
-      <td>2.207</td>
-      <td>4.453</td>
-      <td>-6.427</td>
-      <td>10.434</td>
-      <td>0.126</td>
-      <td>0.089</td>
-      <td>1251.0</td>
-      <td>1754.0</td>
-      <td>1.01</td>
+      <td>2.343</td>
+      <td>4.517</td>
+      <td>-5.974</td>
+      <td>11.056</td>
+      <td>0.114</td>
+      <td>0.086</td>
+      <td>1563.0</td>
+      <td>1750.0</td>
+      <td>1.0</td>
     </tr>
     <tr>
       <th>sigma</th>
-      <td>1.146</td>
-      <td>0.081</td>
-      <td>0.997</td>
-      <td>1.301</td>
+      <td>1.147</td>
+      <td>0.082</td>
+      <td>1.003</td>
+      <td>1.308</td>
       <td>0.002</td>
       <td>0.001</td>
-      <td>2242.0</td>
-      <td>2080.0</td>
-      <td>1.00</td>
+      <td>2077.0</td>
+      <td>2091.0</td>
+      <td>1.0</td>
     </tr>
   </tbody>
 </table>
@@ -3017,9 +3006,9 @@ If all chains converge to the same equilibrium, <span class="math notranslate no
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanations">Explanations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#robust-linear-regression">Robust linear regression</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shrinkage-priors">Shrinkage priors</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#standardizing-predictors">Standardizing predictors</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#robust-linear-regression">Robust linear regression</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a><ul class="nav section-nav flex-column">

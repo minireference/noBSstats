@@ -666,6 +666,19 @@
 </section>
 <section id="model-formula">
 <h3>Model formula<a class="headerlink" href="#model-formula" title="Link to this heading">#</a></h3>
+<p>A Bayesian hierarchical model is described by the following equations:</p>
+<p><span class="math notranslate nohighlight">\(\def\calN{\mathcal{N}}
+ \def\Tdist{\mathcal{T}}
+ \def\Expon{\mathrm{Expon}}\)</span></p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    X_j			&amp;\sim	\calN(M_{j}, \, \Sigma_X),  \\
+    M_{j}		&amp;=		B_0 + B_{0j},					\\
+    \Sigma_X	&amp;\sim	\Tdist^+\!(\nu_{\Sigma_X}, \sigma_{\Sigma_X}), \\
+    B_0			&amp;\sim	\calN(\mu_{B_0},\sigma_{B_0}), \\
+    B_{0j}		&amp;\sim	\calN(0,\Sigma_{B_{0j}}), \\
+    \Sigma_{B_{0j}}	&amp;\sim	\Expon(\lambda).
+\end{align*}\]</div>
 </section>
 </section>
 <section id="radon-dataset">
@@ -900,12 +913,18 @@
 <h3>Bayesian model<a class="headerlink" href="#bayesian-model" title="Link to this heading">#</a></h3>
 <p>We can  pool all the data and estimate one big regression to asses the influence of the floor variable
 on radon levels across all counties.</p>
-<div class="math notranslate nohighlight">
-\[
-  Y = \beta_0 + \beta_x \cdot x.
-\]</div>
-<p>The variable <span class="math notranslate nohighlight">\(x\)</span> corresponds to the <code class="docutils literal notranslate"><span class="pre">floor</span></code> column,
-with <span class="math notranslate nohighlight">\(0\)</span> representing basement, and <span class="math notranslate nohighlight">\(1\)</span> representing ground floor.</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    R			&amp;\sim	\calN(M_R, \, \Sigma_R),  	\\
+    M_R			&amp;=		B_0 + B_{\!f}\!\cdot\!f,	\\
+    \Sigma_R	&amp;\sim	\Tdist^+\!(4, 1),			\\
+    B_0			&amp;\sim	\calN(1, 2), 				\\
+    B_f			&amp;\sim	\calN(0, 5).
+\end{align*}\]</div>
+<p>The variable <span class="math notranslate nohighlight">\(f\)</span> corresponds to the column <code class="docutils literal notranslate"><span class="pre">floor</span></code> in the <code class="docutils literal notranslate"><span class="pre">radon</span></code> data frame,
+which will be internally coded as binary
+with <span class="math notranslate nohighlight">\(0\)</span> representing basement,
+and <span class="math notranslate nohighlight">\(1\)</span> representing ground floor.</p>
 <p>By ignoring the county feature, we do not differenciate on counties.</p>
 </section>
 <section id="bambi-model">
@@ -958,7 +977,7 @@ with <span class="math notranslate nohighlight">\(0\)</span> representing baseme
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/e0916552d6b2221712d1ca6fa898f3058788a10b3ef759441767a214b4b69074.svg" src="../_images/e0916552d6b2221712d1ca6fa898f3058788a10b3ef759441767a214b4b69074.svg" />
+<img alt="../_images/14ad29c5b4051425435c99b52415582c22fa1c0a5aaba40ca84d8ac950fb592f.svg" src="../_images/14ad29c5b4051425435c99b52415582c22fa1c0a5aaba40ca84d8ac950fb592f.svg" />
 </div>
 </div>
 </section>
@@ -977,7 +996,7 @@ Multiprocess sampling (4 chains in 4 jobs)
 NUTS: [sigma, Intercept, floor]
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "5a347a6506fd42e5ae013689ed5a7b57", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "67a97ead8ee24b7e820da633baf3e028", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
 </pre>
 </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 1_000 tune and 1_000 draw iterations (4_000 + 4_000 draws total) took 2 seconds.
@@ -1117,18 +1136,22 @@ NUTS: [sigma, Intercept, floor]
 <h3>Bayesian model<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
 <p>If we treat different counties as independent,
 so each one gets an intercept term:</p>
-<div class="math notranslate nohighlight">
-\[
-  Y_j = \beta_{0j} + \beta_{x} x.
-\]</div>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    R_j			&amp;\sim	\calN(M_j, \, \Sigma_R),  					\\
+    M_j			&amp;=		B_{0j} + B_{\!f}\!\cdot\!f,					\\
+    \Sigma_R		&amp;\sim	\Tdist^+\!(4, 1),							\\
+    B_{0j}		&amp;\sim	\calN(1, 2),							\\
+    B_f			&amp;\sim	\calN(0, 5).
+\end{align*}\]</div>
 </section>
 <section id="id2">
 <h3>Bambi model<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">priors2</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;county&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Normal&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
-    <span class="s2">&quot;floor&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Normal&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">30</span><span class="p">),</span>
+    <span class="s2">&quot;county&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Normal&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+    <span class="s2">&quot;floor&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Normal&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
     <span class="s2">&quot;sigma&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;HalfStudentT&quot;</span><span class="p">,</span> <span class="n">nu</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
 <span class="p">}</span>
 
@@ -1149,8 +1172,8 @@ so each one gets an intercept term:</p>
         Priors: 
     target = mu
         Common-level effects
-            county ~ Normal(mu: 0.0, sigma: 10.0)
-            floor ~ Normal(mu: 0.0, sigma: 30.0)
+            county ~ Normal(mu: 1.0, sigma: 2.0)
+            floor ~ Normal(mu: 0.0, sigma: 5.0)
         
         Auxiliary parameters
             sigma ~ HalfStudentT(nu: 4.0, sigma: 1.0)
@@ -1170,7 +1193,7 @@ so each one gets an intercept term:</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/42de8a86feae51fea76e2244d6d1acd6cda71e448e381a90b29c79e344d257f9.svg" src="../_images/42de8a86feae51fea76e2244d6d1acd6cda71e448e381a90b29c79e344d257f9.svg" />
+<img alt="../_images/d94e90cacc230c99c28c570e3776e915d47a39f892e37b4717a893db35b2b7b7.svg" src="../_images/d94e90cacc230c99c28c570e3776e915d47a39f892e37b4717a893db35b2b7b7.svg" />
 </div>
 </div>
 </section>
@@ -1189,7 +1212,7 @@ Multiprocess sampling (4 chains in 4 jobs)
 NUTS: [sigma, county, floor]
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "3d6d0fa873e94586b6f2e9eb7ac5d406", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "eb842e3ad92d4a849d2b867cc7870172", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
 </pre>
 </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 1_000 tune and 1_000 draw iterations (4_000 + 4_000 draws total) took 4 seconds.
@@ -1232,73 +1255,73 @@ NUTS: [sigma, county, floor]
   <tbody>
     <tr>
       <th>county[LAC QUI PARLE]</th>
-      <td>2.961</td>
-      <td>0.531</td>
-      <td>1.988</td>
-      <td>3.970</td>
+      <td>2.822</td>
+      <td>0.512</td>
+      <td>1.852</td>
+      <td>3.762</td>
     </tr>
     <tr>
       <th>county[AITKIN]</th>
-      <td>0.834</td>
+      <td>0.840</td>
       <td>0.377</td>
-      <td>0.128</td>
-      <td>1.560</td>
+      <td>0.094</td>
+      <td>1.526</td>
     </tr>
     <tr>
       <th>county[KOOCHICHING]</th>
       <td>0.814</td>
-      <td>0.289</td>
-      <td>0.261</td>
-      <td>1.347</td>
+      <td>0.285</td>
+      <td>0.260</td>
+      <td>1.341</td>
     </tr>
     <tr>
       <th>county[DOUGLAS]</th>
-      <td>1.736</td>
-      <td>0.256</td>
-      <td>1.253</td>
-      <td>2.224</td>
+      <td>1.718</td>
+      <td>0.250</td>
+      <td>1.242</td>
+      <td>2.197</td>
     </tr>
     <tr>
       <th>county[HENNEPIN]</th>
-      <td>1.362</td>
-      <td>0.075</td>
-      <td>1.227</td>
-      <td>1.510</td>
+      <td>1.359</td>
+      <td>0.074</td>
+      <td>1.221</td>
+      <td>1.496</td>
     </tr>
     <tr>
       <th>county[STEARNS]</th>
-      <td>1.489</td>
-      <td>0.151</td>
-      <td>1.217</td>
-      <td>1.773</td>
+      <td>1.485</td>
+      <td>0.153</td>
+      <td>1.172</td>
+      <td>1.750</td>
     </tr>
     <tr>
       <th>county[RAMSEY]</th>
-      <td>1.161</td>
+      <td>1.152</td>
       <td>0.132</td>
-      <td>0.929</td>
-      <td>1.426</td>
+      <td>0.903</td>
+      <td>1.403</td>
     </tr>
     <tr>
       <th>county[ST LOUIS]</th>
-      <td>0.867</td>
+      <td>0.866</td>
       <td>0.071</td>
-      <td>0.731</td>
-      <td>0.998</td>
+      <td>0.725</td>
+      <td>0.989</td>
     </tr>
     <tr>
       <th>floor[ground]</th>
-      <td>-0.718</td>
-      <td>0.072</td>
-      <td>-0.851</td>
-      <td>-0.583</td>
+      <td>-0.706</td>
+      <td>0.073</td>
+      <td>-0.839</td>
+      <td>-0.565</td>
     </tr>
     <tr>
       <th>sigma</th>
-      <td>0.757</td>
+      <td>0.756</td>
       <td>0.019</td>
-      <td>0.723</td>
-      <td>0.793</td>
+      <td>0.722</td>
+      <td>0.792</td>
     </tr>
   </tbody>
 </table>
@@ -1313,7 +1336,7 @@ NUTS: [sigma, county, floor]
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="../_images/b3cc5d0bc862c772956802558a04ce6aff248092340577a3cd65c95ece7f1b16.png"><img alt="../_images/b3cc5d0bc862c772956802558a04ce6aff248092340577a3cd65c95ece7f1b16.png" src="../_images/b3cc5d0bc862c772956802558a04ce6aff248092340577a3cd65c95ece7f1b16.png" style="width: 643px; height: 243px;" /></a>
+<a class="reference internal image-reference" href="../_images/a9aa0aefcf1a89ff9506f607db7f5b96ff32117a905b99406bb7eede36abc9ca.png"><img alt="../_images/a9aa0aefcf1a89ff9506f607db7f5b96ff32117a905b99406bb7eede36abc9ca.png" src="../_images/a9aa0aefcf1a89ff9506f607db7f5b96ff32117a905b99406bb7eede36abc9ca.png" style="width: 643px; height: 243px;" /></a>
 </div>
 </div>
 <div class="cell docutils container">
@@ -1332,7 +1355,7 @@ NUTS: [sigma, county, floor]
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="../_images/c5f6ac33b86076002a2677f47412f4ca25aa5bbd1f61d9e49595da6267245458.png"><img alt="../_images/c5f6ac33b86076002a2677f47412f4ca25aa5bbd1f61d9e49595da6267245458.png" src="../_images/c5f6ac33b86076002a2677f47412f4ca25aa5bbd1f61d9e49595da6267245458.png" style="width: 848px; height: 369px;" /></a>
+<a class="reference internal image-reference" href="../_images/e3b0b385ddf2f4ad4b505873bdeb3f30caf13a2720621eef040ecf518256a973.png"><img alt="../_images/e3b0b385ddf2f4ad4b505873bdeb3f30caf13a2720621eef040ecf518256a973.png" src="../_images/e3b0b385ddf2f4ad4b505873bdeb3f30caf13a2720621eef040ecf518256a973.png" style="width: 848px; height: 369px;" /></a>
 </div>
 </div>
 <div class="cell docutils container">
@@ -1396,12 +1419,13 @@ NUTS: [sigma, county, floor]
 <h3>Bayesian hierarchical model<a class="headerlink" href="#bayesian-hierarchical-model" title="Link to this heading">#</a></h3>
 <div class="amsmath math notranslate nohighlight">
 \[\begin{align*}
-Y_j      \;\; &amp;\sim \;\; \mathcal{N}(B_0 + B_j + B_x x, \, \Sigma_Y),  \\
-B_0      \;\; &amp;\sim \;\; \mathcal{N}(\mu_{B_0},\sigma_{B_0}), \\
-B_x      \;\; &amp;\sim \;\; \mathcal{N}(\mu_{B_J},\sigma_{B_x}), \\
-B_j      \;\; &amp;\sim \;\; \mathcal{N}(0,\Sigma_{B_j}), \\
-\Sigma_Y \;\; &amp;\sim \;\;  \mathcal{T}^+(\nu=4, \sigma=?), \\
-\Sigma_{B_j} \;\; &amp;\sim \;\;  \mathcal{T}^+(\nu=4, \sigma=?).
+    R_j			&amp;\sim	\calN(M_j, \, \Sigma_R),						\\
+    M_j			&amp;=		B_0 + B_{0j} + B_f\!\cdot\!f,					\\
+    \Sigma_R	&amp;\sim	\Tdist^+\!(4, 1),								\\
+    B_0			&amp;\sim	\calN(1,2),										\\
+    B_{0j}		&amp;\sim	\calN(0,\Sigma_{B_{0j}}),						\\
+    B_f			&amp;\sim	\calN(0, 5),									\\
+    \Sigma_{B_{0j}}	&amp;\sim	\Expon(1).
 \end{align*}\]</div>
 <p>The partial pooling formula estimates per-county intercepts which drawn
 from the same distribution which is estimated jointly with the rest of
@@ -1525,7 +1549,6 @@ Name: log_radon, dtype: float64
 <span class="p">}</span>
 
 <span class="n">formula3</span> <span class="o">=</span> <span class="s2">&quot;log_radon ~ 1 + (1|county) + floor&quot;</span>
-<span class="c1">#######################################################</span>
 <span class="n">mod3</span> <span class="o">=</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">formula</span><span class="o">=</span><span class="n">formula3</span><span class="p">,</span>
                  <span class="n">family</span><span class="o">=</span><span class="s2">&quot;gaussian&quot;</span><span class="p">,</span>
                  <span class="n">link</span><span class="o">=</span><span class="s2">&quot;identity&quot;</span><span class="p">,</span>
@@ -1569,7 +1592,7 @@ Name: log_radon, dtype: float64
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/820c7c221731c5492d042bc25fe75b67ab07d26b14ee1d848a9010d50677a747.svg" src="../_images/820c7c221731c5492d042bc25fe75b67ab07d26b14ee1d848a9010d50677a747.svg" />
+<img alt="../_images/cee4ee61403769a2cb37db00357f1595d4a9600a5eafdd13390220e1e8afe5b3.svg" src="../_images/cee4ee61403769a2cb37db00357f1595d4a9600a5eafdd13390220e1e8afe5b3.svg" />
 </div>
 </div>
 </section>
@@ -1588,7 +1611,7 @@ Multiprocess sampling (4 chains in 4 jobs)
 NUTS: [sigma, Intercept, floor, 1|county_sigma, 1|county]
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "d6c232342bf244b1a94e095863428aa8", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "649ca4ceb6b547d2a95be9a3f045585b", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
 </pre>
 </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 1_000 tune and 1_000 draw iterations (4_000 + 4_000 draws total) took 3 seconds.
@@ -1770,7 +1793,7 @@ NUTS: [sigma, Intercept, floor, 1|county_sigma, 1|county]
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="../_images/f54a9a70f7ec004816d0d2332c6e6f99110631e42c6e3210d03b393d89fd91eb.png"><img alt="../_images/f54a9a70f7ec004816d0d2332c6e6f99110631e42c6e3210d03b393d89fd91eb.png" src="../_images/f54a9a70f7ec004816d0d2332c6e6f99110631e42c6e3210d03b393d89fd91eb.png" style="width: 848px; height: 369px;" /></a>
+<a class="reference internal image-reference" href="../_images/5c004e233fb5eff70f2814fb18dae9bc1357f60f8cacc93804b7586c3b238ce1.png"><img alt="../_images/5c004e233fb5eff70f2814fb18dae9bc1357f60f8cacc93804b7586c3b238ce1.png" src="../_images/5c004e233fb5eff70f2814fb18dae9bc1357f60f8cacc93804b7586c3b238ce1.png" style="width: 848px; height: 369px;" /></a>
 </div>
 </div>
 <div class="cell docutils container">
@@ -1858,7 +1881,7 @@ varying slope.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/d8bb2c7825828014a070e9abf44f0d79af3555307e5fed730eea38abb454132c.svg" src="../_images/d8bb2c7825828014a070e9abf44f0d79af3555307e5fed730eea38abb454132c.svg" />
+<img alt="../_images/e9042e60365d4742a15306aa9307a7e615aca1a03ec63a2e156572cebaf5d763.svg" src="../_images/e9042e60365d4742a15306aa9307a7e615aca1a03ec63a2e156572cebaf5d763.svg" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1874,10 +1897,10 @@ Multiprocess sampling (4 chains in 4 jobs)
 NUTS: [sigma, Intercept, 1|county_sigma, 1|county, floor|county_sigma, floor|county]
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "0f26117268ce4316b54f30742dd6afba", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "d4621ba687e4475ea5333a09bb90d570", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
 </pre>
-</div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 1_000 tune and 1_000 draw iterations (4_000 + 4_000 draws total) took 5 seconds.
+</div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 1_000 tune and 1_000 draw iterations (4_000 + 4_000 draws total) took 6 seconds.
 </pre></div>
 </div>
 </div>
@@ -2118,7 +2141,7 @@ Multiprocess sampling (4 chains in 4 jobs)
 NUTS: [sigma, Intercept, floor]
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "8946e91acaf242718a365a66ff379fd7", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "aef82731ad8046a2a24af94122bde2a4", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
 </pre>
 </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 1_000 tune and 1_000 draw iterations (4_000 + 4_000 draws total) took 2 seconds.
@@ -2128,17 +2151,17 @@ Multiprocess sampling (4 chains in 4 jobs)
 NUTS: [sigma, county, floor]
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "4663858b91f64383b2d310c590e49c56", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "abb373223ba24488a268503d72885f22", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
 </pre>
-</div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 1_000 tune and 1_000 draw iterations (4_000 + 4_000 draws total) took 3 seconds.
+</div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 1_000 tune and 1_000 draw iterations (4_000 + 4_000 draws total) took 5 seconds.
 Auto-assigning NUTS sampler...
 Initializing NUTS using jitter+adapt_diag...
 Multiprocess sampling (4 chains in 4 jobs)
 NUTS: [sigma, Intercept, floor, 1|county_sigma, 1|county]
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "0f9d19acf49f41e7afc95f55ceaf0e48", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "123acb9ea1df453894e8602881f4ac3e", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
 </pre>
 </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 1_000 tune and 1_000 draw iterations (4_000 + 4_000 draws total) took 2 seconds.
@@ -2148,7 +2171,7 @@ Multiprocess sampling (4 chains in 4 jobs)
 NUTS: [sigma, Intercept, 1|county_sigma, 1|county, floor|county_sigma, floor|county]
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "a20fd207066c4c9394d72a1811f7044c", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "a4c7a481c4ec44e6a372ab2da3c5fc5b", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
 </pre>
 </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 1_000 tune and 1_000 draw iterations (4_000 + 4_000 draws total) took 4 seconds.
@@ -2208,7 +2231,7 @@ NUTS: [sigma, Intercept, 1|county_sigma, 1|county, floor|county_sigma, floor|cou
       <td>-1074.193864</td>
       <td>49.481974</td>
       <td>0.000000</td>
-      <td>7.140791e-01</td>
+      <td>7.140775e-01</td>
       <td>28.159665</td>
       <td>0.000000</td>
       <td>False</td>
@@ -2220,7 +2243,7 @@ NUTS: [sigma, Intercept, 1|county_sigma, 1|county, floor|county_sigma, floor|cou
       <td>-1088.697153</td>
       <td>88.144803</td>
       <td>14.503289</td>
-      <td>2.112574e-01</td>
+      <td>2.112584e-01</td>
       <td>30.093302</td>
       <td>7.369674</td>
       <td>True</td>
@@ -2229,12 +2252,12 @@ NUTS: [sigma, Intercept, 1|county_sigma, 1|county, floor|county_sigma, floor|cou
     <tr>
       <th>mod2 (no pooling)</th>
       <td>2</td>
-      <td>-1099.745752</td>
-      <td>86.771902</td>
-      <td>25.551887</td>
-      <td>8.261194e-14</td>
-      <td>28.185332</td>
-      <td>6.483849</td>
+      <td>-1096.112086</td>
+      <td>83.676430</td>
+      <td>21.918221</td>
+      <td>4.574849e-15</td>
+      <td>28.273724</td>
+      <td>6.038902</td>
       <td>True</td>
       <td>log</td>
     </tr>
@@ -2244,7 +2267,7 @@ NUTS: [sigma, Intercept, 1|county_sigma, 1|county, floor|county_sigma, floor|cou
       <td>-1126.868605</td>
       <td>3.724237</td>
       <td>52.674741</td>
-      <td>7.466341e-02</td>
+      <td>7.466410e-02</td>
       <td>25.547441</td>
       <td>10.576320</td>
       <td>False</td>
@@ -2267,7 +2290,7 @@ NUTS: [sigma, Intercept, 1|county_sigma, 1|county, floor|county_sigma, floor|cou
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="../_images/021abad8e0b7ce3278dae14f8c5e8c288d3a6723899497ec8468d710a23b1f39.png"><img alt="../_images/021abad8e0b7ce3278dae14f8c5e8c288d3a6723899497ec8468d710a23b1f39.png" src="../_images/021abad8e0b7ce3278dae14f8c5e8c288d3a6723899497ec8468d710a23b1f39.png" style="width: 924px; height: 419px;" /></a>
+<a class="reference internal image-reference" href="../_images/143faa81b4d0165149b80fcbd4a16f98c0f2de27ba47a911c6450abcaf7659ac.png"><img alt="../_images/143faa81b4d0165149b80fcbd4a16f98c0f2de27ba47a911c6450abcaf7659ac.png" src="../_images/143faa81b4d0165149b80fcbd4a16f98c0f2de27ba47a911c6450abcaf7659ac.png" style="width: 924px; height: 419px;" /></a>
 </div>
 </div>
 <section id="elpd-and-elpd-loo">
@@ -2830,10 +2853,11 @@ Multiprocess sampling (4 chains in 4 jobs)
 NUTS: [sigma, Intercept, Time, 1|Pig_sigma, 1|Pig_offset, Time|Pig_sigma, Time|Pig_offset]
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "f7a56121af6b4b38b69c539c17ad1d76", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "29d48f15fa9e42fea53a824a7efea93f", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
 </pre>
 </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 1_000 tune and 1_000 draw iterations (4_000 + 4_000 draws total) took 8 seconds.
+The rhat statistic is larger than 1.01 for some parameters. This indicates problems during sampling. See https://arxiv.org/abs/1903.08008 for details
 </pre></div>
 </div>
 </div>
@@ -2877,63 +2901,63 @@ NUTS: [sigma, Intercept, Time, 1|Pig_sigma, 1|Pig_offset, Time|Pig_sigma, Time|P
   <tbody>
     <tr>
       <th>Intercept</th>
-      <td>15.744</td>
-      <td>0.569</td>
-      <td>14.722</td>
-      <td>16.836</td>
-      <td>0.020</td>
-      <td>0.014</td>
-      <td>794.0</td>
-      <td>1262.0</td>
-      <td>1.0</td>
+      <td>15.770</td>
+      <td>0.585</td>
+      <td>14.729</td>
+      <td>16.948</td>
+      <td>0.021</td>
+      <td>0.015</td>
+      <td>771.0</td>
+      <td>1231.0</td>
+      <td>1.00</td>
     </tr>
     <tr>
       <th>Time</th>
-      <td>6.938</td>
-      <td>0.086</td>
-      <td>6.778</td>
-      <td>7.101</td>
+      <td>6.942</td>
+      <td>0.085</td>
+      <td>6.773</td>
+      <td>7.092</td>
       <td>0.004</td>
       <td>0.003</td>
-      <td>554.0</td>
-      <td>781.0</td>
-      <td>1.0</td>
+      <td>524.0</td>
+      <td>1083.0</td>
+      <td>1.00</td>
     </tr>
     <tr>
       <th>1|Pig_sigma</th>
-      <td>4.558</td>
-      <td>0.438</td>
-      <td>3.773</td>
-      <td>5.414</td>
-      <td>0.013</td>
-      <td>0.009</td>
-      <td>1145.0</td>
-      <td>1911.0</td>
-      <td>1.0</td>
+      <td>4.549</td>
+      <td>0.439</td>
+      <td>3.725</td>
+      <td>5.324</td>
+      <td>0.014</td>
+      <td>0.010</td>
+      <td>1104.0</td>
+      <td>1559.0</td>
+      <td>1.00</td>
     </tr>
     <tr>
       <th>Time|Pig_sigma</th>
       <td>0.664</td>
-      <td>0.064</td>
-      <td>0.547</td>
-      <td>0.784</td>
+      <td>0.063</td>
+      <td>0.551</td>
+      <td>0.778</td>
       <td>0.002</td>
       <td>0.001</td>
-      <td>1024.0</td>
-      <td>1750.0</td>
-      <td>1.0</td>
+      <td>951.0</td>
+      <td>2030.0</td>
+      <td>1.01</td>
     </tr>
     <tr>
       <th>sigma</th>
       <td>2.459</td>
-      <td>0.065</td>
-      <td>2.334</td>
-      <td>2.578</td>
+      <td>0.064</td>
+      <td>2.342</td>
+      <td>2.582</td>
       <td>0.001</td>
       <td>0.001</td>
-      <td>4541.0</td>
-      <td>3093.0</td>
-      <td>1.0</td>
+      <td>4547.0</td>
+      <td>3212.0</td>
+      <td>1.00</td>
     </tr>
   </tbody>
 </table>
@@ -3076,7 +3100,7 @@ Multiprocess sampling (4 chains in 4 jobs)
 NUTS: [sigma, Intercept, 1|school_sigma, 1|school_offset]
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "19969e7e551b4107b6bebae65dd14ab3", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "f20ec1cd91534d3b9f40d0e2795c6632", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
 </pre>
 </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 1_000 tune and 1_000 draw iterations (4_000 + 4_000 draws total) took 3 seconds.
@@ -3123,63 +3147,63 @@ NUTS: [sigma, Intercept, 1|school_sigma, 1|school_offset]
   <tbody>
     <tr>
       <th>1|school[20920]</th>
-      <td>-6.947</td>
-      <td>5.239</td>
-      <td>-16.177</td>
-      <td>3.370</td>
-      <td>0.067</td>
-      <td>0.057</td>
-      <td>6201.0</td>
-      <td>3013.0</td>
-      <td>1.00</td>
+      <td>-6.824</td>
+      <td>5.259</td>
+      <td>-16.249</td>
+      <td>3.225</td>
+      <td>0.071</td>
+      <td>0.060</td>
+      <td>5516.0</td>
+      <td>2546.0</td>
+      <td>1.0</td>
     </tr>
     <tr>
       <th>1|school[22520]</th>
-      <td>-15.590</td>
-      <td>2.181</td>
-      <td>-20.054</td>
-      <td>-11.804</td>
-      <td>0.041</td>
-      <td>0.029</td>
-      <td>2874.0</td>
-      <td>3060.0</td>
-      <td>1.00</td>
+      <td>-15.575</td>
+      <td>2.107</td>
+      <td>-19.765</td>
+      <td>-11.835</td>
+      <td>0.045</td>
+      <td>0.032</td>
+      <td>2208.0</td>
+      <td>2544.0</td>
+      <td>1.0</td>
     </tr>
     <tr>
       <th>1|school[22710]</th>
-      <td>6.367</td>
-      <td>3.514</td>
-      <td>-0.266</td>
-      <td>12.883</td>
-      <td>0.053</td>
-      <td>0.042</td>
-      <td>4367.0</td>
-      <td>2872.0</td>
-      <td>1.00</td>
+      <td>6.310</td>
+      <td>3.746</td>
+      <td>-0.529</td>
+      <td>13.519</td>
+      <td>0.055</td>
+      <td>0.044</td>
+      <td>4702.0</td>
+      <td>2840.0</td>
+      <td>1.0</td>
     </tr>
     <tr>
       <th>1|school[22738]</th>
-      <td>-0.708</td>
-      <td>4.315</td>
-      <td>-8.809</td>
-      <td>7.303</td>
+      <td>-0.563</td>
+      <td>4.439</td>
+      <td>-8.787</td>
+      <td>7.715</td>
       <td>0.057</td>
-      <td>0.072</td>
-      <td>5823.0</td>
-      <td>2984.0</td>
-      <td>1.00</td>
+      <td>0.079</td>
+      <td>6017.0</td>
+      <td>2742.0</td>
+      <td>1.0</td>
     </tr>
     <tr>
       <th>1|school[22908]</th>
-      <td>-0.824</td>
-      <td>5.939</td>
-      <td>-12.341</td>
-      <td>9.733</td>
-      <td>0.076</td>
-      <td>0.102</td>
-      <td>6018.0</td>
-      <td>2854.0</td>
-      <td>1.00</td>
+      <td>-0.724</td>
+      <td>5.973</td>
+      <td>-12.708</td>
+      <td>9.542</td>
+      <td>0.078</td>
+      <td>0.092</td>
+      <td>5784.0</td>
+      <td>2677.0</td>
+      <td>1.0</td>
     </tr>
     <tr>
       <th>...</th>
@@ -3195,63 +3219,63 @@ NUTS: [sigma, Intercept, 1|school_sigma, 1|school_offset]
     </tr>
     <tr>
       <th>1|school[84707]</th>
-      <td>4.102</td>
-      <td>7.388</td>
-      <td>-10.026</td>
-      <td>17.715</td>
-      <td>0.094</td>
-      <td>0.107</td>
-      <td>6209.0</td>
-      <td>2690.0</td>
-      <td>1.00</td>
+      <td>3.884</td>
+      <td>7.263</td>
+      <td>-9.331</td>
+      <td>17.834</td>
+      <td>0.093</td>
+      <td>0.120</td>
+      <td>6145.0</td>
+      <td>2494.0</td>
+      <td>1.0</td>
     </tr>
     <tr>
       <th>1|school[84772]</th>
-      <td>8.574</td>
-      <td>3.601</td>
-      <td>1.616</td>
-      <td>15.072</td>
-      <td>0.051</td>
-      <td>0.039</td>
-      <td>5054.0</td>
-      <td>2427.0</td>
-      <td>1.00</td>
+      <td>8.684</td>
+      <td>3.553</td>
+      <td>2.254</td>
+      <td>15.349</td>
+      <td>0.050</td>
+      <td>0.038</td>
+      <td>5002.0</td>
+      <td>3148.0</td>
+      <td>1.0</td>
     </tr>
     <tr>
       <th>1|school_sigma</th>
-      <td>8.829</td>
-      <td>0.917</td>
-      <td>7.177</td>
-      <td>10.539</td>
-      <td>0.027</td>
-      <td>0.019</td>
-      <td>1165.0</td>
-      <td>1640.0</td>
-      <td>1.00</td>
+      <td>8.810</td>
+      <td>0.915</td>
+      <td>7.071</td>
+      <td>10.502</td>
+      <td>0.030</td>
+      <td>0.022</td>
+      <td>964.0</td>
+      <td>1173.0</td>
+      <td>1.0</td>
     </tr>
     <tr>
       <th>Intercept</th>
-      <td>73.778</td>
-      <td>1.146</td>
-      <td>71.707</td>
+      <td>73.753</td>
+      <td>1.143</td>
+      <td>71.718</td>
       <td>75.915</td>
-      <td>0.035</td>
+      <td>0.036</td>
       <td>0.025</td>
-      <td>1056.0</td>
-      <td>1718.0</td>
-      <td>1.01</td>
+      <td>1022.0</td>
+      <td>1818.0</td>
+      <td>1.0</td>
     </tr>
     <tr>
       <th>sigma</th>
-      <td>13.974</td>
-      <td>0.258</td>
-      <td>13.502</td>
-      <td>14.465</td>
+      <td>13.983</td>
+      <td>0.265</td>
+      <td>13.482</td>
+      <td>14.467</td>
       <td>0.003</td>
       <td>0.002</td>
-      <td>6298.0</td>
-      <td>3069.0</td>
-      <td>1.00</td>
+      <td>6216.0</td>
+      <td>2412.0</td>
+      <td>1.0</td>
     </tr>
   </tbody>
 </table>
@@ -3299,7 +3323,7 @@ Multiprocess sampling (4 chains in 4 jobs)
 NUTS: [sigma, Intercept, gender, 1|school_sigma, 1|school_offset, gender|school_sigma, gender|school_offset]
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "a6855fa53baf4b299d89a6512f755501", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "7d115a3b03674acd990127cbcfd145eb", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
 </pre>
 </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 1_000 tune and 1_000 draw iterations (4_000 + 4_000 draws total) took 6 seconds.
