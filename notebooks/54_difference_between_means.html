@@ -30,7 +30,7 @@
   <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -516,7 +516,6 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#normal-distribution-for-log-sigma">Normal distribution for log-sigma</a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gumbel-distribution">Gumbel distribution?</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#choosing-priors-for-the-degrees-of-freedom-parameter">Choosing priors for the degrees of freedom parameter</a></li>
 </ul>
 </li>
@@ -524,6 +523,7 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#electricity-prices-dataset">Electricity prices dataset</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bayesian-model">Bayesian model</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bambi-model">Bambi model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prior-predictive-checks">Prior predictive checks</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-fitting-and-analysis">Model fitting and analysis</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#processing-the-results">Processing the results</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#compare-to-frequentist-results">Compare to frequentist results</a></li>
@@ -596,14 +596,14 @@
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># load Python modules</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
-<span class="kn">import</span> <span class="nn">bambi</span> <span class="k">as</span> <span class="nn">bmb</span>
-<span class="kn">import</span> <span class="nn">arviz</span> <span class="k">as</span> <span class="nn">az</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">bambi</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bmb</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">arviz</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">az</span>
 </pre></div>
 </div>
 </div>
@@ -617,7 +617,7 @@
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Figures setup</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>  <span class="c1"># needed otherwise `sns.set_theme` doesn&quot;t work</span>
-<span class="kn">from</span> <span class="nn">plot_helpers</span> <span class="kn">import</span> <span class="n">RCPARAMS</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">plot_helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">RCPARAMS</span>
 <span class="n">RCPARAMS</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">)})</span>   <span class="c1"># good for screen</span>
 <span class="c1"># RCPARAMS.update({&quot;figure.figsize&quot;: (5, 1.6)})  # good for print</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">set_theme</span><span class="p">(</span>
@@ -631,7 +631,7 @@
 <span class="o">%</span><span class="k">config</span> InlineBackend.figure_format = &quot;retina&quot;
 
 <span class="c1"># Where to store figures</span>
-<span class="kn">from</span> <span class="nn">ministats.utils</span> <span class="kn">import</span> <span class="n">savefigure</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ministats.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">savefigure</span>
 <span class="n">DESTDIR</span> <span class="o">=</span> <span class="s2">&quot;figures/bayes/dmeans&quot;</span>
 </pre></div>
 </div>
@@ -682,7 +682,7 @@ and a gamma distribution for the degrees of freedom parameter:</p>
 <h3>Bambi formula objects<a class="headerlink" href="#bambi-formula-objects" title="Link to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bambi</span> <span class="k">as</span> <span class="nn">bmb</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">bambi</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bmb</span>
 <span class="n">formula</span> <span class="o">=</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Formula</span><span class="p">(</span><span class="s2">&quot;y ~ 0 + group&quot;</span><span class="p">,</span>
                       <span class="s2">&quot;sigma ~ 0 + group&quot;</span><span class="p">)</span>
 <span class="n">formula</span>
@@ -726,157 +726,86 @@ and a gamma distribution for the degrees of freedom parameter:</p>
 <h4>Normal distribution for log-sigma<a class="headerlink" href="#normal-distribution-for-log-sigma" title="Link to this heading">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mu_Sigma</span><span class="p">,</span> <span class="n">sigma_Sigma</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># FIGURES ONLY</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">norm</span>
 
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
-<span class="n">logsigs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
-<span class="n">density_logsigs</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">mu_Sigma</span><span class="p">,</span> <span class="n">sigma_Sigma</span><span class="p">)</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">logsigs</span><span class="p">)</span>
-<span class="n">sigmas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">logsigs</span><span class="p">)</span>
-<span class="c1"># Apply the change of variables to get the density for sigma</span>
-<span class="c1"># based on the Jacobian adjustment |d(log(sigma))/d(sigma)| = 1/sigma</span>
-<span class="n">density_sigmas</span> <span class="o">=</span> <span class="n">density_logsigs</span> <span class="o">/</span> <span class="n">sigmas</span>  
+<span class="k">def</span><span class="w"> </span><span class="nf">get_lognormal</span><span class="p">(</span><span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">logsigs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+    <span class="n">dlogsigs</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">logsigs</span><span class="p">)</span>
+    <span class="n">sigmas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">logsigs</span><span class="p">)</span>
+    <span class="c1"># Apply the change of variables to get the density for sigma</span>
+    <span class="c1"># based on the Jacobian |d(log(sigma))/d(sigma)| = 1/sigma</span>
+    <span class="n">dsigmas</span> <span class="o">=</span> <span class="n">dlogsigs</span> <span class="o">/</span> <span class="n">sigmas</span>
+    <span class="k">return</span> <span class="n">sigmas</span><span class="p">,</span> <span class="n">dsigmas</span>
 
-<span class="c1"># Plot the transformed density using seaborn</span>
-<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">sigmas</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">density_sigmas</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\\</span><span class="s1">sigma$&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Density&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;PDF of sigma = exp(log_sigma) when log_sigma ~ N(0,1)&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">);</span>
+
+<span class="k">with</span> <span class="n">plt</span><span class="o">.</span><span class="n">rc_context</span><span class="p">({</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:(</span><span class="mi">6</span><span class="p">,</span><span class="mf">2.2</span><span class="p">)}):</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># PLOT 1</span>
+    <span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+    <span class="n">sigmas</span><span class="p">,</span> <span class="n">dsigmas</span> <span class="o">=</span> <span class="n">get_lognormal</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">sigmas</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">dsigmas</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\\</span><span class="s1">sigma$&#39;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;density&#39;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(a) pdf of exp($</span><span class="se">\\</span><span class="s1">mathcal</span><span class="se">{{</span><span class="s1">N</span><span class="se">}}</span><span class="s1">$(</span><span class="si">{</span><span class="n">mu</span><span class="si">}</span><span class="s1">,</span><span class="si">{</span><span class="n">sigma</span><span class="si">}</span><span class="s1">))&#39;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">)</span>
+
+    <span class="c1"># PLOT 2</span>
+    <span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span>
+    <span class="n">sigmas</span><span class="p">,</span> <span class="n">dsigmas</span> <span class="o">=</span> <span class="n">get_lognormal</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">sigmas</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">dsigmas</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\\</span><span class="s1">sigma$&#39;</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;density&#39;</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(b) pdf of exp($</span><span class="se">\\</span><span class="s1">mathcal</span><span class="se">{{</span><span class="s1">N</span><span class="se">}}</span><span class="s1">$(</span><span class="si">{</span><span class="n">mu</span><span class="si">}</span><span class="s1">,</span><span class="si">{</span><span class="n">sigma</span><span class="si">}</span><span class="s1">))&#39;</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="c1"># ax2.set_ylim(0, 0.7)</span>
+
+    <span class="c1"># filename = os.path.join(DESTDIR, &quot;log_sigma_normal_examples.pdf&quot;)</span>
+    <span class="c1"># savefigure(fig, filename)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="../_images/5a3a57dcc61903a3c9e85f3c027b4901fbe8acfb7f43fce5d59a0356baf68ad1.png"><img alt="../_images/5a3a57dcc61903a3c9e85f3c027b4901fbe8acfb7f43fce5d59a0356baf68ad1.png" src="../_images/5a3a57dcc61903a3c9e85f3c027b4901fbe8acfb7f43fce5d59a0356baf68ad1.png" style="width: 465px; height: 312px;" /></a>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mu_Sigma</span><span class="p">,</span> <span class="n">sigma_Sigma</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
-
-<span class="c1"># verify using simulation</span>
-<span class="n">N</span> <span class="o">=</span> <span class="mi">10000</span>
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">44</span><span class="p">)</span>
-<span class="n">logsigs</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">mu_Sigma</span><span class="p">,</span> <span class="n">sigma_Sigma</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
-<span class="n">sigs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">logsigs</span><span class="p">)</span>
-<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">sigs</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">15</span><span class="p">);</span>
-<span class="n">sigs</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">sigs</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1.6513486244380393, 2.1603481268169995)
-</pre></div>
-</div>
-<a class="reference internal image-reference" href="../_images/ea80503be80e153f51103d60338f15e89604b18c45d962bfb4d8297ee440203e.png"><img alt="../_images/ea80503be80e153f51103d60338f15e89604b18c45d962bfb4d8297ee440203e.png" src="../_images/ea80503be80e153f51103d60338f15e89604b18c45d962bfb4d8297ee440203e.png" style="width: 461px; height: 274px;" /></a>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># mu, sigma = 2.0059216703551783, 1.7466319059099038</span>
-<span class="n">mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">mu_Sigma</span><span class="o">+</span><span class="n">sigma_Sigma</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">sigma_Sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">mu_Sigma</span><span class="o">+</span><span class="n">sigma_Sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="p">)</span>
-<span class="n">mean</span><span class="p">,</span> <span class="n">std</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1.6487212707001282, 2.1611974158950877)
-</pre></div>
-</div>
-</div>
-</div>
-<p>NOT TRUE: In order to produce a distribution with desired mean <span class="math notranslate nohighlight">\(\mu_X\)</span> and variance <span class="math notranslate nohighlight">\(\sigma_X^2\)</span>, one uses</p>
-<div class="math notranslate nohighlight">
-\[
-  \mu = \ln\left( \frac{ \mu_X^2 }{\ \sqrt{ \mu_X^2 + \sigma_X^2\ }\ }\right)
-  \quad \text{and} \quad
-  \sigma^2 = \ln\left( 1 + \frac{\ \sigma_X^2\ }{ \mu_X^2 } \right).
-\]</div>
-<p>want mean around 10, std 10 wet get</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># mean = 1.2</span>
-<span class="c1"># std = 0.2</span>
-<span class="c1"># mu = np.log( mean**2 / np.sqrt(mean**2 + std**2) )</span>
-<span class="c1"># sigma = np.sqrt( np.log(1 + std**2/mu**2) )</span>
-<span class="c1"># mu, sigma</span>
-</pre></div>
-</div>
+<a class="reference internal image-reference" href="../_images/197be1ce0d19d3937c80d237ab137409092f89e797317d29014188e5929c25c8.png"><img alt="../_images/197be1ce0d19d3937c80d237ab137409092f89e797317d29014188e5929c25c8.png" src="../_images/197be1ce0d19d3937c80d237ab137409092f89e797317d29014188e5929c25c8.png" style="width: 542px; height: 251px;" /></a>
 </div>
 </div>
 </section>
-</section>
-<section id="gumbel-distribution">
-<h3>Gumbel distribution?<a class="headerlink" href="#gumbel-distribution" title="Link to this heading">#</a></h3>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># np.random.seed(43)</span>
-<span class="c1"># from scipy.stats import gumbel_r, expon</span>
-<span class="c1"># N = 1000</span>
-<span class="c1"># gumbels = gumbel_r(loc=1.609, scale=1).rvs(N)</span>
-<span class="c1"># exp_gumbels = np.exp(gumbels)</span>
-<span class="c1"># exps = expon(loc=0, scale=5).rvs(N)</span>
-<span class="c1"># ax = sns.histplot(exp_gumbels, alpha=0.2, stat=&quot;density&quot;, label=&quot;expgumbel&quot;)</span>
-<span class="c1"># sns.histplot(exps, alpha=0.2, stat=&quot;density&quot;, ax=ax, label=&quot;exp&quot;)</span>
-<span class="c1"># ax.set_xlim(0, 40);</span>
-<span class="c1"># ax.legend();</span>
-</pre></div>
-</div>
-</div>
-</div>
 </section>
 <section id="choosing-priors-for-the-degrees-of-freedom-parameter">
 <h3>Choosing priors for the degrees of freedom parameter<a class="headerlink" href="#choosing-priors-for-the-degrees-of-freedom-parameter" title="Link to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">gamma</span>
-<span class="kn">from</span> <span class="nn">ministats</span> <span class="kn">import</span> <span class="n">plot_pdf</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># FIGURES ONLY</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">gamma</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">expon</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ministats</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_pdf</span>
 
-<span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.1</span>
-<span class="n">rv_nu</span> <span class="o">=</span> <span class="n">gamma</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="o">/</span><span class="n">beta</span><span class="p">)</span>
-<span class="n">plot_pdf</span><span class="p">(</span><span class="n">rv_nu</span><span class="p">,</span> <span class="n">rv_name</span><span class="o">=</span><span class="s2">&quot;ν&quot;</span><span class="p">);</span>
+<span class="k">with</span> <span class="n">plt</span><span class="o">.</span><span class="n">rc_context</span><span class="p">({</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:(</span><span class="mi">6</span><span class="p">,</span><span class="mf">2.2</span><span class="p">)}):</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># PLOT 1</span>
+    <span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.1</span>
+    <span class="n">rv_nu</span> <span class="o">=</span> <span class="n">gamma</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="o">/</span><span class="n">beta</span><span class="p">)</span>
+    <span class="n">plot_pdf</span><span class="p">(</span><span class="n">rv_nu</span><span class="p">,</span> <span class="n">rv_name</span><span class="o">=</span><span class="s2">&quot;ν&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(a) pdf of Gamma($</span><span class="se">\\</span><span class="s1">alpha=$</span><span class="si">{</span><span class="n">alpha</span><span class="si">}</span><span class="s1">, $</span><span class="se">\\</span><span class="s1">beta=$</span><span class="si">{</span><span class="n">beta</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+
+    <span class="c1"># PLOT 2</span>
+    <span class="n">scale</span> <span class="o">=</span> <span class="mi">30</span>
+    <span class="n">rv_nu_exp</span> <span class="o">=</span> <span class="n">expon</span><span class="p">(</span><span class="n">scale</span><span class="o">=</span><span class="n">scale</span><span class="p">)</span>
+    <span class="n">plot_pdf</span><span class="p">(</span><span class="n">rv_nu_exp</span><span class="p">,</span> <span class="n">rv_name</span><span class="o">=</span><span class="s2">&quot;ν&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(b) pdf of Expon($</span><span class="se">\\</span><span class="s1">lambda=$1/</span><span class="si">{</span><span class="n">scale</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+
+    <span class="c1"># filename = os.path.join(DESTDIR, &quot;gamma_and_exp_examples.pdf&quot;)</span>
+    <span class="c1"># savefigure(fig, filename)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="../_images/edfbbeabe05cbfd74b74fec32a52ee784f286dddc5da588d500438395f8eefce.png"><img alt="../_images/edfbbeabe05cbfd74b74fec32a52ee784f286dddc5da588d500438395f8eefce.png" src="../_images/edfbbeabe05cbfd74b74fec32a52ee784f286dddc5da588d500438395f8eefce.png" style="width: 473px; height: 293px;" /></a>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># # FIGURES ONLY</span>
-<span class="c1"># from scipy.stats import gamma</span>
-<span class="c1"># from scipy.stats import norm</span>
-<span class="c1"># from ministats import plot_pdf</span>
-
-<span class="c1"># with plt.rc_context({&quot;figure.figsize&quot;:(6,2.2)}):</span>
-<span class="c1">#     fig, (ax1, ax2) = plt.subplots(1, 2)</span>
-<span class="c1">#</span>
-<span class="c1">#     # log(sigma) ~ N(0,1)</span>
-<span class="c1">#     logsig = np.linspace(-5, 5, 1000)</span>
-<span class="c1">#     density_logsig = norm(0,1).pdf(logsig)</span>
-<span class="c1">#     sigma = np.exp(logsig)</span>
-<span class="c1">#     density_sigma = density_logsig / sigma</span>
-<span class="c1">#     sns.lineplot(x=sigma, y=density_sigma, ax=ax1)</span>
-<span class="c1">#     ax1.set_xlabel(&#39;$\\sigma$&#39;)</span>
-<span class="c1">#     ax1.set_ylabel(&#39;$f_{\\Sigma}$&#39;)</span>
-<span class="c1">#     ax1.set_title(&quot;(a) log($\\sigma$) ~ $\\mathcal{N}$(0,1)&quot;)</span>
-<span class="c1">#     ax1.set_xlim(-0.2, 10);</span>
-<span class="c1">#</span>
-<span class="c1">#     # nu ~ Gamma(2,0.1)</span>
-<span class="c1">#     alpha, beta = 2, 0.1</span>
-<span class="c1">#     rv_nu = gamma(a=2, scale=1/beta)</span>
-<span class="c1">#     plot_pdf(rv_nu, rv_name=&quot;ν&quot;, ax=ax2)</span>
-<span class="c1">#     ax2.set_title(&#39;(b) $\\nu$ ~ Gamma(2,0.1)&#39;)</span>
-<span class="c1">#     ax2.set_ylabel(&#39;$f_{\\nu}$&#39;)</span>
-<span class="c1">#     ax2.set_xlim(-1, 75);</span>
-<span class="c1">#</span>
-<span class="c1">#     filename = os.path.join(DESTDIR, &quot;log_sigma_normal_and_gamma_priors.pdf&quot;)</span>
-<span class="c1">#     savefigure(fig, filename)</span>
-</pre></div>
-</div>
+<a class="reference internal image-reference" href="../_images/123e1378a232971c9aa4c46620fe79c9767362900ca51e93088bb539e2f2827b.png"><img alt="../_images/123e1378a232971c9aa4c46620fe79c9767362900ca51e93088bb539e2f2827b.png" src="../_images/123e1378a232971c9aa4c46620fe79c9767362900ca51e93088bb539e2f2827b.png" style="width: 555px; height: 251px;" /></a>
 </div>
 </div>
 </section>
@@ -1044,7 +973,17 @@ and a gamma distribution for the degrees of freedom parameter:</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/09dc0483a9e5ab777285fa18eaca10cda4000eb5437e65bb02c7a86971dade8e.svg" src="../_images/09dc0483a9e5ab777285fa18eaca10cda4000eb5437e65bb02c7a86971dade8e.svg" />
+<img alt="../_images/64dfbfc1e74c3b25292e4a71842e27350125f925d4286876ee45655832f8115d.svg" src="../_images/64dfbfc1e74c3b25292e4a71842e27350125f925d4286876ee45655832f8115d.svg" />
+</div>
+</div>
+</section>
+<section id="prior-predictive-checks">
+<h3>Prior predictive checks<a class="headerlink" href="#prior-predictive-checks" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO</span>
+</pre></div>
+</div>
 </div>
 </div>
 </section>
@@ -1057,7 +996,7 @@ and a gamma distribution for the degrees of freedom parameter:</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/hostedtoolcache/Python/3.10.15/x64/lib/python3.10/site-packages/pymc/sampling/mcmc.py:736: UserWarning: A list or tuple of random_seed no longer specifies the specific random_seed of each chain. Use a single seed instead.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/hostedtoolcache/Python/3.10.16/x64/lib/python3.10/site-packages/pymc/sampling/mcmc.py:736: UserWarning: A list or tuple of random_seed no longer specifies the specific random_seed of each chain. Use a single seed instead.
   warnings.warn(
 </pre></div>
 </div>
@@ -1070,7 +1009,7 @@ and a gamma distribution for the degrees of freedom parameter:</p>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>NUTS: [nu, loc, sigma_loc]
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "a5083e7054bf4adeaaa5b4ce9a5321ae"}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "1f81480bf2084261a3bcd0e807194ee5"}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 2 chains for 1_000 tune and 1_000 draw iterations (2_000 + 2_000 draws total) took 2 seconds.
 </pre></div>
 </div>
@@ -1154,59 +1093,59 @@ and a gamma distribution for the degrees of freedom parameter:</p>
   <tbody>
     <tr>
       <th>mu_West</th>
-      <td>9.087</td>
-      <td>0.560</td>
-      <td>7.953</td>
-      <td>10.184</td>
+      <td>9.099</td>
+      <td>0.567</td>
+      <td>8.061</td>
+      <td>10.270</td>
     </tr>
     <tr>
       <th>mu_East</th>
-      <td>6.155</td>
-      <td>0.320</td>
-      <td>5.463</td>
-      <td>6.759</td>
+      <td>6.154</td>
+      <td>0.303</td>
+      <td>5.559</td>
+      <td>6.768</td>
     </tr>
     <tr>
       <th>dmeans</th>
-      <td>2.932</td>
-      <td>0.646</td>
-      <td>1.669</td>
-      <td>4.271</td>
+      <td>2.945</td>
+      <td>0.633</td>
+      <td>1.683</td>
+      <td>4.149</td>
     </tr>
     <tr>
       <th>sigma_West</th>
-      <td>1.567</td>
-      <td>0.447</td>
-      <td>0.906</td>
-      <td>2.489</td>
+      <td>1.571</td>
+      <td>0.459</td>
+      <td>0.806</td>
+      <td>2.512</td>
     </tr>
     <tr>
       <th>sigma_East</th>
-      <td>0.917</td>
-      <td>0.281</td>
-      <td>0.474</td>
-      <td>1.438</td>
+      <td>0.919</td>
+      <td>0.267</td>
+      <td>0.488</td>
+      <td>1.489</td>
     </tr>
     <tr>
       <th>dstd</th>
-      <td>0.650</td>
-      <td>0.531</td>
-      <td>-0.303</td>
-      <td>1.800</td>
+      <td>0.653</td>
+      <td>0.536</td>
+      <td>-0.407</td>
+      <td>1.761</td>
     </tr>
     <tr>
       <th>nu</th>
-      <td>21.043</td>
-      <td>14.429</td>
-      <td>2.581</td>
-      <td>49.155</td>
+      <td>20.798</td>
+      <td>13.632</td>
+      <td>2.225</td>
+      <td>47.524</td>
     </tr>
     <tr>
       <th>cohend</th>
-      <td>2.360</td>
-      <td>0.703</td>
-      <td>0.928</td>
-      <td>3.722</td>
+      <td>2.368</td>
+      <td>0.704</td>
+      <td>1.132</td>
+      <td>3.809</td>
     </tr>
   </tbody>
 </table>
@@ -1214,7 +1153,7 @@ and a gamma distribution for the degrees of freedom parameter:</p>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ministats</span> <span class="kn">import</span> <span class="n">plot_dmeans_stats</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ministats</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_dmeans_stats</span>
 <span class="n">plot_dmeans_stats</span><span class="p">(</span><span class="n">mod1</span><span class="p">,</span> <span class="n">idata1</span><span class="p">,</span> <span class="n">group_name</span><span class="o">=</span><span class="s2">&quot;loc&quot;</span><span class="p">);</span>
 </pre></div>
 </div>
@@ -1222,11 +1161,11 @@ and a gamma distribution for the degrees of freedom parameter:</p>
 <div class="cell_output docutils container">
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
 <span class="ne">ImportError</span><span class="g g-Whitespace">                               </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">22</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="kn">from</span> <span class="nn">ministats</span> <span class="kn">import</span> <span class="n">plot_dmeans_stats</span>
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">18</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="kn">from</span><span class="w"> </span><span class="nn">ministats</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_dmeans_stats</span>
 <span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="n">plot_dmeans_stats</span><span class="p">(</span><span class="n">mod1</span><span class="p">,</span> <span class="n">idata1</span><span class="p">,</span> <span class="n">group_name</span><span class="o">=</span><span class="s2">&quot;loc&quot;</span><span class="p">);</span>
 
-<span class="ne">ImportError</span>: cannot import name &#39;plot_dmeans_stats&#39; from &#39;ministats&#39; (/opt/hostedtoolcache/Python/3.10.15/x64/lib/python3.10/site-packages/ministats/__init__.py)
+<span class="ne">ImportError</span>: cannot import name &#39;plot_dmeans_stats&#39; from &#39;ministats&#39; (/opt/hostedtoolcache/Python/3.10.16/x64/lib/python3.10/site-packages/ministats/__init__.py)
 </pre></div>
 </div>
 </div>
@@ -1248,7 +1187,7 @@ and a gamma distribution for the degrees of freedom parameter:</p>
 <h3>Compare to frequentist results<a class="headerlink" href="#compare-to-frequentist-results" title="Link to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">ttest_ind</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">ttest_ind</span>
 <span class="n">pricesW</span> <span class="o">=</span> <span class="n">eprices</span><span class="p">[</span><span class="n">eprices</span><span class="p">[</span><span class="s2">&quot;loc&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;West&quot;</span><span class="p">][</span><span class="s2">&quot;price&quot;</span><span class="p">]</span>
 <span class="n">pricesE</span> <span class="o">=</span> <span class="n">eprices</span><span class="p">[</span><span class="n">eprices</span><span class="p">[</span><span class="s2">&quot;loc&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;East&quot;</span><span class="p">][</span><span class="s2">&quot;price&quot;</span><span class="p">]</span>
 
@@ -1265,7 +1204,7 @@ and a gamma distribution for the degrees of freedom parameter:</p>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ministats</span> <span class="kn">import</span> <span class="n">cohend2</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ministats</span><span class="w"> </span><span class="kn">import</span> <span class="n">cohend2</span>
 <span class="n">cohend2</span><span class="p">(</span><span class="n">pricesW</span><span class="p">,</span> <span class="n">pricesE</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1387,7 +1326,7 @@ and a gamma distribution for the degrees of freedom parameter:</p>
 <span class="n">priors2</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Normal&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">35</span><span class="p">),</span>
     <span class="s2">&quot;sigma&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Normal&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Normal&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
     <span class="p">},</span>
     <span class="s2">&quot;nu&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Gamma&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">0.1</span><span class="p">),</span>
 <span class="p">}</span>
@@ -1419,7 +1358,7 @@ and a gamma distribution for the degrees of freedom parameter:</p>
             nu ~ Gamma(alpha: 2.0, beta: 0.1)
     target = sigma
         Common-level effects
-            sigma_group ~ Normal(mu: 0.0, sigma: 1.0)
+            sigma_group ~ Normal(mu: 1.0, sigma: 2.0)
 </pre></div>
 </div>
 </div>
@@ -1436,7 +1375,7 @@ and a gamma distribution for the degrees of freedom parameter:</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/b418e1ae95464cee60f7086ac8453b3d13315668ebac08b1cd32f3ac998dc1a8.svg" src="../_images/b418e1ae95464cee60f7086ac8453b3d13315668ebac08b1cd32f3ac998dc1a8.svg" />
+<img alt="../_images/91cffa22da486cc7c36f2038fae740d1ee10d1fe5725155ee16716a2a991db4d.svg" src="../_images/91cffa22da486cc7c36f2038fae740d1ee10d1fe5725155ee16716a2a991db4d.svg" />
 </div>
 </div>
 </section>
@@ -1455,17 +1394,17 @@ Multiprocess sampling (4 chains in 4 jobs)
 NUTS: [nu, group, sigma_group]
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "1c1ab38983644ebf82264cb3e992b287", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "ae57b971dabd4ee0a4758a5d88d787e2", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
 </pre>
-</div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 1_000 tune and 1_000 draw iterations (4_000 + 4_000 draws total) took 1 seconds.
+</div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 1_000 tune and 1_000 draw iterations (4_000 + 4_000 draws total) took 2 seconds.
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ministats</span> <span class="kn">import</span> <span class="n">calc_dmeans_stats</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ministats</span><span class="w"> </span><span class="kn">import</span> <span class="n">calc_dmeans_stats</span>
 <span class="n">calc_dmeans_stats</span><span class="p">(</span><span class="n">idata2</span><span class="p">,</span> <span class="n">group_name</span><span class="o">=</span><span class="s2">&quot;group&quot;</span><span class="p">);</span>
 <span class="n">az</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">idata2</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;stats&quot;</span><span class="p">,</span> <span class="n">hdi_prob</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span>
            <span class="n">var_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;mu_treat&quot;</span><span class="p">,</span> <span class="s2">&quot;mu_ctrl&quot;</span><span class="p">,</span> <span class="s2">&quot;dmeans&quot;</span><span class="p">,</span> <span class="s2">&quot;sigma_treat&quot;</span><span class="p">,</span> <span class="s2">&quot;sigma_ctrl&quot;</span><span class="p">,</span> <span class="s2">&quot;dstd&quot;</span><span class="p">,</span> <span class="s2">&quot;nu&quot;</span><span class="p">,</span> <span class="s2">&quot;cohend&quot;</span><span class="p">])</span>
@@ -1500,59 +1439,59 @@ NUTS: [nu, group, sigma_group]
   <tbody>
     <tr>
       <th>mu_treat</th>
-      <td>101.545</td>
-      <td>0.376</td>
-      <td>100.760</td>
-      <td>102.245</td>
+      <td>101.553</td>
+      <td>0.381</td>
+      <td>100.763</td>
+      <td>102.262</td>
     </tr>
     <tr>
       <th>mu_ctrl</th>
-      <td>100.525</td>
-      <td>0.206</td>
-      <td>100.118</td>
-      <td>100.916</td>
+      <td>100.530</td>
+      <td>0.207</td>
+      <td>100.121</td>
+      <td>100.920</td>
     </tr>
     <tr>
       <th>dmeans</th>
-      <td>1.020</td>
-      <td>0.424</td>
-      <td>0.196</td>
-      <td>1.843</td>
+      <td>1.024</td>
+      <td>0.431</td>
+      <td>0.180</td>
+      <td>1.869</td>
     </tr>
     <tr>
       <th>sigma_treat</th>
-      <td>1.931</td>
-      <td>0.400</td>
-      <td>1.184</td>
-      <td>2.711</td>
+      <td>2.009</td>
+      <td>0.431</td>
+      <td>1.242</td>
+      <td>2.881</td>
     </tr>
     <tr>
       <th>sigma_ctrl</th>
-      <td>1.011</td>
-      <td>0.195</td>
-      <td>0.666</td>
-      <td>1.411</td>
+      <td>1.027</td>
+      <td>0.201</td>
+      <td>0.669</td>
+      <td>1.444</td>
     </tr>
     <tr>
       <th>dstd</th>
-      <td>0.920</td>
-      <td>0.414</td>
-      <td>0.107</td>
-      <td>1.705</td>
+      <td>0.982</td>
+      <td>0.446</td>
+      <td>0.116</td>
+      <td>1.873</td>
     </tr>
     <tr>
       <th>nu</th>
-      <td>1.794</td>
-      <td>0.449</td>
-      <td>1.059</td>
-      <td>2.662</td>
+      <td>1.855</td>
+      <td>0.485</td>
+      <td>1.024</td>
+      <td>2.798</td>
     </tr>
     <tr>
       <th>cohend</th>
-      <td>0.679</td>
-      <td>0.301</td>
-      <td>0.068</td>
-      <td>1.243</td>
+      <td>0.660</td>
+      <td>0.299</td>
+      <td>0.066</td>
+      <td>1.242</td>
     </tr>
   </tbody>
 </table>
@@ -1560,13 +1499,13 @@ NUTS: [nu, group, sigma_group]
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ministats</span> <span class="kn">import</span> <span class="n">plot_dmeans_stats</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ministats</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_dmeans_stats</span>
 <span class="n">plot_dmeans_stats</span><span class="p">(</span><span class="n">mod2</span><span class="p">,</span> <span class="n">idata2</span><span class="p">,</span> <span class="n">group_name</span><span class="o">=</span><span class="s2">&quot;group&quot;</span><span class="p">,</span> <span class="n">ppc_xlims</span><span class="o">=</span><span class="p">[</span><span class="mi">90</span><span class="p">,</span><span class="mi">110</span><span class="p">]);</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="../_images/6b37cc433355bce758eb757b32fdb16668f9d1702026924d3cc33cc89b19b08f.png"><img alt="../_images/6b37cc433355bce758eb757b32fdb16668f9d1702026924d3cc33cc89b19b08f.png" src="../_images/6b37cc433355bce758eb757b32fdb16668f9d1702026924d3cc33cc89b19b08f.png" style="width: 793px; height: 991px;" /></a>
+<a class="reference internal image-reference" href="../_images/0a2f6da34f693c669f267f84978b94a69cd9fdf3435925fc0fce8b02451bd202.png"><img alt="../_images/0a2f6da34f693c669f267f84978b94a69cd9fdf3435925fc0fce8b02451bd202.png" src="../_images/0a2f6da34f693c669f267f84978b94a69cd9fdf3435925fc0fce8b02451bd202.png" style="width: 794px; height: 991px;" /></a>
 </div>
 </div>
 <div class="cell docutils container">
@@ -1585,7 +1524,7 @@ NUTS: [nu, group, sigma_group]
 <h3>Compare to frequentist results<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">ttest_ind</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">ttest_ind</span>
 
 <span class="n">treated</span> <span class="o">=</span> <span class="n">iqs2</span><span class="p">[</span><span class="n">iqs2</span><span class="p">[</span><span class="s2">&quot;group&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;treat&quot;</span><span class="p">][</span><span class="s2">&quot;iq&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
 <span class="n">controls</span> <span class="o">=</span> <span class="n">iqs2</span><span class="p">[</span><span class="n">iqs2</span><span class="p">[</span><span class="s2">&quot;group&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;ctrl&quot;</span><span class="p">][</span><span class="s2">&quot;iq&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
@@ -1603,7 +1542,7 @@ NUTS: [nu, group, sigma_group]
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ministats</span> <span class="kn">import</span> <span class="n">cohend2</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ministats</span><span class="w"> </span><span class="kn">import</span> <span class="n">cohend2</span>
 <span class="n">cohend2</span><span class="p">(</span><span class="n">treated</span><span class="p">,</span> <span class="n">controls</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1774,10 +1713,10 @@ Multiprocess sampling (4 chains in 4 jobs)
 NUTS: [nu, curriculum, sigma_curriculum]
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "0b95e97b083f4b0c9bb4f9371fc237f6", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "bd766b2178814acb9c61200eb6f31b1e", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
 </pre>
-</div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 1_000 tune and 1_000 draw iterations (4_000 + 4_000 draws total) took 1 seconds.
+</div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 1_000 tune and 1_000 draw iterations (4_000 + 4_000 draws total) took 2 seconds.
 </pre></div>
 </div>
 </div>
@@ -1821,10 +1760,10 @@ NUTS: [nu, curriculum, sigma_curriculum]
   <tbody>
     <tr>
       <th>dmeans</th>
-      <td>7.423</td>
-      <td>5.195</td>
-      <td>-3.168</td>
-      <td>17.422</td>
+      <td>7.304</td>
+      <td>5.322</td>
+      <td>-2.658</td>
+      <td>18.133</td>
     </tr>
   </tbody>
 </table>
@@ -1877,7 +1816,7 @@ NUTS: [nu, curriculum, sigma_curriculum]
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">y1s</span> <span class="o">=</span> <span class="p">[</span><span class="mf">5.77</span><span class="p">,</span> <span class="mf">5.33</span><span class="p">,</span> <span class="mf">4.59</span><span class="p">,</span> <span class="mf">4.33</span><span class="p">,</span> <span class="mf">3.66</span><span class="p">,</span> <span class="mf">4.48</span><span class="p">]</span>
 <span class="n">y2s</span> <span class="o">=</span> <span class="p">[</span><span class="mf">3.88</span><span class="p">,</span> <span class="mf">3.55</span><span class="p">,</span> <span class="mf">3.29</span><span class="p">,</span> <span class="mf">2.59</span><span class="p">,</span> <span class="mf">2.33</span><span class="p">,</span> <span class="mf">3.59</span><span class="p">]</span>
 
-<span class="kn">from</span> <span class="nn">ministats.bayes</span> <span class="kn">import</span> <span class="n">bayes_dmeans</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ministats.bayes</span><span class="w"> </span><span class="kn">import</span> <span class="n">bayes_dmeans</span>
 <span class="n">mod4</span><span class="p">,</span> <span class="n">idata4</span> <span class="o">=</span> <span class="n">bayes_dmeans</span><span class="p">(</span><span class="n">y1s</span><span class="p">,</span> <span class="n">y2s</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;y1&quot;</span><span class="p">,</span> <span class="s2">&quot;y2&quot;</span><span class="p">])</span>
 </pre></div>
 </div>
@@ -1889,17 +1828,17 @@ Multiprocess sampling (4 chains in 4 jobs)
 NUTS: [nu, Intercept, group, sigma_group]
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "0c19ec31fad44800835da0ddda65cf9c", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "db12fffeb47044d880dcb3377ebb316c", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
 </pre>
-</div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 1_000 tune and 2_000 draw iterations (4_000 + 8_000 draws total) took 2 seconds.
+</div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 1_000 tune and 2_000 draw iterations (4_000 + 8_000 draws total) took 4 seconds.
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ministats</span> <span class="kn">import</span> <span class="n">calc_dmeans_stats</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ministats</span><span class="w"> </span><span class="kn">import</span> <span class="n">calc_dmeans_stats</span>
 <span class="n">calc_dmeans_stats</span><span class="p">(</span><span class="n">idata4</span><span class="p">)</span>
 <span class="n">az</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">idata4</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;stats&quot;</span><span class="p">,</span> <span class="n">hdi_prob</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span>
            <span class="n">var_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;dmeans&quot;</span><span class="p">,</span> <span class="s2">&quot;sigma_y1&quot;</span><span class="p">,</span> <span class="s2">&quot;sigma_y2&quot;</span><span class="p">,</span> <span class="s2">&quot;dstd&quot;</span><span class="p">,</span> <span class="s2">&quot;nu&quot;</span><span class="p">,</span> <span class="s2">&quot;cohend&quot;</span><span class="p">])</span>
@@ -1934,45 +1873,45 @@ NUTS: [nu, Intercept, group, sigma_group]
   <tbody>
     <tr>
       <th>dmeans</th>
-      <td>-1.451</td>
-      <td>0.499</td>
-      <td>-2.443</td>
-      <td>-0.497</td>
+      <td>-1.459</td>
+      <td>0.495</td>
+      <td>-2.489</td>
+      <td>-0.529</td>
     </tr>
     <tr>
       <th>sigma_y1</th>
-      <td>0.848</td>
-      <td>0.325</td>
-      <td>0.369</td>
-      <td>1.492</td>
+      <td>0.850</td>
+      <td>0.331</td>
+      <td>0.362</td>
+      <td>1.482</td>
     </tr>
     <tr>
       <th>sigma_y2</th>
-      <td>0.717</td>
-      <td>0.282</td>
-      <td>0.306</td>
-      <td>1.256</td>
+      <td>0.719</td>
+      <td>0.287</td>
+      <td>0.309</td>
+      <td>1.269</td>
     </tr>
     <tr>
       <th>dstd</th>
       <td>-0.131</td>
-      <td>0.426</td>
-      <td>-0.982</td>
-      <td>0.736</td>
+      <td>0.437</td>
+      <td>-1.045</td>
+      <td>0.686</td>
     </tr>
     <tr>
       <th>nu</th>
-      <td>21.306</td>
-      <td>14.394</td>
-      <td>1.211</td>
-      <td>49.339</td>
+      <td>21.387</td>
+      <td>14.233</td>
+      <td>1.818</td>
+      <td>49.849</td>
     </tr>
     <tr>
       <th>cohend</th>
-      <td>-1.934</td>
-      <td>0.784</td>
-      <td>-3.475</td>
-      <td>-0.443</td>
+      <td>-1.937</td>
+      <td>0.773</td>
+      <td>-3.476</td>
+      <td>-0.432</td>
     </tr>
   </tbody>
 </table>
@@ -2002,7 +1941,7 @@ NUTS: [nu, Intercept, group, sigma_group]
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ministats.bayes</span> <span class="kn">import</span> <span class="n">bayes_dmeans</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ministats.bayes</span><span class="w"> </span><span class="kn">import</span> <span class="n">bayes_dmeans</span>
 <span class="n">mod5</span><span class="p">,</span> <span class="n">idata5</span> <span class="o">=</span> <span class="n">bayes_dmeans</span><span class="p">(</span><span class="n">evening</span><span class="p">,</span> <span class="n">morning</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;evening&quot;</span><span class="p">,</span> <span class="s2">&quot;morning&quot;</span><span class="p">])</span>
 </pre></div>
 </div>
@@ -2014,17 +1953,17 @@ Multiprocess sampling (4 chains in 4 jobs)
 NUTS: [nu, Intercept, group, sigma_group]
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "e673860213bb4d6da0d3fee3b17f6812", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "9f3946904e1546a3a7e481881f153854", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
 </pre>
-</div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 1_000 tune and 2_000 draw iterations (4_000 + 8_000 draws total) took 2 seconds.
+</div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 1_000 tune and 2_000 draw iterations (4_000 + 8_000 draws total) took 3 seconds.
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ministats</span> <span class="kn">import</span> <span class="n">calc_dmeans_stats</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ministats</span><span class="w"> </span><span class="kn">import</span> <span class="n">calc_dmeans_stats</span>
 <span class="n">calc_dmeans_stats</span><span class="p">(</span><span class="n">idata5</span><span class="p">)</span>
 <span class="n">az</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">idata5</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;stats&quot;</span><span class="p">,</span> <span class="n">hdi_prob</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span>
            <span class="n">var_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;dmeans&quot;</span><span class="p">,</span> <span class="s2">&quot;sigma_evening&quot;</span><span class="p">,</span> <span class="s2">&quot;sigma_morning&quot;</span><span class="p">,</span> <span class="s2">&quot;dstd&quot;</span><span class="p">,</span> <span class="s2">&quot;nu&quot;</span><span class="p">,</span> <span class="s2">&quot;cohend&quot;</span><span class="p">])</span>
@@ -2059,45 +1998,45 @@ NUTS: [nu, Intercept, group, sigma_group]
   <tbody>
     <tr>
       <th>dmeans</th>
-      <td>-0.528</td>
+      <td>-0.525</td>
       <td>0.141</td>
-      <td>-0.807</td>
+      <td>-0.809</td>
       <td>-0.248</td>
     </tr>
     <tr>
       <th>sigma_evening</th>
       <td>0.454</td>
-      <td>0.086</td>
-      <td>0.302</td>
-      <td>0.632</td>
+      <td>0.085</td>
+      <td>0.311</td>
+      <td>0.633</td>
     </tr>
     <tr>
       <th>sigma_morning</th>
-      <td>0.387</td>
-      <td>0.071</td>
-      <td>0.262</td>
-      <td>0.529</td>
+      <td>0.388</td>
+      <td>0.075</td>
+      <td>0.259</td>
+      <td>0.541</td>
     </tr>
     <tr>
       <th>dstd</th>
-      <td>-0.068</td>
+      <td>-0.066</td>
       <td>0.111</td>
-      <td>-0.294</td>
-      <td>0.153</td>
+      <td>-0.302</td>
+      <td>0.144</td>
     </tr>
     <tr>
       <th>nu</th>
-      <td>22.920</td>
-      <td>14.387</td>
-      <td>2.520</td>
-      <td>50.827</td>
+      <td>23.147</td>
+      <td>14.431</td>
+      <td>2.830</td>
+      <td>51.833</td>
     </tr>
     <tr>
       <th>cohend</th>
-      <td>-1.265</td>
-      <td>0.374</td>
-      <td>-2.017</td>
-      <td>-0.539</td>
+      <td>-1.257</td>
+      <td>0.375</td>
+      <td>-1.973</td>
+      <td>-0.485</td>
     </tr>
   </tbody>
 </table>
@@ -2188,7 +2127,6 @@ NUTS: [nu, Intercept, group, sigma_group]
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#normal-distribution-for-log-sigma">Normal distribution for log-sigma</a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gumbel-distribution">Gumbel distribution?</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#choosing-priors-for-the-degrees-of-freedom-parameter">Choosing priors for the degrees of freedom parameter</a></li>
 </ul>
 </li>
@@ -2196,6 +2134,7 @@ NUTS: [nu, Intercept, group, sigma_group]
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#electricity-prices-dataset">Electricity prices dataset</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bayesian-model">Bayesian model</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bambi-model">Bambi model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prior-predictive-checks">Prior predictive checks</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-fitting-and-analysis">Model fitting and analysis</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#processing-the-results">Processing the results</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#compare-to-frequentist-results">Compare to frequentist results</a></li>
