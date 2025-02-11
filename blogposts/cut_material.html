@@ -517,6 +517,12 @@
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-cleaning">Data cleaning</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-transformation">Data transformation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#from-part-2">From Part 2</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#verifying-p-values">Verifying p-values</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#verifying-confidence-intervals">Verifying confidence intervals</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#discrete-random-variables-bonus-topic">Discrete random variables (bonus topic)</a></li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -646,7 +652,7 @@ and to compute the factorial of <code class="docutils literal notranslate"><span
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_2825/2515606242.py:5: DeprecationWarning: `np.math` is a deprecated alias for the standard library `math` module (Deprecated Numpy 1.25). Replace usages of `np.math` with `math`
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_2784/2515606242.py:5: DeprecationWarning: `np.math` is a deprecated alias for the standard library `math` module (Deprecated Numpy 1.25). Replace usages of `np.math` with `math`
   return lam**h * np.exp(-lam) / np.math.factorial(h)
 </pre></div>
 </div>
@@ -1058,6 +1064,182 @@ For example, <span class="math notranslate nohighlight">\(F_Z(-2) = \textrm{Pr}(
 </div>
 </div>
 </section>
+<section id="from-part-2">
+<h2>From Part 2<a class="headerlink" href="#from-part-2" title="Link to this heading">#</a></h2>
+<p>To create a computer model for the random variable <span class="math notranslate nohighlight">\(Z\)</span>,
+we can define the following Python function that performs the same calculation as the math function <span class="math notranslate nohighlight">\(f_Z\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">fZ</span><span class="p">(</span><span class="n">z</span><span class="p">):</span>
+    <span class="n">const</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+    <span class="n">exp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span> <span class="o">*</span> <span class="n">z</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">const</span><span class="o">*</span><span class="n">exp</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Note the definition of the Python function <code class="docutils literal notranslate"><span class="pre">fZ</span></code> matches exactly the
+calculations described in the complicated-looking math definition of <span class="math notranslate nohighlight">\(f_Z\)</span> we saw above.
+This is one of the key benefits of learning Python:
+you can convert any math expressions into code expressions
+then do computations with it.</p>
+<p>We can now compute the value <span class="math notranslate nohighlight">\(f_Z(1)\)</span> by calling the function <code class="docutils literal notranslate"><span class="pre">fZ</span></code> with input <code class="docutils literal notranslate"><span class="pre">1</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fZ</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.24197072451914337
+</pre></div>
+</div>
+</div>
+</div>
+<section id="verifying-p-values">
+<h3>Verifying p-values<a class="headerlink" href="#verifying-p-values" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">norm</span><span class="p">,</span> <span class="n">ttest_1samp</span>
+
+<span class="n">muK</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">sigmaK</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">rvK</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">muK</span><span class="p">,</span> <span class="n">sigmaK</span><span class="p">)</span>
+
+<span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10000</span><span class="p">):</span>
+    <span class="n">sample</span> <span class="o">=</span> <span class="n">rvK</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">ttest_1samp</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">popmean</span><span class="o">=</span><span class="n">muK</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">pvalue</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">:</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="n">count</span> <span class="o">+</span> <span class="mi">1</span>
+
+<span class="n">count</span> <span class="o">/</span> <span class="mi">10000</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.0505
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="verifying-confidence-intervals">
+<h3>Verifying confidence intervals<a class="headerlink" href="#verifying-confidence-intervals" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="n">muK</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">sigmaK</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">rvK</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">muK</span><span class="p">,</span> <span class="n">sigmaK</span><span class="p">)</span>
+
+<span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10000</span><span class="p">):</span>
+    <span class="n">sample</span> <span class="o">=</span> <span class="n">rvK</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">ttest_1samp</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">popmean</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+    <span class="n">ci</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">confidence_interval</span><span class="p">(</span><span class="n">confidence_level</span><span class="o">=</span><span class="mf">0.90</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ci</span><span class="o">.</span><span class="n">low</span> <span class="o">&lt;=</span> <span class="n">muK</span> <span class="o">&lt;=</span> <span class="n">ci</span><span class="o">.</span><span class="n">high</span><span class="p">:</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="n">count</span> <span class="o">+</span> <span class="mi">1</span>
+
+<span class="n">count</span> <span class="o">/</span> <span class="mi">10000</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.9049
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="discrete-random-variables-bonus-topic">
+<h3>Discrete random variables (bonus topic)<a class="headerlink" href="#discrete-random-variables-bonus-topic" title="Link to this heading">#</a></h3>
+<p>There is a whole other type of random variables called “discrete” random variables,
+which are defined only for integers, like <span class="math notranslate nohighlight">\(0\)</span>, <span class="math notranslate nohighlight">\(1\)</span>, <span class="math notranslate nohighlight">\(2\)</span>, etc.</p>
+<p>For example, the Poisson random variable <span class="math notranslate nohighlight">\(H\)</span> is defined by the probability mass function,</p>
+<div class="math notranslate nohighlight">
+\[ 
+  f_H(h) = \frac{\lambda^{h}e^{-\lambda }}{h!},
+\]</div>
+<p>for <span class="math notranslate nohighlight">\(h\)</span> any natural number, <span class="math notranslate nohighlight">\(0, 1, 2, 3, \ldots\)</span>.
+The parameter <span class="math notranslate nohighlight">\(\lambda\)</span> (the Greek letter lambda) is used to control the shape of the distribution.
+This math formula includes the lambda raised to the power <span class="math notranslate nohighlight">\(h\)</span>,
+the exponential function <span class="math notranslate nohighlight">\(e^x\)</span>,
+and the factorial function <span class="math notranslate nohighlight">\(n!\)</span>.
+That’s a lot of math!
+If you need to do some probability calculations for the random variable <span class="math notranslate nohighlight">\(H\)</span>,
+and you’re ever forced to do the calculations using only pen and paper,
+that would be quite the chore!</p>
+<p>Wouldn’t it be simpler (and more efficient) to define a Python function
+that corresponds to the math function <span class="math notranslate nohighlight">\(f_H\)</span>,
+then do all the calculations using Python as a calculator?</p>
+<p>Let’s see this in action!
+We’ll initialize a <code class="docutils literal notranslate"><span class="pre">poisson</span></code> model with the parameter <span class="math notranslate nohighlight">\(\lambda=20\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">poisson</span>
+
+<span class="n">rvH</span> <span class="o">=</span> <span class="n">poisson</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+<span class="c1"># rvH</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Having defined the computer model <code class="docutils literal notranslate"><span class="pre">rvH</span></code>, we can use it to:</p>
+<ul class="simple">
+<li><p>generate visualizations</p></li>
+<li><p>compute probabilities</p></li>
+<li><p>run simulations</p></li>
+<li><p>use <code class="docutils literal notranslate"><span class="pre">rvH</span></code> it as part of multi-step probability calculations</p></li>
+<li><p>anything else you might want to do with random variable <span class="math notranslate nohighlight">\(H\)</span></p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="n">hs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">40</span><span class="p">)</span>
+<span class="n">fHs</span> <span class="o">=</span> <span class="n">rvH</span><span class="o">.</span><span class="n">pmf</span><span class="p">(</span><span class="n">hs</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">fHs</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;StemContainer object of 3 artists&gt;
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/3e21eb29d1f77264a5dc1536399b9edb22f2910e126da572f4ee3d64498bbb2e.png"><img alt="../_images/3e21eb29d1f77264a5dc1536399b9edb22f2910e126da572f4ee3d64498bbb2e.png" src="../_images/3e21eb29d1f77264a5dc1536399b9edb22f2910e126da572f4ee3d64498bbb2e.png" style="width: 547px; height: 201px;" /></a>
+</div>
+</div>
+<p>Calculating the probability of <span class="math notranslate nohighlight">\(H\)</span> being between <span class="math notranslate nohighlight">\(10\)</span> and <span class="math notranslate nohighlight">\(20\)</span>
+is done by summing over all the probabilities for that range of values of <span class="math notranslate nohighlight">\(h\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+    \textrm{Pr}(\{10 \leq H \leq 20\})
+    = \sum_{h=10}^{h=20} f_H(h)
+    = f_H(10) + f_H(11) + f_H(12) + \cdots + f_H(20).
+\]</div>
+<p>This calculation can be done using a Python summation:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">sum</span><span class="p">([</span><span class="n">rvH</span><span class="o">.</span><span class="n">pmf</span><span class="p">(</span><span class="n">h</span><span class="p">)</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="o">+</span><span class="mi">1</span><span class="p">)])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.5540971719230157
+</pre></div>
+</div>
+</div>
+</div>
+<p>To see a complete worked example based on the
+see <a class="reference external" href="https://minireference.com/static/excerpts/noBSstats/noBSstats_ch02_PROB.pdf#page=15">Example 3: hard disk failures</a> and
+<a class="reference external" href="https://minireference.com/static/excerpts/noBSstats/noBSstats_ch02_PROB.pdf#page=29">Section 2.1.5 Hard disks example</a> in the PDF preview of Chapter 2.</p>
+</section>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -1117,6 +1299,12 @@ For example, <span class="math notranslate nohighlight">\(F_Z(-2) = \textrm{Pr}(
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-cleaning">Data cleaning</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-transformation">Data transformation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#from-part-2">From Part 2</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#verifying-p-values">Verifying p-values</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#verifying-confidence-intervals">Verifying confidence intervals</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#discrete-random-variables-bonus-topic">Discrete random variables (bonus topic)</a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 

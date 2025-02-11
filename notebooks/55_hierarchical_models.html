@@ -515,6 +515,7 @@
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#radon-dataset">Radon dataset</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-the-data">Loading the data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#descriptive-statistics">Descriptive statistics</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1-complete-pooling-model">Example 1: complete pooling model</a><ul class="nav section-nav flex-column">
@@ -547,8 +548,8 @@
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#frequentist-multilevel-models">Frequentist multilevel models</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#varying-intercepts-model-using-statsmodels">Varying intercepts model using <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#varying-intercepts-and-slopes-model-using-statsmodels">Varying intercepts and slopes model using <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#random-intercepts-model-using-statsmodels">Random intercepts model using <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#random-intercepts-and-slopes-model-using-statsmodels-bonus-topic">Random intercepts and slopes model using <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code> (BONUS TOPIC)</a></li>
 </ul>
 </li>
 </ul>
@@ -784,6 +785,29 @@
 </table>
 </div></div></div>
 </div>
+</section>
+<section id="descriptive-statistics">
+<h3>Descriptive statistics<a class="headerlink" href="#descriptive-statistics" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">radon</span><span class="p">[</span><span class="s2">&quot;log_radon&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>count    919.000000
+mean       1.224623
+std        0.853327
+min       -2.302585
+25%        0.641854
+50%        1.280934
+75%        1.791759
+max        3.875359
+Name: log_radon, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">radon</span><span class="p">[</span><span class="s2">&quot;county&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
@@ -798,54 +822,18 @@
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">radon</span><span class="p">[[</span><span class="s2">&quot;log_radon&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">radon</span><span class="p">[</span><span class="s2">&quot;floor&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>count</th>
-      <th>mean</th>
-      <th>std</th>
-      <th>min</th>
-      <th>25%</th>
-      <th>50%</th>
-      <th>75%</th>
-      <th>max</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>log_radon</th>
-      <td>919.0</td>
-      <td>1.22</td>
-      <td>0.85</td>
-      <td>-2.3</td>
-      <td>0.64</td>
-      <td>1.28</td>
-      <td>1.79</td>
-      <td>3.88</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>floor
+basement    766
+ground      153
+Name: count, dtype: int64
+</pre></div>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -861,7 +849,7 @@
 <div class="cell_output docutils container">
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
 <span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
 <span class="ne">----&gt; </span><span class="mi">1</span> <span class="kn">from</span><span class="w"> </span><span class="nn">ministats.book.figures</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_counties</span>
 <span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="n">sel_counties</span> <span class="o">=</span> <span class="p">[</span>
 <span class="g g-Whitespace">      </span><span class="mi">3</span>   <span class="s2">&quot;LAC QUI PARLE&quot;</span><span class="p">,</span> <span class="s2">&quot;AITKIN&quot;</span><span class="p">,</span> <span class="s2">&quot;KOOCHICHING&quot;</span><span class="p">,</span> <span class="s2">&quot;DOUGLAS&quot;</span><span class="p">,</span>
@@ -961,7 +949,7 @@ and <span class="math notranslate nohighlight">\(1\)</span> representing ground 
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/454fb94e683afd65e327f9a7af78b0450dc7c4c161e84d0bbc5bdf7e6faec37a.svg" src="../_images/454fb94e683afd65e327f9a7af78b0450dc7c4c161e84d0bbc5bdf7e6faec37a.svg" />
+<img alt="../_images/14ad29c5b4051425435c99b52415582c22fa1c0a5aaba40ca84d8ac950fb592f.svg" src="../_images/14ad29c5b4051425435c99b52415582c22fa1c0a5aaba40ca84d8ac950fb592f.svg" />
 </div>
 </div>
 </section>
@@ -980,7 +968,7 @@ Multiprocess sampling (4 chains in 4 jobs)
 NUTS: [sigma, Intercept, floor]
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "effa3ea60777407183748c54645ae238", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "6b8eab28e2154f19998b7c105f90dceb", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
 </pre>
 </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 1_000 tune and 1_000 draw iterations (4_000 + 4_000 draws total) took 2 seconds.
@@ -1077,8 +1065,8 @@ NUTS: [sigma, Intercept, floor]
 <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="p">[</span><span class="n">y0</span><span class="p">,</span><span class="n">y1</span><span class="p">],</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
 
 <span class="n">midpoint</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="p">(</span><span class="n">y0</span><span class="o">+</span><span class="n">y1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="mf">0.03</span><span class="p">]</span>
-<span class="n">slope</span> <span class="o">=</span> <span class="n">means1</span><span class="p">[</span><span class="s2">&quot;floor[ground]&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s2">&quot;$</span><span class="se">\\</span><span class="s2">mu_{B_</span><span class="si">{f}</span><span class="s2">}=</span><span class="si">%.3f</span><span class="s2">$&quot;</span> <span class="o">%</span> <span class="n">slope</span><span class="p">,</span> <span class="n">midpoint</span><span class="p">);</span>
+<span class="n">slope</span> <span class="o">=</span> <span class="n">means1</span><span class="p">[</span><span class="s2">&quot;floor[ground]&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s2">&quot;$</span><span class="se">\\</span><span class="s2">mu_{B_</span><span class="si">{f}</span><span class="s2">}=</span><span class="si">%.2f</span><span class="s2">$&quot;</span> <span class="o">%</span> <span class="n">slope</span><span class="p">,</span> <span class="n">midpoint</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
@@ -1086,7 +1074,7 @@ NUTS: [sigma, Intercept, floor]
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Default computed for conditional variable: floor
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="../_images/d7d0cf4d0c72ae603d30d2076a570d6a80c1b3aebf9a2eb4f6e2916153efa35e.png"><img alt="../_images/d7d0cf4d0c72ae603d30d2076a570d6a80c1b3aebf9a2eb4f6e2916153efa35e.png" src="../_images/d7d0cf4d0c72ae603d30d2076a570d6a80c1b3aebf9a2eb4f6e2916153efa35e.png" style="width: 456px; height: 293px;" /></a>
+<a class="reference internal image-reference" href="../_images/10f6f772ec677f340a5c962c89ffeeec1bb8d8f2642960958f5d9d9672fd311d.png"><img alt="../_images/10f6f772ec677f340a5c962c89ffeeec1bb8d8f2642960958f5d9d9672fd311d.png" src="../_images/10f6f772ec677f340a5c962c89ffeeec1bb8d8f2642960958f5d9d9672fd311d.png" style="width: 456px; height: 293px;" /></a>
 </div>
 </div>
 <div class="cell docutils container">
@@ -1099,8 +1087,8 @@ NUTS: [sigma, Intercept, floor]
 <span class="c1"># y1 = means1[&quot;Intercept&quot;] + means1[&quot;floor[ground]&quot;]</span>
 <span class="c1"># sns.lineplot(x=[0,1], y=[y0,y1], ax=axs[0]);</span>
 <span class="c1"># midpoint = [0.5, (y0+y1)/2 + 0.03]</span>
-<span class="c1"># slope = means1[&quot;floor[ground]&quot;].round(3)</span>
-<span class="c1"># axs[0].annotate(&quot;$\\mu_{B_{f}}=%.3f$&quot; % slope, midpoint);</span>
+<span class="c1"># slope = means1[&quot;floor[ground]&quot;].round(2)</span>
+<span class="c1"># axs[0].annotate(&quot;$\\mu_{B_{f}}=%.2f$&quot; % slope, midpoint);</span>
 <span class="c1"># filename = os.path.join(DESTDIR, &quot;example1_basement_ground_slope.pdf&quot;)</span>
 <span class="c1"># savefigure(plt.gcf(), filename)</span>
 </pre></div>
@@ -1177,7 +1165,7 @@ so each one gets an intercept term:</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/86f573c4286cef343a6b1ec814ed186ab600f105dc75a0e7e1c23dc0a0dc9813.svg" src="../_images/86f573c4286cef343a6b1ec814ed186ab600f105dc75a0e7e1c23dc0a0dc9813.svg" />
+<img alt="../_images/d94e90cacc230c99c28c570e3776e915d47a39f892e37b4717a893db35b2b7b7.svg" src="../_images/d94e90cacc230c99c28c570e3776e915d47a39f892e37b4717a893db35b2b7b7.svg" />
 </div>
 </div>
 </section>
@@ -1196,7 +1184,7 @@ Multiprocess sampling (4 chains in 4 jobs)
 NUTS: [sigma, county, floor]
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "c50b3d0e0de04ddc8cf687be458ed2fd", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "11df0e06856848a1844e747c1773d57f", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
 </pre>
 </div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 1_000 tune and 1_000 draw iterations (4_000 + 4_000 draws total) took 6 seconds.
@@ -1393,6 +1381,14 @@ NUTS: [sigma, county, floor]
 <section id="id4">
 <h3>Conclusion<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
 <p>treating each group independently, so we have lots of variance</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO:</span>
+<span class="c1"># calculate the std.dev. of the county-specific slopes -- this is like \Sigma_J but w/o a prior.</span>
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 </section>
 <section id="example-3-hierarchical-model">
@@ -1525,11 +1521,7 @@ Name: log_radon, dtype: float64
     <span class="s2">&quot;Intercept&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Normal&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
     <span class="s2">&quot;floor&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Normal&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
     <span class="s2">&quot;1|county&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Normal&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Exponential&quot;</span><span class="p">,</span> <span class="n">lam</span><span class="o">=</span><span class="mi">1</span><span class="p">)),</span>
-    <span class="c1"># &quot;1|county&quot;: bmb.Prior(&quot;Normal&quot;, mu=0, sigma=bmb.Prior(&quot;HalfNormal&quot;, sigma=2)),</span>
     <span class="s2">&quot;sigma&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;HalfStudentT&quot;</span><span class="p">,</span> <span class="n">nu</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
-    <span class="c1"># &quot;sigma&quot;: bmb.Prior(&quot;Exponential&quot;, lam=1),</span>
-    <span class="c1"># &quot;sigma&quot;: bmb.Prior(&quot;HalfNormal&quot;, sigma=10), # from PyStan tutorial</span>
-    <span class="c1"># &quot;sigma&quot;: bmb.Prior(&quot;Uniform&quot;, lower=0, upper=100), # from PyMC example</span>
 <span class="p">}</span>
 
 <span class="n">formula3</span> <span class="o">=</span> <span class="s2">&quot;log_radon ~ 1 + (1|county) + floor&quot;</span>
@@ -1576,7 +1568,7 @@ Name: log_radon, dtype: float64
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/58d904ce065658a11f67d3e0b6e446f5c9fc16c1ef2b521b372dc8addc6a25e9.svg" src="../_images/58d904ce065658a11f67d3e0b6e446f5c9fc16c1ef2b521b372dc8addc6a25e9.svg" />
+<img alt="../_images/af30779486738ada34ababd77c12088bb3f79a430b85fde05b0be0fcae149297.svg" src="../_images/af30779486738ada34ababd77c12088bb3f79a430b85fde05b0be0fcae149297.svg" />
 </div>
 </div>
 </section>
@@ -1595,10 +1587,10 @@ Multiprocess sampling (4 chains in 4 jobs)
 NUTS: [sigma, Intercept, floor, 1|county_sigma, 1|county]
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "9e075b7f5e8e4e55a63d9fd616515a76", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "632a4a393e894b42842f6cefe2e1bd98", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
 </pre>
-</div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 1_000 tune and 1_000 draw iterations (4_000 + 4_000 draws total) took 5 seconds.
+</div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 1_000 tune and 1_000 draw iterations (4_000 + 4_000 draws total) took 4 seconds.
 </pre></div>
 </div>
 </div>
@@ -1790,6 +1782,21 @@ NUTS: [sigma, Intercept, floor, 1|county_sigma, 1|county]
 </div>
 </div>
 </div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># # Forest plot comparing `mod2` and `mod3` estimates</span>
+<span class="c1"># # (to illustrate reduced uncertainty in estimates + shrinkage)</span>
+<span class="c1"># post3 = idata3sel[&quot;posterior&quot;]</span>
+<span class="c1"># post3[&quot;county&quot;] = post3[&quot;Intercept&quot;] + post3[&quot;1|county&quot;]</span>
+<span class="c1"># axs = az.plot_forest([idata2sel, idata3sel], model_names=[&quot;mod2&quot;, &quot;mod3&quot;],</span>
+<span class="c1">#                      var_names=[&quot;county&quot;, &quot;floor&quot;, &quot;1|county_sigma&quot;, &quot;sigma&quot;], combined=True, figsize=(6,3))</span>
+<span class="c1"># ax = axs[0]</span>
+<span class="c1"># rbar = radon[&quot;log_radon&quot;].mean()</span>
+<span class="c1"># ax.axvline(rbar, ls=&quot;--&quot;);</span>
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 <section id="conclusions">
 <h3>Conclusions<a class="headerlink" href="#conclusions" title="Link to this heading">#</a></h3>
@@ -1814,7 +1821,7 @@ varying slope.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#######################################################</span>
-<span class="n">formula4</span> <span class="o">=</span> <span class="s2">&quot;log_radon ~ 1 + floor + (1 + floor | county)&quot;</span>
+<span class="n">formula4</span> <span class="o">=</span> <span class="s2">&quot;log_radon ~ 1 + (1|county) + floor + (floor|county)&quot;</span>
 
 <span class="n">SigmaB0j</span> <span class="o">=</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Exponential&quot;</span><span class="p">,</span> <span class="n">lam</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">SigmaBfj</span> <span class="o">=</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Exponential&quot;</span><span class="p">,</span> <span class="n">lam</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -1838,7 +1845,7 @@ varying slope.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>       Formula: log_radon ~ 1 + floor + (1 + floor | county)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>       Formula: log_radon ~ 1 + (1|county) + floor + (floor|county)
         Family: gaussian
           Link: mu = identity
   Observations: 919
@@ -1870,7 +1877,7 @@ varying slope.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/c5ef45d7664faecf0bc850be910ef9ad081f6a6b609fd40e318463e9c224b6c2.svg" src="../_images/c5ef45d7664faecf0bc850be910ef9ad081f6a6b609fd40e318463e9c224b6c2.svg" />
+<img alt="../_images/7b3f91b0b1020a872a92d65b78b5c2370256bdc132499de6c708a39e8781372c.svg" src="../_images/7b3f91b0b1020a872a92d65b78b5c2370256bdc132499de6c708a39e8781372c.svg" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1886,10 +1893,10 @@ Multiprocess sampling (4 chains in 4 jobs)
 NUTS: [sigma, Intercept, floor, 1|county_sigma, 1|county, floor|county_sigma, floor|county]
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "0730a74595914b2d888441e4888d6115", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "f3d59c1d3c0d4c1a912acfaa4fb7383a", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
 </pre>
-</div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 3_000 tune and 2_000 draw iterations (12_000 + 8_000 draws total) took 50 seconds.
+</div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 3_000 tune and 2_000 draw iterations (12_000 + 8_000 draws total) took 80 seconds.
 There were 1002 divergences after tuning. Increase `target_accept` or reparameterize.
 The rhat statistic is larger than 1.01 for some parameters. This indicates problems during sampling. See https://arxiv.org/abs/1903.08008 for details
 The effective sample size per chain is smaller than 100 for some parameters.  A higher number is needed for reliable rhat and ess computation. See https://arxiv.org/abs/1903.08008 for details
@@ -2173,15 +2180,16 @@ The effective sample size per chain is smaller than 100 for some parameters.  A 
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ministats.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">loglevel</span>
 <span class="k">with</span> <span class="n">loglevel</span><span class="p">(</span><span class="s2">&quot;ERROR&quot;</span><span class="p">,</span> <span class="n">module</span><span class="o">=</span><span class="s2">&quot;pymc&quot;</span><span class="p">):</span>
-    <span class="n">idata1</span> <span class="o">=</span> <span class="n">mod1</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">idata_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;log_likelihood&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span> <span class="n">random_seed</span><span class="o">=</span><span class="p">[</span><span class="mi">42</span><span class="p">,</span><span class="mi">43</span><span class="p">,</span><span class="mi">44</span><span class="p">,</span><span class="mi">45</span><span class="p">],</span> <span class="n">progressbar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">idata2</span> <span class="o">=</span> <span class="n">mod2</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">idata_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;log_likelihood&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span> <span class="n">random_seed</span><span class="o">=</span><span class="p">[</span><span class="mi">42</span><span class="p">,</span><span class="mi">43</span><span class="p">,</span><span class="mi">44</span><span class="p">,</span><span class="mi">45</span><span class="p">],</span> <span class="n">progressbar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">idata3</span> <span class="o">=</span> <span class="n">mod3</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">idata_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;log_likelihood&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span> <span class="n">random_seed</span><span class="o">=</span><span class="p">[</span><span class="mi">42</span><span class="p">,</span><span class="mi">43</span><span class="p">,</span><span class="mi">44</span><span class="p">,</span><span class="mi">45</span><span class="p">],</span> <span class="n">progressbar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">idata4</span> <span class="o">=</span> <span class="n">mod4</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">idata_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;log_likelihood&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span> <span class="n">random_seed</span><span class="o">=</span><span class="p">[</span><span class="mi">42</span><span class="p">,</span><span class="mi">43</span><span class="p">,</span><span class="mi">44</span><span class="p">,</span><span class="mi">45</span><span class="p">],</span> <span class="n">progressbar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">idata1ll</span> <span class="o">=</span> <span class="n">mod1</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">idata_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;log_likelihood&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span> <span class="n">random_seed</span><span class="o">=</span><span class="p">[</span><span class="mi">42</span><span class="p">,</span><span class="mi">43</span><span class="p">,</span><span class="mi">44</span><span class="p">,</span><span class="mi">45</span><span class="p">],</span> <span class="n">progressbar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">idata2ll</span> <span class="o">=</span> <span class="n">mod2</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">idata_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;log_likelihood&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span> <span class="n">random_seed</span><span class="o">=</span><span class="p">[</span><span class="mi">42</span><span class="p">,</span><span class="mi">43</span><span class="p">,</span><span class="mi">44</span><span class="p">,</span><span class="mi">45</span><span class="p">],</span> <span class="n">progressbar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">idata3ll</span> <span class="o">=</span> <span class="n">mod3</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">idata_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;log_likelihood&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span> <span class="n">random_seed</span><span class="o">=</span><span class="p">[</span><span class="mi">42</span><span class="p">,</span><span class="mi">43</span><span class="p">,</span><span class="mi">44</span><span class="p">,</span><span class="mi">45</span><span class="p">],</span> <span class="n">progressbar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">idata4ll</span> <span class="o">=</span> <span class="n">mod4</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">idata_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;log_likelihood&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span> <span class="n">random_seed</span><span class="o">=</span><span class="p">[</span><span class="mi">42</span><span class="p">,</span><span class="mi">43</span><span class="p">,</span><span class="mi">44</span><span class="p">,</span><span class="mi">45</span><span class="p">],</span> <span class="n">progressbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="n">draws</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">tune</span><span class="o">=</span><span class="mi">3000</span><span class="p">,</span> <span class="n">target_accept</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>There were 52 divergences after tuning. Increase `target_accept` or reparameterize.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>There were 1002 divergences after tuning. Increase `target_accept` or reparameterize.
 The effective sample size per chain is smaller than 100 for some parameters.  A higher number is needed for reliable rhat and ess computation. See https://arxiv.org/abs/1903.08008 for details
 </pre></div>
 </div>
@@ -2192,10 +2200,10 @@ The effective sample size per chain is smaller than 100 for some parameters.  A 
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">radon_models</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;mod1 (complete pooling)&quot;</span><span class="p">:</span> <span class="n">idata1</span><span class="p">,</span>
-    <span class="s2">&quot;mod2 (no pooling)&quot;</span><span class="p">:</span> <span class="n">idata2</span><span class="p">,</span>
-    <span class="s2">&quot;mod3 (varying intercepts)&quot;</span><span class="p">:</span> <span class="n">idata3</span><span class="p">,</span>
-    <span class="s2">&quot;mod4 (varying int. and slopes)&quot;</span><span class="p">:</span> <span class="n">idata4</span><span class="p">,</span>
+    <span class="s2">&quot;mod1 (complete pooling)&quot;</span><span class="p">:</span> <span class="n">idata1ll</span><span class="p">,</span>
+    <span class="s2">&quot;mod2 (no pooling)&quot;</span><span class="p">:</span> <span class="n">idata2ll</span><span class="p">,</span>
+    <span class="s2">&quot;mod3 (varying intercepts)&quot;</span><span class="p">:</span> <span class="n">idata3ll</span><span class="p">,</span>
+    <span class="s2">&quot;mod4 (varying int. and slopes)&quot;</span><span class="p">:</span> <span class="n">idata4ll</span><span class="p">,</span>
 <span class="p">}</span>
 <span class="n">compare_results</span> <span class="o">=</span> <span class="n">az</span><span class="o">.</span><span class="n">compare</span><span class="p">(</span><span class="n">radon_models</span><span class="p">)</span>
 <span class="n">compare_results</span>
@@ -2239,7 +2247,7 @@ The effective sample size per chain is smaller than 100 for some parameters.  A 
       <td>-1074.193864</td>
       <td>49.481974</td>
       <td>0.000000</td>
-      <td>4.546259e-01</td>
+      <td>6.425957e-01</td>
       <td>28.159665</td>
       <td>0.000000</td>
       <td>False</td>
@@ -2248,12 +2256,12 @@ The effective sample size per chain is smaller than 100 for some parameters.  A 
     <tr>
       <th>mod4 (varying int. and slopes)</th>
       <td>1</td>
-      <td>-1075.581187</td>
-      <td>65.074120</td>
-      <td>1.387323</td>
-      <td>4.623941e-01</td>
-      <td>28.902786</td>
-      <td>2.299863</td>
+      <td>-1075.716479</td>
+      <td>62.934270</td>
+      <td>1.522615</td>
+      <td>2.812520e-01</td>
+      <td>28.776081</td>
+      <td>1.920789</td>
       <td>True</td>
       <td>log</td>
     </tr>
@@ -2263,7 +2271,7 @@ The effective sample size per chain is smaller than 100 for some parameters.  A 
       <td>-1096.112086</td>
       <td>83.676430</td>
       <td>21.918221</td>
-      <td>1.890453e-17</td>
+      <td>1.705775e-14</td>
       <td>28.273724</td>
       <td>6.038902</td>
       <td>True</td>
@@ -2275,7 +2283,7 @@ The effective sample size per chain is smaller than 100 for some parameters.  A 
       <td>-1126.868605</td>
       <td>3.724237</td>
       <td>52.674741</td>
-      <td>8.297992e-02</td>
+      <td>7.615230e-02</td>
       <td>25.547441</td>
       <td>10.576320</td>
       <td>False</td>
@@ -2298,7 +2306,7 @@ The effective sample size per chain is smaller than 100 for some parameters.  A 
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="../_images/4fb2750bdf2f2eac305e962b817c1ae7d89baa817a84ffc1be9c4e0f55951de1.png"><img alt="../_images/4fb2750bdf2f2eac305e962b817c1ae7d89baa817a84ffc1be9c4e0f55951de1.png" src="../_images/4fb2750bdf2f2eac305e962b817c1ae7d89baa817a84ffc1be9c4e0f55951de1.png" style="width: 924px; height: 419px;" /></a>
+<a class="reference internal image-reference" href="../_images/32b497664543ce3ad72493e939f1d426a5d44d3cf87e37ae727a0fb87c6b6c06.png"><img alt="../_images/32b497664543ce3ad72493e939f1d426a5d44d3cf87e37ae727a0fb87c6b6c06.png" src="../_images/32b497664543ce3ad72493e939f1d426a5d44d3cf87e37ae727a0fb87c6b6c06.png" style="width: 924px; height: 419px;" /></a>
 </div>
 </div>
 <section id="elpd-and-elpd-loo">
@@ -2310,12 +2318,12 @@ The effective sample size per chain is smaller than 100 for some parameters.  A 
 <section id="frequentist-multilevel-models">
 <h3>Frequentist multilevel models<a class="headerlink" href="#frequentist-multilevel-models" title="Link to this heading">#</a></h3>
 <p>We can use <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code> to fit multilevel models too.</p>
-<section id="varying-intercepts-model-using-statsmodels">
-<h4>Varying intercepts model using <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code><a class="headerlink" href="#varying-intercepts-model-using-statsmodels" title="Link to this heading">#</a></h4>
+<section id="random-intercepts-model-using-statsmodels">
+<h4>Random intercepts model using <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code><a class="headerlink" href="#random-intercepts-model-using-statsmodels" title="Link to this heading">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.formula.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">smf</span>
-<span class="n">sm3</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">mixedlm</span><span class="p">(</span><span class="s2">&quot;log_radon ~ 0 + floor&quot;</span><span class="p">,</span>   <span class="c1"># Fixed effects (no intercept and floor as a fixed effect)</span>
+<span class="n">sm3</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">mixedlm</span><span class="p">(</span><span class="s2">&quot;log_radon ~ 1 + floor&quot;</span><span class="p">,</span>   <span class="c1"># Fixed effects (no intercept and floor as a fixed effect)</span>
                   <span class="n">groups</span><span class="o">=</span><span class="s2">&quot;county&quot;</span><span class="p">,</span>           <span class="c1"># Grouping variable for random effects</span>
                   <span class="n">re_formula</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>            <span class="c1"># Random effects = intercept</span>
                   <span class="n">data</span><span class="o">=</span><span class="n">radon</span><span class="p">)</span>
@@ -2353,7 +2361,7 @@ The effective sample size per chain is smaller than 100 for some parameters.  A 
   </thead>
   <tbody>
     <tr>
-      <th>floor[basement]</th>
+      <th>Intercept</th>
       <td>1.462</td>
       <td>0.052</td>
       <td>28.164</td>
@@ -2362,13 +2370,13 @@ The effective sample size per chain is smaller than 100 for some parameters.  A 
       <td>1.563</td>
     </tr>
     <tr>
-      <th>floor[ground]</th>
-      <td>0.769</td>
-      <td>0.074</td>
-      <td>10.339</td>
+      <th>floor[T.ground]</th>
+      <td>-0.693</td>
+      <td>0.071</td>
+      <td>-9.818</td>
       <td>0.000</td>
-      <td>0.623</td>
-      <td>0.914</td>
+      <td>-0.831</td>
+      <td>-0.555</td>
     </tr>
     <tr>
       <th>county Var</th>
@@ -2386,12 +2394,13 @@ The effective sample size per chain is smaller than 100 for some parameters.  A 
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># slope</span>
-<span class="n">res3</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;floor[ground]&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">res3</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;floor[basement]&quot;</span><span class="p">]</span>
+<span class="c1">#######################################################</span>
+<span class="n">res3</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;floor[T.ground]&quot;</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-0.6929937406558043
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-0.6929937406558049
 </pre></div>
 </div>
 </div>
@@ -2412,33 +2421,73 @@ The effective sample size per chain is smaller than 100 for some parameters.  A 
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># standard deviation of the variability among county-specific Intercepts</span>
-<span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">res3</span><span class="o">.</span><span class="n">cov_re</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">res3</span><span class="o">.</span><span class="n">cov_re</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[0.32822242]])
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>county</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>county</th>
+      <td>0.328222</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># intercept deviation for first country in res3</span>
+<span class="n">res3</span><span class="o">.</span><span class="n">random_effects</span><span class="p">[</span><span class="s2">&quot;LAC QUI PARLE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.40649212])
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># intercept for first country in res3 </span>
-<span class="n">res3</span><span class="o">.</span><span class="n">random_effects</span><span class="p">[</span><span class="s2">&quot;AITKIN&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># compare with corresponding Bayesian point estimate</span>
+<span class="n">lqp</span> <span class="o">=</span> <span class="n">idata3</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">county__factor_dim</span><span class="o">=</span><span class="s2">&quot;LAC QUI PARLE&quot;</span><span class="p">)</span>
+<span class="n">post3_lqp_means</span> <span class="o">=</span> <span class="n">lqp</span><span class="p">[</span><span class="s2">&quot;posterior&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">post3_lqp_means</span><span class="p">[</span><span class="s2">&quot;1|county&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([-0.27009756])
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array(0.41299475)
 </pre></div>
 </div>
 </div>
 </div>
 <p>This is very close to the mean of the random effect coefficient for <code class="docutils literal notranslate"><span class="pre">AITKIN</span></code> in the Bayesian model <code class="docutils literal notranslate"><span class="pre">mod3</span></code> which was <span class="math notranslate nohighlight">\(-0.268\)</span>.</p>
 </section>
-<section id="varying-intercepts-and-slopes-model-using-statsmodels">
-<h4>Varying intercepts and slopes model using <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code><a class="headerlink" href="#varying-intercepts-and-slopes-model-using-statsmodels" title="Link to this heading">#</a></h4>
+<section id="random-intercepts-and-slopes-model-using-statsmodels-bonus-topic">
+<h4>Random intercepts and slopes model using <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code> (BONUS TOPIC)<a class="headerlink" href="#random-intercepts-and-slopes-model-using-statsmodels-bonus-topic" title="Link to this heading">#</a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sm4</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">mixedlm</span><span class="p">(</span><span class="s2">&quot;log_radon ~ 1 + floor&quot;</span><span class="p">,</span>   <span class="c1"># Fixed effects (no intercept and floor as a fixed effect)</span>
@@ -2861,10 +2910,10 @@ Multiprocess sampling (4 chains in 4 jobs)
 NUTS: [sigma, Intercept, Time, 1|Pig_sigma, 1|Pig_offset, Time|Pig_sigma, Time|Pig_offset]
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "695c93824af145a6adc3d5ef26087008", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "24174c0262a1478f8377f17319d0099e", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
 </pre>
-</div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 1_000 tune and 1_000 draw iterations (4_000 + 4_000 draws total) took 9 seconds.
+</div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 1_000 tune and 1_000 draw iterations (4_000 + 4_000 draws total) took 15 seconds.
 </pre></div>
 </div>
 </div>
@@ -2908,62 +2957,62 @@ NUTS: [sigma, Intercept, Time, 1|Pig_sigma, 1|Pig_offset, Time|Pig_sigma, Time|P
   <tbody>
     <tr>
       <th>Intercept</th>
-      <td>15.730</td>
-      <td>0.565</td>
-      <td>14.685</td>
-      <td>16.779</td>
+      <td>15.762</td>
+      <td>0.566</td>
+      <td>14.718</td>
+      <td>16.848</td>
       <td>0.020</td>
       <td>0.014</td>
-      <td>767.0</td>
-      <td>1048.0</td>
+      <td>766.0</td>
+      <td>1313.0</td>
       <td>1.00</td>
     </tr>
     <tr>
       <th>Time</th>
-      <td>6.933</td>
+      <td>6.937</td>
       <td>0.083</td>
-      <td>6.782</td>
-      <td>7.095</td>
-      <td>0.004</td>
+      <td>6.776</td>
+      <td>7.088</td>
       <td>0.003</td>
-      <td>498.0</td>
-      <td>921.0</td>
+      <td>0.002</td>
+      <td>647.0</td>
+      <td>1160.0</td>
       <td>1.01</td>
     </tr>
     <tr>
       <th>1|Pig_sigma</th>
-      <td>4.525</td>
-      <td>0.422</td>
-      <td>3.761</td>
-      <td>5.330</td>
-      <td>0.012</td>
+      <td>4.530</td>
+      <td>0.433</td>
+      <td>3.710</td>
+      <td>5.326</td>
+      <td>0.013</td>
       <td>0.009</td>
-      <td>1150.0</td>
-      <td>1871.0</td>
-      <td>1.01</td>
+      <td>1227.0</td>
+      <td>1724.0</td>
+      <td>1.00</td>
     </tr>
     <tr>
       <th>Time|Pig_sigma</th>
       <td>0.662</td>
-      <td>0.062</td>
-      <td>0.546</td>
-      <td>0.774</td>
+      <td>0.061</td>
+      <td>0.553</td>
+      <td>0.777</td>
       <td>0.002</td>
       <td>0.001</td>
-      <td>1164.0</td>
-      <td>1768.0</td>
+      <td>1380.0</td>
+      <td>2147.0</td>
       <td>1.00</td>
     </tr>
     <tr>
       <th>sigma</th>
       <td>2.459</td>
-      <td>0.066</td>
-      <td>2.338</td>
-      <td>2.585</td>
+      <td>0.064</td>
+      <td>2.334</td>
+      <td>2.579</td>
       <td>0.001</td>
       <td>0.001</td>
-      <td>4963.0</td>
-      <td>2983.0</td>
+      <td>4936.0</td>
+      <td>3241.0</td>
       <td>1.00</td>
     </tr>
   </tbody>
@@ -3107,10 +3156,10 @@ Multiprocess sampling (4 chains in 4 jobs)
 NUTS: [sigma, Intercept, 1|school_sigma, 1|school_offset]
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "bedc551f49f547d7a48da93a1ced7628", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "aad33b979e29493bae961cba9917ee9d", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
 </pre>
-</div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 1_000 tune and 1_000 draw iterations (4_000 + 4_000 draws total) took 3 seconds.
+</div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 1_000 tune and 1_000 draw iterations (4_000 + 4_000 draws total) took 5 seconds.
 </pre></div>
 </div>
 </div>
@@ -3154,63 +3203,63 @@ NUTS: [sigma, Intercept, 1|school_sigma, 1|school_offset]
   <tbody>
     <tr>
       <th>1|school[20920]</th>
-      <td>-6.960</td>
-      <td>5.068</td>
-      <td>-16.568</td>
-      <td>2.606</td>
-      <td>0.064</td>
-      <td>0.061</td>
-      <td>6195.0</td>
-      <td>2644.0</td>
-      <td>1.0</td>
+      <td>-6.965</td>
+      <td>5.120</td>
+      <td>-16.627</td>
+      <td>2.660</td>
+      <td>0.070</td>
+      <td>0.058</td>
+      <td>5400.0</td>
+      <td>2966.0</td>
+      <td>1.00</td>
     </tr>
     <tr>
       <th>1|school[22520]</th>
-      <td>-15.607</td>
-      <td>2.175</td>
-      <td>-19.880</td>
-      <td>-11.759</td>
-      <td>0.041</td>
-      <td>0.029</td>
-      <td>2791.0</td>
-      <td>2880.0</td>
-      <td>1.0</td>
+      <td>-15.653</td>
+      <td>2.167</td>
+      <td>-19.509</td>
+      <td>-11.470</td>
+      <td>0.045</td>
+      <td>0.032</td>
+      <td>2357.0</td>
+      <td>2987.0</td>
+      <td>1.00</td>
     </tr>
     <tr>
       <th>1|school[22710]</th>
-      <td>6.301</td>
-      <td>3.707</td>
-      <td>-0.498</td>
-      <td>13.404</td>
-      <td>0.051</td>
-      <td>0.040</td>
-      <td>5193.0</td>
-      <td>2817.0</td>
-      <td>1.0</td>
+      <td>6.299</td>
+      <td>3.564</td>
+      <td>-0.741</td>
+      <td>12.749</td>
+      <td>0.050</td>
+      <td>0.039</td>
+      <td>5005.0</td>
+      <td>2928.0</td>
+      <td>1.00</td>
     </tr>
     <tr>
       <th>1|school[22738]</th>
-      <td>-0.748</td>
-      <td>4.349</td>
-      <td>-9.507</td>
-      <td>6.952</td>
-      <td>0.057</td>
-      <td>0.071</td>
-      <td>5892.0</td>
-      <td>3270.0</td>
-      <td>1.0</td>
+      <td>-0.788</td>
+      <td>4.482</td>
+      <td>-8.960</td>
+      <td>8.062</td>
+      <td>0.062</td>
+      <td>0.075</td>
+      <td>5204.0</td>
+      <td>2847.0</td>
+      <td>1.00</td>
     </tr>
     <tr>
       <th>1|school[22908]</th>
-      <td>-0.898</td>
-      <td>5.882</td>
-      <td>-11.907</td>
-      <td>10.201</td>
-      <td>0.071</td>
-      <td>0.096</td>
-      <td>6900.0</td>
-      <td>2943.0</td>
-      <td>1.0</td>
+      <td>-0.828</td>
+      <td>6.098</td>
+      <td>-12.113</td>
+      <td>10.955</td>
+      <td>0.073</td>
+      <td>0.107</td>
+      <td>6965.0</td>
+      <td>2776.0</td>
+      <td>1.00</td>
     </tr>
     <tr>
       <th>...</th>
@@ -3226,63 +3275,63 @@ NUTS: [sigma, Intercept, 1|school_sigma, 1|school_offset]
     </tr>
     <tr>
       <th>1|school[84707]</th>
-      <td>3.989</td>
-      <td>7.486</td>
-      <td>-10.337</td>
-      <td>17.559</td>
-      <td>0.091</td>
-      <td>0.109</td>
-      <td>6730.0</td>
-      <td>2729.0</td>
-      <td>1.0</td>
+      <td>3.892</td>
+      <td>7.574</td>
+      <td>-9.630</td>
+      <td>18.652</td>
+      <td>0.086</td>
+      <td>0.127</td>
+      <td>7748.0</td>
+      <td>2474.0</td>
+      <td>1.01</td>
     </tr>
     <tr>
       <th>1|school[84772]</th>
-      <td>8.520</td>
-      <td>3.628</td>
-      <td>1.940</td>
-      <td>15.455</td>
-      <td>0.052</td>
-      <td>0.039</td>
-      <td>4923.0</td>
-      <td>2797.0</td>
-      <td>1.0</td>
+      <td>8.589</td>
+      <td>3.535</td>
+      <td>2.174</td>
+      <td>15.243</td>
+      <td>0.050</td>
+      <td>0.037</td>
+      <td>5102.0</td>
+      <td>3058.0</td>
+      <td>1.00</td>
     </tr>
     <tr>
       <th>1|school_sigma</th>
-      <td>8.734</td>
-      <td>0.888</td>
-      <td>7.091</td>
-      <td>10.362</td>
-      <td>0.028</td>
-      <td>0.020</td>
-      <td>1039.0</td>
-      <td>1261.0</td>
-      <td>1.0</td>
+      <td>8.795</td>
+      <td>0.935</td>
+      <td>7.118</td>
+      <td>10.552</td>
+      <td>0.030</td>
+      <td>0.021</td>
+      <td>1043.0</td>
+      <td>1226.0</td>
+      <td>1.00</td>
     </tr>
     <tr>
       <th>Intercept</th>
-      <td>73.821</td>
-      <td>1.126</td>
-      <td>71.626</td>
-      <td>75.847</td>
-      <td>0.035</td>
-      <td>0.024</td>
-      <td>1067.0</td>
-      <td>1631.0</td>
-      <td>1.0</td>
+      <td>73.843</td>
+      <td>1.164</td>
+      <td>71.512</td>
+      <td>75.871</td>
+      <td>0.036</td>
+      <td>0.025</td>
+      <td>1057.0</td>
+      <td>1442.0</td>
+      <td>1.00</td>
     </tr>
     <tr>
       <th>sigma</th>
-      <td>13.983</td>
-      <td>0.262</td>
-      <td>13.490</td>
-      <td>14.458</td>
-      <td>0.004</td>
+      <td>13.977</td>
+      <td>0.256</td>
+      <td>13.477</td>
+      <td>14.437</td>
       <td>0.003</td>
-      <td>5295.0</td>
-      <td>2861.0</td>
-      <td>1.0</td>
+      <td>0.002</td>
+      <td>6406.0</td>
+      <td>2990.0</td>
+      <td>1.00</td>
     </tr>
   </tbody>
 </table>
@@ -3330,10 +3379,10 @@ Multiprocess sampling (4 chains in 4 jobs)
 NUTS: [sigma, Intercept, gender, 1|school_sigma, 1|school_offset, gender|school_sigma, gender|school_offset]
 </pre></div>
 </div>
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "3a00c079e3cb4e8ea29db3cfc2bc2187", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "94859e057728445db9a98eedea732545", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
 </pre>
-</div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 1_000 tune and 1_000 draw iterations (4_000 + 4_000 draws total) took 6 seconds.
+</div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 1_000 tune and 1_000 draw iterations (4_000 + 4_000 draws total) took 12 seconds.
 </pre></div>
 </div>
 </div>
@@ -3542,6 +3591,7 @@ NUTS: [sigma, Intercept, gender, 1|school_sigma, 1|school_offset, gender|school_
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#radon-dataset">Radon dataset</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-the-data">Loading the data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#descriptive-statistics">Descriptive statistics</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1-complete-pooling-model">Example 1: complete pooling model</a><ul class="nav section-nav flex-column">
@@ -3574,8 +3624,8 @@ NUTS: [sigma, Intercept, gender, 1|school_sigma, 1|school_offset, gender|school_
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#frequentist-multilevel-models">Frequentist multilevel models</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#varying-intercepts-model-using-statsmodels">Varying intercepts model using <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#varying-intercepts-and-slopes-model-using-statsmodels">Varying intercepts and slopes model using <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#random-intercepts-model-using-statsmodels">Random intercepts model using <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#random-intercepts-and-slopes-model-using-statsmodels-bonus-topic">Random intercepts and slopes model using <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code> (BONUS TOPIC)</a></li>
 </ul>
 </li>
 </ul>
