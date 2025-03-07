@@ -1,48 +1,23 @@
 
-## Blog posts
+## Publishing blog posts to WordPress
 
-List of blog posts about the No Bullshit Guide to Statistics.
 
-1. Outline of the stats curriculum research
-   https://minireference.com/blog/fixing-the-introductory-statistics-curriculum/
+### Example usage
 
-2. Book proposal  
-   https://minireference.com/blog/no-bullshit-guide-to-statistics-progress-update/
+1. Convert notebook to HTML using
+   ```
+   jupyter-nbconvert --to HTML --template basic --embed-images  blogposts/<postname>.ipynb
+   ```
+   This command will produce the HTML file `blogposts/<postname>.html`
+2. Copy-paste the HTML from `blogposts/<postname>.html` into a new post (source).
+3. Remove the first few lines (H1 heading) to avoid double title
+4. Publish the post
 
-3. Survey results  
-   https://minireference.com/blog/what-stats-do-people-want-to-learn/
 
-4. Using Python to teach stats Part 1: Python basics  
-   blog post: https://minireference.com/blog/python-for-stats/  
-   notebook: [python_for_stats.ipynb](./python_for_stats.ipynb)
+### WordPress setup
 
-5. Using Python to teach stats Part 2: probability models
-   blog post: COMING SOON
-   notebook: [probability_models.ipynb](./probability_models.ipynb)
-
-6. Using Python to teach stats Part 3: sampling distributions
-   blog post: COMING SOON
-   notebook: [sampling_distributions.ipynb](./sampling_distributions.ipynb)
-
-7. Using Python to teach stats Part 4: bootstrap estimation
-   blog post: COMING SOON
-   notebook: [bootstrap.ipynb](./bootstrap.ipynb)
-
-8. Using Python to teach stats Part 5: hypothesis testing using simulation
-   blog post: COMING SOON
-   notebook: [simulation.ipynb](./simulation.ipynb)
-
-9. Using Python to teach stats Part 6: the permutations test for comparing two groups
-   blog post: COMING SOON
-   notebook: [permutation_test.ipynb](./permutation_test.ipynb)
-
-10. Using Python to teach stats Part 7: stats procedures as Python code
-   blog post: COMING SOON
-   notebook: [stats_procedures.ipynb](./stats_procedures.ipynb)
-
-11. Using Python to teach stats Part 8: libraries for data, prob, and stats  
-   blog post: COMING SOON
-   notebook: [python_stats_libraries.ipynb](./python_stats_libraries.ipynb)
-
+1. I copied over default styles to my WordPress template.
+2. I modified some styles settings for code blocks (to avoid margins).
+3. I added styles to make figures slightly larger.
 
 
