@@ -1,0 +1,2074 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Section 2.7 — Random variable generation &#8212; No BS Stats Notebooks</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'docs/notebooks/27_random_var_generation';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="No BS Stats Notebooks - Home"/>
+    <script>document.write(`<img src="../../_static/logo.png" class="logo__image only-dark" alt="No BS Stats Notebooks - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../intro.html">
+                    No Bullshit Stats Notebooks
+                </a>
+            </li>
+        </ul>
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../stats_overview/README.html">Statistics overview</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../stats_overview/00_Introduction.html">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../stats_overview/01_DATA.html">Chapter 1: DATA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../stats_overview/02_PROB.html">Chapter 2: Probability theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../stats_overview/03_STATS.html">Chapter 3: Inferential statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../stats_overview/04_LINEAR_MODELS.html">Chapter 4: Linear models</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../notebooks/10_DATA.html">Chapter 1 — Data</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/11_intro_to_data.html">Section 1.1 — Introduction to data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/12_data_in_practice.html">Section 1.2 — Data in practice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/13_descriptive_statistics.html">Section 1.3 — Descriptive statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../exercises/exercises_13_descr_stats.html">Descriptive statistics exercises</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../notebooks/20_PROB.html">Chapter 2 — Probability theory</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/21_discrete_random_vars.html">Section 2.1 — Discrete random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../exercises/exercises_21_discrete_RVs.html">Exercises for Section 2.1 Discrete random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/22_multiple_random_vars.html">Section 2.2 — Multiple random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/23_inventory_discrete_dists.html">Section 2.3 — Inventory of discrete distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/24_calculus_prerequisites.html">Section 2.4 — Calculus prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/25_continuous_random_vars.html">Section 2.5 — Continuous random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/26_inventory_continuous_dists.html">Section 2.6 — Inventory of continuous distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/27_random_var_generation.html">Section 2.7 — Random variable generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/28_random_samples.html">Section 2.8 — Probability models for random samples</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../notebooks/30_STATS.html">Chapter 3 — Classical statistics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/31_estimators.html">Section 3.1 — Estimators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../exercises/exercises_31_estimtors.html">Exercises for Section 3.1 Estimates and estimators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/32_confidence_intervals.html">Section 3.2 — Confidence intervals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../exercises/exercises_32_confidence_intervals.html">Exercises for Section 3.2 Confidence intervals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/33_intro_to_NHST.html">Section 3.3 — Introduction to hypothesis testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/34_analytical_approx.html">Section 3.4 — Hypothesis testing using analytical approximations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/35_two_sample_tests.html">Section 3.5 — Two-sample hypothesis tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/36_design.html">Section 3.6 — Statistical design and error analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/37_inventory_stats_tests.html">Section 3.7 — Inventory of statistical tests</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../examples/README.html">Statistical analysis examples</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/statistical_design.html">Statistical design examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/one_sample_z-test.html">One-sample z-test for the mean</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/one_sample_t-test.html">One-sample t-test for the mean</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/two_sample_t-test.html">Welch’s two-sample <span class="math notranslate nohighlight">\(t\)</span>-test</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/ANOVA.html">Analysis of variance (ANOVA)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/two_sample_equivalence_test.html">Two-sample equivalence test</a></li>
+
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../notebooks/40_LINEAR_MODELS.html">Chapter 4 — Linear models</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/41_simple_linear_regression.html">Section 4.1 — Simple linear regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/42_multiple_linear_regression.html">Section 4.2 — Multiple linear regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/43_interpreting_linear_models.html">Section 4.3 — Interpreting linear models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/44_regression_with_categorical_predictors.html">Section 4.4 — Regression with categorical predictors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/45_causal_inference.html">Section 4.5 — Model selection for causal inference</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/46_generalized_linear_models.html">Section 4.6 — Generalized linear models</a></li>
+
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../notebooks/50_BAYESIAN_STATS.html">Chapter 5 — Bayesian statistics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/51_intro_to_Bayesian_stats.html">Section 5.1 — Introduction to Bayesian statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/52_Bayesian_inference_computations.html">Section 5.2 — Bayesian inference computations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/53_Bayesian_linear_models.html">Section 5.3 — Bayesian linear models</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/54_difference_between_means.html">Section 5.4 — Bayesian difference between means</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/55_hierarchical_models.html">Section 5.5 — Hierarchical models</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/appendix.html">Appendix</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/python_tutorial.html">Appendix C — Python tutorial</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/pandas_tutorial.html">Appendix D — Pandas tutorial</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/seaborn_tutorial.html">Appendix E — Seaborn tutorial</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/calculus_tutorial.html">Calculus tutorial</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../blogposts/index.html">Blog posts</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../blogposts/python_for_stats.html">Using Python for learning statistics Part 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../blogposts/bootstrap.html">Bootstrap estimation</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/minireference/noBSstats/main?urlpath=lab/tree/./docs/notebooks/27_random_var_generation.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Binder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Binder logo" src="../../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/minireference/noBSstats" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/minireference/noBSstats/issues/new?title=Issue%20on%20page%20%2Fdocs/notebooks/27_random_var_generation.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/docs/notebooks/27_random_var_generation.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Section 2.7 — Random variable generation</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebook-setup">Notebook setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-simulate">Why simulate?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#random-variable-generation-using-a-computer">Random variable generation using a computer</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#discrete-random-variable-generation">Discrete random variable generation</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1-generating-bernoulli-observations">Example 1: generating Bernoulli observations</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#continuous-random-variable-generation">Continuous random variable generation</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2-generating-observations-from-a-shifted-uniform-distribution">Example 2: generating observations from a shifted uniform distribution</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example-3-generating-observations-from-an-exponential-distribution">Example 3: generating observations from an exponential distribution</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#empirical-distributions">Empirical distributions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-the-empirical-cumulative-distribution">Visualizing the empirical cumulative distribution</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#measuring-data-model-fit">Measuring data-model fit</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visual-comparison-between-data-and-model-distributions">Visual comparison between data and model distributions</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#shifted-uniform-distribution">Shifted uniform distribution</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#exponential-distribution">Exponential distribution</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-q-q-plots-to-compare-quantiles">Using Q-Q plots to compare quantiles</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#examples-of-good-fit">Examples of good fit</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#normal-data-vs-the-true-normal-model">Normal data vs. the true normal model</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#normal-data-vs-the-standard-normal">Normal data vs. the standard normal</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#examples-of-bad-fit">Examples of bad fit</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#shifted-uniform-data-vs-standard-normal">Shifted uniform data vs. standard normal</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#exponential-data-vs-standard-normal">Exponential data vs. standard normal</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#shifted-uniform-sample-vs-true-model">Shifted uniform sample vs. true model</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#exponential-sample-vs-true-exponential-model">Exponential sample vs. true exponential model</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#generating-a-q-q-plot-manually-bonus-material">Generating a Q-Q plot manually (bonus material)</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-moments">Comparing moments</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#moments-of-uniform-distribution">Moments of uniform distribution</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#moments-of-exponential-distribution">Moments of exponential distribution</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example-of-bad-fit-between-higher-moments">Example of bad fit between higher moments</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kolmogorovsmirnov-test">Kolmogorov–Smirnov test</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example-of-big-distance">Example of big distance</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ks-distances-after-standardization-optional">KS distances after standardization (optional)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#calculating-the-ks-distance-manually-optional">Calculating the KS distance manually (optional)</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#test-1">Test 1</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#test-2">Test 2</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bootstrap-sample-generation">Bootstrap sample generation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clarification-empirical-distribution-of-sample-is-not-the-same-as-f-n">Clarification: empirical distribution of <code class="docutils literal notranslate"><span class="pre">sample</span></code> is not the same as <span class="math notranslate nohighlight">\(f_N\)</span></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="section-2-7-random-variable-generation">
+<h1>Section 2.7 — Random variable generation<a class="headerlink" href="#section-2-7-random-variable-generation" title="Link to this heading">#</a></h1>
+<p>This notebook contains the code examples from <a class="reference external" href="https://minireference.com/static/excerpts/noBSstats/noBSstats_ch02_PROB.pdf#page=200">Section 2.7 Random variable generation</a> of the <strong>No Bullshit Guide to Statistics</strong>.</p>
+<section id="notebook-setup">
+<h2>Notebook setup<a class="headerlink" href="#notebook-setup" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># load Python modules</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Figures setup</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set_theme</span><span class="p">(</span>
+    <span class="n">context</span><span class="o">=</span><span class="s2">&quot;paper&quot;</span><span class="p">,</span>
+    <span class="n">style</span><span class="o">=</span><span class="s2">&quot;whitegrid&quot;</span><span class="p">,</span>
+    <span class="n">palette</span><span class="o">=</span><span class="s2">&quot;colorblind&quot;</span><span class="p">,</span>
+    <span class="n">rc</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">4</span><span class="p">)},</span>
+<span class="p">)</span>
+
+<span class="o">%</span><span class="k">config</span> InlineBackend.figure_format = &#39;retina&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># set random seed for repeatability</span>
+<span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="why-simulate">
+<h2>Why simulate?<a class="headerlink" href="#why-simulate" title="Link to this heading">#</a></h2>
+<p>Running simulations of random variables is super useful:</p>
+<ul class="simple">
+<li><p>fake data generation</p></li>
+<li><p>probability calculations</p></li>
+<li><p>statistical procedures</p></li>
+</ul>
+<p>(see book)</p>
+<p>General procedure to simulate <span class="math notranslate nohighlight">\(\mathbb{E}_X(g)\)</span>:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">30</span>
+
+<span class="n">gvalues</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">xi</span> <span class="o">=</span> <span class="n">gen_x</span><span class="p">()</span>
+    <span class="n">gi</span> <span class="o">=</span> <span class="n">g</span><span class="p">(</span><span class="n">xi</span><span class="p">)</span>
+    <span class="n">gvalues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gi</span><span class="p">)</span>
+
+<span class="n">expg</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">gvalues</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span>
+</pre></div>
+</div>
+<p>We’ll see different variations of this procedure (for loop that generates many random observations and does something with them).</p>
+</section>
+<section id="random-variable-generation-using-a-computer">
+<h2>Random variable generation using a computer<a class="headerlink" href="#random-variable-generation-using-a-computer" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+
+<span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.36152277491407514
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># # ALT.</span>
+<span class="c1"># import numpy as np</span>
+<span class="c1"># np.random.rand()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="discrete-random-variable-generation">
+<h3>Discrete random variable generation<a class="headerlink" href="#discrete-random-variable-generation" title="Link to this heading">#</a></h3>
+<p>Splitting up the uniform random variable …</p>
+<section id="example-1-generating-bernoulli-observations">
+<h4>Example 1: generating Bernoulli observations<a class="headerlink" href="#example-1-generating-bernoulli-observations" title="Link to this heading">#</a></h4>
+<p>Consider the Bernoulli random variable <span class="math notranslate nohighlight">\(B \sim \textrm{Bernoulli}(p)\)</span>,
+which corresponds to a coin toss with probability of heads (outcome 1) equal to <span class="math notranslate nohighlight">\(p\)</span>,
+and probability of tails (outcome 0) <span class="math notranslate nohighlight">\((1-p)\)</span>.</p>
+<p>The function <code class="docutils literal notranslate"><span class="pre">gen_b</span></code> defined below is a generator of observations from the random variable <span class="math notranslate nohighlight">\(B\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">gen_b</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">u</span> <span class="o">&lt;</span> <span class="n">p</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>To generate a random observation from <span class="math notranslate nohighlight">\(B \sim \textrm{Bernoulli}(p=0.3)\)</span>,
+we simply need to call the function <code class="docutils literal notranslate"><span class="pre">gen_b</span></code> with the keyword argument <code class="docutils literal notranslate"><span class="pre">p=0.3</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gen_b</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s now generates <code class="docutils literal notranslate"><span class="pre">n=1000</span></code> observations from <span class="math notranslate nohighlight">\(B \sim \textrm{Bernoulli}(p=0.3)\)</span>,
+and compute the proportion of the outcome <span class="math notranslate nohighlight">\(1\)</span> (heads) in the list.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">bsample</span> <span class="o">=</span> <span class="p">[</span><span class="n">gen_b</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">n</span><span class="p">)]</span>
+<span class="n">bsample</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.316
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># # ALT. Use regular for-loop, instead of list comprehension syntax</span>
+<span class="c1"># n = 1000</span>
+<span class="c1"># bsample = []</span>
+<span class="c1"># for i in range(0,n):</span>
+<span class="c1">#     b = gen_b(p=0.3)</span>
+<span class="c1">#     bsample.append(b)</span>
+<span class="c1"># bsample.count(1) / n</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="continuous-random-variable-generation">
+<h3>Continuous random variable generation<a class="headerlink" href="#continuous-random-variable-generation" title="Link to this heading">#</a></h3>
+<p>See the book or explanations of the the invers-CDF trick.</p>
+<section id="example-2-generating-observations-from-a-shifted-uniform-distribution">
+<h4>Example 2: generating observations from a shifted uniform distribution<a class="headerlink" href="#example-2-generating-observations-from-a-shifted-uniform-distribution" title="Link to this heading">#</a></h4>
+<p><span class="math notranslate nohighlight">\(V \sim \mathcal{U}(\alpha=100,\beta=120)\)</span></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">gen_v</span><span class="p">():</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">+</span> <span class="mi">20</span><span class="o">*</span><span class="n">u</span>
+    <span class="k">return</span> <span class="n">v</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gen_v</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>107.26199234069637
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">vsample</span> <span class="o">=</span> <span class="p">[</span><span class="n">gen_v</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">n</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vsample</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>  <span class="c1"># first three observations</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[103.6386436977451, 117.34140363667541, 113.35634072970831]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">min</span><span class="p">(</span><span class="n">vsample</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">vsample</span><span class="p">)</span>  <span class="c1"># Range</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(100.32987267319582, 119.88187770589093)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># plot a histogram of data in `vsample`</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">vsample</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="s2">&quot;density&quot;</span><span class="p">)</span>
+
+<span class="c1"># plot the pdf of the model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">uniform</span>
+<span class="n">rvV</span> <span class="o">=</span> <span class="n">uniform</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">90</span><span class="p">,</span><span class="mi">130</span><span class="p">,</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">xs</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">rvV</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">xs</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: ylabel=&#39;Density&#39;&gt;
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../../_images/1b69632e8dc3445ffb2f1c69f30f0c7667e03074cd66946d932463277fb66977.png"><img alt="../../_images/1b69632e8dc3445ffb2f1c69f30f0c7667e03074cd66946d932463277fb66977.png" src="../../_images/1b69632e8dc3445ffb2f1c69f30f0c7667e03074cd66946d932463277fb66977.png" style="width: 619px; height: 351px;" />
+</a>
+</div>
+</div>
+</section>
+<section id="example-3-generating-observations-from-an-exponential-distribution">
+<h4>Example 3: generating observations from an exponential distribution<a class="headerlink" href="#example-3-generating-observations-from-an-exponential-distribution" title="Link to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">gen_e</span><span class="p">(</span><span class="n">lam</span><span class="p">):</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span>
+    <span class="n">e</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">u</span><span class="p">)</span> <span class="o">/</span> <span class="n">lam</span>
+    <span class="k">return</span> <span class="n">e</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Where <code class="docutils literal notranslate"><span class="pre">lam</span></code> is the <span class="math notranslate nohighlight">\(\lambda\)</span> (lambda) parameter chosen for exponential model family.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+
+<span class="n">n</span> <span class="o">=</span> <span class="mi">1000</span>  <span class="c1"># number of observations to generate</span>
+<span class="n">esample</span> <span class="o">=</span> <span class="p">[</span><span class="n">gen_e</span><span class="p">(</span><span class="n">lam</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">n</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">esample</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>  <span class="c1"># first three observations</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[0.5024273707608603, 10.625297726488984, 2.731193337322976]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># plot a histogram of data in `esample`</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">esample</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="s2">&quot;density&quot;</span><span class="p">)</span>
+
+<span class="c1"># plot the pdf of the model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">expon</span>
+<span class="n">lam</span> <span class="o">=</span> <span class="mf">0.2</span>
+<span class="n">rvE</span> <span class="o">=</span> <span class="n">expon</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="o">/</span><span class="n">lam</span><span class="p">)</span>
+<span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">xs</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">rvE</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">xs</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: ylabel=&#39;Density&#39;&gt;
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../../_images/88865587c77f878f22f1b642b95b3dc426beaf5a4545b2e608fce9130be81e43.png"><img alt="../../_images/88865587c77f878f22f1b642b95b3dc426beaf5a4545b2e608fce9130be81e43.png" src="../../_images/88865587c77f878f22f1b642b95b3dc426beaf5a4545b2e608fce9130be81e43.png" style="width: 627px; height: 351px;" />
+</a>
+</div>
+</div>
+<p>We’ll develop various way to analyze this “goodness of fit” between the sample <code class="docutils literal notranslate"><span class="pre">esample</span></code> data we generated
+and the theoretical model <span class="math notranslate nohighlight">\(f_E\)</span> in the remainder of this notebook.</p>
+</section>
+</section>
+</section>
+<section id="empirical-distributions">
+<h2>Empirical distributions<a class="headerlink" href="#empirical-distributions" title="Link to this heading">#</a></h2>
+<p>Let’s write a function that compute the value empirical cumulative distribution (eCDF)
+of the sample <code class="docutils literal notranslate"><span class="pre">data</span></code>. The function takes two inputs: <code class="docutils literal notranslate"><span class="pre">data</span></code> the sample of observations,
+and <code class="docutils literal notranslate"><span class="pre">b</span></code>, the value where we want to evaluate the function.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">ecdf</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="n">sdata</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">sdata</span> <span class="o">&lt;=</span> <span class="n">b</span><span class="p">)</span>    <span class="c1"># num. of obs. &lt;= b</span>
+    <span class="k">return</span> <span class="n">count</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>   <span class="c1"># proportion of total</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Note the sorting step is not strictly necessary,
+but it guarantees the <code class="docutils literal notranslate"><span class="pre">sdata</span></code> is a NymPy <code class="docutils literal notranslate"><span class="pre">array</span></code> object which allows the comparison to work.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ecdf</span><span class="p">(</span><span class="n">vsample</span><span class="p">,</span> <span class="mi">110</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.48
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ecdf</span><span class="p">(</span><span class="n">esample</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.606
+</pre></div>
+</div>
+</div>
+</div>
+<section id="visualizing-the-empirical-cumulative-distribution">
+<h3>Visualizing the empirical cumulative distribution<a class="headerlink" href="#visualizing-the-empirical-cumulative-distribution" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">ecdfplot</span><span class="p">(</span><span class="n">vsample</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;ecdf(vsample)&quot;</span><span class="p">)</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">uniform</span>
+<span class="n">rvV</span> <span class="o">=</span> <span class="n">uniform</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">bs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">80</span><span class="p">,</span><span class="mi">140</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">bs</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">rvV</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">bs</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;$F_V$&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: ylabel=&#39;Proportion&#39;&gt;
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../../_images/0c05e3899cbc1279621218fc0e42f1f897cb6cdcc34b8c1dc6a2fcc21360ad57.png"><img alt="../../_images/0c05e3899cbc1279621218fc0e42f1f897cb6cdcc34b8c1dc6a2fcc21360ad57.png" src="../../_images/0c05e3899cbc1279621218fc0e42f1f897cb6cdcc34b8c1dc6a2fcc21360ad57.png" style="width: 611px; height: 356px;" />
+</a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># # ALT. manually plot ecdf using lineplot</span>
+<span class="c1"># bs = np.linspace(80,140,1000)</span>
+<span class="c1"># empFvs = [ecdf(vsample,b) for b in bs]</span>
+<span class="c1"># sns.lineplot(x=bs, y=empFvs, drawstyle=&#39;steps-post&#39;)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">ecdfplot</span><span class="p">(</span><span class="n">esample</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;eCDF(esample)&quot;</span><span class="p">)</span>
+
+<span class="n">bs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">bs</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">rvE</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">bs</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;$F_E$&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: ylabel=&#39;Proportion&#39;&gt;
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../../_images/1a8cf353eb72964a485a40b817a8299ba81d37cf91ee6916dc4a742873eedf46.png"><img alt="../../_images/1a8cf353eb72964a485a40b817a8299ba81d37cf91ee6916dc4a742873eedf46.png" src="../../_images/1a8cf353eb72964a485a40b817a8299ba81d37cf91ee6916dc4a742873eedf46.png" style="width: 611px; height: 356px;" />
+</a>
+</div>
+</div>
+</section>
+</section>
+<section id="measuring-data-model-fit">
+<h2>Measuring data-model fit<a class="headerlink" href="#measuring-data-model-fit" title="Link to this heading">#</a></h2>
+<p>Want to measure if <code class="docutils literal notranslate"><span class="pre">vsample</span></code> comes from <span class="math notranslate nohighlight">\(\mathcal{U}(100,120)\)</span>.
+Here are the first five values we simulated:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vsample</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[103.6386436977451, 117.34140363667541, 113.35634072970831]
+</pre></div>
+</div>
+</div>
+</div>
+<p>We also want to check if the data we generated <code class="docutils literal notranslate"><span class="pre">esample</span></code> comes from <span class="math notranslate nohighlight">\(\textrm{Expon}(\lambda=0.2)\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">esample</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[0.5024273707608603, 10.625297726488984, 2.731193337322976]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s also generate an additional sample <code class="docutils literal notranslate"><span class="pre">nsample</span></code>
+from the normal distribution <span class="math notranslate nohighlight">\(\mathcal{N}(1000,100)\)</span>
+so we’ll be able to make a variety of comparisons.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">norm</span>
+<span class="n">rvN</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">nsample</span> <span class="o">=</span> <span class="n">rvN</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">nsample</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 968.82163265, 1072.90039236, 1021.78207881])
+</pre></div>
+</div>
+</div>
+</div>
+<section id="visual-comparison-between-data-and-model-distributions">
+<h3>Visual comparison between data and model distributions<a class="headerlink" href="#visual-comparison-between-data-and-model-distributions" title="Link to this heading">#</a></h3>
+<section id="shifted-uniform-distribution">
+<h4>Shifted uniform distribution<a class="headerlink" href="#shifted-uniform-distribution" title="Link to this heading">#</a></h4>
+<p>Here is the code for comparison of <code class="docutils literal notranslate"><span class="pre">vsample</span></code> and the theoretical model <code class="docutils literal notranslate"><span class="pre">rvV</span></code> <span class="math notranslate nohighlight">\(= \mathcal{U}(100,120)\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">uniform</span>
+<span class="n">rvV</span> <span class="o">=</span> <span class="n">uniform</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">20</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+<span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">90</span><span class="p">,</span><span class="mi">130</span><span class="p">,</span><span class="mi">1000</span><span class="p">)</span>
+
+<span class="c1"># plot histogram of `vsample`</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">vsample</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="s2">&quot;density&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;vsample&quot;</span><span class="p">)</span>
+
+<span class="c1"># plot the pdf of rvV </span>
+<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">xs</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">rvV</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">xs</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;$f_V$&quot;</span><span class="p">)</span>
+<span class="n">lines</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_legend_handles_labels</span><span class="p">()</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]),</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">labels</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]))</span>
+
+<span class="c1"># plot a empirical cumulative distribution</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">ecdfplot</span><span class="p">(</span><span class="n">vsample</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;eCDF(vsample)&quot;</span><span class="p">)</span>
+
+<span class="c1"># plot the CDF of rvV</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">xs</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">rvV</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">xs</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;$F_V$&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">TypeError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">31</span><span class="p">],</span> <span class="n">line</span> <span class="mi">10</span>
+<span class="g g-Whitespace">      </span><span class="mi">8</span> <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">xs</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">rvV</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">xs</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;$f_V$&quot;</span><span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">9</span> <span class="n">lines</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_legend_handles_labels</span><span class="p">()</span>
+<span class="ne">---&gt; </span><span class="mi">10</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]),</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">labels</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]))</span>
+<span class="g g-Whitespace">     </span><span class="mi">12</span> <span class="c1"># plot a empirical cumulative distribution</span>
+<span class="g g-Whitespace">     </span><span class="mi">13</span> <span class="n">sns</span><span class="o">.</span><span class="n">ecdfplot</span><span class="p">(</span><span class="n">vsample</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;eCDF(vsample)&quot;</span><span class="p">)</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.10.17/x64/lib/python3.10/site-packages/matplotlib/axes/_axes.py:337,</span> in <span class="ni">Axes.legend</span><span class="nt">(self, *args, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">220</span><span class="w"> </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">221</span><span class="sd"> Place a legend on the Axes.</span>
+<span class="g g-Whitespace">    </span><span class="mi">222</span><span class="sd"> </span>
+<span class="sd">   (...)</span>
+<span class="g g-Whitespace">    </span><span class="mi">334</span><span class="sd"> .. plot:: gallery/text_labels_and_annotations/legend.py</span>
+<span class="g g-Whitespace">    </span><span class="mi">335</span><span class="sd"> &quot;&quot;&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">336</span> <span class="n">handles</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">kwargs</span> <span class="o">=</span> <span class="n">mlegend</span><span class="o">.</span><span class="n">_parse_legend_args</span><span class="p">([</span><span class="bp">self</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">337</span> <span class="bp">self</span><span class="o">.</span><span class="n">legend_</span> <span class="o">=</span> <span class="n">mlegend</span><span class="o">.</span><span class="n">Legend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handles</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">338</span> <span class="bp">self</span><span class="o">.</span><span class="n">legend_</span><span class="o">.</span><span class="n">_remove_method</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_remove_legend</span>
+<span class="g g-Whitespace">    </span><span class="mi">339</span> <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">legend_</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.10.17/x64/lib/python3.10/site-packages/matplotlib/legend.py:462,</span> in <span class="ni">Legend.__init__</span><span class="nt">(self, parent, handles, labels, loc, numpoints, markerscale, markerfirst, reverse, scatterpoints, scatteryoffsets, prop, fontsize, labelcolor, borderpad, labelspacing, handlelength, handleheight, handletextpad, borderaxespad, columnspacing, ncols, mode, fancybox, shadow, title, title_fontsize, framealpha, edgecolor, facecolor, bbox_to_anchor, bbox_transform, frameon, handler_map, title_fontproperties, alignment, ncol, draggable)</span>
+<span class="g g-Whitespace">    </span><span class="mi">459</span>     <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="nb">reversed</span><span class="p">(</span><span class="n">labels</span><span class="p">)]</span>
+<span class="g g-Whitespace">    </span><span class="mi">460</span>     <span class="n">handles</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="nb">reversed</span><span class="p">(</span><span class="n">handles</span><span class="p">)]</span>
+<span class="ne">--&gt; </span><span class="mi">462</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">handles</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">463</span>     <span class="n">ncols</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="g g-Whitespace">    </span><span class="mi">464</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ncols</span> <span class="o">=</span> <span class="n">ncols</span> <span class="k">if</span> <span class="n">ncols</span> <span class="o">!=</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">ncol</span>
+
+<span class="ne">TypeError</span>: object of type &#39;list_reverseiterator&#39; has no len()
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../../_images/92cf1a909e501b211ff55a55b67a930b264e7bf9b42a6e7acb9a35ef549c211e.png"><img alt="../../_images/92cf1a909e501b211ff55a55b67a930b264e7bf9b42a6e7acb9a35ef549c211e.png" src="../../_images/92cf1a909e501b211ff55a55b67a930b264e7bf9b42a6e7acb9a35ef549c211e.png" style="width: 706px; height: 279px;" />
+</a>
+</div>
+</div>
+</section>
+<section id="exponential-distribution">
+<h4>Exponential distribution<a class="headerlink" href="#exponential-distribution" title="Link to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">expon</span>
+<span class="n">lam</span> <span class="o">=</span> <span class="mf">0.2</span>
+<span class="n">rvE</span> <span class="o">=</span> <span class="n">expon</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="o">/</span><span class="n">lam</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here is the code for visual comparison of <code class="docutils literal notranslate"><span class="pre">esample</span></code> and the theoretical model <code class="docutils literal notranslate"><span class="pre">rvE</span></code> <span class="math notranslate nohighlight">\(=\mathrm{Expon}(\lambda=0.2)\)</span>, based on the probability density and cumulative probability distributions.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+<span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">1000</span><span class="p">)</span>
+
+<span class="c1"># plot histogram of `esample`</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">esample</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="s2">&quot;density&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;vsample&quot;</span><span class="p">)</span>
+
+<span class="c1"># plot the pdf of rvE</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">xs</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">rvE</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">xs</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;$f_E$&quot;</span><span class="p">)</span>
+<span class="n">lines</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_legend_handles_labels</span><span class="p">()</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]),</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">labels</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]))</span>
+
+<span class="c1"># plot a empirical cumulative distribution</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">ecdfplot</span><span class="p">(</span><span class="n">esample</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;eCDF(esample)&quot;</span><span class="p">)</span>
+
+<span class="c1"># plot the CDF of rvE</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">xs</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">rvE</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">xs</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;$F_E$&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(-0.05, 1.05)
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../../_images/66c9144acaf9a00e1f5f3d34eea57500fd8f856e2d9bbdb891ba75e2281fe4b3.png"><img alt="../../_images/66c9144acaf9a00e1f5f3d34eea57500fd8f856e2d9bbdb891ba75e2281fe4b3.png" src="../../_images/66c9144acaf9a00e1f5f3d34eea57500fd8f856e2d9bbdb891ba75e2281fe4b3.png" style="width: 504px; height: 194px;" />
+</a>
+</div>
+</div>
+</section>
+</section>
+<section id="using-q-q-plots-to-compare-quantiles">
+<h3>Using Q-Q plots to compare quantiles<a class="headerlink" href="#using-q-q-plots-to-compare-quantiles" title="Link to this heading">#</a></h3>
+<p>The quantile-quantile plot <code class="docutils literal notranslate"><span class="pre">qqplot(data,</span> <span class="pre">dist)</span></code>
+is used to compare the positions of the quantiles of the dataset <code class="docutils literal notranslate"><span class="pre">data</span></code>
+against the quantiles of the theoretical distribution <code class="docutils literal notranslate"><span class="pre">dist</span></code>,
+which is an instance of one of the probability models in <code class="docutils literal notranslate"><span class="pre">scipy.stats</span></code>.</p>
+<p>The easiest way to generate a Q-Q plot is to use
+the function <code class="docutils literal notranslate"><span class="pre">qqplot</span></code> defined in the the <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code> package.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.graphics.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">qqplot</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="examples-of-good-fit">
+<h4>Examples of good fit<a class="headerlink" href="#examples-of-good-fit" title="Link to this heading">#</a></h4>
+<section id="normal-data-vs-the-true-normal-model">
+<h5>Normal data vs. the true normal model<a class="headerlink" href="#normal-data-vs-the-true-normal-model" title="Link to this heading">#</a></h5>
+<p>Let’s look at the quantiles of the data in <code class="docutils literal notranslate"><span class="pre">nsample</span></code>,
+plotted versus the quantiles of the theoretical model <span class="math notranslate nohighlight">\(\mathcal{N}(1000,100)\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">qqplot</span><span class="p">(</span><span class="n">nsample</span><span class="p">,</span> <span class="n">dist</span><span class="o">=</span><span class="n">norm</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span><span class="mi">100</span><span class="p">),</span> <span class="n">line</span><span class="o">=</span><span class="s1">&#39;q&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../../_images/023f6668418eb00c80434a1076a841357f76db182539f739d8ee6009c29a2a0d.png"><img alt="../../_images/023f6668418eb00c80434a1076a841357f76db182539f739d8ee6009c29a2a0d.png" src="../../_images/023f6668418eb00c80434a1076a841357f76db182539f739d8ee6009c29a2a0d.png" style="width: 445px; height: 262px;" />
+</a>
+</div>
+</div>
+</section>
+</section>
+<section id="normal-data-vs-the-standard-normal">
+<h4>Normal data vs. the standard normal<a class="headerlink" href="#normal-data-vs-the-standard-normal" title="Link to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">qqplot</span><span class="p">(</span><span class="n">nsample</span><span class="p">,</span> <span class="n">dist</span><span class="o">=</span><span class="n">norm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">line</span><span class="o">=</span><span class="s1">&#39;q&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../../_images/16864e419febdb4e32e448320f0c06e05d95f2f737011a1fd9c58239b80d2d49.png"><img alt="../../_images/16864e419febdb4e32e448320f0c06e05d95f2f737011a1fd9c58239b80d2d49.png" src="../../_images/16864e419febdb4e32e448320f0c06e05d95f2f737011a1fd9c58239b80d2d49.png" style="width: 445px; height: 262px;" />
+</a>
+</div>
+</div>
+</section>
+<section id="examples-of-bad-fit">
+<h4>Examples of bad fit<a class="headerlink" href="#examples-of-bad-fit" title="Link to this heading">#</a></h4>
+<section id="shifted-uniform-data-vs-standard-normal">
+<h5>Shifted uniform data vs. standard normal<a class="headerlink" href="#shifted-uniform-data-vs-standard-normal" title="Link to this heading">#</a></h5>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vsample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vsample</span><span class="p">)</span>
+<span class="n">qqplot</span><span class="p">(</span><span class="n">vsample</span><span class="p">,</span> <span class="n">dist</span><span class="o">=</span><span class="n">norm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">line</span><span class="o">=</span><span class="s2">&quot;q&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../../_images/26f954b854de0ae7dc6501903e79e1eaa4c7ae29b5ba4f01c6ac2dd3e56f1e65.png"><img alt="../../_images/26f954b854de0ae7dc6501903e79e1eaa4c7ae29b5ba4f01c6ac2dd3e56f1e65.png" src="../../_images/26f954b854de0ae7dc6501903e79e1eaa4c7ae29b5ba4f01c6ac2dd3e56f1e65.png" style="width: 440px; height: 263px;" />
+</a>
+</div>
+</div>
+</section>
+<section id="exponential-data-vs-standard-normal">
+<h5>Exponential data vs. standard normal<a class="headerlink" href="#exponential-data-vs-standard-normal" title="Link to this heading">#</a></h5>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">esample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">esample</span><span class="p">)</span>
+<span class="n">qqplot</span><span class="p">(</span><span class="n">esample</span><span class="p">,</span> <span class="n">dist</span><span class="o">=</span><span class="n">norm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">line</span><span class="o">=</span><span class="s2">&quot;q&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../../_images/a65c48f59e5282214475549fc729e929239508837475426edf9cd3a9a35cf9be.png"><img alt="../../_images/a65c48f59e5282214475549fc729e929239508837475426edf9cd3a9a35cf9be.png" src="../../_images/a65c48f59e5282214475549fc729e929239508837475426edf9cd3a9a35cf9be.png" style="width: 441px; height: 262px;" />
+</a>
+</div>
+</div>
+<p>Note the lowest quantiles don’t match (exponential data limited to zero),
+and the high quantiles don’t match either (exponential data has a long tail).</p>
+</section>
+</section>
+<section id="shifted-uniform-sample-vs-true-model">
+<h4>Shifted uniform sample vs. true model<a class="headerlink" href="#shifted-uniform-sample-vs-true-model" title="Link to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vsample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vsample</span><span class="p">)</span>
+<span class="n">qqplot</span><span class="p">(</span><span class="n">vsample</span><span class="p">,</span> <span class="n">dist</span><span class="o">=</span><span class="n">rvV</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="s2">&quot;q&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../../_images/8b3b797f50adee67d9d11d7ac1776cf3c262d4b3ac9515c6bfaf1f7172d4091d.png"><img alt="../../_images/8b3b797f50adee67d9d11d7ac1776cf3c262d4b3ac9515c6bfaf1f7172d4091d.png" src="../../_images/8b3b797f50adee67d9d11d7ac1776cf3c262d4b3ac9515c6bfaf1f7172d4091d.png" style="width: 448px; height: 262px;" />
+</a>
+</div>
+</div>
+</section>
+<section id="exponential-sample-vs-true-exponential-model">
+<h4>Exponential sample vs. true exponential model<a class="headerlink" href="#exponential-sample-vs-true-exponential-model" title="Link to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">qqplot</span><span class="p">(</span><span class="n">esample</span><span class="p">,</span> <span class="n">dist</span><span class="o">=</span><span class="n">rvE</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="s2">&quot;q&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../../_images/084cafb81b82247eaa21c26313f88d898c4442778c54406d15ba1f9ede2569e2.png"><img alt="../../_images/084cafb81b82247eaa21c26313f88d898c4442778c54406d15ba1f9ede2569e2.png" src="../../_images/084cafb81b82247eaa21c26313f88d898c4442778c54406d15ba1f9ede2569e2.png" style="width: 438px; height: 262px;" />
+</a>
+</div>
+</div>
+</section>
+<section id="generating-a-q-q-plot-manually-bonus-material">
+<h4>Generating a Q-Q plot manually (bonus material)<a class="headerlink" href="#generating-a-q-q-plot-manually-bonus-material" title="Link to this heading">#</a></h4>
+<p>If want to know how the Q-Q plot is generated,
+you can look at the following function <code class="docutils literal notranslate"><span class="pre">qq_plot</span></code> which the same way as <code class="docutils literal notranslate"><span class="pre">qqplot</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">qq_plot</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="s2">&quot;q&quot;</span><span class="p">):</span>
+    <span class="n">qs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sample</span><span class="p">))</span>
+    <span class="n">xs</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="n">qs</span><span class="p">)</span>
+    <span class="n">ys</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">qs</span><span class="p">)</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">xs</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">ys</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">line</span> <span class="o">==</span> <span class="s2">&quot;q&quot;</span><span class="p">:</span>
+        <span class="c1"># compute the parameters m and b for the diagonal</span>
+        <span class="n">xq25</span><span class="p">,</span> <span class="n">xq75</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">ppf</span><span class="p">([</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">])</span>
+        <span class="n">yq25</span><span class="p">,</span> <span class="n">yq75</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.25</span><span class="p">,</span><span class="mf">0.75</span><span class="p">])</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="p">(</span><span class="n">yq75</span><span class="o">-</span><span class="n">yq25</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">xq75</span><span class="o">-</span><span class="n">xq25</span><span class="p">)</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">yq25</span> <span class="o">-</span> <span class="n">m</span> <span class="o">*</span> <span class="n">xq25</span>
+        <span class="c1"># add the line  y = m*x+b  to the plot</span>
+        <span class="n">linexs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">xs</span><span class="p">[</span><span class="mi">1</span><span class="p">:]),</span><span class="nb">max</span><span class="p">(</span><span class="n">xs</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">lineys</span> <span class="o">=</span> <span class="n">m</span><span class="o">*</span><span class="n">linexs</span> <span class="o">+</span> <span class="n">b</span>
+        <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">linexs</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">lineys</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ax</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># # ALT2. use the `probplot` from the `scipy.stats` module</span>
+<span class="c1"># from scipy.stats import probplot</span>
+<span class="c1"># probplot(nsample, dist=norm(1000,100), plot=plt)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="comparing-moments">
+<h3>Comparing moments<a class="headerlink" href="#comparing-moments" title="Link to this heading">#</a></h3>
+<p>A simple way to measure how well the data sample <span class="math notranslate nohighlight">\(\mathbf{x} = (x_1, x_2, \ldots , x_n)\)</span>
+fits the probability model <span class="math notranslate nohighlight">\(f_X\)</span> is to check if the data distribution
+and the probability distribution have the same moments.</p>
+<p>In order to easily be able to calculate the moments of the data samples,
+we’ll convert <code class="docutils literal notranslate"><span class="pre">vsample</span></code> and <code class="docutils literal notranslate"><span class="pre">esample</span></code> into Pandas series objects,
+which have all the necessary methods.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vseries</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">vsample</span><span class="p">)</span>
+<span class="n">eseries</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">esample</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="moments-of-uniform-distribution">
+<h4>Moments of uniform distribution<a class="headerlink" href="#moments-of-uniform-distribution" title="Link to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vseries</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">rvV</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(110.21271847666772, 110.0)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vseries</span><span class="o">.</span><span class="n">var</span><span class="p">(),</span> <span class="n">rvV</span><span class="o">.</span><span class="n">var</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(35.95736108409104, 33.33333333333333)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s now compare the <a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.skew.html">skew</a> of dataset and the <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.rv_continuous.stats.html#scipy.stats.rv_continuous.stats">skew</a> of the distribution:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vseries</span><span class="o">.</span><span class="n">skew</span><span class="p">(),</span> <span class="n">rvV</span><span class="o">.</span><span class="n">stats</span><span class="p">(</span><span class="s2">&quot;s&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(0.03970716302600479, array(0.))
+</pre></div>
+</div>
+</div>
+</div>
+<p>Finally,
+let’s compare the <a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.kurt.html">kurtosis</a> of dataset and the <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.rv_continuous.stats.html#scipy.stats.rv_continuous.stats">kurtosis</a> of the distribution.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vseries</span><span class="o">.</span><span class="n">kurt</span><span class="p">(),</span> <span class="n">rvV</span><span class="o">.</span><span class="n">stats</span><span class="p">(</span><span class="s2">&quot;k&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(-1.2584390506748377, array(-1.2))
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="moments-of-exponential-distribution">
+<h4>Moments of exponential distribution<a class="headerlink" href="#moments-of-exponential-distribution" title="Link to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">eseries</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">rvE</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(5.343224374466268, 5.0)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">eseries</span><span class="o">.</span><span class="n">var</span><span class="p">(),</span> <span class="n">rvE</span><span class="o">.</span><span class="n">var</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(27.53085874882216, 25.0)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s now compare the <a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.skew.html">skew</a> of dataset and the <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.rv_continuous.stats.html#scipy.stats.rv_continuous.stats">skew</a> of the distribution:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">eseries</span><span class="o">.</span><span class="n">skew</span><span class="p">(),</span> <span class="n">rvE</span><span class="o">.</span><span class="n">stats</span><span class="p">(</span><span class="s2">&quot;s&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1.7338627932228903, array(2.))
+</pre></div>
+</div>
+</div>
+</div>
+<p>Finally,
+let’s compare the <a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.kurt.html">kurtosis</a> of dataset and the <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.rv_continuous.stats.html#scipy.stats.rv_continuous.stats">kurtosis</a> of the distribution.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">eseries</span><span class="o">.</span><span class="n">kurt</span><span class="p">(),</span> <span class="n">rvE</span><span class="o">.</span><span class="n">stats</span><span class="p">(</span><span class="s2">&quot;k&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(3.557504048617028, array(6.))
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="example-of-bad-fit-between-higher-moments">
+<h4>Example of bad fit between higher moments<a class="headerlink" href="#example-of-bad-fit-between-higher-moments" title="Link to this heading">#</a></h4>
+<p>Define the random variable <code class="docutils literal notranslate"><span class="pre">rvNE</span></code> as the best normal approximation to random variable <code class="docutils literal notranslate"><span class="pre">rvE</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rvNE</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">rvNE</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">rvNE</span><span class="o">.</span><span class="n">var</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(5.0, 25.0)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">eseries</span><span class="o">.</span><span class="n">skew</span><span class="p">(),</span> <span class="n">rvNE</span><span class="o">.</span><span class="n">stats</span><span class="p">(</span><span class="s2">&quot;s&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1.7338627932228903, array(0.))
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">eseries</span><span class="o">.</span><span class="n">kurt</span><span class="p">(),</span> <span class="n">rvNE</span><span class="o">.</span><span class="n">stats</span><span class="p">(</span><span class="s2">&quot;k&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(3.557504048617028, array(0.))
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="kolmogorovsmirnov-test">
+<h3>Kolmogorov–Smirnov test<a class="headerlink" href="#kolmogorovsmirnov-test" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">ks_1samp</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s jump right ahead and compute the KS distance for the data and distribution of interest.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ks_1samp</span><span class="p">(</span><span class="n">nsample</span><span class="p">,</span> <span class="n">rvN</span><span class="o">.</span><span class="n">cdf</span><span class="p">)</span><span class="o">.</span><span class="n">statistic</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.07815466189999987
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ks_1samp</span><span class="p">(</span><span class="n">esample</span><span class="p">,</span> <span class="n">rvE</span><span class="o">.</span><span class="n">cdf</span><span class="p">)</span><span class="o">.</span><span class="n">statistic</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.03597247001342496
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ks_1samp</span><span class="p">(</span><span class="n">vsample</span><span class="p">,</span> <span class="n">rvV</span><span class="o">.</span><span class="n">cdf</span><span class="p">)</span><span class="o">.</span><span class="n">statistic</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.05707018183377044
+</pre></div>
+</div>
+</div>
+</div>
+<section id="example-of-big-distance">
+<h4>Example of big distance<a class="headerlink" href="#example-of-big-distance" title="Link to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ks_1samp</span><span class="p">(</span><span class="n">esample</span><span class="p">,</span> <span class="n">rvNE</span><span class="o">.</span><span class="n">cdf</span><span class="p">)</span><span class="o">.</span><span class="n">statistic</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.15871546070321535
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">ecdfplot</span><span class="p">(</span><span class="n">esample</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;eCDF(esample)&quot;</span><span class="p">)</span>
+<span class="n">bs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="mi">35</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">bs</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">rvNE</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">bs</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;$F_</span><span class="si">{N_E}</span><span class="s2">$&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot:ylabel=&#39;Proportion&#39;&gt;
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../../_images/8fe9cf28d97b877882b848ef738d1b92bde342dc34283ba27325b91187cd57e4.png"><img alt="../../_images/8fe9cf28d97b877882b848ef738d1b92bde342dc34283ba27325b91187cd57e4.png" src="../../_images/8fe9cf28d97b877882b848ef738d1b92bde342dc34283ba27325b91187cd57e4.png" style="width: 438px; height: 252px;" />
+</a>
+</div>
+</div>
+</section>
+<section id="ks-distances-after-standardization-optional">
+<h4>KS distances after standardization (optional)<a class="headerlink" href="#ks-distances-after-standardization-optional" title="Link to this heading">#</a></h4>
+<p>Define the function <code class="docutils literal notranslate"><span class="pre">standardize</span></code> that transforms any dataset
+so it will have mean zero, and standard deviation one.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">standardize</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="n">xbar</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">data</span><span class="o">-</span><span class="n">xbar</span><span class="p">)</span><span class="o">/</span><span class="n">s</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ALT. Use existing function that does the same as `standardize`</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">zscore</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can now report the KS distances,
+between the standardized version so <code class="docutils literal notranslate"><span class="pre">nsample</span></code>, <code class="docutils literal notranslate"><span class="pre">esample</span></code>, and <code class="docutils literal notranslate"><span class="pre">vsample</span></code> and
+standard normal <span class="math notranslate nohighlight">\(\mathcal{N}(0,1)\)</span>,
+to check how “normal” they are.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ks_1samp</span><span class="p">(</span><span class="n">zscore</span><span class="p">(</span><span class="n">nsample</span><span class="p">),</span> <span class="n">norm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">cdf</span><span class="p">)</span><span class="o">.</span><span class="n">statistic</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.037541386171241364
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ks_1samp</span><span class="p">(</span><span class="n">zscore</span><span class="p">(</span><span class="n">vsample</span><span class="p">),</span> <span class="n">norm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">cdf</span><span class="p">)</span><span class="o">.</span><span class="n">statistic</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.10026891576437313
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ks_1samp</span><span class="p">(</span><span class="n">zscore</span><span class="p">(</span><span class="n">esample</span><span class="p">),</span> <span class="n">norm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">cdf</span><span class="p">)</span><span class="o">.</span><span class="n">statistic</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.15419311135216357
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">expon</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">ks_1samp</span><span class="p">(</span><span class="n">zscore</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">norm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">cdf</span><span class="p">)</span><span class="o">.</span><span class="n">statistic</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.1781210103950946
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="calculating-the-ks-distance-manually-optional">
+<h4>Calculating the KS distance manually (optional)<a class="headerlink" href="#calculating-the-ks-distance-manually-optional" title="Link to this heading">#</a></h4>
+<p>The computation is a little tricky since the eCDF is a stepwise function,
+so we need to two differences <span class="math notranslate nohighlight">\(|F_X(x_i) - F_{\mathbf{x}}(x_i)|\)</span>
+and <span class="math notranslate nohighlight">\(|F_X(x_i) - F_{\mathbf{x}}(x_{i-1})|\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">ks_dist</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">rv</span><span class="o">=</span><span class="n">norm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the KS distance between observed data in `sample`</span>
+<span class="sd">    and the theoretical distribution of random variable `rv`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sample</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+    <span class="n">ks_dists</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">x0</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ks_dist0</span> <span class="o">=</span> <span class="n">rv</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span>
+    <span class="n">ks_dists</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ks_dist0</span><span class="p">)</span>
+
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">n</span><span class="p">):</span>
+        <span class="c1"># xi</span>
+        <span class="n">xi</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">eCDFxi</span> <span class="o">=</span> <span class="n">ecdf</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">xi</span><span class="p">)</span>
+        <span class="n">ks_dist1</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">eCDFxi</span> <span class="o">-</span> <span class="n">rv</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">xi</span><span class="p">))</span>
+        <span class="n">ks_dists</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ks_dist1</span><span class="p">)</span>
+        <span class="c1"># x(i-1)</span>
+        <span class="n">xim1</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">eCDFxim1</span> <span class="o">=</span> <span class="n">ecdf</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">xim1</span><span class="p">)</span>
+        <span class="n">ks_dist2</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">eCDFxim1</span> <span class="o">-</span> <span class="n">rv</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">xi</span><span class="p">))</span>
+        <span class="n">ks_dists</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ks_dist2</span><span class="p">)</span>
+
+    <span class="c1"># find max</span>
+    <span class="n">max_ks_dist</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">ks_dists</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">max_ks_dist</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="test-1">
+<h5>Test 1<a class="headerlink" href="#test-1" title="Link to this heading">#</a></h5>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ks_dist</span><span class="p">(</span><span class="n">nsample</span><span class="p">,</span> <span class="n">rv</span><span class="o">=</span><span class="n">norm</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span><span class="mi">100</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.07815466189999987
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ks_1samp</span><span class="p">(</span><span class="n">nsample</span><span class="p">,</span> <span class="n">norm</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">cdf</span><span class="p">)</span><span class="o">.</span><span class="n">statistic</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.07815466189999987
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="test-2">
+<h5>Test 2<a class="headerlink" href="#test-2" title="Link to this heading">#</a></h5>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ks_dist</span><span class="p">(</span><span class="n">standardize</span><span class="p">(</span><span class="n">nsample</span><span class="p">),</span> <span class="n">rv</span><span class="o">=</span><span class="n">norm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.037541386171241364
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ks_1samp</span><span class="p">(</span><span class="n">standardize</span><span class="p">(</span><span class="n">nsample</span><span class="p">),</span> <span class="n">norm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">cdf</span><span class="p">)</span><span class="o">.</span><span class="n">statistic</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.037541386171241364
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+</section>
+<section id="bootstrap-sample-generation">
+<h2>Bootstrap sample generation<a class="headerlink" href="#bootstrap-sample-generation" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">norm</span>
+<span class="n">rvN</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">72</span><span class="p">)</span>
+<span class="n">sample</span> <span class="o">=</span> <span class="n">rvN</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">sample</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([1031.85454991,  932.04405655,  779.16115305, 1059.02401628,
+       1167.47660438,  833.40440269,  917.56612626, 1054.52603422,
+       1000.11861932,  924.29694777, 1062.95451919,  990.43682345,
+        849.21393503,  949.99869847, 1171.40102725,  877.62327349,
+       1139.59050836, 1041.44763431, 1151.96667669, 1139.0063404 ,
+        891.5999061 ,  957.46318231,  937.81775307, 1145.86005158,
+        872.50054515, 1112.86094852, 1179.05765281,  948.13164741,
+        932.89197563, 1073.67607886])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">([</span><span class="nb">round</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">sample</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">]])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[1031.85, 932.04, 779.16, 1059.02]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sample</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1004.1657229506349
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s generate a bootstrap sample and compute its mean:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bsample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">bsample</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>989.8642131674898
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s compute the means of <span class="math notranslate nohighlight">\(10\)</span> bootstrap samples:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">B</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">bmeans</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">B</span><span class="p">):</span>
+    <span class="n">bsample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+    <span class="n">bmean</span> <span class="o">=</span> <span class="n">bsample</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> 
+    <span class="n">bmeans</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bmean</span><span class="p">)</span>
+
+<span class="c1"># bmeans</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">([</span><span class="nb">round</span><span class="p">(</span><span class="n">bmean</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">bmean</span> <span class="ow">in</span> <span class="n">bmeans</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[1002.72, 968.09, 995.78, 964.45, 1011.08, 1013.17, 1027.03, 1041.01, 969.77, 1029.55]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">bmeans</span> <span class="o">-</span> <span class="n">sample</span><span class="o">.</span><span class="n">mean</span><span class="p">()))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>39.719674810092215
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># # BONUS: draw B=1000 bootstrap samples ot obtain a full histogram</span>
+<span class="c1"># B = 1000</span>
+<span class="c1"># bmeans = []</span>
+<span class="c1"># for i in range(0,B):</span>
+<span class="c1">#     bsample = np.random.choice(sample, 30)</span>
+<span class="c1">#     bmean = bsample.mean() </span>
+<span class="c1">#     bmeans.append(bmean)</span>
+
+<span class="c1"># ax = sns.histplot(bmeans, stat=&quot;density&quot;)</span>
+<span class="c1"># ax.set_xlim(600,1400)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="clarification-empirical-distribution-of-sample-is-not-the-same-as-f-n">
+<h3>Clarification: empirical distribution of <code class="docutils literal notranslate"><span class="pre">sample</span></code> is not the same as <span class="math notranslate nohighlight">\(f_N\)</span><a class="headerlink" href="#clarification-empirical-distribution-of-sample-is-not-the-same-as-f-n" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># plot the pmf of uknown distritbuon f_N</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">norm</span>
+<span class="n">rvN</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">600</span><span class="p">,</span><span class="mi">1400</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">xs</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">rvN</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">xs</span><span class="p">))</span>
+
+<span class="c1"># plot histogram from a single samples of size 30</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">binwidth</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="s2">&quot;density&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">600</span><span class="p">,</span><span class="mi">1400</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(600.0, 1400.0)
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../../_images/887a030f061252bb53890df8ac46bc4013a16bc3b7ac6d80b88c3f899d02436f.png"><img alt="../../_images/887a030f061252bb53890df8ac46bc4013a16bc3b7ac6d80b88c3f899d02436f.png" src="../../_images/887a030f061252bb53890df8ac46bc4013a16bc3b7ac6d80b88c3f899d02436f.png" style="width: 458px; height: 252px;" />
+</a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO: stem plot of sample</span>
+<span class="c1"># TODO: stem plot alpha=0.1 of bsamples</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="discussion">
+<h2>Discussion<a class="headerlink" href="#discussion" title="Link to this heading">#</a></h2>
+<p>set random seed for repeatability</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.6394267984578837
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">43</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.11505456638977896
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "minireference/noBSstats",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./docs/notebooks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebook-setup">Notebook setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-simulate">Why simulate?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#random-variable-generation-using-a-computer">Random variable generation using a computer</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#discrete-random-variable-generation">Discrete random variable generation</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1-generating-bernoulli-observations">Example 1: generating Bernoulli observations</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#continuous-random-variable-generation">Continuous random variable generation</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2-generating-observations-from-a-shifted-uniform-distribution">Example 2: generating observations from a shifted uniform distribution</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example-3-generating-observations-from-an-exponential-distribution">Example 3: generating observations from an exponential distribution</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#empirical-distributions">Empirical distributions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-the-empirical-cumulative-distribution">Visualizing the empirical cumulative distribution</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#measuring-data-model-fit">Measuring data-model fit</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visual-comparison-between-data-and-model-distributions">Visual comparison between data and model distributions</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#shifted-uniform-distribution">Shifted uniform distribution</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#exponential-distribution">Exponential distribution</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-q-q-plots-to-compare-quantiles">Using Q-Q plots to compare quantiles</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#examples-of-good-fit">Examples of good fit</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#normal-data-vs-the-true-normal-model">Normal data vs. the true normal model</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#normal-data-vs-the-standard-normal">Normal data vs. the standard normal</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#examples-of-bad-fit">Examples of bad fit</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#shifted-uniform-data-vs-standard-normal">Shifted uniform data vs. standard normal</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#exponential-data-vs-standard-normal">Exponential data vs. standard normal</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#shifted-uniform-sample-vs-true-model">Shifted uniform sample vs. true model</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#exponential-sample-vs-true-exponential-model">Exponential sample vs. true exponential model</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#generating-a-q-q-plot-manually-bonus-material">Generating a Q-Q plot manually (bonus material)</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-moments">Comparing moments</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#moments-of-uniform-distribution">Moments of uniform distribution</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#moments-of-exponential-distribution">Moments of exponential distribution</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example-of-bad-fit-between-higher-moments">Example of bad fit between higher moments</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kolmogorovsmirnov-test">Kolmogorov–Smirnov test</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example-of-big-distance">Example of big distance</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ks-distances-after-standardization-optional">KS distances after standardization (optional)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#calculating-the-ks-distance-manually-optional">Calculating the KS distance manually (optional)</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#test-1">Test 1</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#test-2">Test 2</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bootstrap-sample-generation">Bootstrap sample generation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clarification-empirical-distribution-of-sample-is-not-the-same-as-f-n">Clarification: empirical distribution of <code class="docutils literal notranslate"><span class="pre">sample</span></code> is not the same as <span class="math notranslate nohighlight">\(f_N\)</span></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Ivan Savov
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
