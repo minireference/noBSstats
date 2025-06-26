@@ -127,15 +127,15 @@ introducing the "continuous LEGOs" distributions like `uniform`, `norm`, `expon`
 
 
 
-### 2.7 Random variable generation
+### 2.7 Simulations
 How can we use computers to generation observations from random variables?
 In this notebooks, we'll describe some practical techniques for generating
-observations from any probability distribution, and develop math tools to verify
-that the random generation process is workin as expected.
+observations from any probability distribution, and use these observations 
+for probability calculations.
 
-- View notebook: [27_random_var_generation.ipynb](./27_random_var_generation.ipynb)
-- Binder link: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstats/main?labpath=notebooks%2F27_random_var_generation.ipynb)
-- Colab link: [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/minireference/noBSstats/blob/main/notebooks/27_random_var_generation.ipynb)
+- View notebook: [27_simulations.ipynb](./27_simulations.ipynb)
+- Binder link: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstats/main?labpath=notebooks%2F27_simulations.ipynb)
+- Colab link: [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/minireference/noBSstats/blob/main/notebooks/27_simulations.ipynb)
 
 
 

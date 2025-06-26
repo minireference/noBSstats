@@ -24,7 +24,7 @@ to run all the probability calculations for yourself.
 - Calculus prerequisites [24_calculus_prerequisites.ipynb](./24_calculus_prerequisites.ipynb)
 - Continuous random variables [25_continuous_random_vars.ipynb](./25_continuous_random_vars.ipynb)
 - Inventory of continuous distributions [26_inventory_continuous_dists.ipynb](./26_inventory_continuous_dists.ipynb)
-- Random variable generation [27_random_var_generation.ipynb](./27_random_var_generation.ipynb)
+- Random variable generation [27_simulations.ipynb](./27_simulations.ipynb)
 - Probability models for random samples [28_random_samples.ipynb](./28_random_samples.ipynb)
 
 
@@ -45,7 +45,7 @@ Here is a list of the different domains that can be usefully described using pro
   The computer model `rvX` for the random variable $X$ has
   methods like: `rvX.rvs()`, `rvX.cdf(b)`, `pdf/pmf`,
   and stats like `rvX.mean()`, `rvX.median()`, `rvX.var()`, `rvX.std()`, `rvQ.ppf(q)`, etc.
-- random draws form a generative process (computer simulation that generates random numbers, see [Section 2.7](./27_random_var_generation.ipynb) for examples)
+- random draws form a generative process (computer simulation that generates random numbers, see [Section 2.7](./27_simulations.ipynb) for examples)
 - random draws from a real world process (e.g. factory that produces a new item)
 - data for an entire population (census)
 - sample data from a population (the data type we learned about in Chapter 1)
