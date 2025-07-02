@@ -21,11 +21,10 @@ to run all the probability calculations for yourself.
 - Discrete random variables [21_discrete_random_vars.ipynb](./21_discrete_random_vars.ipynb)
 - Multiple random variables [22_multiple_random_vars.ipynb](./22_multiple_random_vars.ipynb)
 - Inventory of discrete distributions [23_inventory_discrete_dists.ipynb](./23_inventory_discrete_dists.ipynb)
-- Calculus prerequisites [24_calculus_prerequisites.ipynb](./24_calculus_prerequisites.ipynb)
-- Continuous random variables [25_continuous_random_vars.ipynb](./25_continuous_random_vars.ipynb)
-- Inventory of continuous distributions [26_inventory_continuous_dists.ipynb](./26_inventory_continuous_dists.ipynb)
-- Random variable generation [27_simulations.ipynb](./27_simulations.ipynb)
-- Probability models for random samples [28_random_samples.ipynb](./28_random_samples.ipynb)
+- Continuous random variables [24_continuous_random_vars.ipynb](./24_continuous_random_vars.ipynb)
+- Inventory of continuous distributions [25_inventory_continuous_dists.ipynb](./25_inventory_continuous_dists.ipynb)
+- Random variable generation [26_simulations.ipynb](./26_simulations.ipynb)
+- Probability models for random samples [27_random_samples.ipynb](./27_random_samples.ipynb)
 
 
 ## Exercises
