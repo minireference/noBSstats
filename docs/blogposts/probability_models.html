@@ -1,0 +1,891 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Probability models &#8212; No BS Stats Notebooks</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'docs/blogposts/probability_models';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="No BS Stats Notebooks - Home"/>
+    <script>document.write(`<img src="../../_static/logo.png" class="logo__image only-dark" alt="No BS Stats Notebooks - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../intro.html">
+                    No Bullshit Stats Notebooks
+                </a>
+            </li>
+        </ul>
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../stats_overview/README.html">Statistics overview</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../stats_overview/00_Introduction.html">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../stats_overview/01_DATA.html">Chapter 1: DATA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../stats_overview/02_PROB.html">Chapter 2: Probability theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../stats_overview/03_STATS.html">Chapter 3: Inferential statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../stats_overview/04_LINEAR_MODELS.html">Chapter 4: Linear models</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../notebooks/10_DATA.html">Chapter 1 — Data</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/11_intro_to_data.html">Section 1.1 — Introduction to data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/12_data_in_practice.html">Section 1.2 — Data in practice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/13_descriptive_statistics.html">Section 1.3 — Descriptive statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../exercises/exercises_13_descr_stats.html">Descriptive statistics exercises</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../notebooks/20_PROB.html">Chapter 2 — Probability theory</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/21_discrete_random_vars.html">Section 2.1 — Discrete random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../exercises/exercises_21_discrete_RVs.html">Exercises for Section 2.1 Discrete random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/22_multiple_random_vars.html">Section 2.2 — Multiple random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/23_inventory_discrete_dists.html">Section 2.3 — Inventory of discrete distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/24_calculus_prerequisites.html">Section 2.4 — Calculus prerequisites</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../notebooks/30_STATS.html">Chapter 3 — Classical statistics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/31_estimators.html">Section 3.1 — Estimators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../exercises/exercises_31_estimtors.html">Exercises for Section 3.1 Estimates and estimators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/32_confidence_intervals.html">Section 3.2 — Confidence intervals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../exercises/exercises_32_confidence_intervals.html">Exercises for Section 3.2 Confidence intervals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/33_intro_to_NHST.html">Section 3.3 — Introduction to hypothesis testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/34_analytical_approx.html">Section 3.4 — Hypothesis testing using analytical approximations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/35_two_sample_tests.html">Section 3.5 — Two-sample hypothesis tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/36_design.html">Section 3.6 — Statistical design and error analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/37_inventory_stats_tests.html">Section 3.7 — Inventory of statistical tests</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../examples/README.html">Statistical analysis examples</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/statistical_design.html">Statistical design examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/one_sample_z-test.html">One-sample z-test for the mean</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/one_sample_t-test.html">One-sample t-test for the mean</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/two_sample_t-test.html">Welch’s two-sample <span class="math notranslate nohighlight">\(t\)</span>-test</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/ANOVA.html">Analysis of variance (ANOVA)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/two_sample_equivalence_test.html">Two-sample equivalence test</a></li>
+
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../notebooks/40_LINEAR_MODELS.html">Chapter 4 — Linear models</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/41_simple_linear_regression.html">Section 4.1 — Simple linear regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/42_multiple_linear_regression.html">Section 4.2 — Multiple linear regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/43_interpreting_linear_models.html">Section 4.3 — Interpreting linear models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/44_regression_with_categorical_predictors.html">Section 4.4 — Regression with categorical predictors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/45_causal_inference.html">Section 4.5 — Model selection for causal inference</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/46_generalized_linear_models.html">Section 4.6 — Generalized linear models</a></li>
+
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../notebooks/50_BAYESIAN_STATS.html">Chapter 5 — Bayesian statistics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/51_intro_to_Bayesian_stats.html">Section 5.1 — Introduction to Bayesian statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/52_Bayesian_inference_computations.html">Section 5.2 — Bayesian inference computations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/53_Bayesian_linear_models.html">Section 5.3 — Bayesian linear models</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/54_difference_between_means.html">Section 5.4 — Bayesian difference between means</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/55_hierarchical_models.html">Section 5.5 — Hierarchical models</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/appendix.html">Appendix</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/python_tutorial.html">Appendix C — Python tutorial</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/pandas_tutorial.html">Appendix D — Pandas tutorial</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/seaborn_tutorial.html">Appendix E — Seaborn tutorial</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/calculus_tutorial.html">Calculus tutorial</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../blogposts/index.html">Blog posts</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../blogposts/python_for_stats.html">Using Python for learning statistics Part 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../blogposts/bootstrap.html">Bootstrap estimation</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/minireference/noBSstats/main?urlpath=lab/tree/./docs/blogposts/probability_models.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Binder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Binder logo" src="../../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/minireference/noBSstats" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/minireference/noBSstats/issues/new?title=Issue%20on%20page%20%2Fdocs/blogposts/probability_models.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/docs/blogposts/probability_models.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Probability models</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebook-setup">Notebook setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Probability models</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1-discrete-random-variable">Example 1: discrete random variable</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2-continuous-random-variable">Example 2: continuous random variable</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#computer-models-for-random-variables">Computer models for random variables</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#probability-model-visualizations">Probability model visualizations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#doing-probability-calculations">Doing probability calculations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#random-samples">Random samples</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#normal-distributions-with-different-parameters">Normal distributions with different parameters</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#applications">Applications</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#links">Links</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="probability-models">
+<h1>Probability models<a class="headerlink" href="#probability-models" title="Link to this heading">#</a></h1>
+<p>This notebook contains the code examples for the blog post
+<a class="reference internal" href="#???"><span class="xref myst">???</span></a>,
+which explains how Python can help us better understand probability and statistics concepts. I’ve reproduced the essential parts of the narrative here (in abridged form) so the notebook should be readable on its own.</p>
+<p>The benefit of the notebook version is you can play with the code examples interactively. To run a code cell, press the play button in the menu bar, or use the keyboard shortcut <strong>SHIFT+ENTER</strong>.</p>
+<section id="notebook-setup">
+<h2>Notebook setup<a class="headerlink" href="#notebook-setup" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install stats library</span>
+<span class="o">%</span><span class="k">pip</span> install --quiet ministats 
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Note: you may need to restart the kernel to use updated packages.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Figures setup</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>  <span class="c1"># needed otherwise `sns.set_theme` doesn&#39;t work</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set_theme</span><span class="p">(</span>
+    <span class="n">style</span><span class="o">=</span><span class="s2">&quot;whitegrid&quot;</span><span class="p">,</span>
+    <span class="n">rc</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">2</span><span class="p">)},</span>
+<span class="p">)</span>
+<span class="c1"># High-resolution figures please</span>
+<span class="o">%</span><span class="k">config</span> InlineBackend.figure_format = &#39;retina&#39;
+
+<span class="k">def</span><span class="w"> </span><span class="nf">savefig</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">,</span> <span class="n">pad_inches</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Figure size 640x480 with 0 Axes&gt;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h2>
+</section>
+<section id="id1">
+<h2>Probability models<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>The concept of a random variable, denoted <span class="math notranslate nohighlight">\(X\)</span>, is a key building block in probability theory. The random variable <span class="math notranslate nohighlight">\(X\)</span> is a quantity that can take on different values, and it is described by a probability distribution function <span class="math notranslate nohighlight">\(f_X\)</span>, which we use to compute the probability of different possible outcomes of the random variable <span class="math notranslate nohighlight">\(X\)</span>.</p>
+<p>When learning about random variables, readers are usually exposed to numerous formulas and equations for describing probability distributions. These math equations can be hard to understand, especially for people who haven’t done math recently. Using computer models, however, makes probability concepts much more accessible. Specifically, computers give us two additional points of view of the math equations:</p>
+<ul class="simple">
+<li><p><strong>Visualizations</strong>. Plotting the probability distribution <span class="math notranslate nohighlight">\(f_X\)</span> for the random variable <span class="math notranslate nohighlight">\(X\)</span> gives you a visual representation of the possible values this variable can have.</p></li>
+<li><p><strong>Computer-assisted calculations</strong>. Probability calculations can be done easily using Python as a calculator.</p></li>
+</ul>
+</section>
+<section id="example-1-discrete-random-variable">
+<h2>Example 1: discrete random variable<a class="headerlink" href="#example-1-discrete-random-variable" title="Link to this heading">#</a></h2>
+<p>TODO: import from cut material</p>
+</section>
+<section id="example-2-continuous-random-variable">
+<h2>Example 2: continuous random variable<a class="headerlink" href="#example-2-continuous-random-variable" title="Link to this heading">#</a></h2>
+<section id="computer-models-for-random-variables">
+<h3>Computer models for random variables<a class="headerlink" href="#computer-models-for-random-variables" title="Link to this heading">#</a></h3>
+<p>The standard normal distribution is denoted <span class="math notranslate nohighlight">\(Z \sim \mathcal{N}(\mu=0,\sigma=1)\)</span>,
+where <span class="math notranslate nohighlight">\(Z\)</span> is the name has the probability density function:</p>
+<div class="math notranslate nohighlight">
+\[
+    f_Z(z) = \tfrac{1}{\sqrt{2\pi}} e^{ - \frac{1}{2}z^2}.
+\]</div>
+<p>The standard normal is a special case of the general normal <span class="math notranslate nohighlight">\(\mathcal{N}(\mu, \sigma)\)</span>
+where <span class="math notranslate nohighlight">\(\mu\)</span> is the mean and <span class="math notranslate nohighlight">\(\sigma\)</span> is the standard deviation.</p>
+<p>We can use the predefined probability model from the Python module <code class="docutils literal notranslate"><span class="pre">scipy.stats</span></code> whenever we need to do probability calculations.
+To create a computer model for the standard normal random variable <span class="math notranslate nohighlight">\(Z \sim \mathcal{N}(\mu=0, \sigma=1)\)</span>,
+we need to import the <code class="docutils literal notranslate"><span class="pre">norm</span></code> model family form <code class="docutils literal notranslate"><span class="pre">scipy.stats</span></code>
+then create the random variable object <code class="docutils literal notranslate"><span class="pre">norm(0,1)</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">norm</span>
+<span class="n">rvZ</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The model first parameter is the mean <span class="math notranslate nohighlight">\(\mu=0\)</span>,
+which is also know as the <em>location</em> parameter of the distribution–where it is centred.
+The second parameter is the standard deviation <span class="math notranslate nohighlight">\(\sigma=1\)</span>,
+which is also known as the <em>scale</em> parameter and controls the width.
+The Python keyword for the model parameters are <code class="docutils literal notranslate"><span class="pre">loc</span></code> and <code class="docutils literal notranslate"><span class="pre">scale</span></code>,
+so another way to create the random variable object <code class="docutils literal notranslate"><span class="pre">rvZ</span></code> is <code class="docutils literal notranslate"><span class="pre">norm(loc=0,</span> <span class="pre">scale=1)</span></code>.</p>
+<p>The probability density function <span class="math notranslate nohighlight">\(f_Z\)</span> is available as the <code class="docutils literal notranslate"><span class="pre">.pdf</span></code> method on the model <code class="docutils literal notranslate"><span class="pre">rvZ</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rvZ</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.24197072451914337
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="probability-model-visualizations">
+<h3>Probability model visualizations<a class="headerlink" href="#probability-model-visualizations" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="n">zs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">fZs</span> <span class="o">=</span> <span class="n">rvZ</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">zs</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">zs</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">fZs</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$z$&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$f_Z$&quot;</span><span class="p">)</span>
+<span class="n">savefig</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="p">,</span> <span class="s2">&quot;figures/pdf_of_rvZ.png&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../../_images/60e542fec89b525a091dba507d3c6ab54240aa81beb5768b2a1f3f17c2f7df99.png"><img alt="../../_images/60e542fec89b525a091dba507d3c6ab54240aa81beb5768b2a1f3f17c2f7df99.png" src="../../_images/60e542fec89b525a091dba507d3c6ab54240aa81beb5768b2a1f3f17c2f7df99.png" style="width: 680px; height: 183px;" />
+</a>
+</div>
+</div>
+<p>The above graph tells you everything you need to know about the random variable <span class="math notranslate nohighlight">\(Z\)</span>.
+The possible values of <span class="math notranslate nohighlight">\(Z\)</span> are concentrated around the mean <span class="math notranslate nohighlight">\(\mu=0\)</span>.
+The region of highest density is roughly between <span class="math notranslate nohighlight">\(z=-1\)</span> and <span class="math notranslate nohighlight">\(z=1\)</span>,
+with most of values between <span class="math notranslate nohighlight">\(z=-2\)</span> and <span class="math notranslate nohighlight">\(z=2\)</span>,
+then the probability density drops off to (almost) zero for <span class="math notranslate nohighlight">\(z&lt;-3\)</span> and <span class="math notranslate nohighlight">\(z&gt;3\)</span>.</p>
+</section>
+<section id="doing-probability-calculations">
+<h3>Doing probability calculations<a class="headerlink" href="#doing-probability-calculations" title="Link to this heading">#</a></h3>
+<p>Calculating probabilities with the continuous random variable <span class="math notranslate nohighlight">\(Z\)</span> requires using <em>integration</em>,
+which the process of computing the total area under a curve for some region.
+For example,
+the probability that the random variable <span class="math notranslate nohighlight">\(Z\)</span> will have a value somewhere
+between <span class="math notranslate nohighlight">\(1\)</span> and <span class="math notranslate nohighlight">\(2\)</span> is defined as <span class="math notranslate nohighlight">\(\textrm{Pr}(\{1 \leq Z \leq 2\}) = \int_{z=1}^{z=2} f_Z(z) dz\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.integrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">quad</span>
+<span class="n">quad</span><span class="p">(</span><span class="n">rvZ</span><span class="o">.</span><span class="n">pdf</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.13590512198327787
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">zs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="n">fZs</span> <span class="o">=</span> <span class="n">rvZ</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">zs</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">zs</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">fZs</span><span class="p">)</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;</span> <span class="n">zs</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">zs</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">zs</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">y1</span><span class="o">=</span><span class="n">fZs</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;C3&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$z$&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$f_Z$&quot;</span><span class="p">)</span>
+<span class="c1"># TODO: add text label &quot;$\{1 \leq Z \leq 2\}$&quot; and arrow pointing towards region</span>
+<span class="n">savefig</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="p">,</span> <span class="s2">&quot;figures/pdf_of_rvZ_highlight_1_to_2.png&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../../_images/a6570ff0ec5619de06854e0fc7a48e67a86e3fbdbb2a30957a4c0c3161073dd0.png"><img alt="../../_images/a6570ff0ec5619de06854e0fc7a48e67a86e3fbdbb2a30957a4c0c3161073dd0.png" src="../../_images/a6570ff0ec5619de06854e0fc7a48e67a86e3fbdbb2a30957a4c0c3161073dd0.png" style="width: 680px; height: 182px;" />
+</a>
+</div>
+</div>
+<p>The probability of the event <span class="math notranslate nohighlight">\(\{1 \leq Z \leq 2\}\)</span> corresponds to the area in red.</p>
+</section>
+<section id="random-samples">
+<h3>Random samples<a class="headerlink" href="#random-samples" title="Link to this heading">#</a></h3>
+<p>To generate a random sample of size <span class="math notranslate nohighlight">\(n\)</span> from the random variable <code class="docutils literal notranslate"><span class="pre">rvZ</span></code>,
+call the method <code class="docutils literal notranslate"><span class="pre">rvZ.rvs(n)</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">46</span><span class="p">)</span>
+<span class="n">zs</span> <span class="o">=</span> <span class="n">rvZ</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">zs</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 0.58487584,  1.23119574,  0.82190026, -0.79922836,  0.41205323,
+       -0.17615661, -0.07317197, -0.56566639, -0.09346524,  0.85730108])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">plt</span><span class="o">.</span><span class="n">rc_context</span><span class="p">({</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:(</span><span class="mi">6</span><span class="p">,</span><span class="mf">1.3</span><span class="p">)}):</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">stripplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">zs</span><span class="p">)</span>
+    <span class="n">savefig</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">(),</span> <span class="s2">&quot;figures/sample_from_rvZ_n10.png&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../../_images/6d86394888668ae75553108ce38d2dafd8873d8cc4af4a81e5897f30d1c8a414.png"><img alt="../../_images/6d86394888668ae75553108ce38d2dafd8873d8cc4af4a81e5897f30d1c8a414.png" src="../../_images/6d86394888668ae75553108ce38d2dafd8873d8cc4af4a81e5897f30d1c8a414.png" style="width: 584px; height: 113px;" />
+</a>
+</div>
+</div>
+</section>
+<section id="normal-distributions-with-different-parameters">
+<h3>Normal distributions with different parameters<a class="headerlink" href="#normal-distributions-with-different-parameters" title="Link to this heading">#</a></h3>
+<p>The standard normal distribution <span class="math notranslate nohighlight">\(\mathcal{N}(\mu=0, \sigma=1)\)</span> is just one representative of the family of normal distributions. The mean parameter  <span class="math notranslate nohighlight">\(\mu\)</span> (the Greek letter mu) and standard deviation parameter <span class="math notranslate nohighlight">\(\sigma\)</span> (the Greek letter sigma) control the shape of the normal distribution. We can experiment with the different choices of parameters for the normal model to see what shape of distribution we get.</p>
+<p>Here are some examples of graphs of the normal distribution for different parameters <span class="math notranslate nohighlight">\(\mu\)</span> and <span class="math notranslate nohighlight">\(\sigma\)</span>.</p>
+<p><img alt="normal_panel.png" src="docs/blogposts/attachment:404ffc17-cc59-4c80-aee2-2ff0bc658a37.png" /></p>
+<p>There are many of other probability distributions that can be useful for modelling various real world quantities. You can take a look at the probability graphs
+of <a class="reference external" href="https://nobsstats.com/notebooks/26_inventory_continuous_dists.html">discrete distribution here</a> and <a class="reference external" href="https://nobsstats.com/notebooks/23_inventory_discrete_dists.html">continuous distributions here</a>.</p>
+</section>
+</section>
+<section id="applications">
+<h2>Applications<a class="headerlink" href="#applications" title="Link to this heading">#</a></h2>
+</section>
+<section id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">#</a></h2>
+</section>
+<section id="links">
+<h2>Links<a class="headerlink" href="#links" title="Link to this heading">#</a></h2>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "minireference/noBSstats",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./docs/blogposts"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebook-setup">Notebook setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Probability models</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1-discrete-random-variable">Example 1: discrete random variable</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2-continuous-random-variable">Example 2: continuous random variable</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#computer-models-for-random-variables">Computer models for random variables</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#probability-model-visualizations">Probability model visualizations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#doing-probability-calculations">Doing probability calculations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#random-samples">Random samples</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#normal-distributions-with-different-parameters">Normal distributions with different parameters</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#applications">Applications</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#links">Links</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Ivan Savov
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
