@@ -105,30 +105,38 @@ with $\textrm{Pr}(a \leq X \leq b)=\int_{x=a}^{x=b}f_X(x)dx$.
 - Colab link: [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/minireference/noBSstats/blob/main/notebooks/24_continuous_random_vars.ipynb)
 
 
-### 2.5 Inventory of continuous distributions
+### 2.5 Multiple continuous random variables
+
+- View notebook: [25_multiple_continuous_random_vars.ipynb](./25_multiple_continuous_random_vars.ipynb)
+- Binder link: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstats/main?labpath=notebooks%2F25_multiple_continuous_random_vars.ipynb)
+- Colab link: [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/minireference/noBSstats/blob/main/notebooks/25_multiple_continuous_random_vars.ipynb)
+
+
+
+### 2.6 Inventory of continuous distributions
 In this section we'll complete the inventory of probability distributions by
 introducing the "continuous LEGOs" distributions like `uniform`, `norm`, `expon`,
 `t`, `f`, `chi2`, `gamma`, `beta`, etc.
 
-- View notebook: [25_inventory_continuous_dists.ipynb](./25_inventory_continuous_dists.ipynb)
-- Binder link: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstats/main?labpath=notebooks%2F25_inventory_continuous_dists.ipynb)
-- Colab link: [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/minireference/noBSstats/blob/main/notebooks/25_inventory_continuous_dists.ipynb)
+- View notebook: [26_inventory_continuous_dists.ipynb](./26_inventory_continuous_dists.ipynb)
+- Binder link: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstats/main?labpath=notebooks%2F26_inventory_continuous_dists.ipynb)
+- Colab link: [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/minireference/noBSstats/blob/main/notebooks/26_inventory_continuous_dists.ipynb)
 
 
 
-### 2.6 Simulations
+### 2.7 Simulations
 How can we use computers to generation observations from random variables?
 In this notebooks, we'll describe some practical techniques for generating
 observations from any probability distribution, and use these observations 
 for probability calculations.
 
-- View notebook: [26_simulations.ipynb](./26_simulations.ipynb)
-- Binder link: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstats/main?labpath=notebooks%2F26_simulations.ipynb)
-- Colab link: [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/minireference/noBSstats/blob/main/notebooks/26_simulations.ipynb)
+- View notebook: [27_simulations.ipynb](./27_simulations.ipynb)
+- Binder link: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstats/main?labpath=notebooks%2F27_simulations.ipynb)
+- Colab link: [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/minireference/noBSstats/blob/main/notebooks/27_simulations.ipynb)
 
 
 
-### 2.7 Probability models for random samples
+### 2.8 Probability models for random samples
 Consider a random variable $X$ with a known probability distribution $f_X$.
 What can we say about the characteristics of $n$ copies of the random variable
 $\mathbf{X} = X_1X_2X_3\cdots X_n \sim f_{X_1X_2\cdots X_n}$.
@@ -137,9 +145,9 @@ This is called the independent, identically distributed (iid) setting.
 Understanding the properties of $\mathbf{X}$ is important for all the 
 statistics operations we'll be doing in the next two chapters.
 
-- View notebook: [27_random_samples.ipynb](./27_random_samples.ipynb)
-- Binder link: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstats/main?labpath=notebooks%2F27_random_samples.ipynb)
-- Colab link: [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/minireference/noBSstat/blob/main/notebooks/27_random_samples.ipynb)
+- View notebook: [28_random_samples.ipynb](./28_random_samples.ipynb)
+- Binder link: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstats/main?labpath=notebooks%2F28_random_samples.ipynb)
+- Colab link: [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/minireference/noBSstat/blob/main/notebooks/28_random_samples.ipynb)
 
 
 
