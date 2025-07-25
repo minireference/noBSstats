@@ -1,0 +1,932 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Visualizing scipy.stats distributions &#8212; No BS Stats Notebooks</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'docs/notebooks/explorations/all_scipy_dists';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/logo.png" class="logo__image only-light" alt="No BS Stats Notebooks - Home"/>
+    <script>document.write(`<img src="../../../_static/logo.png" class="logo__image only-dark" alt="No BS Stats Notebooks - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../intro.html">
+                    No Bullshit Stats Notebooks
+                </a>
+            </li>
+        </ul>
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../stats_overview/README.html">Statistics overview</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../stats_overview/00_Introduction.html">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../stats_overview/01_DATA.html">Chapter 1: DATA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../stats_overview/02_PROB.html">Chapter 2: Probability theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../stats_overview/03_STATS.html">Chapter 3: Inferential statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../stats_overview/04_LINEAR_MODELS.html">Chapter 4: Linear models</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../notebooks/10_DATA.html">Chapter 1 — Data</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/11_intro_to_data.html">Section 1.1 — Introduction to data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/12_data_in_practice.html">Section 1.2 — Data in practice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/13_descriptive_statistics.html">Section 1.3 — Descriptive statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../exercises/exercises_13_descr_stats.html">Descriptive statistics exercises</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../notebooks/20_PROB.html">Chapter 2 — Probability theory</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/21_discrete_random_vars.html">Section 2.1 — Discrete random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/22_multiple_random_vars.html">Section 2.2 — Multiple random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/23_inventory_discrete_dists.html">Section 2.3 — Inventory of discrete distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/24_continuous_random_vars.html">Section 2.4 — Continuous random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/25_multiple_continuous_random_vars.html">Section 2.5 — Multiple continuous random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/26_inventory_continuous_dists.html">Section 2.6 — Inventory of continuous distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/28_random_samples.html">Section 2.8 — Probability models for random samples</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../notebooks/30_STATS.html">Chapter 3 — Classical statistics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/31_estimators.html">Section 3.1 — Estimators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../exercises/exercises_31_estimtors.html">Exercises for Section 3.1 Estimates and estimators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/32_confidence_intervals.html">Section 3.2 — Confidence intervals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../exercises/exercises_32_confidence_intervals.html">Exercises for Section 3.2 Confidence intervals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/33_intro_to_NHST.html">Section 3.3 — Introduction to hypothesis testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/34_analytical_approx.html">Section 3.4 — Hypothesis testing using analytical approximations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/35_two_sample_tests.html">Section 3.5 — Two-sample hypothesis tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/36_design.html">Section 3.6 — Statistical design and error analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/37_inventory_stats_tests.html">Section 3.7 — Inventory of statistical tests</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../examples/README.html">Statistical analysis examples</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/statistical_design.html">Statistical design examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/one_sample_z-test.html">One-sample z-test for the mean</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/one_sample_t-test.html">One-sample t-test for the mean</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/two_sample_t-test.html">Welch’s two-sample <span class="math notranslate nohighlight">\(t\)</span>-test</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/ANOVA.html">Analysis of variance (ANOVA)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/two_sample_equivalence_test.html">Two-sample equivalence test</a></li>
+
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../notebooks/40_LINEAR_MODELS.html">Chapter 4 — Linear models</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/41_simple_linear_regression.html">Section 4.1 — Simple linear regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/42_multiple_linear_regression.html">Section 4.2 — Multiple linear regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/43_interpreting_linear_models.html">Section 4.3 — Interpreting linear models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/44_regression_with_categorical_predictors.html">Section 4.4 — Regression with categorical predictors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/45_causal_inference.html">Section 4.5 — Model selection for causal inference</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/46_generalized_linear_models.html">Section 4.6 — Generalized linear models</a></li>
+
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../notebooks/50_BAYESIAN_STATS.html">Chapter 5 — Bayesian statistics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/51_intro_to_Bayesian_stats.html">Section 5.1 — Introduction to Bayesian statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/52_Bayesian_inference_computations.html">Section 5.2 — Bayesian inference computations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/53_Bayesian_linear_models.html">Section 5.3 — Bayesian linear models</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/54_difference_between_means.html">Section 5.4 — Bayesian difference between means</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/55_hierarchical_models.html">Section 5.5 — Hierarchical models</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../tutorials/appendix.html">Appendix</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/python_tutorial.html">Appendix C — Python tutorial</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/pandas_tutorial.html">Appendix D — Pandas tutorial</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/seaborn_tutorial.html">Appendix E — Seaborn tutorial</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/calculus_tutorial.html">Calculus tutorial</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../blogposts/index.html">Blog posts</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../blogposts/python_for_stats.html">Using Python for learning statistics Part 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../blogposts/bootstrap.html">Bootstrap estimation</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/minireference/noBSstats/main?urlpath=lab/tree/./docs/notebooks/explorations/all_scipy_dists.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Binder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Binder logo" src="../../../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/minireference/noBSstats" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/minireference/noBSstats/issues/new?title=Issue%20on%20page%20%2Fdocs/notebooks/explorations/all_scipy_dists.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/docs/notebooks/explorations/all_scipy_dists.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Visualizing scipy.stats distributions</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#alternative-version">Alternative version</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="visualizing-scipy-stats-distributions">
+<h1>Visualizing scipy.stats distributions<a class="headerlink" href="#visualizing-scipy-stats-distributions" title="Link to this heading">#</a></h1>
+<p>What do all the distributions available in scipy.stats look like?</p>
+<p>This <a class="reference external" href="https://stackoverflow.com/a/37559471/127114">answer</a> on stackoverflow shows them all!</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">io</span><span class="o">,</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">stats</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">16.0</span><span class="p">,</span> <span class="mf">14.0</span><span class="p">)</span>
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;ggplot&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Distributions to check, shape constants were taken from the examples on the scipy.stats distribution documentation pages.</span>
+<span class="n">DISTRIBUTIONS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">stats</span><span class="o">.</span><span class="n">alpha</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mf">3.57</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">anglit</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> 
+    <span class="n">stats</span><span class="o">.</span><span class="n">arcsine</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">beta</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mf">2.31</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">0.627</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> 
+    <span class="n">stats</span><span class="o">.</span><span class="n">betaprime</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">bradford</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mf">0.299</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+    <span class="n">stats</span><span class="o">.</span><span class="n">burr</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mf">10.5</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mf">4.3</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">cauchy</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> 
+    <span class="n">stats</span><span class="o">.</span><span class="n">chi</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="mi">78</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">chi2</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="mi">55</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+    <span class="n">stats</span><span class="o">.</span><span class="n">cosine</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">dgamma</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mf">1.1</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> 
+    <span class="n">stats</span><span class="o">.</span><span class="n">dweibull</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mf">2.07</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">erlang</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> 
+    <span class="n">stats</span><span class="o">.</span><span class="n">expon</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">exponnorm</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+    <span class="n">stats</span><span class="o">.</span><span class="n">exponweib</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mf">2.89</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mf">1.95</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">exponpow</span><span class="p">(</span><span class="n">b</span><span class="o">=</span><span class="mf">2.7</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+    <span class="n">stats</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="n">dfn</span><span class="o">=</span><span class="mi">29</span><span class="p">,</span> <span class="n">dfd</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">fatiguelife</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mi">29</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> 
+    <span class="n">stats</span><span class="o">.</span><span class="n">fisk</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mf">3.09</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">foldcauchy</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mf">4.72</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+    <span class="c1"># stats.foldnorm(c=1.95, loc=0.0, scale=1.0), stats.frechet_r(c=1.89, loc=0.0, scale=1.0),</span>
+    <span class="c1"># stats.frechet_l(c=3.63, loc=0.0, scale=1.0), stats.genlogistic(c=0.412, loc=0.0, scale=1.0),</span>
+    <span class="n">stats</span><span class="o">.</span><span class="n">genpareto</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">gennorm</span><span class="p">(</span><span class="n">beta</span><span class="o">=</span><span class="mf">1.3</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> 
+    <span class="n">stats</span><span class="o">.</span><span class="n">genexpon</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mf">9.13</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">16.2</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mf">3.28</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">genextreme</span><span class="p">(</span><span class="n">c</span><span class="o">=-</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+    <span class="n">stats</span><span class="o">.</span><span class="n">gausshyper</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mf">13.8</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">3.12</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mf">2.51</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mf">5.18</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">gamma</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mf">1.99</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+    <span class="n">stats</span><span class="o">.</span><span class="n">gengamma</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mf">4.42</span><span class="p">,</span> <span class="n">c</span><span class="o">=-</span><span class="mf">3.12</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">genhalflogistic</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mf">0.773</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+    <span class="n">stats</span><span class="o">.</span><span class="n">gilbrat</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">gompertz</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mf">0.947</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+    <span class="n">stats</span><span class="o">.</span><span class="n">gumbel_r</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">gumbel_l</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+    <span class="n">stats</span><span class="o">.</span><span class="n">halfcauchy</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">halflogistic</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+    <span class="n">stats</span><span class="o">.</span><span class="n">halfnorm</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">halfgennorm</span><span class="p">(</span><span class="n">beta</span><span class="o">=</span><span class="mf">0.675</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+    <span class="n">stats</span><span class="o">.</span><span class="n">hypsecant</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">invgamma</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mf">4.07</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+    <span class="n">stats</span><span class="o">.</span><span class="n">invgauss</span><span class="p">(</span><span class="n">mu</span><span class="o">=</span><span class="mf">0.145</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">invweibull</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mf">10.6</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+    <span class="n">stats</span><span class="o">.</span><span class="n">johnsonsb</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mf">4.32</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">3.18</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">johnsonsu</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mf">2.55</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">2.25</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+    <span class="n">stats</span><span class="o">.</span><span class="n">ksone</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mf">1e+03</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">kstwobign</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+    <span class="n">stats</span><span class="o">.</span><span class="n">laplace</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">levy</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+    <span class="n">stats</span><span class="o">.</span><span class="n">levy_l</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">levy_stable</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.357</span><span class="p">,</span> <span class="n">beta</span><span class="o">=-</span><span class="mf">0.675</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+    <span class="n">stats</span><span class="o">.</span><span class="n">logistic</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">loggamma</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mf">0.414</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+    <span class="n">stats</span><span class="o">.</span><span class="n">loglaplace</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mf">3.25</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">lognorm</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="mf">0.954</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+    <span class="n">stats</span><span class="o">.</span><span class="n">lomax</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mf">1.88</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">maxwell</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+    <span class="n">stats</span><span class="o">.</span><span class="n">mielke</span><span class="p">(</span><span class="n">k</span><span class="o">=</span><span class="mf">10.4</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mf">3.6</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">nakagami</span><span class="p">(</span><span class="n">nu</span><span class="o">=</span><span class="mf">4.97</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+    <span class="n">stats</span><span class="o">.</span><span class="n">ncx2</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="mi">21</span><span class="p">,</span> <span class="n">nc</span><span class="o">=</span><span class="mf">1.06</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">ncf</span><span class="p">(</span><span class="n">dfn</span><span class="o">=</span><span class="mi">27</span><span class="p">,</span> <span class="n">dfd</span><span class="o">=</span><span class="mi">27</span><span class="p">,</span> <span class="n">nc</span><span class="o">=</span><span class="mf">0.416</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+    <span class="n">stats</span><span class="o">.</span><span class="n">nct</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">nc</span><span class="o">=</span><span class="mf">0.24</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+    <span class="n">stats</span><span class="o">.</span><span class="n">pareto</span><span class="p">(</span><span class="n">b</span><span class="o">=</span><span class="mf">2.62</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">pearson3</span><span class="p">(</span><span class="n">skew</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+    <span class="n">stats</span><span class="o">.</span><span class="n">powerlaw</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mf">1.66</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">powerlognorm</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mf">2.14</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mf">0.446</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+    <span class="n">stats</span><span class="o">.</span><span class="n">powernorm</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mf">4.45</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">rdist</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+    <span class="n">stats</span><span class="o">.</span><span class="n">reciprocal</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mf">0.00623</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">1.01</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">rayleigh</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+    <span class="n">stats</span><span class="o">.</span><span class="n">rice</span><span class="p">(</span><span class="n">b</span><span class="o">=</span><span class="mf">0.775</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">recipinvgauss</span><span class="p">(</span><span class="n">mu</span><span class="o">=</span><span class="mf">0.63</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+    <span class="n">stats</span><span class="o">.</span><span class="n">semicircular</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="mf">2.74</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+    <span class="n">stats</span><span class="o">.</span><span class="n">triang</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mf">0.158</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">truncexpon</span><span class="p">(</span><span class="n">b</span><span class="o">=</span><span class="mf">4.69</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+    <span class="n">stats</span><span class="o">.</span><span class="n">truncnorm</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">tukeylambda</span><span class="p">(</span><span class="n">lam</span><span class="o">=</span><span class="mf">3.13</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+    <span class="n">stats</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">vonmises</span><span class="p">(</span><span class="n">kappa</span><span class="o">=</span><span class="mf">3.99</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+    <span class="n">stats</span><span class="o">.</span><span class="n">vonmises_line</span><span class="p">(</span><span class="n">kappa</span><span class="o">=</span><span class="mf">3.99</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">wald</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+    <span class="n">stats</span><span class="o">.</span><span class="n">weibull_min</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mf">1.79</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">weibull_max</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mf">2.87</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+    <span class="n">stats</span><span class="o">.</span><span class="n">wrapcauchy</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mf">0.0311</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">AttributeError</span><span class="g g-Whitespace">                            </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">line</span> <span class="mi">20</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="c1"># Distributions to check, shape constants were taken from the examples on the scipy.stats distribution documentation pages.</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="n">DISTRIBUTIONS</span> <span class="o">=</span> <span class="p">[</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span>     <span class="n">stats</span><span class="o">.</span><span class="n">alpha</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mf">3.57</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">anglit</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> 
+<span class="g g-Whitespace">      </span><span class="mi">4</span>     <span class="n">stats</span><span class="o">.</span><span class="n">arcsine</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">beta</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mf">2.31</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">0.627</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> 
+<span class="g g-Whitespace">      </span><span class="mi">5</span>     <span class="n">stats</span><span class="o">.</span><span class="n">betaprime</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">bradford</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mf">0.299</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+<span class="g g-Whitespace">      </span><span class="mi">6</span>     <span class="n">stats</span><span class="o">.</span><span class="n">burr</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mf">10.5</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mf">4.3</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">cauchy</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> 
+<span class="g g-Whitespace">      </span><span class="mi">7</span>     <span class="n">stats</span><span class="o">.</span><span class="n">chi</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="mi">78</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">chi2</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="mi">55</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+<span class="g g-Whitespace">      </span><span class="mi">8</span>     <span class="n">stats</span><span class="o">.</span><span class="n">cosine</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">dgamma</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mf">1.1</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> 
+<span class="g g-Whitespace">      </span><span class="mi">9</span>     <span class="n">stats</span><span class="o">.</span><span class="n">dweibull</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mf">2.07</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">erlang</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> 
+<span class="g g-Whitespace">     </span><span class="mi">10</span>     <span class="n">stats</span><span class="o">.</span><span class="n">expon</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">exponnorm</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+<span class="g g-Whitespace">     </span><span class="mi">11</span>     <span class="n">stats</span><span class="o">.</span><span class="n">exponweib</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mf">2.89</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mf">1.95</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">exponpow</span><span class="p">(</span><span class="n">b</span><span class="o">=</span><span class="mf">2.7</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+<span class="g g-Whitespace">     </span><span class="mi">12</span>     <span class="n">stats</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="n">dfn</span><span class="o">=</span><span class="mi">29</span><span class="p">,</span> <span class="n">dfd</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">fatiguelife</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mi">29</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> 
+<span class="g g-Whitespace">     </span><span class="mi">13</span>     <span class="n">stats</span><span class="o">.</span><span class="n">fisk</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mf">3.09</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">foldcauchy</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mf">4.72</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+<span class="g g-Whitespace">     </span><span class="mi">14</span>     <span class="c1"># stats.foldnorm(c=1.95, loc=0.0, scale=1.0), stats.frechet_r(c=1.89, loc=0.0, scale=1.0),</span>
+<span class="g g-Whitespace">     </span><span class="mi">15</span>     <span class="c1"># stats.frechet_l(c=3.63, loc=0.0, scale=1.0), stats.genlogistic(c=0.412, loc=0.0, scale=1.0),</span>
+<span class="g g-Whitespace">     </span><span class="mi">16</span>     <span class="n">stats</span><span class="o">.</span><span class="n">genpareto</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">gennorm</span><span class="p">(</span><span class="n">beta</span><span class="o">=</span><span class="mf">1.3</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> 
+<span class="g g-Whitespace">     </span><span class="mi">17</span>     <span class="n">stats</span><span class="o">.</span><span class="n">genexpon</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mf">9.13</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">16.2</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mf">3.28</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">genextreme</span><span class="p">(</span><span class="n">c</span><span class="o">=-</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+<span class="g g-Whitespace">     </span><span class="mi">18</span>     <span class="n">stats</span><span class="o">.</span><span class="n">gausshyper</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mf">13.8</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">3.12</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mf">2.51</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mf">5.18</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">gamma</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mf">1.99</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+<span class="g g-Whitespace">     </span><span class="mi">19</span>     <span class="n">stats</span><span class="o">.</span><span class="n">gengamma</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mf">4.42</span><span class="p">,</span> <span class="n">c</span><span class="o">=-</span><span class="mf">3.12</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">genhalflogistic</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mf">0.773</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+<span class="ne">---&gt; </span><span class="mi">20</span>     <span class="n">stats</span><span class="o">.</span><span class="n">gilbrat</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">gompertz</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mf">0.947</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+<span class="g g-Whitespace">     </span><span class="mi">21</span>     <span class="n">stats</span><span class="o">.</span><span class="n">gumbel_r</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">gumbel_l</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+<span class="g g-Whitespace">     </span><span class="mi">22</span>     <span class="n">stats</span><span class="o">.</span><span class="n">halfcauchy</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">halflogistic</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+<span class="g g-Whitespace">     </span><span class="mi">23</span>     <span class="n">stats</span><span class="o">.</span><span class="n">halfnorm</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">halfgennorm</span><span class="p">(</span><span class="n">beta</span><span class="o">=</span><span class="mf">0.675</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+<span class="g g-Whitespace">     </span><span class="mi">24</span>     <span class="n">stats</span><span class="o">.</span><span class="n">hypsecant</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">invgamma</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mf">4.07</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+<span class="g g-Whitespace">     </span><span class="mi">25</span>     <span class="n">stats</span><span class="o">.</span><span class="n">invgauss</span><span class="p">(</span><span class="n">mu</span><span class="o">=</span><span class="mf">0.145</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">invweibull</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mf">10.6</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+<span class="g g-Whitespace">     </span><span class="mi">26</span>     <span class="n">stats</span><span class="o">.</span><span class="n">johnsonsb</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mf">4.32</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">3.18</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">johnsonsu</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mf">2.55</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">2.25</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+<span class="g g-Whitespace">     </span><span class="mi">27</span>     <span class="n">stats</span><span class="o">.</span><span class="n">ksone</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mf">1e+03</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">kstwobign</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+<span class="g g-Whitespace">     </span><span class="mi">28</span>     <span class="n">stats</span><span class="o">.</span><span class="n">laplace</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">levy</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+<span class="g g-Whitespace">     </span><span class="mi">29</span>     <span class="n">stats</span><span class="o">.</span><span class="n">levy_l</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">levy_stable</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.357</span><span class="p">,</span> <span class="n">beta</span><span class="o">=-</span><span class="mf">0.675</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+<span class="g g-Whitespace">     </span><span class="mi">30</span>     <span class="n">stats</span><span class="o">.</span><span class="n">logistic</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">loggamma</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mf">0.414</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+<span class="g g-Whitespace">     </span><span class="mi">31</span>     <span class="n">stats</span><span class="o">.</span><span class="n">loglaplace</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mf">3.25</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">lognorm</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="mf">0.954</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+<span class="g g-Whitespace">     </span><span class="mi">32</span>     <span class="n">stats</span><span class="o">.</span><span class="n">lomax</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mf">1.88</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">maxwell</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+<span class="g g-Whitespace">     </span><span class="mi">33</span>     <span class="n">stats</span><span class="o">.</span><span class="n">mielke</span><span class="p">(</span><span class="n">k</span><span class="o">=</span><span class="mf">10.4</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mf">3.6</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">nakagami</span><span class="p">(</span><span class="n">nu</span><span class="o">=</span><span class="mf">4.97</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+<span class="g g-Whitespace">     </span><span class="mi">34</span>     <span class="n">stats</span><span class="o">.</span><span class="n">ncx2</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="mi">21</span><span class="p">,</span> <span class="n">nc</span><span class="o">=</span><span class="mf">1.06</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">ncf</span><span class="p">(</span><span class="n">dfn</span><span class="o">=</span><span class="mi">27</span><span class="p">,</span> <span class="n">dfd</span><span class="o">=</span><span class="mi">27</span><span class="p">,</span> <span class="n">nc</span><span class="o">=</span><span class="mf">0.416</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+<span class="g g-Whitespace">     </span><span class="mi">35</span>     <span class="n">stats</span><span class="o">.</span><span class="n">nct</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">nc</span><span class="o">=</span><span class="mf">0.24</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+<span class="g g-Whitespace">     </span><span class="mi">36</span>     <span class="n">stats</span><span class="o">.</span><span class="n">pareto</span><span class="p">(</span><span class="n">b</span><span class="o">=</span><span class="mf">2.62</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">pearson3</span><span class="p">(</span><span class="n">skew</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+<span class="g g-Whitespace">     </span><span class="mi">37</span>     <span class="n">stats</span><span class="o">.</span><span class="n">powerlaw</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mf">1.66</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">powerlognorm</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mf">2.14</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mf">0.446</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+<span class="g g-Whitespace">     </span><span class="mi">38</span>     <span class="n">stats</span><span class="o">.</span><span class="n">powernorm</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mf">4.45</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">rdist</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+<span class="g g-Whitespace">     </span><span class="mi">39</span>     <span class="n">stats</span><span class="o">.</span><span class="n">reciprocal</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mf">0.00623</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">1.01</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">rayleigh</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+<span class="g g-Whitespace">     </span><span class="mi">40</span>     <span class="n">stats</span><span class="o">.</span><span class="n">rice</span><span class="p">(</span><span class="n">b</span><span class="o">=</span><span class="mf">0.775</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">recipinvgauss</span><span class="p">(</span><span class="n">mu</span><span class="o">=</span><span class="mf">0.63</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+<span class="g g-Whitespace">     </span><span class="mi">41</span>     <span class="n">stats</span><span class="o">.</span><span class="n">semicircular</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="mf">2.74</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+<span class="g g-Whitespace">     </span><span class="mi">42</span>     <span class="n">stats</span><span class="o">.</span><span class="n">triang</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mf">0.158</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">truncexpon</span><span class="p">(</span><span class="n">b</span><span class="o">=</span><span class="mf">4.69</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+<span class="g g-Whitespace">     </span><span class="mi">43</span>     <span class="n">stats</span><span class="o">.</span><span class="n">truncnorm</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">tukeylambda</span><span class="p">(</span><span class="n">lam</span><span class="o">=</span><span class="mf">3.13</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+<span class="g g-Whitespace">     </span><span class="mi">44</span>     <span class="n">stats</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">vonmises</span><span class="p">(</span><span class="n">kappa</span><span class="o">=</span><span class="mf">3.99</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+<span class="g g-Whitespace">     </span><span class="mi">45</span>     <span class="n">stats</span><span class="o">.</span><span class="n">vonmises_line</span><span class="p">(</span><span class="n">kappa</span><span class="o">=</span><span class="mf">3.99</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">wald</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+<span class="g g-Whitespace">     </span><span class="mi">46</span>     <span class="n">stats</span><span class="o">.</span><span class="n">weibull_min</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mf">1.79</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">weibull_max</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mf">2.87</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+<span class="g g-Whitespace">     </span><span class="mi">47</span>     <span class="n">stats</span><span class="o">.</span><span class="n">wrapcauchy</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mf">0.0311</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">48</span> <span class="p">]</span>
+
+<span class="ne">AttributeError</span>: module &#39;scipy.stats&#39; has no attribute &#39;gilbrat&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bins</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="n">size</span> <span class="o">=</span> <span class="mi">16384</span>
+<span class="n">plotData</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">distribution</span> <span class="ow">in</span> <span class="n">DISTRIBUTIONS</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>  
+        <span class="c1"># Create random data</span>
+        <span class="n">rv</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">distribution</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">))</span>
+        <span class="c1"># Get sane start and end points of distribution</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.99</span><span class="p">)</span>
+
+        <span class="c1"># Build PDF and turn into pandas Series</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">pdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+
+        <span class="c1"># Get histogram of random data</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">bins</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">rv</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">b</span><span class="p">,</span> <span class="n">normed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="p">[(</span><span class="n">a</span><span class="o">+</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="mf">2.0</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">a</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])]</span>
+        <span class="n">hist</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+
+        <span class="c1"># Create distribution name and parameter string</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">(</span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">distribution</span><span class="o">.</span><span class="n">dist</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">=</span><span class="si">{:0.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">distribution</span><span class="o">.</span><span class="n">kwds</span><span class="o">.</span><span class="n">items</span><span class="p">()]))</span>
+
+        <span class="c1"># Store data for later</span>
+        <span class="n">plotData</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s1">&#39;pdf&#39;</span><span class="p">:</span> <span class="n">pdf</span><span class="p">,</span>
+            <span class="s1">&#39;hist&#39;</span><span class="p">:</span> <span class="n">hist</span><span class="p">,</span>
+            <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="n">title</span>
+        <span class="p">})</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;could not create data&#39;</span><span class="p">,</span> <span class="n">distribution</span><span class="o">.</span><span class="n">dist</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/wc/2r44j8gs4gn56t1xtw5f6wlm0000gn/T/ipykernel_35683/1332613993.py:19: VisibleDeprecationWarning: Passing `normed=True` on non-uniform bins has always been broken, and computes neither the probability density function nor the probability mass function. The result is only correct if the bins are uniform, when density=True will produce the same result anyway. The argument will be removed in a future version of numpy.
+  y, x = np.histogram(rv, bins=b, normed=True)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s1">&#39;all_scipy_dists&#39;</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plotMax</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">plotData</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">plotData</span><span class="p">):</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;hist&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="nb">abs</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;hist&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+    <span class="c1"># Display</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;pdf&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;line&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Model PDF&#39;</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;hist&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;hist&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Random Sample&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">w</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">])</span>
+
+    <span class="c1"># Grab figure</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">pyplot</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span>
+    <span class="c1"># Output &#39;file&#39;</span>
+    <span class="n">outfile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;all_scipy_dists&#39;</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.png&#39;</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;png&#39;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+    <span class="n">matplotlib</span><span class="o">.</span><span class="n">pyplot</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="alternative-version">
+<h2>Alternative version<a class="headerlink" href="#alternative-version" title="Link to this heading">#</a></h2>
+<p>via <a class="reference external" href="https://stackoverflow.com/a/65957876/127114">https://stackoverflow.com/a/65957876/127114</a></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># import numpy as np         # v 1.19.2</span>
+<span class="c1"># from scipy import stats    # v 1.5.2</span>
+<span class="c1"># import pandas as pd        # v 1.1.3</span>
+
+<span class="c1"># pd.options.display.max_columns = 6</span>
+<span class="c1"># np.random.seed(123)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># size = 10000</span>
+<span class="c1"># names, xlabels, frozen_rvs, samples = [], [], [], []</span>
+
+<span class="c1"># # Extract names and sane parameters of all scipy probability distributions</span>
+<span class="c1"># # (except the deprecated ones) and loop through them to create lists of names,</span>
+<span class="c1"># # frozen random variables, samples of random variates and x labels</span>
+<span class="c1"># for name, params in stats._distr_params.distcont:</span>
+<span class="c1">#     if name not in [&#39;frechet_l&#39;, &#39;frechet_r&#39;]:</span>
+<span class="c1">#         loc, scale = 0, 1</span>
+<span class="c1">#         names.append(name)</span>
+<span class="c1">#         params = list(params) + [loc, scale]</span>
+        
+<span class="c1">#         # Create instance of random variable</span>
+<span class="c1">#         dist = getattr(stats, name)</span>
+        
+<span class="c1">#         # Create frozen random variable using parameters and add it to the list</span>
+<span class="c1">#         # to be used to draw the probability density functions</span>
+<span class="c1">#         rv = dist(*params)</span>
+<span class="c1">#         frozen_rvs.append(rv)</span>
+        
+<span class="c1">#         # Create sample of random variates</span>
+<span class="c1">#         samples.append(rv.rvs(size=size))</span>
+        
+<span class="c1">#         # Create x label containing the distribution parameters</span>
+<span class="c1">#         p_names = [&#39;loc&#39;, &#39;scale&#39;]</span>
+<span class="c1">#         if dist.shapes:</span>
+<span class="c1">#             p_names = [sh.strip() for sh in dist.shapes.split(&#39;,&#39;)] + [&#39;loc&#39;, &#39;scale&#39;]</span>
+<span class="c1">#         xlabels.append(&#39;, &#39;.join([f&#39;{pn}={pv:.2f}&#39; for pn, pv in zip(p_names, params)]))</span>
+
+<span class="c1"># # Create pandas dataframe containing all the samples</span>
+<span class="c1"># df = pd.DataFrame(data=np.array(samples).T, columns=[name for name in names])</span>
+<span class="c1"># # Rename the duplicate column names by adding a period and an integer at the end</span>
+<span class="c1"># df.columns = pd.io.parsers.ParserBase({&#39;names&#39;:df.columns})._maybe_dedup_names(df.columns)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># # Set parameters for figure dimensions</span>
+<span class="c1"># nplot = df.columns.size</span>
+<span class="c1"># cols = 3</span>
+<span class="c1"># rows = int(np.ceil(nplot/cols))</span>
+<span class="c1"># subp_w = 10/cols  # 10 corresponds to the figure width in inches</span>
+<span class="c1"># subp_h = 0.9*subp_w</span>
+
+<span class="c1"># # Create pandas grid of histograms</span>
+<span class="c1"># axs = df.hist(density=True, bins=15, grid=False, edgecolor=&#39;w&#39;,</span>
+<span class="c1">#               linewidth=0.5, legend=False,</span>
+<span class="c1">#               layout=(rows, cols), figsize=(cols*subp_w, rows*subp_h))</span>
+
+<span class="c1"># # Loop over subplots to draw probability density function and apply some</span>
+<span class="c1"># # additional formatting</span>
+<span class="c1"># for idx, ax in enumerate(axs.flat[:df.columns.size]):</span>
+<span class="c1">#     rv = frozen_rvs[idx]</span>
+<span class="c1">#     x = np.linspace(rv.ppf(0.001), rv.ppf(0.999), size)</span>
+<span class="c1">#     ax.plot(x, rv.pdf(x), c=&#39;black&#39;, alpha=0.5)</span>
+<span class="c1">#     ax.set_title(ax.get_title(), pad=25)</span>
+<span class="c1">#     ax.set_xlim(x.min(), x.max())</span>
+<span class="c1">#     ax.set_xlabel(xlabels[idx], fontsize=8, labelpad=10)</span>
+<span class="c1">#     ax.xaxis.set_label_position(&#39;top&#39;)</span>
+<span class="c1">#     ax.tick_params(axis=&#39;both&#39;, labelsize=9)</span>
+<span class="c1">#     ax.spines[&#39;top&#39;].set_visible(False)</span>
+<span class="c1">#     ax.spines[&#39;right&#39;].set_visible(False)</span>
+
+<span class="c1"># ax.figure.subplots_adjust(hspace=0.8, wspace=0.3)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "minireference/noBSstats",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./docs/notebooks/explorations"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#alternative-version">Alternative version</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Ivan Savov
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
