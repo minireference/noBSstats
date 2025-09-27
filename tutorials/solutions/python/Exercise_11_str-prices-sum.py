@@ -5,6 +5,6 @@ for price in prices:
     total = total + float(price)
 total
 
-# ALT. using list comprehensions syntax
+# ALT. using the list-comprehensions syntax
 prices_float = [float(price) for price in prices]
 sum(prices_float)

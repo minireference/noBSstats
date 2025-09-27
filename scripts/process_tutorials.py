@@ -39,7 +39,7 @@ import os
 import re
 
 
-PROJECT_DIR = "/Users/ivan/Projects/Minireference/STATSbook/noBSstatsnotebooks/"
+PROJECT_DIR = "/Users/ivan/Projects/Minireference/STATSbook/noBSstats/"
 SOLUTIONS_DIR = "tutorials/solutions/python/"
 SOLUTIONS_PATH = os.path.join(PROJECT_DIR, SOLUTIONS_DIR)
 GITHUB_TREE_URL = "https://github.com/minireference/noBSstats/blob/main"
