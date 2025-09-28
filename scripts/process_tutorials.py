@@ -40,10 +40,18 @@ import re
 
 
 PROJECT_DIR = "/Users/ivan/Projects/Minireference/STATSbook/noBSstats/"
-SOLUTIONS_DIR = "tutorials/solutions/python/"
-SOLUTIONS_PATH = os.path.join(PROJECT_DIR, SOLUTIONS_DIR)
+SOLUTIONS_DIR = "tutorials/solutions/"
 GITHUB_TREE_URL = "https://github.com/minireference/noBSstats/blob/main"
 GITHUB_RAW_TREE_URL = "https://raw.githubusercontent.com/minireference/noBSstats/main"
+
+
+TUTORIALS = {
+    "python": { "src": "python_tutorial_src.ipynb",
+               "dest": "python_tutorial.ipynb"},
+    "pandas": { "src": "pandas_tutorial_src.ipynb",
+               "dest": "pandas_tutorial.ipynb"}
+    # "seaborn": {}; TODO
+}
 
 def has_solution(cell):
     """Return True if cell is marked as containing an exercise solution."""
@@ -55,9 +63,9 @@ def has_solution(cell):
     )
 
 
-def clear_solutions_dir():
-    solutions_dir = SOLUTIONS_PATH
-    solutions_py_pat = os.path.join(solutions_dir, '*.py')
+def clear_solutions_dir(tutorial):
+    solutions_subdir = os.path.join(PROJECT_DIR, SOLUTIONS_DIR, tutorial)
+    solutions_py_pat = os.path.join(solutions_subdir, '*.py')
     solutions_py_files = glob.glob(solutions_py_pat)
     for solutions_py_file in solutions_py_files:
         os.remove(solutions_py_file)
@@ -73,24 +81,28 @@ def rewrite_attachment_links(cell):
             cell["source"] = updated_source
 
 
-def split_off_solutions(srcfilename: str, destfilename: str):
+def process_tutorial_notebook(tutorial: str, src_filepath: str, dest_filepath: str):
     """
-    Load the notebook, adjust headings in markdown cells, and write back.
+    Load the source notebook `src_filepath` and process the content:
+    - rewrite attachment/ images to URLs from github images (to make the tutorial independent from )
+    - split off solutions
     """
-    with open(srcfilename, 'r', encoding='utf-8') as inf:
+    assert tutorial in TUTORIALS.keys()
+    with open(src_filepath, 'r', encoding='utf-8') as inf:
         nb = nbformat.read(inf, as_version=4)
 
     for cell in nb.cells:
         # rewrite ./attachment/ relative images links as absolute URLs
         rewrite_attachment_links(cell)
 
-        # split_off_solutions
+        # split off solutions
         if cell.cell_type == 'code' and has_solution(cell):
             cell_source = cell["source"]
             cell_source = cell_source.replace("@titlesolution", "")
             title = cell_source.splitlines()[0].strip()
             filename = title.replace("# ","").replace(" ","_") + ".py"
-            with open(os.path.join(SOLUTIONS_PATH, filename), "w") as solf:
+            solutions_subdir = os.path.join(PROJECT_DIR, SOLUTIONS_DIR, tutorial)
+            with open(os.path.join(solutions_subdir, filename), "w") as solf:
                 solf.write(cell_source)
 
             # clear cell outputs
@@ -103,17 +115,22 @@ def split_off_solutions(srcfilename: str, destfilename: str):
 
             # set cell content to link to the solution .py
             cell["cell_type"] = "markdown"
-            py_url = f"{GITHUB_TREE_URL}/tutorials/solutions/python/{filename}"
+            py_url = f"{GITHUB_TREE_URL}/tutorials/solutions/{tutorial}/{filename}"
             new_source = f'<a href=\"{py_url}\" target=\"_blank\">Click for solution.</a>\n'
             cell['source'] = new_source
 
-    with open(destfilename, 'w', encoding='utf-8') as outf:
+    with open(dest_filepath, 'w', encoding='utf-8') as outf:
         nbformat.write(nb, outf)
 
 
+
 if __name__ == "__main__":
-    srcfilename = os.path.join(PROJECT_DIR, "tutorials/src/python_tutorial_src.ipynb")
-    destfilename = os.path.join(PROJECT_DIR, "tutorials/python_tutorial.ipynb")
-    print('Processing', srcfilename)
-    clear_solutions_dir()
-    split_off_solutions(srcfilename, destfilename)
+    print("Processing tutorials source files...")
+    for tutorial, tutorial_filenames in TUTORIALS.items():
+        print('Processing the', tutorial, "tutorial...")
+        src_filename = tutorial_filenames["src"]
+        dest_filename = tutorial_filenames["dest"]        
+        src_filepath = os.path.join(PROJECT_DIR, "tutorials/src/", src_filename)
+        dest_filepath = os.path.join(PROJECT_DIR, "tutorials", dest_filename)
+        clear_solutions_dir(tutorial)
+        process_tutorial_notebook(tutorial, src_filepath, dest_filepath)
