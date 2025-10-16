@@ -1,21 +1,29 @@
-No Bullshit Stats Notebooks
-===========================
+No Bullshit Guide to Statistics
+===============================
 
-Use the binder button to run the notebooks interactively: 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstats/main?labpath=notebooks).
-
-
-
-Contents
+The book
 --------
-- [`notebooks/`](./notebooks/README.md): the notebooks that accompany each section of the book.
+The **No Bullshit Guide to Statistics** is now available to purchase via Gumroad: 
+[gum.co/noBSstats](https://gum.co/noBSstats).
+This book introduces statistics in a rigorous, yet accessible manner.
+It is the result of seven years of research, writing, and editing by Ivan Savov and collaborators.
+Read the [announcement blog post](https://minireference.com/blog/noBSstats-prerelease/)
+for more details about the book contents and the eBook prerelease in October 2025.
+If you want to learn stats, go and get it now.
+
+
+
+Computational notebooks
+-----------------------
+- [`notebooks/`](./notebooks/README.md): list of notebooks that accompany the book.
 - [`tutorials/`](./tutorials/appendix.md): tutorials that introduce technical prerequisites like
   [Python coding](./tutorials/python_tutorial.ipynb),
   data management with [Pandas](https://pandas.pydata.org/),
   and data visualization with [Seaborn](https://seaborn.pydata.org/).
 
+Use this binder button to run the notebooks interactively: 
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstats/main?labpath=notebooks).
 
-This book introduces statistics in a rigorous, yet accessible manner.
 
 
 
@@ -45,17 +53,20 @@ This is why these notebooks exist—so you can try things for yourself.
 
 
 
-
-Book details
-------------
-These notebooks are part of the support materials for the upcoming book titled
-**No Bullshit Guide to Statistics** by Ivan Savov (Minireference Publishing).
+Links
+-----
 Check on the links below to learn more about the book:
 
-- [Concept map](https://minireference.com/static/excerpts/noBSstats/conceptmaps/BookSubjectsOverview.pdf)
-  from the book.
-- [Detailed book outline](https://docs.google.com/document/d/1fwep23-95U-w1QMPU31nOvUnUXE2X3s_Dbk5JuLlKAY/edit#) (continuously updated)
+- Concept maps from the books: [statistics\_concepts.pdf](https://minireference.com/static/conceptmaps/statistics_concepts.pdf)
+- Book preview PDFs that contain the introductions from each chapter:
+  - [noBSstats_part1_preview.pdf](https://minireference.com/static/excerpts/noBSstats_part1_preview.pdf) [223pp, 9MB]
+  - [noBSstats_part2_preview.pdf](https://minireference.com/static/excerpts/noBSstats_part2_preview.pdf) [191pp, 16MB]
+- [Detailed book outline](https://docs.google.com/document/d/1fwep23-95U-w1QMPU31nOvUnUXE2X3s_Dbk5JuLlKAY/edit#)
+  (continuously updated; open for comments)
 - Subscribe to the [mailing list](https://confirmsubscription.com/h/t/A17516BF2FCB41B2)
   for future updates about the book.
-
+- This GitHub repo for this site: [github.com/minireference/noBSstats](https://github.com/minireference/noBSstats/)
+- The Python module [`ministats`](https://github.com/minireference/ministats) with statistics helper functions.
+- A [playlist with video tutorials](https://www.youtube.com/playlist?list=PLGmu4KtWiH6-WQrTReNIIQhLxU8cirdxA)
+  for Chapter 3 (the most complicated stuff).
 
