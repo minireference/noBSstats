@@ -1,13 +1,15 @@
 # Chapter 3 — Classical statistics
 
-See the [Chapter 3 outline](https://docs.google.com/document/d/1fwep23-95U-w1QMPU31nOvUnUXE2X3s_Dbk5JuLlKAY/edit#heading=h.w1m7v7b5wie3)
-for an overview of what is covered.
+See the [excerpt from Chapter 3](https://minireference.com/static/excerpts/noBSstats_part2_preview.pdf#page=17)
+for a preview of the classical (frequentist) topics covered in the book.
+
 
 
 ## Notebooks
 
-Each notebook contains the code examples from corresponding section in book.
-If you're reading the book, you should follow along by running the commands in the these notebooks,
+Each notebook contains the code examples from the corresponding section in book.
+If you're reading the book,
+you should follow along by running the commands in the these notebooks,
 to check all the probability calculations for yourself.
 
 - Estimates and estimators [31_estimators.ipynb](./31_estimators.ipynb)
@@ -17,7 +19,7 @@ to check all the probability calculations for yourself.
 - Two-sample tests [35_two_sample_tests.ipynb](./35_two_sample_tests.ipynb)
 - Statistical design and error analysis [36_design.ipynb](./36_design.ipynb)
 - Inventory of statistical tests [37_inventory_stats_tests.ipynb](./37_inventory_stats_tests.ipynb)
-- COMING SOON: **Sec 3.8 Stats practice**
+- No notebook available for **Section 3.8 Stats practice**
 
 
 
