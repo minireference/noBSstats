@@ -1,0 +1,48 @@
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/jupyter_cache/executors/utils.py", line 58, in single_nb_execution
+    executenb(
+  File "/opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/nbclient/client.py", line 1319, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+  File "/opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/jupyter_core/utils/__init__.py", line 165, in wrapped
+    return loop.run_until_complete(inner)
+  File "/opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/nbclient/client.py", line 709, in async_execute
+    await self.async_execute_cell(
+  File "/opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/nbclient/client.py", line 1062, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/nbclient/client.py", line 918, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+np.random.seed(42)
+
+n = doctors.shape[0]
+B = 1000
+
+formula = "score ~ 1 + alc + weed + exrc"
+lm2 = smf.ols(formula, data=bdoctor).fit()
+
+bparams = np.ndarray( (B,len(lm2.params)))
+for i in range(B):
+    # bootstrap dataset
+    bdoctors = doctors.sample(n, replace=True)
+    # fit the model
+    blm2 = smf.ols(formula, data=bdoctors).fit()
+    bparams[i] = blm2.params
+
+cis = np.quantile(bparams, [0.025, 0.975], axis=0).T
+pd.DataFrame(cis, index=blm2.params.index)
+------------------
+
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mNameError[0m                                 Traceback (most recent call last)
+Cell [0;32mIn[5], line 3[0m
+[1;32m      1[0m np[38;5;241m.[39mrandom[38;5;241m.[39mseed([38;5;241m42[39m)
+[0;32m----> 3[0m n [38;5;241m=[39m [43mdoctors[49m[38;5;241m.[39mshape[[38;5;241m0[39m]
+[1;32m      4[0m B [38;5;241m=[39m [38;5;241m1000[39m
+[1;32m      6[0m formula [38;5;241m=[39m [38;5;124m"[39m[38;5;124mscore ~ 1 + alc + weed + exrc[39m[38;5;124m"[39m
+
+[0;31mNameError[0m: name 'doctors' is not defined
+
