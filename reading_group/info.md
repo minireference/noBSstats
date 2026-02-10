@@ -15,7 +15,7 @@ Schedule
 --------
 Here is the proposed [schedule](https://docs.google.com/spreadsheets/d/1Prwh9q-MTwScMLoH20rxmmNxZ9vEDx820nikQadxpkI/edit?usp=sharing) I have in mind:
 
-<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQmBwfQE2R9BOx2RGltcNtrqB7BdTtp0S6vQtMnDZb_o7hiz3hz7MiZULYyIM2D87nMuBSMmHl84S0f/pubhtml?range=A1:I9&amp;gid=0&amp;single=true&amp;widget=true&amp;headers=false" style="height:200px;width:100%;border:none;overflow:hidden;"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQmBwfQE2R9BOx2RGltcNtrqB7BdTtp0S6vQtMnDZb_o7hiz3hz7MiZULYyIM2D87nMuBSMmHl84S0f/pubhtml?range=A1:I9&amp;gid=0&amp;single=true&amp;widget=true&amp;headers=false" style="height:300px;width:100%;border:none;overflow:hidden;"></iframe>
 
 
 
@@ -39,7 +39,7 @@ and aim to motivate you to spend the time to read the text.
 I'll also introduce the key ideas using informal language.
 
 I'll be recoding new video tutorials for Chapter 1 and Chapter 2 topics
-and adding them to the existing playlist:  
+and adding them to the existing playlist: 
 https://www.youtube.com/playlist?list=PLGmu4KtWiH6-WQrTReNIIQhLxU8cirdxA
 
 
@@ -93,7 +93,7 @@ Discussion forum
 ----------------
 I've setup a Discord server called `noBSstats` where we can
 have ongoing discussions during the week.
-Sign up link is here:  
+Sign up link is here: 
 https://discord.gg/DEzBpZN4
 
 Use the `#chapter1-questions` channel to ask questions
@@ -109,11 +109,11 @@ but if you post your questions on the forum others will be able to learn from yo
 FAQ
 ---
 
-- Q: **What if I can't joint in Feb?**  
-  A: No problem, you can still benefit from the video tutorials and exercises.
+- **What if I can't joint in Feb?**  
+  No problem, you can still benefit from the video tutorials and exercises.
   
-- Q: **When do we get to Part 2?**  
-  A: We're with a reading group of Part 1, and if things work out I'll organize
+- **When do we get to Part 2?**  
+  We're with a reading group of Part 1, and if things work out I'll organize
   a reading group for Part 2 as well (Spring or Summer 2026).
 
 
