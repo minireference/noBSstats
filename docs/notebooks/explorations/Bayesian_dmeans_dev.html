@@ -1,0 +1,2149 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Helper functions &#8212; No Bullshit Guide to Statistics</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=1ae7504c"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'docs/notebooks/explorations/Bayesian_dmeans_dev';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/logo.png" class="logo__image only-light" alt="No Bullshit Guide to Statistics - Home"/>
+    <script>document.write(`<img src="../../../_static/logo.png" class="logo__image only-dark" alt="No Bullshit Guide to Statistics - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../intro.html">
+                    No Bullshit Guide to Statistics
+                </a>
+            </li>
+        </ul>
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../notebooks/10_DATA.html">Chapter 1 — Data</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/11_intro_to_data.html">Section 1.1 — Introduction to data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/12_data_in_practice.html">Section 1.2 — Data in practice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/13_descriptive_statistics.html">Section 1.3 — Descriptive statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../exercises/exercises_13_descr_stats.html">Descriptive statistics exercises</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../notebooks/20_PROB.html">Chapter 2 — Probability theory</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/21_discrete_random_vars.html">Section 2.1 — Discrete random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/22_multiple_random_vars.html">Section 2.2 — Multiple random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/23_inventory_discrete_dists.html">Section 2.3 — Inventory of discrete distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/24_continuous_random_vars.html">Section 2.4 — Continuous random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/25_multiple_continuous_random_vars.html">Section 2.5 — Multiple continuous random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/26_inventory_continuous_dists.html">Section 2.6 — Inventory of continuous distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/27_simulations.html">Section 2.7 — Simulation and empirical distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/28_random_samples.html">Section 2.8 — Probability models for random samples</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../notebooks/30_STATS.html">Chapter 3 — Classical statistics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/31_estimators.html">Section 3.1 — Estimators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../exercises/exercises_31_estimtors.html">Exercises for Section 3.1 Estimates and estimators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/32_confidence_intervals.html">Section 3.2 — Confidence intervals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../exercises/exercises_32_confidence_intervals.html">Exercises for Section 3.2 Confidence intervals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/33_intro_to_NHST.html">Section 3.3 — Introduction to hypothesis testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/34_analytical_approx.html">Section 3.4 — Hypothesis testing using analytical approximations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/35_two_sample_tests.html">Section 3.5 — Two-sample hypothesis tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/36_design.html">Section 3.6 — Statistical design and error analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/37_inventory_stats_tests.html">Section 3.7 — Inventory of statistical tests</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../examples/README.html">Statistical analysis examples</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/statistical_design.html">Statistical design examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/one_sample_z-test.html">One-sample z-test for the mean</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/one_sample_t-test.html">One-sample t-test for the mean</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/two_sample_t-test.html">Welch’s two-sample <span class="math notranslate nohighlight">\(t\)</span>-test</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/ANOVA.html">Analysis of variance (ANOVA)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/two_sample_equivalence_test.html">Two-sample equivalence test</a></li>
+
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../notebooks/40_LINEAR_MODELS.html">Chapter 4 — Linear models</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/41_simple_linear_regression.html">Section 4.1 — Simple linear regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/42_multiple_linear_regression.html">Section 4.2 — Multiple linear regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/43_interpreting_linear_models.html">Section 4.3 — Interpreting linear models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/44_regression_with_categorical_predictors.html">Section 4.4 — Regression with categorical predictors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/45_causal_inference.html">Section 4.5 — Model selection for causal inference</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/46_generalized_linear_models.html">Section 4.6 — Generalized linear models</a></li>
+
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../notebooks/50_BAYESIAN_STATS.html">Chapter 5 — Bayesian statistics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/51_intro_to_Bayesian_stats.html">Section 5.1 — Introduction to Bayesian statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/52_Bayesian_inference_computations.html">Section 5.2 — Bayesian inference computations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/53_Bayesian_linear_models.html">Section 5.3 — Bayesian linear models</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/54_difference_between_means.html">Section 5.4 — Bayesian difference between means</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/55_hierarchical_models.html">Section 5.5 — Hierarchical models</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../tutorials/appendix.html">Appendix</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/python_tutorial.html">Appendix C — Python tutorial</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/pandas_tutorial.html">Appendix D — Pandas tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/seaborn_tutorial.html">Appendix E — Seaborn tutorial</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/calculus_tutorial.html">Appendix F — Calculus tutorial</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reading_group/info.html">noBSstats Reading Group</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../blogposts/index.html">Blog posts</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../blogposts/python_for_stats.html">Using Python for learning statistics Part 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../blogposts/probability_models.html">Using Python for probability calculations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../blogposts/sampling_distributions.html">Sampling distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../blogposts/bootstrap.html">Bootstrap estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../blogposts/simulation_hypothesis_tests.html">Hypothesis testing using simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../blogposts/permutation_test.html">Permutation tests for comparing two groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../blogposts/stats_procedures.html">Python libraries for doing statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../blogposts/python_stats_libraries.html">Python libraries for doing statistics</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/minireference/noBSstats/main?urlpath=lab/tree/./docs/notebooks/explorations/Bayesian_dmeans_dev.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Binder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Binder logo" src="../../../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/minireference/noBSstats" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/minireference/noBSstats/issues/new?title=Issue%20on%20page%20%2Fdocs/notebooks/explorations/Bayesian_dmeans_dev.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/docs/notebooks/explorations/Bayesian_dmeans_dev.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Helper functions</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Helper functions</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#sensitivity-analysis">Sensitivity analysis</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-analysis">Performance analysis</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset">Dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#permutation-test">Permutation test</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#welch-s-two-sample-t-test">Welch’s two-sample t-test</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#normal-bayesian-model">Normal Bayesian model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#robust-bayesian-model">Robust Bayesian model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bayes-factors">Bayes factors</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">arviz</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">az</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">bambi</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bmb</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">arviz.plots.plot_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">calculate_point_estimate</span> <span class="k">as</span> <span class="n">calc_point_est</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="helper-functions">
+<h1>Helper functions<a class="headerlink" href="#helper-functions" title="Link to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">is_inside</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">interval</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check if the value `val` is inside the interval `interval`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">val</span> <span class="o">&gt;=</span> <span class="n">interval</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">val</span> <span class="o">&lt;=</span> <span class="n">interval</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_pval_decision</span><span class="p">(</span><span class="n">pval</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">pval</span> <span class="o">&lt;=</span> <span class="n">alpha</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;reject H0&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;fail to reject H0&quot;</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_ci_decision</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">interval</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">is_inside</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">interval</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;fail to reject H0&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;reject H0&quot;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_bf_decision</span><span class="p">(</span><span class="n">bfA0</span><span class="p">,</span> <span class="n">cutoff_reject_H0</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">cutoff_accept_H0</span><span class="o">=</span><span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">bfA0</span> <span class="o">&gt;=</span> <span class="n">cutoff_reject_H0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;reject H0&quot;</span>
+    <span class="k">elif</span> <span class="n">bfA0</span> <span class="o">&lt;=</span> <span class="n">cutoff_accept_H0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;accept H0&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;no decision&quot;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">calc_dmeans</span><span class="p">(</span><span class="n">idata</span><span class="p">,</span> <span class="n">group_name</span><span class="o">=</span><span class="s2">&quot;group&quot;</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;ctrl&quot;</span><span class="p">,</span> <span class="s2">&quot;treat&quot;</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Simplified version of `ministats.bayes.calc_dmeans_stats`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">group_dim</span> <span class="o">=</span> <span class="n">group_name</span> <span class="o">+</span> <span class="s2">&quot;_dim&quot;</span>
+    <span class="n">post</span> <span class="o">=</span> <span class="n">idata</span><span class="p">[</span><span class="s2">&quot;posterior&quot;</span><span class="p">]</span>
+    <span class="n">post</span><span class="p">[</span><span class="s2">&quot;mu_&quot;</span> <span class="o">+</span> <span class="n">groups</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">post</span><span class="p">[</span><span class="n">group_name</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[{</span><span class="n">group_dim</span><span class="p">:</span><span class="n">groups</span><span class="p">[</span><span class="mi">0</span><span class="p">]}]</span>
+    <span class="n">post</span><span class="p">[</span><span class="s2">&quot;mu_&quot;</span> <span class="o">+</span> <span class="n">groups</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">post</span><span class="p">[</span><span class="n">group_name</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[{</span><span class="n">group_dim</span><span class="p">:</span><span class="n">groups</span><span class="p">[</span><span class="mi">1</span><span class="p">]}]</span>
+    <span class="n">post</span><span class="p">[</span><span class="s2">&quot;dmeans&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">post</span><span class="p">[</span><span class="s2">&quot;mu_&quot;</span> <span class="o">+</span> <span class="n">groups</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">-</span> <span class="n">post</span><span class="p">[</span><span class="s2">&quot;mu_&quot;</span> <span class="o">+</span> <span class="n">groups</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="sensitivity-analysis">
+<h1>Sensitivity analysis<a class="headerlink" href="#sensitivity-analysis" title="Link to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Original (for testing)</span>
+<span class="n">iqs2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/iqs2.csv&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ministats.book.tables</span><span class="w"> </span><span class="kn">import</span> <span class="n">fit_bayesian_model_iqs2</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ministats.bayes</span><span class="w"> </span><span class="kn">import</span> <span class="n">calc_dmeans_stats</span>
+
+<span class="n">idata2</span> <span class="o">=</span> <span class="n">fit_bayesian_model_iqs2</span><span class="p">(</span><span class="n">iqs2</span><span class="p">,</span> <span class="p">{},</span> <span class="n">random_seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">calc_dmeans_stats</span><span class="p">(</span><span class="n">idata2</span><span class="p">,</span> <span class="n">group_name</span><span class="o">=</span><span class="s2">&quot;group&quot;</span><span class="p">)</span>
+<span class="n">post2</span> <span class="o">=</span> <span class="n">idata2</span><span class="p">[</span><span class="s2">&quot;posterior&quot;</span><span class="p">]</span>
+<span class="n">summary2</span> <span class="o">=</span> <span class="n">az</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">post2</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;stats&quot;</span><span class="p">,</span> <span class="n">hdi_prob</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span>
+<span class="n">summary2</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/pytensor/link/c/cmodule.py:2968: UserWarning: PyTensor could not link to a BLAS installation. Operations that might benefit from BLAS will be severely degraded.
+This usually happens when PyTensor is installed via pip. We recommend it be installed via conda/mamba/pixi instead.
+Alternatively, you can use an experimental backend such as Numba or JAX that perform their own BLAS optimizations, by setting `pytensor.config.mode == &#39;NUMBA&#39;` or passing `mode=&#39;NUMBA&#39;` when compiling a PyTensor function.
+For more options and details see https://pytensor.readthedocs.io/en/latest/troubleshooting.html#how-do-i-configure-test-my-blas-library
+  warnings.warn(
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>mean</th>
+      <th>sd</th>
+      <th>hdi_2.5%</th>
+      <th>hdi_97.5%</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>nu</th>
+      <td>1.856</td>
+      <td>0.483</td>
+      <td>0.996</td>
+      <td>2.760</td>
+    </tr>
+    <tr>
+      <th>group[ctrl]</th>
+      <td>100.527</td>
+      <td>0.213</td>
+      <td>100.120</td>
+      <td>100.948</td>
+    </tr>
+    <tr>
+      <th>group[treat]</th>
+      <td>101.547</td>
+      <td>0.371</td>
+      <td>100.820</td>
+      <td>102.273</td>
+    </tr>
+    <tr>
+      <th>sigma_group[ctrl]</th>
+      <td>0.008</td>
+      <td>0.193</td>
+      <td>-0.390</td>
+      <td>0.365</td>
+    </tr>
+    <tr>
+      <th>sigma_group[treat]</th>
+      <td>0.672</td>
+      <td>0.209</td>
+      <td>0.274</td>
+      <td>1.086</td>
+    </tr>
+    <tr>
+      <th>mu_ctrl</th>
+      <td>100.527</td>
+      <td>0.213</td>
+      <td>100.120</td>
+      <td>100.948</td>
+    </tr>
+    <tr>
+      <th>mu_treat</th>
+      <td>101.547</td>
+      <td>0.371</td>
+      <td>100.820</td>
+      <td>102.273</td>
+    </tr>
+    <tr>
+      <th>dmeans</th>
+      <td>1.020</td>
+      <td>0.430</td>
+      <td>0.232</td>
+      <td>1.907</td>
+    </tr>
+    <tr>
+      <th>sigma_ctrl</th>
+      <td>1.027</td>
+      <td>0.201</td>
+      <td>0.661</td>
+      <td>1.422</td>
+    </tr>
+    <tr>
+      <th>sigma_treat</th>
+      <td>2.002</td>
+      <td>0.422</td>
+      <td>1.245</td>
+      <td>2.858</td>
+    </tr>
+    <tr>
+      <th>dsigmas</th>
+      <td>0.975</td>
+      <td>0.426</td>
+      <td>0.213</td>
+      <td>1.858</td>
+    </tr>
+    <tr>
+      <th>cohend</th>
+      <td>0.662</td>
+      <td>0.300</td>
+      <td>0.109</td>
+      <td>1.283</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ministats.book.tables</span><span class="w"> </span><span class="kn">import</span> <span class="n">sens_analysis_dmeans_iqs2</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">sens_analysis_dmeans_iqs2</span><span class="p">(</span><span class="n">iqs2</span><span class="p">)</span>
+<span class="n">results</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>M_prior</th>
+      <th>logSigma_prior</th>
+      <th>Nu_prior</th>
+      <th>dmeans_mean</th>
+      <th>dmeans_95hdi</th>
+      <th>dsigmas_mode</th>
+      <th>dsigmas_95hdi</th>
+      <th>nu_mode</th>
+      <th>codhend_mode</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>$\mathcal{N}(100,35)$</td>
+      <td>$\mathcal{N}(1,2)$</td>
+      <td>$\Gamma(2,0.1)$</td>
+      <td>1.02</td>
+      <td>[0.232, 1.907]</td>
+      <td>0.897</td>
+      <td>[0.213, 1.858]</td>
+      <td>1.672</td>
+      <td>0.897</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>$\mathcal{N}(100,50)$</td>
+      <td>$\mathcal{N}(1,2)$</td>
+      <td>$\Gamma(2,0.1)$</td>
+      <td>1.014</td>
+      <td>[0.207, 1.888]</td>
+      <td>0.932</td>
+      <td>[0.143, 1.823]</td>
+      <td>1.71</td>
+      <td>0.932</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>$\mathcal{N}(100,10)$</td>
+      <td>$\mathcal{N}(1,2)$</td>
+      <td>$\Gamma(2,0.1)$</td>
+      <td>1.026</td>
+      <td>[0.227, 1.917]</td>
+      <td>0.905</td>
+      <td>[0.201, 1.829]</td>
+      <td>1.724</td>
+      <td>0.905</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>$\mathcal{N}(100,35)$</td>
+      <td>$\mathcal{N}(0,1)$</td>
+      <td>$\Gamma(2,0.1)$</td>
+      <td>1.027</td>
+      <td>[0.193, 1.838]</td>
+      <td>0.831</td>
+      <td>[0.178, 1.714]</td>
+      <td>1.608</td>
+      <td>0.831</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>$\mathcal{N}(100,35)$</td>
+      <td>$\mathcal{N}(1,2)$</td>
+      <td>$\textrm{Expon}(1/30)$</td>
+      <td>1.027</td>
+      <td>[0.261, 1.867]</td>
+      <td>0.795</td>
+      <td>[0.217, 1.882]</td>
+      <td>1.6</td>
+      <td>0.795</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># display_cols = [&#39;M_prior&#39;, &#39;logSigma_prior&#39;, &#39;Nu_prior&#39;, &#39;dmeans_mean&#39;, &#39;dmeans_95hdi&#39;, &#39;dsigmas_mode&#39;, &#39;nu_mode&#39;]</span>
+<span class="c1"># with pd.option_context(&#39;styler.format.precision&#39;, 3):</span>
+<span class="c1">#     print(results[display_cols].to_latex(index=False))</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="performance-analysis">
+<h1>Performance analysis<a class="headerlink" href="#performance-analysis" title="Link to this heading">#</a></h1>
+<section id="dataset">
+<h2>Dataset<a class="headerlink" href="#dataset" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># # Original (for testing)</span>
+<span class="c1"># iqs2 = pd.read_csv(&quot;../datasets/iqs2.csv&quot;)</span>
+<span class="c1"># treated = iqs2[iqs2[&quot;group&quot;]==&quot;treat&quot;][&quot;iq&quot;].values</span>
+<span class="c1"># controls = iqs2[iqs2[&quot;group&quot;]==&quot;ctrl&quot;][&quot;iq&quot;].values</span>
+<span class="c1"># dataset = iqs2</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ministats.book.tables</span><span class="w"> </span><span class="kn">import</span> <span class="n">gen_dmeans_dataset</span>
+
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">gen_dmeans_dataset</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">Delta</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">prop_outliers</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">random_seed</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+<span class="n">treated</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="n">dataset</span><span class="p">[</span><span class="s2">&quot;group&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;treat&quot;</span><span class="p">][</span><span class="s2">&quot;value&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">controls</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="n">dataset</span><span class="p">[</span><span class="s2">&quot;group&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;ctrl&quot;</span><span class="p">][</span><span class="s2">&quot;value&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">treated</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">20</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">controls</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">20</span><span class="p">])</span>
+<span class="c1"># dataset.groupby(&quot;group&quot;).head()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[ 3.38666824  4.05043186 -0.19195943 -0.50781168  0.67179962  0.39543833
+  1.25410694 -1.19000488  0.45604899  0.50586257  0.30916242 -0.31387606
+  0.60371539  1.60303184  0.48431307  0.56393392  0.77375155  0.17309315
+ -0.2712744   0.71410988]
+[ 0.48252047  2.14383013 -0.39514554 -0.20430091 -1.27163265 -2.59687863
+  0.28968091 -0.87330464  0.39407266  0.93510554 -0.01568471  0.25959597
+ -1.47331424  0.8019266  -1.75075239 -0.49505193 -1.00860081  0.02524419
+ -0.12150685 -1.54687318]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ministats.book.tables</span><span class="w"> </span><span class="kn">import</span> <span class="n">fit_dmeans_models</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">fit_dmeans_models</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">random_seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ministats.book.tables</span><span class="w"> </span><span class="kn">import</span> <span class="n">gen_dmeans_datasets</span>
+<span class="n">gen_dmeans_datasets</span><span class="p">(</span>
+    <span class="n">ns</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">50</span><span class="p">,</span><span class="mi">100</span><span class="p">],</span>
+    <span class="n">Deltas</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">],</span>
+    <span class="n">outliers_options</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;no&quot;</span><span class="p">,</span> <span class="s2">&quot;few&quot;</span><span class="p">,</span> <span class="s2">&quot;lots&quot;</span><span class="p">],</span>
+    <span class="n">random_seed_start</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[{&#39;n&#39;: 20, &#39;Delta&#39;: 0, &#39;outliers&#39;: &#39;no&#39;, &#39;random_seed&#39;: 45},
+ {&#39;n&#39;: 20, &#39;Delta&#39;: 0, &#39;outliers&#39;: &#39;few&#39;, &#39;random_seed&#39;: 46},
+ {&#39;n&#39;: 20, &#39;Delta&#39;: 0, &#39;outliers&#39;: &#39;lots&#39;, &#39;random_seed&#39;: 47},
+ {&#39;n&#39;: 20, &#39;Delta&#39;: 0.2, &#39;outliers&#39;: &#39;no&#39;, &#39;random_seed&#39;: 48},
+ {&#39;n&#39;: 20, &#39;Delta&#39;: 0.2, &#39;outliers&#39;: &#39;few&#39;, &#39;random_seed&#39;: 49},
+ {&#39;n&#39;: 20, &#39;Delta&#39;: 0.2, &#39;outliers&#39;: &#39;lots&#39;, &#39;random_seed&#39;: 50},
+ {&#39;n&#39;: 20, &#39;Delta&#39;: 0.5, &#39;outliers&#39;: &#39;no&#39;, &#39;random_seed&#39;: 51},
+ {&#39;n&#39;: 20, &#39;Delta&#39;: 0.5, &#39;outliers&#39;: &#39;few&#39;, &#39;random_seed&#39;: 52},
+ {&#39;n&#39;: 20, &#39;Delta&#39;: 0.5, &#39;outliers&#39;: &#39;lots&#39;, &#39;random_seed&#39;: 53},
+ {&#39;n&#39;: 20, &#39;Delta&#39;: 0.8, &#39;outliers&#39;: &#39;no&#39;, &#39;random_seed&#39;: 54},
+ {&#39;n&#39;: 20, &#39;Delta&#39;: 0.8, &#39;outliers&#39;: &#39;few&#39;, &#39;random_seed&#39;: 55},
+ {&#39;n&#39;: 20, &#39;Delta&#39;: 0.8, &#39;outliers&#39;: &#39;lots&#39;, &#39;random_seed&#39;: 56},
+ {&#39;n&#39;: 20, &#39;Delta&#39;: 1.3, &#39;outliers&#39;: &#39;no&#39;, &#39;random_seed&#39;: 57},
+ {&#39;n&#39;: 20, &#39;Delta&#39;: 1.3, &#39;outliers&#39;: &#39;few&#39;, &#39;random_seed&#39;: 58},
+ {&#39;n&#39;: 20, &#39;Delta&#39;: 1.3, &#39;outliers&#39;: &#39;lots&#39;, &#39;random_seed&#39;: 59},
+ {&#39;n&#39;: 30, &#39;Delta&#39;: 0, &#39;outliers&#39;: &#39;no&#39;, &#39;random_seed&#39;: 60},
+ {&#39;n&#39;: 30, &#39;Delta&#39;: 0, &#39;outliers&#39;: &#39;few&#39;, &#39;random_seed&#39;: 61},
+ {&#39;n&#39;: 30, &#39;Delta&#39;: 0, &#39;outliers&#39;: &#39;lots&#39;, &#39;random_seed&#39;: 62},
+ {&#39;n&#39;: 30, &#39;Delta&#39;: 0.2, &#39;outliers&#39;: &#39;no&#39;, &#39;random_seed&#39;: 63},
+ {&#39;n&#39;: 30, &#39;Delta&#39;: 0.2, &#39;outliers&#39;: &#39;few&#39;, &#39;random_seed&#39;: 64},
+ {&#39;n&#39;: 30, &#39;Delta&#39;: 0.2, &#39;outliers&#39;: &#39;lots&#39;, &#39;random_seed&#39;: 65},
+ {&#39;n&#39;: 30, &#39;Delta&#39;: 0.5, &#39;outliers&#39;: &#39;no&#39;, &#39;random_seed&#39;: 66},
+ {&#39;n&#39;: 30, &#39;Delta&#39;: 0.5, &#39;outliers&#39;: &#39;few&#39;, &#39;random_seed&#39;: 67},
+ {&#39;n&#39;: 30, &#39;Delta&#39;: 0.5, &#39;outliers&#39;: &#39;lots&#39;, &#39;random_seed&#39;: 68},
+ {&#39;n&#39;: 30, &#39;Delta&#39;: 0.8, &#39;outliers&#39;: &#39;no&#39;, &#39;random_seed&#39;: 69},
+ {&#39;n&#39;: 30, &#39;Delta&#39;: 0.8, &#39;outliers&#39;: &#39;few&#39;, &#39;random_seed&#39;: 70},
+ {&#39;n&#39;: 30, &#39;Delta&#39;: 0.8, &#39;outliers&#39;: &#39;lots&#39;, &#39;random_seed&#39;: 71},
+ {&#39;n&#39;: 30, &#39;Delta&#39;: 1.3, &#39;outliers&#39;: &#39;no&#39;, &#39;random_seed&#39;: 72},
+ {&#39;n&#39;: 30, &#39;Delta&#39;: 1.3, &#39;outliers&#39;: &#39;few&#39;, &#39;random_seed&#39;: 73},
+ {&#39;n&#39;: 30, &#39;Delta&#39;: 1.3, &#39;outliers&#39;: &#39;lots&#39;, &#39;random_seed&#39;: 74},
+ {&#39;n&#39;: 50, &#39;Delta&#39;: 0, &#39;outliers&#39;: &#39;no&#39;, &#39;random_seed&#39;: 75},
+ {&#39;n&#39;: 50, &#39;Delta&#39;: 0, &#39;outliers&#39;: &#39;few&#39;, &#39;random_seed&#39;: 76},
+ {&#39;n&#39;: 50, &#39;Delta&#39;: 0, &#39;outliers&#39;: &#39;lots&#39;, &#39;random_seed&#39;: 77},
+ {&#39;n&#39;: 50, &#39;Delta&#39;: 0.2, &#39;outliers&#39;: &#39;no&#39;, &#39;random_seed&#39;: 78},
+ {&#39;n&#39;: 50, &#39;Delta&#39;: 0.2, &#39;outliers&#39;: &#39;few&#39;, &#39;random_seed&#39;: 79},
+ {&#39;n&#39;: 50, &#39;Delta&#39;: 0.2, &#39;outliers&#39;: &#39;lots&#39;, &#39;random_seed&#39;: 80},
+ {&#39;n&#39;: 50, &#39;Delta&#39;: 0.5, &#39;outliers&#39;: &#39;no&#39;, &#39;random_seed&#39;: 81},
+ {&#39;n&#39;: 50, &#39;Delta&#39;: 0.5, &#39;outliers&#39;: &#39;few&#39;, &#39;random_seed&#39;: 82},
+ {&#39;n&#39;: 50, &#39;Delta&#39;: 0.5, &#39;outliers&#39;: &#39;lots&#39;, &#39;random_seed&#39;: 83},
+ {&#39;n&#39;: 50, &#39;Delta&#39;: 0.8, &#39;outliers&#39;: &#39;no&#39;, &#39;random_seed&#39;: 84},
+ {&#39;n&#39;: 50, &#39;Delta&#39;: 0.8, &#39;outliers&#39;: &#39;few&#39;, &#39;random_seed&#39;: 85},
+ {&#39;n&#39;: 50, &#39;Delta&#39;: 0.8, &#39;outliers&#39;: &#39;lots&#39;, &#39;random_seed&#39;: 86},
+ {&#39;n&#39;: 50, &#39;Delta&#39;: 1.3, &#39;outliers&#39;: &#39;no&#39;, &#39;random_seed&#39;: 87},
+ {&#39;n&#39;: 50, &#39;Delta&#39;: 1.3, &#39;outliers&#39;: &#39;few&#39;, &#39;random_seed&#39;: 88},
+ {&#39;n&#39;: 50, &#39;Delta&#39;: 1.3, &#39;outliers&#39;: &#39;lots&#39;, &#39;random_seed&#39;: 89},
+ {&#39;n&#39;: 100, &#39;Delta&#39;: 0, &#39;outliers&#39;: &#39;no&#39;, &#39;random_seed&#39;: 90},
+ {&#39;n&#39;: 100, &#39;Delta&#39;: 0, &#39;outliers&#39;: &#39;few&#39;, &#39;random_seed&#39;: 91},
+ {&#39;n&#39;: 100, &#39;Delta&#39;: 0, &#39;outliers&#39;: &#39;lots&#39;, &#39;random_seed&#39;: 92},
+ {&#39;n&#39;: 100, &#39;Delta&#39;: 0.2, &#39;outliers&#39;: &#39;no&#39;, &#39;random_seed&#39;: 93},
+ {&#39;n&#39;: 100, &#39;Delta&#39;: 0.2, &#39;outliers&#39;: &#39;few&#39;, &#39;random_seed&#39;: 94},
+ {&#39;n&#39;: 100, &#39;Delta&#39;: 0.2, &#39;outliers&#39;: &#39;lots&#39;, &#39;random_seed&#39;: 95},
+ {&#39;n&#39;: 100, &#39;Delta&#39;: 0.5, &#39;outliers&#39;: &#39;no&#39;, &#39;random_seed&#39;: 96},
+ {&#39;n&#39;: 100, &#39;Delta&#39;: 0.5, &#39;outliers&#39;: &#39;few&#39;, &#39;random_seed&#39;: 97},
+ {&#39;n&#39;: 100, &#39;Delta&#39;: 0.5, &#39;outliers&#39;: &#39;lots&#39;, &#39;random_seed&#39;: 98},
+ {&#39;n&#39;: 100, &#39;Delta&#39;: 0.8, &#39;outliers&#39;: &#39;no&#39;, &#39;random_seed&#39;: 99},
+ {&#39;n&#39;: 100, &#39;Delta&#39;: 0.8, &#39;outliers&#39;: &#39;few&#39;, &#39;random_seed&#39;: 100},
+ {&#39;n&#39;: 100, &#39;Delta&#39;: 0.8, &#39;outliers&#39;: &#39;lots&#39;, &#39;random_seed&#39;: 101},
+ {&#39;n&#39;: 100, &#39;Delta&#39;: 1.3, &#39;outliers&#39;: &#39;no&#39;, &#39;random_seed&#39;: 102},
+ {&#39;n&#39;: 100, &#39;Delta&#39;: 1.3, &#39;outliers&#39;: &#39;few&#39;, &#39;random_seed&#39;: 103},
+ {&#39;n&#39;: 100, &#39;Delta&#39;: 1.3, &#39;outliers&#39;: &#39;lots&#39;, &#39;random_seed&#39;: 104}]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ministats.book.tables</span><span class="w"> </span><span class="kn">import</span> <span class="n">calc_dmeans_perf_metrics</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">calc_dmeans_perf_metrics</span><span class="p">(</span>
+    <span class="n">ns</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">50</span><span class="p">,</span><span class="mi">100</span><span class="p">],</span>
+    <span class="n">Deltas</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">],</span>
+    <span class="n">outliers_options</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;no&quot;</span><span class="p">,</span> <span class="s2">&quot;few&quot;</span><span class="p">,</span> <span class="s2">&quot;lots&quot;</span><span class="p">],</span>
+    <span class="n">reps</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">results</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Simulating a total of 60 dataset specs
+{&#39;n&#39;: 20, &#39;Delta&#39;: 0, &#39;outliers&#39;: &#39;no&#39;, &#39;random_seed&#39;: 45}
+Running {&#39;n&#39;: 20, &#39;Delta&#39;: 0, &#39;outliers&#39;: &#39;no&#39;, &#39;random_seed&#39;: 45} rep 0
+</pre></div>
+</div>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">KeyboardInterrupt</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">11</span><span class="p">],</span> <span class="n">line</span> <span class="mi">2</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="kn">from</span><span class="w"> </span><span class="nn">ministats.book.tables</span><span class="w"> </span><span class="kn">import</span> <span class="n">calc_dmeans_perf_metrics</span>
+<span class="ne">----&gt; </span><span class="mi">2</span> <span class="n">results</span> <span class="o">=</span> <span class="n">calc_dmeans_perf_metrics</span><span class="p">(</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span>     <span class="n">ns</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">50</span><span class="p">,</span><span class="mi">100</span><span class="p">],</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span>     <span class="n">Deltas</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">],</span>
+<span class="g g-Whitespace">      </span><span class="mi">5</span>     <span class="n">outliers_options</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;no&quot;</span><span class="p">,</span> <span class="s2">&quot;few&quot;</span><span class="p">,</span> <span class="s2">&quot;lots&quot;</span><span class="p">],</span>
+<span class="g g-Whitespace">      </span><span class="mi">6</span>     <span class="n">reps</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">7</span> <span class="n">results</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/ministats/book/tables.py:444,</span> in <span class="ni">calc_dmeans_perf_metrics</span><span class="nt">(ns, Deltas, outliers_options, reps, random_seed_start)</span>
+<span class="g g-Whitespace">    </span><span class="mi">439</span> <span class="n">dataset</span> <span class="o">=</span> <span class="n">gen_dmeans_dataset</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">spec</span><span class="p">[</span><span class="s2">&quot;n&quot;</span><span class="p">],</span>
+<span class="g g-Whitespace">    </span><span class="mi">440</span>                              <span class="n">Delta</span><span class="o">=</span><span class="n">spec</span><span class="p">[</span><span class="s2">&quot;Delta&quot;</span><span class="p">],</span>
+<span class="g g-Whitespace">    </span><span class="mi">441</span>                              <span class="n">prop_outliers</span><span class="o">=</span><span class="n">prop_outliers</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">442</span>                              <span class="n">random_seed</span><span class="o">=</span><span class="n">rep_random_seed</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">443</span> <span class="c1"># Run all the tests</span>
+<span class="ne">--&gt; </span><span class="mi">444</span> <span class="n">rep_results</span> <span class="o">=</span> <span class="n">fit_dmeans_models</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">random_seed</span><span class="o">=</span><span class="n">rep_random_seed</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">445</span> <span class="k">for</span> <span class="n">model</span><span class="p">,</span> <span class="n">model_results</span> <span class="ow">in</span> <span class="n">rep_results</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+<span class="g g-Whitespace">    </span><span class="mi">446</span>     <span class="c1"># Hypothesis test metrics</span>
+<span class="g g-Whitespace">    </span><span class="mi">447</span>     <span class="n">decision</span> <span class="o">=</span> <span class="n">model_results</span><span class="p">[</span><span class="s2">&quot;decision&quot;</span><span class="p">]</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/ministats/book/tables.py:331,</span> in <span class="ni">fit_dmeans_models</span><span class="nt">(dataset, random_seed)</span>
+<span class="g g-Whitespace">    </span><span class="mi">329</span> <span class="n">robust_mod</span> <span class="o">=</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">formula</span><span class="o">=</span><span class="n">formula</span><span class="p">,</span> <span class="n">family</span><span class="o">=</span><span class="s2">&quot;t&quot;</span><span class="p">,</span> <span class="n">priors</span><span class="o">=</span><span class="n">priors</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">dataset</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">330</span> <span class="k">with</span> <span class="n">loglevel</span><span class="p">(</span><span class="s2">&quot;ERROR&quot;</span><span class="p">,</span> <span class="n">module</span><span class="o">=</span><span class="s2">&quot;pymc&quot;</span><span class="p">):</span>
+<span class="ne">--&gt; </span><span class="mi">331</span>     <span class="n">idata</span> <span class="o">=</span> <span class="n">robust_mod</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">draws</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">random_seed</span><span class="o">=</span><span class="n">random_seed</span><span class="p">,</span> <span class="n">progressbar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">332</span> <span class="n">calc_dmeans</span><span class="p">(</span><span class="n">idata</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">333</span> <span class="n">ci95</span> <span class="o">=</span> <span class="n">hdi_from_idata</span><span class="p">(</span><span class="n">idata</span><span class="p">,</span> <span class="n">var_name</span><span class="o">=</span><span class="s2">&quot;dmeans&quot;</span><span class="p">,</span> <span class="n">hdi_prob</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/bambi/models.py:330,</span> in <span class="ni">Model.fit</span><span class="nt">(self, draws, tune, discard_tuned_samples, omit_offsets, include_mean, include_response_params, inference_method, init, n_init, chains, cores, random_seed, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">327</span>         <span class="n">inference_method</span> <span class="o">=</span> <span class="n">method</span>
+<span class="g g-Whitespace">    </span><span class="mi">329</span> <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">built</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">330</span>     <span class="bp">self</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+<span class="g g-Whitespace">    </span><span class="mi">332</span> <span class="c1"># Tell user which event is being modeled</span>
+<span class="g g-Whitespace">    </span><span class="mi">333</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">family</span><span class="p">,</span> <span class="n">univariate</span><span class="o">.</span><span class="n">Bernoulli</span><span class="p">):</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/bambi/models.py:373,</span> in <span class="ni">Model.build</span><span class="nt">(self)</span>
+<span class="g g-Whitespace">    </span><span class="mi">364</span><span class="w"> </span><span class="sd">&quot;&quot;&quot;Set up the model for sampling/fitting</span>
+<span class="g g-Whitespace">    </span><span class="mi">365</span><span class="sd"> </span>
+<span class="g g-Whitespace">    </span><span class="mi">366</span><span class="sd"> Creates an instance of the underlying PyMC model and adds all the necessary terms to it.</span>
+<span class="sd">   (...)</span>
+<span class="g g-Whitespace">    </span><span class="mi">370</span><span class="sd"> `None`.</span>
+<span class="g g-Whitespace">    </span><span class="mi">371</span><span class="sd"> &quot;&quot;&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">372</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span> <span class="o">=</span> <span class="n">PyMCModel</span><span class="p">()</span>
+<span class="ne">--&gt; </span><span class="mi">373</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">374</span> <span class="bp">self</span><span class="o">.</span><span class="n">built</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/bambi/backend/pymc.py:90,</span> in <span class="ni">PyMCModel.build</span><span class="nt">(self, spec)</span>
+<span class="g g-Whitespace">     </span><span class="mi">88</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">spec</span><span class="o">.</span><span class="n">distributional_components</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+<span class="g g-Whitespace">     </span><span class="mi">89</span>     <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">DistributionalComponent</span><span class="p">(</span><span class="n">component</span><span class="p">)</span>
+<span class="ne">---&gt; </span><span class="mi">90</span>     <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spec</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">92</span> <span class="c1"># Add response</span>
+<span class="g g-Whitespace">     </span><span class="mi">93</span> <span class="bp">self</span><span class="o">.</span><span class="n">response_component</span> <span class="o">=</span> <span class="n">ResponseComponent</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">response_component</span><span class="p">)</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/bambi/backend/model_components.py:55,</span> in <span class="ni">DistributionalComponent.build</span><span class="nt">(self, pymc_backend, bmb_model)</span>
+<span class="g g-Whitespace">     </span><span class="mi">53</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_intercept</span><span class="p">(</span><span class="n">bmb_model</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">54</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_offsets</span><span class="p">()</span>
+<span class="ne">---&gt; </span><span class="mi">55</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_common_terms</span><span class="p">(</span><span class="n">pymc_backend</span><span class="p">,</span> <span class="n">bmb_model</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">56</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_hsgp_terms</span><span class="p">(</span><span class="n">bmb_model</span><span class="p">,</span> <span class="n">pymc_backend</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">57</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_group_specific_terms</span><span class="p">(</span><span class="n">pymc_backend</span><span class="p">,</span> <span class="n">bmb_model</span><span class="p">)</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/bambi/backend/model_components.py:93,</span> in <span class="ni">DistributionalComponent.build_common_terms</span><span class="nt">(self, pymc_backend, bmb_model)</span>
+<span class="g g-Whitespace">     </span><span class="mi">90</span>     <span class="n">pymc_backend</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">add_coords</span><span class="p">({</span><span class="n">name</span><span class="p">:</span> <span class="n">values</span><span class="p">})</span>
+<span class="g g-Whitespace">     </span><span class="mi">92</span> <span class="c1"># Build</span>
+<span class="ne">---&gt; </span><span class="mi">93</span> <span class="n">coef</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">common_term</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">bmb_model</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">94</span> <span class="n">coefs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">coef</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">95</span> <span class="n">columns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/bambi/backend/terms.py:58,</span> in <span class="ni">CommonTerm.build</span><span class="nt">(self, spec)</span>
+<span class="g g-Whitespace">     </span><span class="mi">56</span> <span class="n">dims</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="p">)</span> <span class="o">+</span> <span class="n">response_dims</span>
+<span class="g g-Whitespace">     </span><span class="mi">57</span> <span class="k">if</span> <span class="n">dims</span><span class="p">:</span>
+<span class="ne">---&gt; </span><span class="mi">58</span>     <span class="n">coef</span> <span class="o">=</span> <span class="n">distribution</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="n">dims</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">59</span> <span class="k">else</span><span class="p">:</span>
+<span class="g g-Whitespace">     </span><span class="mi">60</span>     <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/pymc/distributions/distribution.py:529,</span> in <span class="ni">Distribution.__new__</span><span class="nt">(cls, name, rng, dims, initval, observed, total_size, transform, default_transform, *args, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">526</span>     <span class="k">elif</span> <span class="n">observed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">527</span>         <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;shape&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">observed</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">529</span> <span class="n">rv_out</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">dist</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">531</span> <span class="n">rv_out</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">register_rv</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">532</span>     <span class="n">rv_out</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">533</span>     <span class="n">name</span><span class="p">,</span>
+   <span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">539</span>     <span class="n">initval</span><span class="o">=</span><span class="n">initval</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">540</span> <span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">542</span> <span class="c1"># add in pretty-printing support</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/pymc/distributions/continuous.py:491,</span> in <span class="ni">Normal.dist</span><span class="nt">(cls, mu, sigma, tau, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">489</span> <span class="n">sigma</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">as_tensor_variable</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">490</span> <span class="n">mu</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">as_tensor_variable</span><span class="p">(</span><span class="n">mu</span><span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">491</span> <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">dist</span><span class="p">([</span><span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/pymc/distributions/distribution.py:598,</span> in <span class="ni">Distribution.dist</span><span class="nt">(cls, dist_params, shape, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">595</span>     <span class="n">ndim_supp</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">rv_op</span><span class="p">(</span><span class="o">*</span><span class="n">dist_params</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">owner</span><span class="o">.</span><span class="n">op</span><span class="o">.</span><span class="n">ndim_supp</span>
+<span class="g g-Whitespace">    </span><span class="mi">597</span> <span class="n">create_size</span> <span class="o">=</span> <span class="n">find_size</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">shape</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">ndim_supp</span><span class="o">=</span><span class="n">ndim_supp</span><span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">598</span> <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">rv_op</span><span class="p">(</span><span class="o">*</span><span class="n">dist_params</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">create_size</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/pytensor/tensor/random/basic.py:282,</span> in <span class="ni">NormalRV.__call__</span><span class="nt">(self, loc, scale, size, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">261</span> <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="g g-Whitespace">    </span><span class="mi">262</span><span class="w">     </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Draw samples from a normal distribution.</span>
+<span class="g g-Whitespace">    </span><span class="mi">263</span><span class="sd"> </span>
+<span class="g g-Whitespace">    </span><span class="mi">264</span><span class="sd">     Signature</span>
+<span class="sd">   (...)</span>
+<span class="g g-Whitespace">    </span><span class="mi">280</span><span class="sd"> </span>
+<span class="g g-Whitespace">    </span><span class="mi">281</span><span class="sd">     &quot;&quot;&quot;</span>
+<span class="ne">--&gt; </span><span class="mi">282</span>     <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__call__</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/pytensor/tensor/random/op.py:334,</span> in <span class="ni">RandomVariable.__call__</span><span class="nt">(self, size, name, rng, dtype, *args, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">332</span>     <span class="n">props</span><span class="p">[</span><span class="s2">&quot;dtype&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dtype</span>
+<span class="g g-Whitespace">    </span><span class="mi">333</span>     <span class="n">new_op</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)(</span><span class="o">**</span><span class="n">props</span><span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">334</span>     <span class="k">return</span> <span class="n">new_op</span><span class="o">.</span><span class="fm">__call__</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">335</span>         <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+<span class="g g-Whitespace">    </span><span class="mi">336</span>     <span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">338</span> <span class="n">res</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__call__</span><span class="p">(</span><span class="n">rng</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">340</span> <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/pytensor/tensor/random/basic.py:282,</span> in <span class="ni">NormalRV.__call__</span><span class="nt">(self, loc, scale, size, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">261</span> <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="g g-Whitespace">    </span><span class="mi">262</span><span class="w">     </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Draw samples from a normal distribution.</span>
+<span class="g g-Whitespace">    </span><span class="mi">263</span><span class="sd"> </span>
+<span class="g g-Whitespace">    </span><span class="mi">264</span><span class="sd">     Signature</span>
+<span class="sd">   (...)</span>
+<span class="g g-Whitespace">    </span><span class="mi">280</span><span class="sd"> </span>
+<span class="g g-Whitespace">    </span><span class="mi">281</span><span class="sd">     &quot;&quot;&quot;</span>
+<span class="ne">--&gt; </span><span class="mi">282</span>     <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__call__</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/pytensor/tensor/random/op.py:338,</span> in <span class="ni">RandomVariable.__call__</span><span class="nt">(self, size, name, rng, dtype, *args, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">333</span>     <span class="n">new_op</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)(</span><span class="o">**</span><span class="n">props</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">334</span>     <span class="k">return</span> <span class="n">new_op</span><span class="o">.</span><span class="fm">__call__</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">335</span>         <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+<span class="g g-Whitespace">    </span><span class="mi">336</span>     <span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">338</span> <span class="n">res</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__call__</span><span class="p">(</span><span class="n">rng</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">340</span> <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">341</span>     <span class="n">res</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/pytensor/graph/op.py:293,</span> in <span class="ni">Op.__call__</span><span class="nt">(self, name, return_list, *inputs, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">249</span> <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">250</span>     <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">inputs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">return_list</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+<span class="g g-Whitespace">    </span><span class="mi">251</span> <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Variable</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">Variable</span><span class="p">]:</span>
+<span class="g g-Whitespace">    </span><span class="mi">252</span><span class="w">     </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Construct an `Apply` node using :meth:`Op.make_node` and return its outputs.</span>
+<span class="g g-Whitespace">    </span><span class="mi">253</span><span class="sd"> </span>
+<span class="g g-Whitespace">    </span><span class="mi">254</span><span class="sd">     This method is just a wrapper around :meth:`Op.make_node`.</span>
+<span class="sd">   (...)</span>
+<span class="g g-Whitespace">    </span><span class="mi">291</span><span class="sd"> </span>
+<span class="g g-Whitespace">    </span><span class="mi">292</span><span class="sd">     &quot;&quot;&quot;</span>
+<span class="ne">--&gt; </span><span class="mi">293</span>     <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_node</span><span class="p">(</span><span class="o">*</span><span class="n">inputs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">294</span>     <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">295</span>         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">outputs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/pytensor/tensor/random/op.py:385,</span> in <span class="ni">RandomVariable.make_node</span><span class="nt">(self, rng, size, *dist_params)</span>
+<span class="g g-Whitespace">    </span><span class="mi">382</span> <span class="n">inferred_shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_infer_shape</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">dist_params</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">383</span> <span class="n">_</span><span class="p">,</span> <span class="n">static_shape</span> <span class="o">=</span> <span class="n">infer_static_shape</span><span class="p">(</span><span class="n">inferred_shape</span><span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">385</span> <span class="n">dist_params</span> <span class="o">=</span> <span class="n">explicit_expand_dims</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">386</span>     <span class="n">dist_params</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">387</span>     <span class="bp">self</span><span class="o">.</span><span class="n">ndims_params</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">388</span>     <span class="n">size_length</span><span class="o">=</span><span class="kc">None</span> <span class="k">if</span> <span class="n">NoneConst</span><span class="o">.</span><span class="n">equals</span><span class="p">(</span><span class="n">size</span><span class="p">)</span> <span class="k">else</span> <span class="n">get_vector_length</span><span class="p">(</span><span class="n">size</span><span class="p">),</span>
+<span class="g g-Whitespace">    </span><span class="mi">389</span> <span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">391</span> <span class="n">inputs</span> <span class="o">=</span> <span class="p">(</span><span class="n">rng</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="o">*</span><span class="n">dist_params</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">392</span> <span class="n">out_type</span> <span class="o">=</span> <span class="n">TensorType</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">static_shape</span><span class="p">)</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/pytensor/tensor/random/utils.py:160,</span> in <span class="ni">explicit_expand_dims</span><span class="nt">(params, ndim_params, size_length)</span>
+<span class="g g-Whitespace">    </span><span class="mi">158</span>     <span class="n">missing_dims</span> <span class="o">=</span> <span class="n">max_batch_dims</span> <span class="o">-</span> <span class="n">batch_dim</span>
+<span class="g g-Whitespace">    </span><span class="mi">159</span>     <span class="k">if</span> <span class="n">missing_dims</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">160</span>         <span class="n">new_param</span> <span class="o">=</span> <span class="n">shape_padleft</span><span class="p">(</span><span class="n">new_param</span><span class="p">,</span> <span class="n">missing_dims</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">161</span>     <span class="n">new_params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_param</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">163</span> <span class="k">return</span> <span class="n">new_params</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/pytensor/tensor/shape.py:886,</span> in <span class="ni">shape_padleft</span><span class="nt">(t, n_ones)</span>
+<span class="g g-Whitespace">    </span><span class="mi">884</span>     <span class="k">return</span> <span class="n">_t</span>
+<span class="g g-Whitespace">    </span><span class="mi">885</span> <span class="n">pattern</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_ones</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">_t</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">ndim</span><span class="p">))</span>
+<span class="ne">--&gt; </span><span class="mi">886</span> <span class="k">return</span> <span class="n">_t</span><span class="o">.</span><span class="n">dimshuffle</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/pytensor/tensor/variable.py:355,</span> in <span class="ni">_tensor_py_operators.dimshuffle</span><span class="nt">(self, *pattern)</span>
+<span class="g g-Whitespace">    </span><span class="mi">352</span> <span class="k">if</span> <span class="n">ds_op</span><span class="o">.</span><span class="n">new_order</span> <span class="o">==</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">ndim</span><span class="p">)):</span>
+<span class="g g-Whitespace">    </span><span class="mi">353</span>     <span class="c1"># No-op</span>
+<span class="g g-Whitespace">    </span><span class="mi">354</span>     <span class="k">return</span> <span class="bp">self</span>
+<span class="ne">--&gt; </span><span class="mi">355</span> <span class="k">return</span> <span class="n">ds_op</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/pytensor/graph/op.py:293,</span> in <span class="ni">Op.__call__</span><span class="nt">(self, name, return_list, *inputs, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">249</span> <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">250</span>     <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">inputs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">return_list</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+<span class="g g-Whitespace">    </span><span class="mi">251</span> <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Variable</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">Variable</span><span class="p">]:</span>
+<span class="g g-Whitespace">    </span><span class="mi">252</span><span class="w">     </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Construct an `Apply` node using :meth:`Op.make_node` and return its outputs.</span>
+<span class="g g-Whitespace">    </span><span class="mi">253</span><span class="sd"> </span>
+<span class="g g-Whitespace">    </span><span class="mi">254</span><span class="sd">     This method is just a wrapper around :meth:`Op.make_node`.</span>
+<span class="sd">   (...)</span>
+<span class="g g-Whitespace">    </span><span class="mi">291</span><span class="sd"> </span>
+<span class="g g-Whitespace">    </span><span class="mi">292</span><span class="sd">     &quot;&quot;&quot;</span>
+<span class="ne">--&gt; </span><span class="mi">293</span>     <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_node</span><span class="p">(</span><span class="o">*</span><span class="n">inputs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">294</span>     <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">295</span>         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">outputs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/pytensor/tensor/elemwise.py:210,</span> in <span class="ni">DimShuffle.make_node</span><span class="nt">(self, inp)</span>
+<span class="g g-Whitespace">    </span><span class="mi">207</span>     <span class="k">else</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">208</span>         <span class="n">out_static_shape</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">input_static_shape</span><span class="p">[</span><span class="n">dim_idx</span><span class="p">])</span>
+<span class="ne">--&gt; </span><span class="mi">210</span> <span class="n">output</span> <span class="o">=</span> <span class="n">TensorType</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">out_static_shape</span><span class="p">)()</span>
+<span class="g g-Whitespace">    </span><span class="mi">212</span> <span class="k">return</span> <span class="n">Apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="nb">input</span><span class="p">],</span> <span class="p">[</span><span class="n">output</span><span class="p">])</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/pytensor/tensor/type.py:136,</span> in <span class="ni">TensorType.__call__</span><span class="nt">(self, shape, *args, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">132</span>     <span class="k">else</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">133</span>         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">134</span>             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">shape</span><span class="si">=}</span><span class="s2"> is incompatible with original type shape </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s2">&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">135</span>         <span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">136</span> <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__call__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/pytensor/graph/type.py:223,</span> in <span class="ni">Type.__call__</span><span class="nt">(self, name)</span>
+<span class="g g-Whitespace">    </span><span class="mi">214</span> <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">variable_type</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">215</span><span class="w">     </span><span class="sd">&quot;&quot;&quot;Return a new `Variable` instance of Type `self`.</span>
+<span class="g g-Whitespace">    </span><span class="mi">216</span><span class="sd"> </span>
+<span class="g g-Whitespace">    </span><span class="mi">217</span><span class="sd">     Parameters</span>
+<span class="sd">   (...)</span>
+<span class="g g-Whitespace">    </span><span class="mi">221</span><span class="sd"> </span>
+<span class="g g-Whitespace">    </span><span class="mi">222</span><span class="sd">     &quot;&quot;&quot;</span>
+<span class="ne">--&gt; </span><span class="mi">223</span>     <span class="k">return</span> <span class="n">utils</span><span class="o">.</span><span class="n">add_tag_trace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">make_variable</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/pytensor/graph/utils.py:121,</span> in <span class="ni">add_tag_trace</span><span class="nt">(thing, user_line)</span>
+<span class="g g-Whitespace">    </span><span class="mi">118</span> <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">traceback__compile_limit</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">119</span>     <span class="n">skips</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="ne">--&gt; </span><span class="mi">121</span> <span class="n">tr</span> <span class="o">=</span> <span class="n">simple_extract_stack</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="n">user_line</span><span class="p">,</span> <span class="n">skips</span><span class="o">=</span><span class="n">skips</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">122</span> <span class="c1"># Different python version use different sementic for</span>
+<span class="g g-Whitespace">    </span><span class="mi">123</span> <span class="c1"># limit. python 2.7 include the call to extrack_stack. The -1 get</span>
+<span class="g g-Whitespace">    </span><span class="mi">124</span> <span class="c1"># rid of it.</span>
+<span class="g g-Whitespace">    </span><span class="mi">126</span> <span class="k">if</span> <span class="n">tr</span><span class="p">:</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/pytensor/graph/utils.py:51,</span> in <span class="ni">simple_extract_stack</span><span class="nt">(f, limit, skips)</span>
+<span class="g g-Whitespace">     </span><span class="mi">49</span> <span class="n">name</span> <span class="o">=</span> <span class="n">co</span><span class="o">.</span><span class="n">co_name</span>
+<span class="g g-Whitespace">     </span><span class="mi">50</span> <span class="c1">#        linecache.checkcache(filename)</span>
+<span class="ne">---&gt; </span><span class="mi">51</span> <span class="n">line</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">linecache</span><span class="o">.</span><span class="n">getline</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">lineno</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">f_globals</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">52</span> <span class="k">if</span> <span class="n">line</span><span class="p">:</span>
+<span class="g g-Whitespace">     </span><span class="mi">53</span>     <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/linecache.py:30,</span> in <span class="ni">getline</span><span class="nt">(filename, lineno, module_globals)</span>
+<span class="g g-Whitespace">     </span><span class="mi">26</span> <span class="k">def</span><span class="w"> </span><span class="nf">getline</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">lineno</span><span class="p">,</span> <span class="n">module_globals</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="g g-Whitespace">     </span><span class="mi">27</span><span class="w">     </span><span class="sd">&quot;&quot;&quot;Get a line for a Python source file from the cache.</span>
+<span class="g g-Whitespace">     </span><span class="mi">28</span><span class="sd">     Update the cache if it doesn&#39;t contain an entry for this file already.&quot;&quot;&quot;</span>
+<span class="ne">---&gt; </span><span class="mi">30</span>     <span class="n">lines</span> <span class="o">=</span> <span class="n">getlines</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">module_globals</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">31</span>     <span class="k">if</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">lineno</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
+<span class="g g-Whitespace">     </span><span class="mi">32</span>         <span class="k">return</span> <span class="n">lines</span><span class="p">[</span><span class="n">lineno</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/linecache.py:42,</span> in <span class="ni">getlines</span><span class="nt">(filename, module_globals)</span>
+<span class="g g-Whitespace">     </span><span class="mi">40</span> <span class="k">if</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">cache</span><span class="p">:</span>
+<span class="g g-Whitespace">     </span><span class="mi">41</span>     <span class="n">entry</span> <span class="o">=</span> <span class="n">cache</span><span class="p">[</span><span class="n">filename</span><span class="p">]</span>
+<span class="ne">---&gt; </span><span class="mi">42</span>     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+<span class="g g-Whitespace">     </span><span class="mi">43</span>         <span class="k">return</span> <span class="n">cache</span><span class="p">[</span><span class="n">filename</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+<span class="g g-Whitespace">     </span><span class="mi">45</span> <span class="k">try</span><span class="p">:</span>
+
+<span class="ne">KeyboardInterrupt</span>: 
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ministats.book.tables</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_perf_table_typeI</span>
+
+<span class="n">tableA</span> <span class="o">=</span> <span class="n">get_perf_table_typeI</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+<span class="n">tableA</span>
+<span class="c1"># print(tableA.to_latex(float_format=&quot;%.2f&quot;))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>model</th>
+      <th>perm</th>
+      <th>welch</th>
+      <th>norm_bayes</th>
+      <th>robust_bayes</th>
+      <th>bf</th>
+    </tr>
+    <tr>
+      <th>outliers</th>
+      <th>n</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th rowspan="4" valign="top">no</th>
+      <th>20</th>
+      <td>0.06</td>
+      <td>0.06</td>
+      <td>0.02</td>
+      <td>0.07</td>
+      <td>0.02</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>0.04</td>
+      <td>0.04</td>
+      <td>0.03</td>
+      <td>0.04</td>
+      <td>0.03</td>
+    </tr>
+    <tr>
+      <th>50</th>
+      <td>0.04</td>
+      <td>0.04</td>
+      <td>0.01</td>
+      <td>0.04</td>
+      <td>0.01</td>
+    </tr>
+    <tr>
+      <th>100</th>
+      <td>0.06</td>
+      <td>0.06</td>
+      <td>0.03</td>
+      <td>0.05</td>
+      <td>0.01</td>
+    </tr>
+    <tr>
+      <th rowspan="4" valign="top">few</th>
+      <th>20</th>
+      <td>0.04</td>
+      <td>0.04</td>
+      <td>0.01</td>
+      <td>0.05</td>
+      <td>0.01</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>0.04</td>
+      <td>0.04</td>
+      <td>0.01</td>
+      <td>0.05</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>50</th>
+      <td>0.03</td>
+      <td>0.03</td>
+      <td>0.02</td>
+      <td>0.01</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>100</th>
+      <td>0.07</td>
+      <td>0.07</td>
+      <td>0.06</td>
+      <td>0.08</td>
+      <td>0.03</td>
+    </tr>
+    <tr>
+      <th rowspan="4" valign="top">lots</th>
+      <th>20</th>
+      <td>0.04</td>
+      <td>0.02</td>
+      <td>0.01</td>
+      <td>0.03</td>
+      <td>0.01</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>0.02</td>
+      <td>0.02</td>
+      <td>0.00</td>
+      <td>0.02</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>50</th>
+      <td>0.07</td>
+      <td>0.06</td>
+      <td>0.06</td>
+      <td>0.07</td>
+      <td>0.04</td>
+    </tr>
+    <tr>
+      <th>100</th>
+      <td>0.03</td>
+      <td>0.03</td>
+      <td>0.03</td>
+      <td>0.02</td>
+      <td>0.00</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ministats.book.tables</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_perf_table_power</span>
+
+<span class="n">tableB</span> <span class="o">=</span> <span class="n">get_perf_table_power</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">show_all</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">tableB</span>
+<span class="c1"># tableB_str = tableB.to_latex(float_format=&quot;%.2f&quot;)</span>
+<span class="c1"># print(tableB_str.replace(&quot;0.500000&quot;, &quot;0.5&quot;).replace(&quot;0.800000&quot;,&quot;0.8&quot;))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th></th>
+      <th>model</th>
+      <th>perm</th>
+      <th>welch</th>
+      <th>norm_bayes</th>
+      <th>robust_bayes</th>
+      <th>bf</th>
+    </tr>
+    <tr>
+      <th>outliers</th>
+      <th>Delta</th>
+      <th>n</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th rowspan="6" valign="top">no</th>
+      <th rowspan="3" valign="top">0.5</th>
+      <th>30</th>
+      <td>0.46</td>
+      <td>0.46</td>
+      <td>0.33</td>
+      <td>0.46</td>
+      <td>0.31</td>
+    </tr>
+    <tr>
+      <th>50</th>
+      <td>0.68</td>
+      <td>0.69</td>
+      <td>0.54</td>
+      <td>0.66</td>
+      <td>0.50</td>
+    </tr>
+    <tr>
+      <th>100</th>
+      <td>0.93</td>
+      <td>0.93</td>
+      <td>0.90</td>
+      <td>0.93</td>
+      <td>0.84</td>
+    </tr>
+    <tr>
+      <th rowspan="3" valign="top">0.8</th>
+      <th>20</th>
+      <td>0.60</td>
+      <td>0.60</td>
+      <td>0.44</td>
+      <td>0.59</td>
+      <td>0.49</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>0.86</td>
+      <td>0.86</td>
+      <td>0.77</td>
+      <td>0.86</td>
+      <td>0.72</td>
+    </tr>
+    <tr>
+      <th>50</th>
+      <td>0.99</td>
+      <td>0.99</td>
+      <td>0.96</td>
+      <td>0.99</td>
+      <td>0.93</td>
+    </tr>
+    <tr>
+      <th rowspan="6" valign="top">few</th>
+      <th rowspan="3" valign="top">0.5</th>
+      <th>30</th>
+      <td>0.49</td>
+      <td>0.49</td>
+      <td>0.32</td>
+      <td>0.45</td>
+      <td>0.29</td>
+    </tr>
+    <tr>
+      <th>50</th>
+      <td>0.49</td>
+      <td>0.51</td>
+      <td>0.39</td>
+      <td>0.58</td>
+      <td>0.33</td>
+    </tr>
+    <tr>
+      <th>100</th>
+      <td>0.80</td>
+      <td>0.80</td>
+      <td>0.80</td>
+      <td>0.88</td>
+      <td>0.69</td>
+    </tr>
+    <tr>
+      <th rowspan="3" valign="top">0.8</th>
+      <th>20</th>
+      <td>0.69</td>
+      <td>0.68</td>
+      <td>0.51</td>
+      <td>0.65</td>
+      <td>0.54</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>0.88</td>
+      <td>0.88</td>
+      <td>0.79</td>
+      <td>0.87</td>
+      <td>0.78</td>
+    </tr>
+    <tr>
+      <th>50</th>
+      <td>0.85</td>
+      <td>0.85</td>
+      <td>0.83</td>
+      <td>0.94</td>
+      <td>0.75</td>
+    </tr>
+    <tr>
+      <th rowspan="6" valign="top">lots</th>
+      <th rowspan="3" valign="top">0.5</th>
+      <th>30</th>
+      <td>0.33</td>
+      <td>0.32</td>
+      <td>0.29</td>
+      <td>0.43</td>
+      <td>0.20</td>
+    </tr>
+    <tr>
+      <th>50</th>
+      <td>0.52</td>
+      <td>0.52</td>
+      <td>0.50</td>
+      <td>0.63</td>
+      <td>0.33</td>
+    </tr>
+    <tr>
+      <th>100</th>
+      <td>0.64</td>
+      <td>0.63</td>
+      <td>0.60</td>
+      <td>0.88</td>
+      <td>0.52</td>
+    </tr>
+    <tr>
+      <th rowspan="3" valign="top">0.8</th>
+      <th>20</th>
+      <td>0.44</td>
+      <td>0.43</td>
+      <td>0.37</td>
+      <td>0.63</td>
+      <td>0.30</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>0.60</td>
+      <td>0.59</td>
+      <td>0.57</td>
+      <td>0.81</td>
+      <td>0.48</td>
+    </tr>
+    <tr>
+      <th>50</th>
+      <td>0.82</td>
+      <td>0.83</td>
+      <td>0.79</td>
+      <td>0.97</td>
+      <td>0.66</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ministats.book.tables</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_perf_table_coverage</span>
+
+<span class="n">tableC</span> <span class="o">=</span> <span class="n">get_perf_table_coverage</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+<span class="n">tableC</span>
+<span class="c1"># print(tableC.to_latex(float_format=&quot;%.2f&quot;))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead tr th {
+        text-align: left;
+    }
+
+    .dataframe thead tr:last-of-type th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th>model</th>
+      <th colspan="2" halign="left">perm</th>
+      <th colspan="2" halign="left">welch</th>
+      <th colspan="2" halign="left">norm_bayes</th>
+      <th colspan="2" halign="left">robust_bayes</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th></th>
+      <th>coverage</th>
+      <th>avg_width</th>
+      <th>coverage</th>
+      <th>avg_width</th>
+      <th>coverage</th>
+      <th>avg_width</th>
+      <th>coverage</th>
+      <th>avg_width</th>
+    </tr>
+    <tr>
+      <th>outliers</th>
+      <th>n</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th rowspan="4" valign="top">no</th>
+      <th>20</th>
+      <td>0.8800</td>
+      <td>1.011711</td>
+      <td>0.9050</td>
+      <td>1.064862</td>
+      <td>0.9650</td>
+      <td>1.298070</td>
+      <td>0.9100</td>
+      <td>1.078473</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>0.9100</td>
+      <td>0.821001</td>
+      <td>0.9175</td>
+      <td>0.849298</td>
+      <td>0.9625</td>
+      <td>1.016220</td>
+      <td>0.9225</td>
+      <td>0.855460</td>
+    </tr>
+    <tr>
+      <th>50</th>
+      <td>0.9050</td>
+      <td>0.651732</td>
+      <td>0.9100</td>
+      <td>0.665610</td>
+      <td>0.9525</td>
+      <td>0.762513</td>
+      <td>0.9100</td>
+      <td>0.667750</td>
+    </tr>
+    <tr>
+      <th>100</th>
+      <td>0.9025</td>
+      <td>0.462228</td>
+      <td>0.9025</td>
+      <td>0.467091</td>
+      <td>0.9325</td>
+      <td>0.517568</td>
+      <td>0.9075</td>
+      <td>0.467747</td>
+    </tr>
+    <tr>
+      <th rowspan="4" valign="top">few</th>
+      <th>20</th>
+      <td>0.8550</td>
+      <td>1.002797</td>
+      <td>0.8675</td>
+      <td>1.056252</td>
+      <td>0.9500</td>
+      <td>1.294572</td>
+      <td>0.8700</td>
+      <td>1.069132</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>0.9175</td>
+      <td>0.835295</td>
+      <td>0.9250</td>
+      <td>0.864310</td>
+      <td>0.9625</td>
+      <td>1.022407</td>
+      <td>0.9250</td>
+      <td>0.872108</td>
+    </tr>
+    <tr>
+      <th>50</th>
+      <td>0.8675</td>
+      <td>0.784709</td>
+      <td>0.9025</td>
+      <td>0.802027</td>
+      <td>0.9350</td>
+      <td>0.854340</td>
+      <td>0.9075</td>
+      <td>0.695260</td>
+    </tr>
+    <tr>
+      <th>100</th>
+      <td>0.8725</td>
+      <td>0.554332</td>
+      <td>0.8975</td>
+      <td>0.560776</td>
+      <td>0.9125</td>
+      <td>0.581300</td>
+      <td>0.9275</td>
+      <td>0.487010</td>
+    </tr>
+    <tr>
+      <th rowspan="4" valign="top">lots</th>
+      <th>20</th>
+      <td>0.8700</td>
+      <td>1.442238</td>
+      <td>0.9025</td>
+      <td>1.530370</td>
+      <td>0.9450</td>
+      <td>1.601472</td>
+      <td>0.8975</td>
+      <td>1.197020</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>0.8550</td>
+      <td>1.085291</td>
+      <td>0.8700</td>
+      <td>1.128444</td>
+      <td>0.9000</td>
+      <td>1.197037</td>
+      <td>0.8550</td>
+      <td>0.926892</td>
+    </tr>
+    <tr>
+      <th>50</th>
+      <td>0.8825</td>
+      <td>0.892523</td>
+      <td>0.8975</td>
+      <td>0.913113</td>
+      <td>0.9175</td>
+      <td>0.937645</td>
+      <td>0.9075</td>
+      <td>0.726270</td>
+    </tr>
+    <tr>
+      <th>100</th>
+      <td>0.8975</td>
+      <td>0.679404</td>
+      <td>0.9025</td>
+      <td>0.686951</td>
+      <td>0.9175</td>
+      <td>0.688840</td>
+      <td>0.8950</td>
+      <td>0.509295</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># results[(results[&quot;outliers&quot;]==&quot;few&quot;) &amp; (results[&quot;Delta&quot;]==1.0)]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># results[(results[&quot;outliers&quot;]==&quot;lots&quot;) &amp; (results[&quot;Delta&quot;]==1.0)]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="permutation-test">
+<h2>Permutation test<a class="headerlink" href="#permutation-test" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ministats.hypothesis_tests</span><span class="w"> </span><span class="kn">import</span> <span class="n">permutation_test_dmeans</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ministats.confidence_intervals</span><span class="w"> </span><span class="kn">import</span> <span class="n">ci_dmeans</span>
+
+<span class="c1"># np.random.seed(random_seed)</span>
+<span class="n">pval</span> <span class="o">=</span> <span class="n">permutation_test_dmeans</span><span class="p">(</span><span class="n">treated</span><span class="p">,</span> <span class="n">controls</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pval</span><span class="p">)</span>
+<span class="n">decision</span> <span class="o">=</span> <span class="n">get_pval_decision</span><span class="p">(</span><span class="n">pval</span><span class="p">)</span>
+<span class="n">ci90</span> <span class="o">=</span> <span class="n">ci_dmeans</span><span class="p">(</span><span class="n">treated</span><span class="p">,</span> <span class="n">controls</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">)</span>
+<span class="n">decision</span><span class="p">,</span> <span class="n">ci90</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.0006
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&#39;reject H0&#39;, [0.41048098294960556, 1.1117862568974726])
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="welch-s-two-sample-t-test">
+<h2>Welch’s two-sample t-test<a class="headerlink" href="#welch-s-two-sample-t-test" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ministats.hypothesis_tests</span><span class="w"> </span><span class="kn">import</span> <span class="n">ttest_dmeans</span>
+
+<span class="n">pval</span> <span class="o">=</span> <span class="n">ttest_dmeans</span><span class="p">(</span><span class="n">treated</span><span class="p">,</span> <span class="n">controls</span><span class="p">,</span> <span class="n">equal_var</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;two-sided&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pval</span><span class="p">)</span>
+<span class="n">decision</span> <span class="o">=</span> <span class="n">get_pval_decision</span><span class="p">(</span><span class="n">pval</span><span class="p">)</span>
+<span class="n">ci90</span> <span class="o">=</span> <span class="n">ci_dmeans</span><span class="p">(</span><span class="n">treated</span><span class="p">,</span> <span class="n">controls</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
+<span class="n">decision</span><span class="p">,</span> <span class="n">ci90</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.0005822820572150585
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&#39;reject H0&#39;, [0.3997722238319435, 1.100183880609041])
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="normal-bayesian-model">
+<h2>Normal Bayesian model<a class="headerlink" href="#normal-bayesian-model" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">random_seed</span> <span class="o">=</span> <span class="mi">43</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">ministats.bayes</span><span class="w"> </span><span class="kn">import</span> <span class="n">hdi_from_idata</span>
+
+<span class="n">priors</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Normal&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+    <span class="s2">&quot;sigma&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;LogNormal&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># &quot;group&quot;: bmb.Prior(&quot;Normal&quot;, mu=1, sigma=1)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="n">formula</span> <span class="o">=</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Formula</span><span class="p">(</span><span class="s2">&quot;value ~ 0 + group&quot;</span><span class="p">,</span> <span class="s2">&quot;sigma ~ 0 + group&quot;</span><span class="p">)</span>
+<span class="n">norm_mod</span> <span class="o">=</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">formula</span><span class="o">=</span><span class="n">formula</span><span class="p">,</span> <span class="n">family</span><span class="o">=</span><span class="s2">&quot;gaussian&quot;</span><span class="p">,</span> <span class="n">priors</span><span class="o">=</span><span class="n">priors</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">dataset</span><span class="p">)</span>
+<span class="n">idata</span> <span class="o">=</span> <span class="n">norm_mod</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">random_seed</span><span class="o">=</span><span class="n">random_seed</span><span class="p">)</span>
+<span class="n">calc_dmeans</span><span class="p">(</span><span class="n">idata</span><span class="p">)</span>
+<span class="n">ci95</span> <span class="o">=</span> <span class="n">hdi_from_idata</span><span class="p">(</span><span class="n">idata</span><span class="p">,</span> <span class="n">var_name</span><span class="o">=</span><span class="s2">&quot;dmeans&quot;</span><span class="p">,</span> <span class="n">hdi_prob</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ci95 =&quot;</span><span class="p">,</span> <span class="n">ci95</span><span class="p">)</span>
+<span class="n">decision</span> <span class="o">=</span> <span class="n">get_ci_decision</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ci95</span><span class="p">)</span>
+<span class="n">ci90</span> <span class="o">=</span> <span class="n">hdi_from_idata</span><span class="p">(</span><span class="n">idata</span><span class="p">,</span> <span class="n">var_name</span><span class="o">=</span><span class="s2">&quot;dmeans&quot;</span><span class="p">,</span> <span class="n">hdi_prob</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+<span class="n">decision</span><span class="p">,</span> <span class="n">ci90</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 4 jobs)
+NUTS: [group, sigma_group]
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "6f84b7216e63456abe8d13ec49bac1b5", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+</div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
+</pre>
+</div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 1_000 tune and 1_000 draw iterations (4_000 + 4_000 draws total) took 1 seconds.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ci95 = [0.281, 1.2]
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&#39;reject H0&#39;, [0.354, 1.142])
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="robust-bayesian-model">
+<h2>Robust Bayesian model<a class="headerlink" href="#robust-bayesian-model" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">random_seed</span> <span class="o">=</span> <span class="mi">42</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">ministats.bayes</span><span class="w"> </span><span class="kn">import</span> <span class="n">hdi_from_idata</span>
+
+
+<span class="n">priors</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Normal&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+    <span class="s2">&quot;sigma&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Normal&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;nu&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Gamma&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">0.1</span><span class="p">),</span>
+<span class="p">}</span>
+<span class="n">formula</span> <span class="o">=</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Formula</span><span class="p">(</span><span class="s2">&quot;value ~ 0 + group&quot;</span><span class="p">,</span> <span class="s2">&quot;sigma ~ 0 + group&quot;</span><span class="p">)</span>
+<span class="n">robust_mod</span> <span class="o">=</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">formula</span><span class="o">=</span><span class="n">formula</span><span class="p">,</span> <span class="n">family</span><span class="o">=</span><span class="s2">&quot;t&quot;</span><span class="p">,</span> <span class="n">priors</span><span class="o">=</span><span class="n">priors</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">dataset</span><span class="p">)</span>
+<span class="n">idata</span> <span class="o">=</span> <span class="n">robust_mod</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">random_seed</span><span class="o">=</span><span class="n">random_seed</span><span class="p">)</span>
+<span class="n">calc_dmeans</span><span class="p">(</span><span class="n">idata</span><span class="p">)</span>
+
+<span class="n">nus</span> <span class="o">=</span> <span class="n">idata</span><span class="p">[</span><span class="s2">&quot;posterior&quot;</span><span class="p">][</span><span class="s2">&quot;nu&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+<span class="n">nu_mode</span> <span class="o">=</span> <span class="n">calc_point_est</span><span class="p">(</span><span class="s2">&quot;mode&quot;</span><span class="p">,</span> <span class="n">nus</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;nu_mode =&quot;</span><span class="p">,</span> <span class="n">nu_mode</span><span class="p">)</span>
+
+<span class="n">ci95</span> <span class="o">=</span> <span class="n">hdi_from_idata</span><span class="p">(</span><span class="n">idata</span><span class="p">,</span> <span class="n">var_name</span><span class="o">=</span><span class="s2">&quot;dmeans&quot;</span><span class="p">,</span> <span class="n">hdi_prob</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span>
+<span class="n">decision</span> <span class="o">=</span> <span class="n">get_ci_decision</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ci95</span><span class="p">)</span>
+<span class="n">ci90</span> <span class="o">=</span> <span class="n">hdi_from_idata</span><span class="p">(</span><span class="n">idata</span><span class="p">,</span> <span class="n">var_name</span><span class="o">=</span><span class="s2">&quot;dmeans&quot;</span><span class="p">,</span> <span class="n">hdi_prob</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+
+<span class="n">decision</span><span class="p">,</span> <span class="n">ci90</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 4 jobs)
+NUTS: [nu, group, sigma_group]
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "8661a3fa3d5341069ec02e67ee618ddf", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+</div><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
+</pre>
+</div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 1_000 tune and 1_000 draw iterations (4_000 + 4_000 draws total) took 2 seconds.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>nu_mode = 5.987
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&#39;reject H0&#39;, [0.39, 1.062])
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="bayes-factors">
+<h2>Bayes factors<a class="headerlink" href="#bayes-factors" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Computer Bayes factor (based on JZS prior)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">ttest_ind</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pingouin</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pg</span>
+
+<span class="n">ttres</span> <span class="o">=</span> <span class="n">ttest_ind</span><span class="p">(</span><span class="n">treated</span><span class="p">,</span> <span class="n">controls</span><span class="p">,</span> <span class="n">equal_var</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">tstat</span> <span class="o">=</span> <span class="n">ttres</span><span class="o">.</span><span class="n">statistic</span>
+<span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">treated</span><span class="p">)</span>
+<span class="n">m</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">controls</span><span class="p">)</span>
+<span class="n">bfA0</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">bayesfactor_ttest</span><span class="p">(</span><span class="n">tstat</span><span class="p">,</span> <span class="n">nx</span><span class="o">=</span><span class="n">n</span><span class="p">,</span> <span class="n">ny</span><span class="o">=</span><span class="n">m</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mf">0.707</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">bfA0</span><span class="p">)</span>
+<span class="n">decision</span> <span class="o">=</span> <span class="n">get_bf_decision</span><span class="p">(</span><span class="n">bfA0</span><span class="p">)</span>
+<span class="n">ci90</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">decision</span><span class="p">,</span> <span class="n">ci90</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>47.19376683007691
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&#39;reject H0&#39;, None)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># # Verify using R</span>
+<span class="c1"># import rpy2.robjects as robjects</span>
+<span class="c1"># from rpy2.robjects import r as runr, pandas2ri</span>
+<span class="c1"># from rpy2.robjects.packages import importr</span>
+<span class="c1"># pandas2ri.activate()</span>
+<span class="c1"># # import the BayesFactor package</span>
+<span class="c1"># BayesFactor = importr(&#39;BayesFactor&#39;)</span>
+<span class="c1"># # copy the data sample into the R workspace</span>
+<span class="c1"># robjects.globalenv[&quot;dataset&quot;] = dataset</span>
+<span class="c1"># # compute the Bayes factor</span>
+<span class="c1"># runr(&#39;bf = ttestBF(formula = value ~ group, data = dataset)&#39;)</span>
+<span class="c1"># runr(&#39;print(bf)&#39;)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "minireference/noBSstats",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./docs/notebooks/explorations"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Helper functions</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#sensitivity-analysis">Sensitivity analysis</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-analysis">Performance analysis</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset">Dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#permutation-test">Permutation test</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#welch-s-two-sample-t-test">Welch’s two-sample t-test</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#normal-bayesian-model">Normal Bayesian model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#robust-bayesian-model">Robust Bayesian model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bayes-factors">Bayes factors</a></li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Ivan Savov
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

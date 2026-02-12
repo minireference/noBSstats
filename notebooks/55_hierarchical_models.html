@@ -1,0 +1,3641 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Section 5.5 — Hierarchical models &#8212; No Bullshit Guide to Statistics</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=1ae7504c"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/55_hierarchical_models';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Appendix" href="../tutorials/appendix.html" />
+    <link rel="prev" title="Section 5.4 — Bayesian difference between means" href="54_difference_between_means.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="No Bullshit Guide to Statistics - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="No Bullshit Guide to Statistics - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    No Bullshit Guide to Statistics
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="10_DATA.html">Chapter 1 — Data</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="11_intro_to_data.html">Section 1.1 — Introduction to data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="12_data_in_practice.html">Section 1.2 — Data in practice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="13_descriptive_statistics.html">Section 1.3 — Descriptive statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../exercises/exercises_13_descr_stats.html">Descriptive statistics exercises</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="20_PROB.html">Chapter 2 — Probability theory</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="21_discrete_random_vars.html">Section 2.1 — Discrete random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="22_multiple_random_vars.html">Section 2.2 — Multiple random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="23_inventory_discrete_dists.html">Section 2.3 — Inventory of discrete distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="24_continuous_random_vars.html">Section 2.4 — Continuous random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="25_multiple_continuous_random_vars.html">Section 2.5 — Multiple continuous random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="26_inventory_continuous_dists.html">Section 2.6 — Inventory of continuous distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="27_simulations.html">Section 2.7 — Simulation and empirical distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="28_random_samples.html">Section 2.8 — Probability models for random samples</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="30_STATS.html">Chapter 3 — Classical statistics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="31_estimators.html">Section 3.1 — Estimators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../exercises/exercises_31_estimtors.html">Exercises for Section 3.1 Estimates and estimators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="32_confidence_intervals.html">Section 3.2 — Confidence intervals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../exercises/exercises_32_confidence_intervals.html">Exercises for Section 3.2 Confidence intervals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="33_intro_to_NHST.html">Section 3.3 — Introduction to hypothesis testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="34_analytical_approx.html">Section 3.4 — Hypothesis testing using analytical approximations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="35_two_sample_tests.html">Section 3.5 — Two-sample hypothesis tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="36_design.html">Section 3.6 — Statistical design and error analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="37_inventory_stats_tests.html">Section 3.7 — Inventory of statistical tests</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../examples/README.html">Statistical analysis examples</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../examples/statistical_design.html">Statistical design examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/one_sample_z-test.html">One-sample z-test for the mean</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/one_sample_t-test.html">One-sample t-test for the mean</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/two_sample_t-test.html">Welch’s two-sample <span class="math notranslate nohighlight">\(t\)</span>-test</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/ANOVA.html">Analysis of variance (ANOVA)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/two_sample_equivalence_test.html">Two-sample equivalence test</a></li>
+
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="40_LINEAR_MODELS.html">Chapter 4 — Linear models</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="41_simple_linear_regression.html">Section 4.1 — Simple linear regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="42_multiple_linear_regression.html">Section 4.2 — Multiple linear regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="43_interpreting_linear_models.html">Section 4.3 — Interpreting linear models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="44_regression_with_categorical_predictors.html">Section 4.4 — Regression with categorical predictors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="45_causal_inference.html">Section 4.5 — Model selection for causal inference</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="46_generalized_linear_models.html">Section 4.6 — Generalized linear models</a></li>
+
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="50_BAYESIAN_STATS.html">Chapter 5 — Bayesian statistics</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="51_intro_to_Bayesian_stats.html">Section 5.1 — Introduction to Bayesian statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="52_Bayesian_inference_computations.html">Section 5.2 — Bayesian inference computations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="53_Bayesian_linear_models.html">Section 5.3 — Bayesian linear models</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="54_difference_between_means.html">Section 5.4 — Bayesian difference between means</a></li>
+
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Section 5.5 — Hierarchical models</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials/appendix.html">Appendix</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/python_tutorial.html">Appendix C — Python tutorial</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/pandas_tutorial.html">Appendix D — Pandas tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/seaborn_tutorial.html">Appendix E — Seaborn tutorial</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/calculus_tutorial.html">Appendix F — Calculus tutorial</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../reading_group/info.html">noBSstats Reading Group</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../blogposts/index.html">Blog posts</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../blogposts/python_for_stats.html">Using Python for learning statistics Part 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../blogposts/probability_models.html">Using Python for probability calculations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../blogposts/sampling_distributions.html">Sampling distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../blogposts/bootstrap.html">Bootstrap estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../blogposts/simulation_hypothesis_tests.html">Hypothesis testing using simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../blogposts/permutation_test.html">Permutation tests for comparing two groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../blogposts/stats_procedures.html">Python libraries for doing statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../blogposts/python_stats_libraries.html">Python libraries for doing statistics</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/minireference/noBSstats/main?urlpath=lab/tree/./notebooks/55_hierarchical_models.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Binder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Binder logo" src="../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/minireference/noBSstats" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/minireference/noBSstats/issues/new?title=Issue%20on%20page%20%2Fnotebooks/55_hierarchical_models.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/notebooks/55_hierarchical_models.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Section 5.5 — Hierarchical models</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebook-setup">Notebook setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definitions">Definitions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hierarchical-multilevel-models">Hierarchical (multilevel) models</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-formula">Model formula</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#radon-dataset">Radon dataset</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-the-data">Loading the data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#descriptive-statistics">Descriptive statistics</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1-complete-pooling-model">Example 1: complete pooling model</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bayesian-model">Bayesian model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bambi-model">Bambi model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-fitting-and-analysis">Model fitting and analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2-no-pooling-model">Example 2: no pooling model</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Bayesian model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Bambi model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Model fitting and analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Conclusion</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-3-hierarchical-model">Example 3: hierarchical model</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bayesian-hierarchical-model">Bayesian hierarchical model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Bambi model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Model fitting and analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#compare-models">Compare models</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusions">Conclusions</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanations">Explanations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prior-selection-for-hierarchical-models">Prior selection for hierarchical models</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#varying-intercepts-and-slopes-model">Varying intercepts and slopes model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-models">Comparing models</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#elpd-and-elpd-loo">ELPD and elpd_loo</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#frequentist-multilevel-models">Frequentist multilevel models</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#random-intercepts-model-using-statsmodels">Random intercepts model using <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#random-intercepts-and-slopes-model-using-statsmodels-bonus-topic">Random intercepts and slopes model using <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code> (BONUS TOPIC)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#alternative-notations-for-hierarchical-models">Alternative notations for hierarchical models</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#computational-challenges-associated-with-hierarchical-models">Computational challenges associated with hierarchical models</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#benefits-of-multilevel-models">Benefits of multilevel models</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#applications">Applications</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-mod1u">Exercise: mod1u</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-pigs-dataset">Exercise: pigs dataset</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-educational-data">Exercise: educational data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-sleepstudy-dataset">Exercise: sleepstudy dataset</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-tadpoles-bonus">Exercise: tadpoles (BONUS)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#links">Links</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extra-material">EXTRA MATERIAL</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="section-5-5-hierarchical-models">
+<h1>Section 5.5 — Hierarchical models<a class="headerlink" href="#section-5-5-hierarchical-models" title="Link to this heading">#</a></h1>
+<p>This notebook contains the code examples from <a class="reference internal" href="#"><span class="xref myst">Section 5.5 Hierarchical models</span></a> from the <strong>No Bullshit Guide to Statistics</strong>.</p>
+<p>See also:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="http://localhost:8888/lab/tree/notebooks/explorations/bambi-paper-main/original/03_hierarchical_model.ipynb">03_hierarchical_model.ipynb</a></p></li>
+<li><p><a class="reference internal" href="#./explorations/cs109b_lect13_bayes_2_2021.ipynb"><span class="xref myst">cs109b_lect13_bayes_2_2021.ipynb</span></a></p></li>
+<li><p><a class="github reference external" href="https://github.com/fonnesbeck/pymc_sdss_2024/blob/main/notebooks/Section4-Hierarchical_Models.ipynb">fonnesbeck/pymc_sdss_2024</a></p></li>
+<li><p><a class="reference external" href="https://mc-stan.org/users/documentation/case-studies/radon_cmdstanpy_plotnine.html#data-prep">https://mc-stan.org/users/documentation/case-studies/radon_cmdstanpy_plotnine.html#data-prep</a></p></li>
+<li><p><a class="github reference external" href="https://github.com/mitzimorris/brms_feb_28_2023/blob/main/brms_notebook.Rmd">mitzimorris/brms_feb_28_2023</a></p></li>
+<li><p><a class="reference external" href="https://www.pymc.io/projects/examples/en/latest/generalized_linear_models/multilevel_modeling.html">https://www.pymc.io/projects/examples/en/latest/generalized_linear_models/multilevel_modeling.html</a></p></li>
+</ul>
+<section id="notebook-setup">
+<h2>Notebook setup<a class="headerlink" href="#notebook-setup" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ensure required Python modules are installed</span>
+<span class="c1"># %pip install --quiet numpy scipy seaborn statsmodels bambi==0.15.0 pymc==5.23.0 ministats</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load Python modules</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Figures setup</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>  <span class="c1"># needed otherwise `sns.set_theme` doesn&#39;t work</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set_theme</span><span class="p">(</span>
+    <span class="n">context</span><span class="o">=</span><span class="s2">&quot;paper&quot;</span><span class="p">,</span>
+    <span class="n">style</span><span class="o">=</span><span class="s2">&quot;whitegrid&quot;</span><span class="p">,</span>
+    <span class="n">palette</span><span class="o">=</span><span class="s2">&quot;colorblind&quot;</span><span class="p">,</span>
+    <span class="n">rc</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;font.family&quot;</span><span class="p">:</span> <span class="s2">&quot;serif&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;font.serif&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Palatino&quot;</span><span class="p">,</span> <span class="s2">&quot;DejaVu Serif&quot;</span><span class="p">,</span> <span class="s2">&quot;serif&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;figure.figsize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">)},</span>
+<span class="p">)</span>
+<span class="o">%</span><span class="k">config</span> InlineBackend.figure_format = &quot;retina&quot;
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Figure size 640x480 with 0 Axes&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simple float __repr__  </span>
+<span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">__version__</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">legacy</span><span class="o">=</span><span class="s1">&#39;1.25&#39;</span><span class="p">)</span>
+
+<span class="c1"># Set random seed for repeatability</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Download datasets/ directory if necessary</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ministats</span><span class="w"> </span><span class="kn">import</span> <span class="n">ensure_datasets</span>
+<span class="n">ensure_datasets</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>datasets/ directory already exists.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># silence statsmodels kurtosistest warning when using n &lt; 20</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">)</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># silence ERROR messages when showing model graphs</span>
+<span class="c1"># cf. https://github.com/pymc-devs/pymc/issues/7901</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;pytensor.graph.rewriting.basic&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">CRITICAL</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="definitions">
+<h2>Definitions<a class="headerlink" href="#definitions" title="Link to this heading">#</a></h2>
+<section id="hierarchical-multilevel-models">
+<h3>Hierarchical (multilevel) models<a class="headerlink" href="#hierarchical-multilevel-models" title="Link to this heading">#</a></h3>
+</section>
+<section id="model-formula">
+<h3>Model formula<a class="headerlink" href="#model-formula" title="Link to this heading">#</a></h3>
+<p>A Bayesian hierarchical model is described by the following equations:</p>
+<p><span class="math notranslate nohighlight">\(\def\calN{\mathcal{N}}
+ \def\Tdist{\mathcal{T}}
+ \def\Expon{\mathrm{Expon}}\)</span></p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    X_j			&amp;\sim	\calN(M_{j}, \, \Sigma_X),  \\
+    M_{j}		&amp;=		B_0 + B_{0j},					\\
+    \Sigma_X	&amp;\sim	\Tdist^+\!(\nu_{\Sigma_X}, \sigma_{\Sigma_X}), \\
+    B_0			&amp;\sim	\calN(\mu_{B_0},\sigma_{B_0}), \\
+    B_{0j}		&amp;\sim	\calN(0,\Sigma_{B_{0j}}), \\
+    \Sigma_{B_{0j}}	&amp;\sim	\Expon(\lambda).
+\end{align*}\]</div>
+</section>
+</section>
+<section id="radon-dataset">
+<h2>Radon dataset<a class="headerlink" href="#radon-dataset" title="Link to this heading">#</a></h2>
+<p><a class="reference external" href="https://bambinos.github.io/bambi/notebooks/radon_example.html">https://bambinos.github.io/bambi/notebooks/radon_example.html</a></p>
+<ul class="simple">
+<li><p>Description: Contains measurements of radon levels in homes across various counties.</p></li>
+<li><p>Source: Featured in Andrew Gelman and Jennifer Hill’s book Data Analysis Using Regression and Multilevel/Hierarchical Models.</p></li>
+<li><p>Application: Demonstrates partial pooling and varying intercepts/slopes in hierarchical modeling.</p></li>
+</ul>
+<section id="loading-the-data">
+<h3>Loading the data<a class="headerlink" href="#loading-the-data" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">radon</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;datasets/radon.csv&quot;</span><span class="p">)</span>
+<span class="n">radon</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(919, 6)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">radon</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>idnum</th>
+      <th>state</th>
+      <th>county</th>
+      <th>floor</th>
+      <th>log_radon</th>
+      <th>log_uranium</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>5081</td>
+      <td>MN</td>
+      <td>AITKIN</td>
+      <td>ground</td>
+      <td>0.788457</td>
+      <td>-0.689048</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>5082</td>
+      <td>MN</td>
+      <td>AITKIN</td>
+      <td>basement</td>
+      <td>0.788457</td>
+      <td>-0.689048</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>5083</td>
+      <td>MN</td>
+      <td>AITKIN</td>
+      <td>basement</td>
+      <td>1.064711</td>
+      <td>-0.689048</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>5084</td>
+      <td>MN</td>
+      <td>AITKIN</td>
+      <td>basement</td>
+      <td>0.000000</td>
+      <td>-0.689048</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5085</td>
+      <td>MN</td>
+      <td>ANOKA</td>
+      <td>basement</td>
+      <td>1.131402</td>
+      <td>-0.847313</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="descriptive-statistics">
+<h3>Descriptive statistics<a class="headerlink" href="#descriptive-statistics" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">radon</span><span class="p">[</span><span class="s2">&quot;log_radon&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>count    919.000000
+mean       1.224623
+std        0.853327
+min       -2.302585
+25%        0.641854
+50%        1.280934
+75%        1.791759
+max        3.875359
+Name: log_radon, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">radon</span><span class="p">[</span><span class="s2">&quot;county&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>85
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">radon</span><span class="p">[</span><span class="s2">&quot;floor&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>floor
+basement    766
+ground      153
+Name: count, dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ministats.book.figures</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_counties</span>
+<span class="n">sel_counties</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="s2">&quot;LAC QUI PARLE&quot;</span><span class="p">,</span> <span class="s2">&quot;AITKIN&quot;</span><span class="p">,</span> <span class="s2">&quot;KOOCHICHING&quot;</span><span class="p">,</span> <span class="s2">&quot;DOUGLAS&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;HENNEPIN&quot;</span><span class="p">,</span> <span class="s2">&quot;STEARNS&quot;</span><span class="p">,</span> <span class="s2">&quot;RAMSEY&quot;</span><span class="p">,</span> <span class="s2">&quot;ST LOUIS&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+<span class="n">plot_counties</span><span class="p">(</span><span class="n">radon</span><span class="p">,</span> <span class="n">counties</span><span class="o">=</span><span class="n">sel_counties</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/1daf076aa94e30418f63022f16449bdc157fa918cd768bac2d06fd50a708464f.png"><img alt="../_images/1daf076aa94e30418f63022f16449bdc157fa918cd768bac2d06fd50a708464f.png" src="../_images/1daf076aa94e30418f63022f16449bdc157fa918cd768bac2d06fd50a708464f.png" style="width: 855px; height: 369px;" />
+</a>
+</div>
+</div>
+</section>
+</section>
+<section id="example-1-complete-pooling-model">
+<h2>Example 1: complete pooling model<a class="headerlink" href="#example-1-complete-pooling-model" title="Link to this heading">#</a></h2>
+<p>= common linear regression model for all counties</p>
+<section id="bayesian-model">
+<h3>Bayesian model<a class="headerlink" href="#bayesian-model" title="Link to this heading">#</a></h3>
+<p>We can  pool all the data and estimate one big regression to asses the influence of the floor variable
+on radon levels across all counties.</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    R			&amp;\sim	\calN(M_R, \, \Sigma_R),  	\\
+    M_R			&amp;=		B_0 + B_{\!f}\!\cdot\!f,	\\
+    \Sigma_R	&amp;\sim	\Tdist^+\!(4, 1),			\\
+    B_0			&amp;\sim	\calN(1, 2), 				\\
+    B_f			&amp;\sim	\calN(0, 5).
+\end{align*}\]</div>
+<p>The variable <span class="math notranslate nohighlight">\(f\)</span> corresponds to the column <code class="docutils literal notranslate"><span class="pre">floor</span></code> in the <code class="docutils literal notranslate"><span class="pre">radon</span></code> data frame,
+which will be internally coded as binary
+with <span class="math notranslate nohighlight">\(0\)</span> representing basement,
+and <span class="math notranslate nohighlight">\(1\)</span> representing ground floor.</p>
+<p>By ignoring the county feature, we do not differenciate on counties.</p>
+</section>
+<section id="bambi-model">
+<h3>Bambi model<a class="headerlink" href="#bambi-model" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">bambi</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bmb</span>
+
+<span class="n">priors1</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;Intercept&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Normal&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+    <span class="s2">&quot;floor&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Normal&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+    <span class="s2">&quot;sigma&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;HalfStudentT&quot;</span><span class="p">,</span> <span class="n">nu</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+<span class="p">}</span>
+
+<span class="n">mod1</span> <span class="o">=</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">formula</span><span class="o">=</span><span class="s2">&quot;log_radon ~ 1 + floor&quot;</span><span class="p">,</span>
+                 <span class="n">family</span><span class="o">=</span><span class="s2">&quot;gaussian&quot;</span><span class="p">,</span>
+                 <span class="n">link</span><span class="o">=</span><span class="s2">&quot;identity&quot;</span><span class="p">,</span>
+                 <span class="n">priors</span><span class="o">=</span><span class="n">priors1</span><span class="p">,</span>
+                 <span class="n">data</span><span class="o">=</span><span class="n">radon</span><span class="p">)</span>
+<span class="n">mod1</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>       Formula: log_radon ~ 1 + floor
+        Family: gaussian
+          Link: mu = identity
+  Observations: 919
+        Priors: 
+    target = mu
+        Common-level effects
+            Intercept ~ Normal(mu: 1.0, sigma: 2.0)
+            floor ~ Normal(mu: 0.0, sigma: 5.0)
+        
+        Auxiliary parameters
+            sigma ~ HalfStudentT(nu: 4.0, sigma: 1.0)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mod1</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+<span class="n">mod1</span><span class="o">.</span><span class="n">graph</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/0753a62fe1e8fb2d63e717fa3cf5abadda0a3da569e6dbc00f0d6e096ad7b721.svg" src="../_images/0753a62fe1e8fb2d63e717fa3cf5abadda0a3da569e6dbc00f0d6e096ad7b721.svg" />
+</div>
+</div>
+</section>
+<section id="model-fitting-and-analysis">
+<h3>Model fitting and analysis<a class="headerlink" href="#model-fitting-and-analysis" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">idata1</span> <span class="o">=</span> <span class="n">mod1</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">random_seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Initializing NUTS using jitter+adapt_diag...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Multiprocess sampling (2 chains in 2 jobs)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>NUTS: [sigma, Intercept, floor]
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "319157e2acc043419dc5f8011337c3c5"}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+</div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 2 chains for 1_000 tune and 1_000 draw iterations (2_000 + 2_000 draws total) took 2 seconds.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>We recommend running at least 4 chains for robust computation of convergence diagnostics
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">arviz</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">az</span>
+
+<span class="n">az</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">idata1</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;stats&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>mean</th>
+      <th>sd</th>
+      <th>hdi_3%</th>
+      <th>hdi_97%</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>sigma</th>
+      <td>0.823</td>
+      <td>0.020</td>
+      <td>0.787</td>
+      <td>0.860</td>
+    </tr>
+    <tr>
+      <th>Intercept</th>
+      <td>1.327</td>
+      <td>0.031</td>
+      <td>1.274</td>
+      <td>1.389</td>
+    </tr>
+    <tr>
+      <th>floor[ground]</th>
+      <td>-0.615</td>
+      <td>0.073</td>
+      <td>-0.763</td>
+      <td>-0.485</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">az</span><span class="o">.</span><span class="n">plot_posterior</span><span class="p">(</span><span class="n">idata1</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/c569d5ea072a4d80dfccc0f5f0b53639db15a6240d16e326b1d55b893c441039.png"><img alt="../_images/c569d5ea072a4d80dfccc0f5f0b53639db15a6240d16e326b1d55b893c441039.png" src="../_images/c569d5ea072a4d80dfccc0f5f0b53639db15a6240d16e326b1d55b893c441039.png" style="width: 1356px; height: 338px;" />
+</a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">bmb</span><span class="o">.</span><span class="n">interpret</span><span class="o">.</span><span class="n">plot_predictions</span><span class="p">(</span><span class="n">mod1</span><span class="p">,</span> <span class="n">idata1</span><span class="p">,</span> <span class="n">conditional</span><span class="o">=</span><span class="s2">&quot;floor&quot;</span><span class="p">)</span>
+
+<span class="n">means1</span> <span class="o">=</span> <span class="n">az</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">idata1</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;stats&quot;</span><span class="p">)[</span><span class="s2">&quot;mean&quot;</span><span class="p">]</span>
+<span class="n">y0</span> <span class="o">=</span> <span class="n">means1</span><span class="p">[</span><span class="s2">&quot;Intercept&quot;</span><span class="p">]</span>
+<span class="n">y1</span> <span class="o">=</span> <span class="n">means1</span><span class="p">[</span><span class="s2">&quot;Intercept&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">means1</span><span class="p">[</span><span class="s2">&quot;floor[ground]&quot;</span><span class="p">]</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="p">[</span><span class="n">y0</span><span class="p">,</span><span class="n">y1</span><span class="p">],</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+
+<span class="n">midpoint</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="p">(</span><span class="n">y0</span><span class="o">+</span><span class="n">y1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="mf">0.03</span><span class="p">]</span>
+<span class="n">slope</span> <span class="o">=</span> <span class="n">means1</span><span class="p">[</span><span class="s2">&quot;floor[ground]&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s2">&quot;$</span><span class="se">\\</span><span class="s2">mu_{B_</span><span class="si">{f}</span><span class="s2">}=</span><span class="si">%.2f</span><span class="s2">$&quot;</span> <span class="o">%</span> <span class="n">slope</span><span class="p">,</span> <span class="n">midpoint</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Default computed for conditional variable: floor
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/50f2ddd5cafa8d5d502548df5fdfb30b23e43ba4f6dd6b981e85f19cd4d6bee8.png"><img alt="../_images/50f2ddd5cafa8d5d502548df5fdfb30b23e43ba4f6dd6b981e85f19cd4d6bee8.png" src="../_images/50f2ddd5cafa8d5d502548df5fdfb30b23e43ba4f6dd6b981e85f19cd4d6bee8.png" style="width: 462px; height: 293px;" />
+</a>
+</div>
+</div>
+</section>
+<section id="conclusion">
+<h3>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">#</a></h3>
+<p>not using group membership, so we have lots of bias</p>
+</section>
+</section>
+<section id="example-2-no-pooling-model">
+<h2>Example 2: no pooling model<a class="headerlink" href="#example-2-no-pooling-model" title="Link to this heading">#</a></h2>
+<p>= separate intercept for each county</p>
+<section id="id1">
+<h3>Bayesian model<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<p>If we treat different counties as independent,
+so each one gets an intercept term:</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    R_j			&amp;\sim	\calN(M_j, \, \Sigma_R),  					\\
+    M_j			&amp;=		B_{0j} + B_{\!f}\!\cdot\!f,					\\
+    \Sigma_R		&amp;\sim	\Tdist^+\!(4, 1),							\\
+    B_{0j}		&amp;\sim	\calN(1, 2),							\\
+    B_f			&amp;\sim	\calN(0, 5).
+\end{align*}\]</div>
+</section>
+<section id="id2">
+<h3>Bambi model<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">priors2</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;county&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Normal&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+    <span class="s2">&quot;floor&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Normal&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+    <span class="s2">&quot;sigma&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;HalfStudentT&quot;</span><span class="p">,</span> <span class="n">nu</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+<span class="p">}</span>
+
+<span class="n">mod2</span> <span class="o">=</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="s2">&quot;log_radon ~ 0 + county + floor&quot;</span><span class="p">,</span>
+                 <span class="n">family</span><span class="o">=</span><span class="s2">&quot;gaussian&quot;</span><span class="p">,</span>
+                 <span class="n">link</span><span class="o">=</span><span class="s2">&quot;identity&quot;</span><span class="p">,</span>
+                 <span class="n">priors</span><span class="o">=</span><span class="n">priors2</span><span class="p">,</span>
+                 <span class="n">data</span><span class="o">=</span><span class="n">radon</span><span class="p">)</span>
+<span class="n">mod2</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>       Formula: log_radon ~ 0 + county + floor
+        Family: gaussian
+          Link: mu = identity
+  Observations: 919
+        Priors: 
+    target = mu
+        Common-level effects
+            county ~ Normal(mu: 1.0, sigma: 2.0)
+            floor ~ Normal(mu: 0.0, sigma: 5.0)
+        
+        Auxiliary parameters
+            sigma ~ HalfStudentT(nu: 4.0, sigma: 1.0)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mod2</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+<span class="n">mod2</span><span class="o">.</span><span class="n">graph</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/95f456bb2f0bec47965d4ef989a591f6123adf04ffa2a26927afd1feb542d6fc.svg" src="../_images/95f456bb2f0bec47965d4ef989a591f6123adf04ffa2a26927afd1feb542d6fc.svg" />
+</div>
+</div>
+</section>
+<section id="id3">
+<h3>Model fitting and analysis<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">idata2</span> <span class="o">=</span> <span class="n">mod2</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">random_seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Initializing NUTS using jitter+adapt_diag...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Multiprocess sampling (2 chains in 2 jobs)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>NUTS: [sigma, county, floor]
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "e0b5321d283f45619d29beb1d2a30ab5"}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+</div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 2 chains for 1_000 tune and 1_000 draw iterations (2_000 + 2_000 draws total) took 4 seconds.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>We recommend running at least 4 chains for robust computation of convergence diagnostics
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">idata2sel</span> <span class="o">=</span> <span class="n">idata2</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">county_dim</span><span class="o">=</span><span class="n">sel_counties</span><span class="p">)</span>
+<span class="n">az</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">idata2sel</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;stats&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>mean</th>
+      <th>sd</th>
+      <th>hdi_3%</th>
+      <th>hdi_97%</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>sigma</th>
+      <td>0.757</td>
+      <td>0.018</td>
+      <td>0.725</td>
+      <td>0.793</td>
+    </tr>
+    <tr>
+      <th>county[LAC QUI PARLE]</th>
+      <td>2.833</td>
+      <td>0.512</td>
+      <td>1.745</td>
+      <td>3.719</td>
+    </tr>
+    <tr>
+      <th>county[AITKIN]</th>
+      <td>0.844</td>
+      <td>0.375</td>
+      <td>0.136</td>
+      <td>1.553</td>
+    </tr>
+    <tr>
+      <th>county[KOOCHICHING]</th>
+      <td>0.809</td>
+      <td>0.303</td>
+      <td>0.258</td>
+      <td>1.406</td>
+    </tr>
+    <tr>
+      <th>county[DOUGLAS]</th>
+      <td>1.722</td>
+      <td>0.243</td>
+      <td>1.266</td>
+      <td>2.184</td>
+    </tr>
+    <tr>
+      <th>county[HENNEPIN]</th>
+      <td>1.357</td>
+      <td>0.074</td>
+      <td>1.222</td>
+      <td>1.488</td>
+    </tr>
+    <tr>
+      <th>county[STEARNS]</th>
+      <td>1.487</td>
+      <td>0.147</td>
+      <td>1.216</td>
+      <td>1.759</td>
+    </tr>
+    <tr>
+      <th>county[RAMSEY]</th>
+      <td>1.156</td>
+      <td>0.132</td>
+      <td>0.924</td>
+      <td>1.416</td>
+    </tr>
+    <tr>
+      <th>county[ST LOUIS]</th>
+      <td>0.866</td>
+      <td>0.074</td>
+      <td>0.722</td>
+      <td>1.000</td>
+    </tr>
+    <tr>
+      <th>floor[ground]</th>
+      <td>-0.704</td>
+      <td>0.073</td>
+      <td>-0.838</td>
+      <td>-0.564</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">axs</span> <span class="o">=</span> <span class="n">az</span><span class="o">.</span><span class="n">plot_forest</span><span class="p">(</span><span class="n">idata2sel</span><span class="p">,</span> <span class="n">combined</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mf">2.6</span><span class="p">))</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">4.6</span><span class="p">,</span><span class="mf">0.5</span><span class="p">))</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="kc">None</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/f93cc69b26ebd294d575265ada37a066e576e48173a40f295d29e0fb8d000779.png"><img alt="../_images/f93cc69b26ebd294d575265ada37a066e576e48173a40f295d29e0fb8d000779.png" src="../_images/f93cc69b26ebd294d575265ada37a066e576e48173a40f295d29e0fb8d000779.png" style="width: 658px; height: 243px;" />
+</a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_counties</span><span class="p">(</span><span class="n">radon</span><span class="p">,</span> <span class="n">idata_cp</span><span class="o">=</span><span class="n">idata1</span><span class="p">,</span> <span class="n">idata_np</span><span class="o">=</span><span class="n">idata2</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/034a939da54439e13a77b6152b17af370acce2346b017598d0b2f2d585a904c9.png"><img alt="../_images/034a939da54439e13a77b6152b17af370acce2346b017598d0b2f2d585a904c9.png" src="../_images/034a939da54439e13a77b6152b17af370acce2346b017598d0b2f2d585a904c9.png" style="width: 854px; height: 369px;" />
+</a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># fig, axs = bmb.interpret.plot_predictions(mod2, idata2, [&quot;floor&quot;, &quot;county&quot;]);</span>
+<span class="c1"># axs[0].get_legend().remove()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># post2 = idata2[&quot;posterior&quot;]</span>
+<span class="c1"># unpooled_means = post2.mean(dim=(&quot;chain&quot;, &quot;draw&quot;))</span>
+<span class="c1"># unpooled_hdi = az.hdi(idata2)</span>
+
+<span class="c1"># unpooled_means_iter = unpooled_means.sortby(&quot;county&quot;)</span>
+<span class="c1"># unpooled_hdi_iter = unpooled_hdi.sortby(unpooled_means_iter.county)</span>
+
+<span class="c1"># _, ax = plt.subplots(figsize=(12, 5))</span>
+<span class="c1"># unpooled_means_iter.plot.scatter(x=&quot;county_dim&quot;, y=&quot;county&quot;, ax=ax, alpha=0.9)</span>
+<span class="c1"># ax.vlines(</span>
+<span class="c1">#     np.arange(len(radon[&quot;county&quot;].unique())),</span>
+<span class="c1">#     unpooled_hdi_iter.county.sel(hdi=&quot;lower&quot;),</span>
+<span class="c1">#     unpooled_hdi_iter.county.sel(hdi=&quot;higher&quot;),</span>
+<span class="c1">#     color=&quot;orange&quot;,</span>
+<span class="c1">#     alpha=0.6,</span>
+<span class="c1"># )</span>
+<span class="c1"># ax.set(ylabel=&quot;Radon estimate&quot;, ylim=(-2, 4.5))</span>
+<span class="c1"># ax.tick_params(rotation=90);</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id4">
+<h3>Conclusion<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
+<p>treating each group independently, so we have lots of variance</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO:</span>
+<span class="c1"># calculate the std.dev. of the county-specific slopes -- this is like \Sigma_J but w/o a prior.</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="example-3-hierarchical-model">
+<h2>Example 3: hierarchical model<a class="headerlink" href="#example-3-hierarchical-model" title="Link to this heading">#</a></h2>
+<p>= partial pooling model
+= varying intercepts model</p>
+<section id="bayesian-hierarchical-model">
+<h3>Bayesian hierarchical model<a class="headerlink" href="#bayesian-hierarchical-model" title="Link to this heading">#</a></h3>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    R_j			&amp;\sim	\calN(M_j, \, \Sigma_R),						\\
+    M_j			&amp;=		B_0 + B_{0j} + B_f\!\cdot\!f,					\\
+    \Sigma_R	&amp;\sim	\Tdist^+\!(4, 1),								\\
+    B_0			&amp;\sim	\calN(1,2),										\\
+    B_{0j}		&amp;\sim	\calN(0,\Sigma_{B_{0j}}),						\\
+    B_f			&amp;\sim	\calN(0, 5),									\\
+    \Sigma_{B_{0j}}	&amp;\sim	\Expon(1).
+\end{align*}\]</div>
+<p>The partial pooling formula estimates per-county intercepts which drawn
+from the same distribution which is estimated jointly with the rest of
+the model parameters. The <code class="docutils literal notranslate"><span class="pre">1</span></code> is the intercept co-efficient. The
+estimates across counties will all have the same slope.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>log_radon ~ 1 + (1|county_id) + floor
+</pre></div>
+</div>
+<p>There is a middle ground to both of these extremes.
+Specifically, we may assume that the intercepts are different for each county as in the unpooled case,
+but they are drawn from the same distribution.
+The different counties are effectively sharing information through the common prior.</p>
+<p>NOTE: some counties have very few sample; the hierarchical model will provide “shrinkage” for these groups, and use global information learned from all counties</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">radon</span><span class="p">[</span><span class="s2">&quot;log_radon&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>count    919.000000
+mean       1.224623
+std        0.853327
+min       -2.302585
+25%        0.641854
+50%        1.280934
+75%        1.791759
+max        3.875359
+Name: log_radon, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">radon</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;floor&quot;</span><span class="p">)[</span><span class="s2">&quot;log_radon&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>count</th>
+      <th>mean</th>
+      <th>std</th>
+      <th>min</th>
+      <th>25%</th>
+      <th>50%</th>
+      <th>75%</th>
+      <th>max</th>
+    </tr>
+    <tr>
+      <th>floor</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>basement</th>
+      <td>766.0</td>
+      <td>1.326744</td>
+      <td>0.782709</td>
+      <td>-2.302585</td>
+      <td>0.788457</td>
+      <td>1.360977</td>
+      <td>1.883253</td>
+      <td>3.875359</td>
+    </tr>
+    <tr>
+      <th>ground</th>
+      <td>153.0</td>
+      <td>0.713349</td>
+      <td>0.999376</td>
+      <td>-2.302585</td>
+      <td>0.095310</td>
+      <td>0.741937</td>
+      <td>1.308333</td>
+      <td>3.234749</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="id5">
+<h3>Bambi model<a class="headerlink" href="#id5" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">priors3</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;Intercept&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Normal&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+    <span class="s2">&quot;floor&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Normal&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+    <span class="s2">&quot;1|county&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Normal&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Exponential&quot;</span><span class="p">,</span> <span class="n">lam</span><span class="o">=</span><span class="mi">1</span><span class="p">)),</span>
+    <span class="s2">&quot;sigma&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;HalfStudentT&quot;</span><span class="p">,</span> <span class="n">nu</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+<span class="p">}</span>
+
+<span class="n">formula3</span> <span class="o">=</span> <span class="s2">&quot;log_radon ~ 1 + (1|county) + floor&quot;</span>
+<span class="n">mod3</span> <span class="o">=</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">formula</span><span class="o">=</span><span class="n">formula3</span><span class="p">,</span>
+                 <span class="n">family</span><span class="o">=</span><span class="s2">&quot;gaussian&quot;</span><span class="p">,</span>
+                 <span class="n">link</span><span class="o">=</span><span class="s2">&quot;identity&quot;</span><span class="p">,</span>
+                 <span class="n">priors</span><span class="o">=</span><span class="n">priors3</span><span class="p">,</span>
+                 <span class="n">data</span><span class="o">=</span><span class="n">radon</span><span class="p">,</span>
+                 <span class="n">noncentered</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">mod3</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>       Formula: log_radon ~ 1 + (1|county) + floor
+        Family: gaussian
+          Link: mu = identity
+  Observations: 919
+        Priors: 
+    target = mu
+        Common-level effects
+            Intercept ~ Normal(mu: 1.0, sigma: 2.0)
+            floor ~ Normal(mu: 0.0, sigma: 5.0)
+        
+        Group-level effects
+            1|county ~ Normal(mu: 0.0, sigma: Exponential(lam: 1.0))
+        
+        Auxiliary parameters
+            sigma ~ HalfStudentT(nu: 4.0, sigma: 1.0)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mod3</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+<span class="n">mod3</span><span class="o">.</span><span class="n">graph</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/4b306d5a88ebec71185b560738d9f449ae86506b3890f9c69e5103cf5e874bae.svg" src="../_images/4b306d5a88ebec71185b560738d9f449ae86506b3890f9c69e5103cf5e874bae.svg" />
+</div>
+</div>
+</section>
+<section id="id6">
+<h3>Model fitting and analysis<a class="headerlink" href="#id6" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">idata3</span> <span class="o">=</span> <span class="n">mod3</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">random_seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Initializing NUTS using jitter+adapt_diag...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Multiprocess sampling (2 chains in 2 jobs)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>NUTS: [sigma, Intercept, floor, 1|county_sigma, 1|county]
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "9251c19162184a1dac988474d3b46bd2"}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+</div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 2 chains for 1_000 tune and 1_000 draw iterations (2_000 + 2_000 draws total) took 4 seconds.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>We recommend running at least 4 chains for robust computation of convergence diagnostics
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The rhat statistic is larger than 1.01 for some parameters. This indicates problems during sampling. See https://arxiv.org/abs/1903.08008 for details
+</pre></div>
+</div>
+</div>
+</div>
+<p>The group level parameters</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">idata3sel</span> <span class="o">=</span> <span class="n">idata3</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">county__factor_dim</span><span class="o">=</span><span class="n">sel_counties</span><span class="p">)</span>
+<span class="n">az</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">idata3sel</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;stats&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>mean</th>
+      <th>sd</th>
+      <th>hdi_3%</th>
+      <th>hdi_97%</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>sigma</th>
+      <td>0.756</td>
+      <td>0.018</td>
+      <td>0.718</td>
+      <td>0.786</td>
+    </tr>
+    <tr>
+      <th>Intercept</th>
+      <td>1.462</td>
+      <td>0.054</td>
+      <td>1.359</td>
+      <td>1.558</td>
+    </tr>
+    <tr>
+      <th>floor[ground]</th>
+      <td>-0.695</td>
+      <td>0.072</td>
+      <td>-0.835</td>
+      <td>-0.567</td>
+    </tr>
+    <tr>
+      <th>1|county_sigma</th>
+      <td>0.334</td>
+      <td>0.047</td>
+      <td>0.249</td>
+      <td>0.424</td>
+    </tr>
+    <tr>
+      <th>1|county[LAC QUI PARLE]</th>
+      <td>0.408</td>
+      <td>0.308</td>
+      <td>-0.173</td>
+      <td>0.988</td>
+    </tr>
+    <tr>
+      <th>1|county[AITKIN]</th>
+      <td>-0.284</td>
+      <td>0.253</td>
+      <td>-0.786</td>
+      <td>0.157</td>
+    </tr>
+    <tr>
+      <th>1|county[KOOCHICHING]</th>
+      <td>-0.376</td>
+      <td>0.232</td>
+      <td>-0.814</td>
+      <td>0.050</td>
+    </tr>
+    <tr>
+      <th>1|county[DOUGLAS]</th>
+      <td>0.167</td>
+      <td>0.198</td>
+      <td>-0.190</td>
+      <td>0.540</td>
+    </tr>
+    <tr>
+      <th>1|county[HENNEPIN]</th>
+      <td>-0.100</td>
+      <td>0.088</td>
+      <td>-0.276</td>
+      <td>0.054</td>
+    </tr>
+    <tr>
+      <th>1|county[STEARNS]</th>
+      <td>0.020</td>
+      <td>0.141</td>
+      <td>-0.225</td>
+      <td>0.302</td>
+    </tr>
+    <tr>
+      <th>1|county[RAMSEY]</th>
+      <td>-0.260</td>
+      <td>0.135</td>
+      <td>-0.513</td>
+      <td>-0.005</td>
+    </tr>
+    <tr>
+      <th>1|county[ST LOUIS]</th>
+      <td>-0.572</td>
+      <td>0.085</td>
+      <td>-0.735</td>
+      <td>-0.415</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>The intercept offsets for each county are:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># sum( idata3[&quot;posterior&quot;][&quot;1|county&quot;].stack(sample=(&quot;chain&quot;,&quot;draw&quot;)).values.mean(axis=1) )</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># az.plot_forest(idata3, combined=True, figsize=(7,2),</span>
+<span class="c1">#                var_names=[&quot;Intercept&quot;, &quot;floor&quot;, &quot;1|county_sigma&quot;, &quot;sigma&quot;]);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">axs</span> <span class="o">=</span> <span class="n">az</span><span class="o">.</span><span class="n">plot_forest</span><span class="p">(</span><span class="n">idata3sel</span><span class="p">,</span>
+                     <span class="n">var_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Intercept&quot;</span><span class="p">,</span> <span class="s2">&quot;1|county&quot;</span><span class="p">,</span> <span class="s2">&quot;floor&quot;</span><span class="p">,</span> <span class="s2">&quot;1|county_sigma&quot;</span><span class="p">,</span> <span class="s2">&quot;sigma&quot;</span><span class="p">],</span>
+                     <span class="n">combined</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">0.8</span><span class="p">,</span><span class="mf">1.6</span><span class="p">,</span><span class="mf">0.2</span><span class="p">))</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="kc">None</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/6f90bc1344f7db66041efe1d3f0fa56e0a0d5be3be808eeaef67f1d6fa056bf1.png"><img alt="../_images/6f90bc1344f7db66041efe1d3f0fa56e0a0d5be3be808eeaef67f1d6fa056bf1.png" src="../_images/6f90bc1344f7db66041efe1d3f0fa56e0a0d5be3be808eeaef67f1d6fa056bf1.png" style="width: 660px; height: 274px;" />
+</a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># az.plot_forest(idata3, var_names=[&quot;1|county&quot;], combined=True);</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="compare-models">
+<h3>Compare models<a class="headerlink" href="#compare-models" title="Link to this heading">#</a></h3>
+<p>Compare complete pooling,  no pooling, and partial pooling models</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_counties</span><span class="p">(</span><span class="n">radon</span><span class="p">,</span> <span class="n">idata_cp</span><span class="o">=</span><span class="n">idata1</span><span class="p">,</span> <span class="n">idata_np</span><span class="o">=</span><span class="n">idata2</span><span class="p">,</span> <span class="n">idata_pp</span><span class="o">=</span><span class="n">idata3</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/5b26a9bd4ef4778e65d56a9bbfaff793ebaa677195570bfca6f6835433b0e619.png"><img alt="../_images/5b26a9bd4ef4778e65d56a9bbfaff793ebaa677195570bfca6f6835433b0e619.png" src="../_images/5b26a9bd4ef4778e65d56a9bbfaff793ebaa677195570bfca6f6835433b0e619.png" style="width: 854px; height: 369px;" />
+</a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># # Forest plot comparing `mod2` and `mod3` estimates</span>
+<span class="c1"># # (to illustrate reduced uncertainty in estimates + shrinkage)</span>
+<span class="c1"># post3 = idata3sel[&quot;posterior&quot;]</span>
+<span class="c1"># post3[&quot;county&quot;] = post3[&quot;Intercept&quot;] + post3[&quot;1|county&quot;]</span>
+<span class="c1"># axs = az.plot_forest([idata2sel, idata3sel], model_names=[&quot;mod2&quot;, &quot;mod3&quot;],</span>
+<span class="c1">#                      var_names=[&quot;county&quot;, &quot;floor&quot;, &quot;1|county_sigma&quot;, &quot;sigma&quot;], combined=True, figsize=(6,3))</span>
+<span class="c1"># ax = axs[0]</span>
+<span class="c1"># rbar = radon[&quot;log_radon&quot;].mean()</span>
+<span class="c1"># ax.axvline(rbar, ls=&quot;--&quot;);</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="conclusions">
+<h3>Conclusions<a class="headerlink" href="#conclusions" title="Link to this heading">#</a></h3>
+</section>
+</section>
+<section id="explanations">
+<h2>Explanations<a class="headerlink" href="#explanations" title="Link to this heading">#</a></h2>
+<section id="prior-selection-for-hierarchical-models">
+<h3>Prior selection for hierarchical models<a class="headerlink" href="#prior-selection-for-hierarchical-models" title="Link to this heading">#</a></h3>
+<p>?</p>
+</section>
+<section id="varying-intercepts-and-slopes-model">
+<h3>Varying intercepts and slopes model<a class="headerlink" href="#varying-intercepts-and-slopes-model" title="Link to this heading">#</a></h3>
+<p>= Group-specific slopes
+We can also make beta_x group-specific</p>
+<p>The varying-slope, varying intercept model adds <code class="docutils literal notranslate"><span class="pre">floor</span></code> to the
+group-level co-efficients. Now estimates across counties will all have
+varying slope.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>log_radon ~ 1 + floor + (1 + floor | county)
+</pre></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#######################################################</span>
+<span class="n">formula4</span> <span class="o">=</span> <span class="s2">&quot;log_radon ~ 1 + (1|county) + floor + (floor|county)&quot;</span>
+
+<span class="n">SigmaB0j</span> <span class="o">=</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Exponential&quot;</span><span class="p">,</span> <span class="n">lam</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">SigmaBfj</span> <span class="o">=</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Exponential&quot;</span><span class="p">,</span> <span class="n">lam</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">priors4</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;Intercept&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Normal&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+    <span class="s2">&quot;1|county&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Normal&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">SigmaB0j</span><span class="p">),</span>
+    <span class="s2">&quot;floor&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Normal&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+    <span class="s2">&quot;floor|county&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Normal&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">SigmaBfj</span><span class="p">),</span>
+    <span class="s2">&quot;sigma&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;HalfStudentT&quot;</span><span class="p">,</span> <span class="n">nu</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+<span class="p">}</span>
+
+<span class="n">mod4</span> <span class="o">=</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">formula</span><span class="o">=</span><span class="n">formula4</span><span class="p">,</span>
+                 <span class="n">family</span><span class="o">=</span><span class="s2">&quot;gaussian&quot;</span><span class="p">,</span>
+                 <span class="n">link</span><span class="o">=</span><span class="s2">&quot;identity&quot;</span><span class="p">,</span>
+                 <span class="n">priors</span><span class="o">=</span><span class="n">priors4</span><span class="p">,</span>
+                 <span class="n">data</span><span class="o">=</span><span class="n">radon</span><span class="p">,</span>
+                 <span class="n">noncentered</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">mod4</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>       Formula: log_radon ~ 1 + (1|county) + floor + (floor|county)
+        Family: gaussian
+          Link: mu = identity
+  Observations: 919
+        Priors: 
+    target = mu
+        Common-level effects
+            Intercept ~ Normal(mu: 1.0, sigma: 2.0)
+            floor ~ Normal(mu: -1.0, sigma: 2.0)
+        
+        Group-level effects
+            1|county ~ Normal(mu: 0.0, sigma: Exponential(lam: 1.0))
+            floor|county ~ Normal(mu: 0.0, sigma: Exponential(lam: 1.0))
+        
+        Auxiliary parameters
+            sigma ~ HalfStudentT(nu: 4.0, sigma: 1.0)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mod4</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+<span class="n">mod4</span><span class="o">.</span><span class="n">graph</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/3aaf1ba4a3ddb68bdc67d512e39ce02f7793688f480f2e24c8d3106852928798.svg" src="../_images/3aaf1ba4a3ddb68bdc67d512e39ce02f7793688f480f2e24c8d3106852928798.svg" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">idata4</span> <span class="o">=</span> <span class="n">mod4</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">draws</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">tune</span><span class="o">=</span><span class="mi">3000</span><span class="p">,</span> <span class="n">random_seed</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">target_accept</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Initializing NUTS using jitter+adapt_diag...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Multiprocess sampling (2 chains in 2 jobs)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>NUTS: [sigma, Intercept, floor, 1|county_sigma, 1|county, floor|county_sigma, floor|county]
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "d1017b8733ab43abb58f0e114f93a731"}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+</div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 2 chains for 3_000 tune and 2_000 draw iterations (6_000 + 4_000 draws total) took 21 seconds.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>We recommend running at least 4 chains for robust computation of convergence diagnostics
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The rhat statistic is larger than 1.01 for some parameters. This indicates problems during sampling. See https://arxiv.org/abs/1903.08008 for details
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The effective sample size per chain is smaller than 100 for some parameters.  A higher number is needed for reliable rhat and ess computation. See https://arxiv.org/abs/1903.08008 for details
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># az.autocorr(idata4[&quot;posterior&quot;][&quot;sigma&quot;].values.flatten())[0:10]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">idata4sel</span> <span class="o">=</span> <span class="n">idata4</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">county__factor_dim</span><span class="o">=</span><span class="n">sel_counties</span><span class="p">)</span>
+<span class="n">az</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">idata4sel</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;stats&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>mean</th>
+      <th>sd</th>
+      <th>hdi_3%</th>
+      <th>hdi_97%</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>sigma</th>
+      <td>0.750</td>
+      <td>0.019</td>
+      <td>0.715</td>
+      <td>0.785</td>
+    </tr>
+    <tr>
+      <th>Intercept</th>
+      <td>1.462</td>
+      <td>0.057</td>
+      <td>1.347</td>
+      <td>1.562</td>
+    </tr>
+    <tr>
+      <th>floor[ground]</th>
+      <td>-0.674</td>
+      <td>0.087</td>
+      <td>-0.843</td>
+      <td>-0.518</td>
+    </tr>
+    <tr>
+      <th>1|county_sigma</th>
+      <td>0.338</td>
+      <td>0.047</td>
+      <td>0.253</td>
+      <td>0.428</td>
+    </tr>
+    <tr>
+      <th>1|county[LAC QUI PARLE]</th>
+      <td>0.401</td>
+      <td>0.304</td>
+      <td>-0.164</td>
+      <td>0.961</td>
+    </tr>
+    <tr>
+      <th>1|county[AITKIN]</th>
+      <td>-0.289</td>
+      <td>0.260</td>
+      <td>-0.779</td>
+      <td>0.181</td>
+    </tr>
+    <tr>
+      <th>1|county[KOOCHICHING]</th>
+      <td>-0.415</td>
+      <td>0.241</td>
+      <td>-0.878</td>
+      <td>0.017</td>
+    </tr>
+    <tr>
+      <th>1|county[DOUGLAS]</th>
+      <td>0.162</td>
+      <td>0.202</td>
+      <td>-0.209</td>
+      <td>0.563</td>
+    </tr>
+    <tr>
+      <th>1|county[HENNEPIN]</th>
+      <td>-0.091</td>
+      <td>0.090</td>
+      <td>-0.262</td>
+      <td>0.074</td>
+    </tr>
+    <tr>
+      <th>1|county[STEARNS]</th>
+      <td>0.032</td>
+      <td>0.150</td>
+      <td>-0.270</td>
+      <td>0.287</td>
+    </tr>
+    <tr>
+      <th>1|county[RAMSEY]</th>
+      <td>-0.285</td>
+      <td>0.133</td>
+      <td>-0.532</td>
+      <td>-0.037</td>
+    </tr>
+    <tr>
+      <th>1|county[ST LOUIS]</th>
+      <td>-0.581</td>
+      <td>0.090</td>
+      <td>-0.750</td>
+      <td>-0.410</td>
+    </tr>
+    <tr>
+      <th>floor|county_sigma[ground]</th>
+      <td>0.289</td>
+      <td>0.122</td>
+      <td>0.046</td>
+      <td>0.478</td>
+    </tr>
+    <tr>
+      <th>floor|county[ground, LAC QUI PARLE]</th>
+      <td>0.174</td>
+      <td>0.309</td>
+      <td>-0.360</td>
+      <td>0.804</td>
+    </tr>
+    <tr>
+      <th>floor|county[ground, AITKIN]</th>
+      <td>0.037</td>
+      <td>0.283</td>
+      <td>-0.482</td>
+      <td>0.651</td>
+    </tr>
+    <tr>
+      <th>floor|county[ground, KOOCHICHING]</th>
+      <td>0.049</td>
+      <td>0.251</td>
+      <td>-0.403</td>
+      <td>0.563</td>
+    </tr>
+    <tr>
+      <th>floor|county[ground, DOUGLAS]</th>
+      <td>0.052</td>
+      <td>0.286</td>
+      <td>-0.493</td>
+      <td>0.621</td>
+    </tr>
+    <tr>
+      <th>floor|county[ground, HENNEPIN]</th>
+      <td>-0.099</td>
+      <td>0.186</td>
+      <td>-0.471</td>
+      <td>0.229</td>
+    </tr>
+    <tr>
+      <th>floor|county[ground, STEARNS]</th>
+      <td>-0.108</td>
+      <td>0.241</td>
+      <td>-0.582</td>
+      <td>0.355</td>
+    </tr>
+    <tr>
+      <th>floor|county[ground, RAMSEY]</th>
+      <td>0.235</td>
+      <td>0.274</td>
+      <td>-0.208</td>
+      <td>0.779</td>
+    </tr>
+    <tr>
+      <th>floor|county[ground, ST LOUIS]</th>
+      <td>0.046</td>
+      <td>0.168</td>
+      <td>-0.277</td>
+      <td>0.368</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">az</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">idata4</span><span class="p">,</span> <span class="n">var_names</span><span class="o">=</span><span class="s2">&quot;sigma&quot;</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;stats&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>mean</th>
+      <th>sd</th>
+      <th>hdi_3%</th>
+      <th>hdi_97%</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>sigma</th>
+      <td>0.75</td>
+      <td>0.019</td>
+      <td>0.715</td>
+      <td>0.785</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>The estimated mean standard deviation is the lowest of all the models we considered so far.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_counties</span><span class="p">(</span><span class="n">radon</span><span class="p">,</span> <span class="n">idata_cp</span><span class="o">=</span><span class="n">idata1</span><span class="p">,</span> <span class="n">idata_np</span><span class="o">=</span><span class="n">idata2</span><span class="p">,</span> <span class="n">idata_pp</span><span class="o">=</span><span class="n">idata3</span><span class="p">,</span> <span class="n">idata_pp2</span><span class="o">=</span><span class="n">idata4</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/e6fdb39fa945cf87014fa6f49274f638a7ad2eb90cf1a5e3f553f515b0d77027.png"><img alt="../_images/e6fdb39fa945cf87014fa6f49274f638a7ad2eb90cf1a5e3f553f515b0d77027.png" src="../_images/e6fdb39fa945cf87014fa6f49274f638a7ad2eb90cf1a5e3f553f515b0d77027.png" style="width: 855px; height: 369px;" />
+</a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">idata4sel</span> <span class="o">=</span> <span class="n">idata4</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">county__factor_dim</span><span class="o">=</span><span class="n">sel_counties</span><span class="p">)</span>
+<span class="n">var_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Intercept&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;1|county&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;floor&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;floor|county&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;1|county_sigma&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;floor|county_sigma&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;sigma&quot;</span><span class="p">]</span>
+<span class="n">axs</span> <span class="o">=</span> <span class="n">az</span><span class="o">.</span><span class="n">plot_forest</span><span class="p">(</span><span class="n">idata4sel</span><span class="p">,</span> <span class="n">combined</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">var_names</span><span class="o">=</span><span class="n">var_names</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">1.6</span><span class="p">,</span><span class="mf">1.6</span><span class="p">,</span><span class="mf">0.2</span><span class="p">))</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="kc">None</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/6f2dfa9651ba96cd9ca016616c030d848d533ec45e559ea90c34e0a65624e135.png"><img alt="../_images/6f2dfa9651ba96cd9ca016616c030d848d533ec45e559ea90c34e0a65624e135.png" src="../_images/6f2dfa9651ba96cd9ca016616c030d848d533ec45e559ea90c34e0a65624e135.png" style="width: 682px; height: 351px;" />
+</a>
+</div>
+</div>
+</section>
+<section id="comparing-models">
+<h3>Comparing models<a class="headerlink" href="#comparing-models" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ministats.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">loglevel</span>
+<span class="k">with</span> <span class="n">loglevel</span><span class="p">(</span><span class="s2">&quot;ERROR&quot;</span><span class="p">,</span> <span class="n">module</span><span class="o">=</span><span class="s2">&quot;pymc&quot;</span><span class="p">):</span>
+    <span class="n">idata1ll</span> <span class="o">=</span> <span class="n">mod1</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">idata_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;log_likelihood&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span> <span class="n">random_seed</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">progressbar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">idata2ll</span> <span class="o">=</span> <span class="n">mod2</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">idata_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;log_likelihood&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span> <span class="n">random_seed</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">progressbar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">idata3ll</span> <span class="o">=</span> <span class="n">mod3</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">idata_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;log_likelihood&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span> <span class="n">random_seed</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">progressbar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">idata4ll</span> <span class="o">=</span> <span class="n">mod4</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">idata_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;log_likelihood&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span> <span class="n">random_seed</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">progressbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="n">draws</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">tune</span><span class="o">=</span><span class="mi">3000</span><span class="p">,</span> <span class="n">target_accept</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Compare models based on their expected log pointwise predictive density (ELPD).</p>
+<p>The ELPD is estimated either by Pareto smoothed importance sampling leave-one-out cross-validation (LOO) or using the widely applicable information criterion (WAIC). We recommend loo. Read more theory here - in a paper by some of the leading authorities on model comparison <a class="reference external" href="http://dx.doi.org/10.1111/1467-9868.00353">dx.doi.org/10.1111/1467-9868.00353</a></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">radon_models</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;mod1 (complete pooling)&quot;</span><span class="p">:</span> <span class="n">idata1ll</span><span class="p">,</span>
+    <span class="s2">&quot;mod2 (no pooling)&quot;</span><span class="p">:</span> <span class="n">idata2ll</span><span class="p">,</span>
+    <span class="s2">&quot;mod3 (varying intercepts)&quot;</span><span class="p">:</span> <span class="n">idata3ll</span><span class="p">,</span>
+    <span class="s2">&quot;mod4 (varying int. and slopes)&quot;</span><span class="p">:</span> <span class="n">idata4ll</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">compare_results</span> <span class="o">=</span> <span class="n">az</span><span class="o">.</span><span class="n">compare</span><span class="p">(</span><span class="n">radon_models</span><span class="p">)</span>
+<span class="n">compare_results</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>rank</th>
+      <th>elpd_loo</th>
+      <th>p_loo</th>
+      <th>elpd_diff</th>
+      <th>weight</th>
+      <th>se</th>
+      <th>dse</th>
+      <th>warning</th>
+      <th>scale</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>mod3 (varying intercepts)</th>
+      <td>0</td>
+      <td>-1074.082946</td>
+      <td>49.438388</td>
+      <td>0.000000</td>
+      <td>5.712644e-01</td>
+      <td>28.158630</td>
+      <td>0.000000</td>
+      <td>False</td>
+      <td>log</td>
+    </tr>
+    <tr>
+      <th>mod4 (varying int. and slopes)</th>
+      <td>1</td>
+      <td>-1075.845532</td>
+      <td>65.772502</td>
+      <td>1.762586</td>
+      <td>3.492005e-01</td>
+      <td>28.887361</td>
+      <td>2.381882</td>
+      <td>True</td>
+      <td>log</td>
+    </tr>
+    <tr>
+      <th>mod2 (no pooling)</th>
+      <td>2</td>
+      <td>-1096.122253</td>
+      <td>83.726370</td>
+      <td>22.039307</td>
+      <td>2.500135e-18</td>
+      <td>28.240890</td>
+      <td>6.110614</td>
+      <td>True</td>
+      <td>log</td>
+    </tr>
+    <tr>
+      <th>mod1 (complete pooling)</th>
+      <td>3</td>
+      <td>-1126.954906</td>
+      <td>3.813040</td>
+      <td>52.871960</td>
+      <td>7.953513e-02</td>
+      <td>25.538335</td>
+      <td>10.607278</td>
+      <td>False</td>
+      <td>log</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">az</span><span class="o">.</span><span class="n">plot_compare</span><span class="p">(</span><span class="n">compare_results</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/fe27761e0790fed39b7bf6db629c3adf746dfb964ac5fd3d3a04bf8d3b14b375.png"><img alt="../_images/fe27761e0790fed39b7bf6db629c3adf746dfb964ac5fd3d3a04bf8d3b14b375.png" src="../_images/fe27761e0790fed39b7bf6db629c3adf746dfb964ac5fd3d3a04bf8d3b14b375.png" style="width: 728px; height: 419px;" />
+</a>
+</div>
+</div>
+<section id="elpd-and-elpd-loo">
+<h4>ELPD and elpd_loo<a class="headerlink" href="#elpd-and-elpd-loo" title="Link to this heading">#</a></h4>
+<p>The ELPD is the theoretical expected log pointwise predictive density for a new dataset (Eq 1 in VGG2017), which can be estimated, e.g., using cross-validation. elpd_loo is the Bayesian LOO estimate of the expected log pointwise predictive density (Eq 4 in VGG2017) and is a sum of N individual pointwise log predictive densities. Probability densities can be smaller or larger than 1, and thus log predictive densities can be negative or positive. For simplicity the ELPD acronym is used also for expected log pointwise predictive probabilities for discrete models. Probabilities are always equal or less than 1, and thus log predictive probabilities are 0 or negative.</p>
+<p>via <a class="reference external" href="https://mc-stan.org/loo/reference/loo-glossary.html">https://mc-stan.org/loo/reference/loo-glossary.html</a></p>
+</section>
+</section>
+<section id="frequentist-multilevel-models">
+<h3>Frequentist multilevel models<a class="headerlink" href="#frequentist-multilevel-models" title="Link to this heading">#</a></h3>
+<p>We can use <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code> to fit multilevel models too.</p>
+<section id="random-intercepts-model-using-statsmodels">
+<h4>Random intercepts model using <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code><a class="headerlink" href="#random-intercepts-model-using-statsmodels" title="Link to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.formula.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">smf</span>
+<span class="n">sm3</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">mixedlm</span><span class="p">(</span><span class="s2">&quot;log_radon ~ 1 + floor&quot;</span><span class="p">,</span>   <span class="c1"># Fixed effects (no intercept and floor as a fixed effect)</span>
+                  <span class="n">groups</span><span class="o">=</span><span class="s2">&quot;county&quot;</span><span class="p">,</span>           <span class="c1"># Grouping variable for random effects</span>
+                  <span class="n">re_formula</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>            <span class="c1"># Random effects = intercept</span>
+                  <span class="n">data</span><span class="o">=</span><span class="n">radon</span><span class="p">)</span>
+<span class="n">res3</span> <span class="o">=</span> <span class="n">sm3</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">res3</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span><span class="o">.</span><span class="n">tables</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Coef.</th>
+      <th>Std.Err.</th>
+      <th>z</th>
+      <th>P&gt;|z|</th>
+      <th>[0.025</th>
+      <th>0.975]</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Intercept</th>
+      <td>1.462</td>
+      <td>0.052</td>
+      <td>28.164</td>
+      <td>0.000</td>
+      <td>1.360</td>
+      <td>1.563</td>
+    </tr>
+    <tr>
+      <th>floor[T.ground]</th>
+      <td>-0.693</td>
+      <td>0.071</td>
+      <td>-9.818</td>
+      <td>0.000</td>
+      <td>-0.831</td>
+      <td>-0.555</td>
+    </tr>
+    <tr>
+      <th>county Var</th>
+      <td>0.108</td>
+      <td>0.041</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># slope</span>
+<span class="c1">#######################################################</span>
+<span class="n">res3</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;floor[T.ground]&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-0.6929937406558051
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># sigma-hat</span>
+<span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">res3</span><span class="o">.</span><span class="n">scale</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.7555891484188185
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># standard deviation of the variability among county-specific Intercepts</span>
+<span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">res3</span><span class="o">.</span><span class="n">cov_re</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>county</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>county</th>
+      <td>0.328222</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># intercept deviation for first country in res3</span>
+<span class="n">res3</span><span class="o">.</span><span class="n">random_effects</span><span class="p">[</span><span class="s2">&quot;LAC QUI PARLE&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.40649212])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># compare with corresponding Bayesian point estimate</span>
+<span class="n">lqp</span> <span class="o">=</span> <span class="n">idata3</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">county__factor_dim</span><span class="o">=</span><span class="s2">&quot;LAC QUI PARLE&quot;</span><span class="p">)</span>
+<span class="n">post3_lqp_means</span> <span class="o">=</span> <span class="n">lqp</span><span class="p">[</span><span class="s2">&quot;posterior&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">post3_lqp_means</span><span class="p">[</span><span class="s2">&quot;1|county&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array(0.41388794)
+</pre></div>
+</div>
+</div>
+</div>
+<p>This is very close to the mean of the random effect coefficient for <code class="docutils literal notranslate"><span class="pre">AITKIN</span></code> in the Bayesian model <code class="docutils literal notranslate"><span class="pre">mod3</span></code> which was <span class="math notranslate nohighlight">\(-0.268\)</span>.</p>
+</section>
+<section id="random-intercepts-and-slopes-model-using-statsmodels-bonus-topic">
+<h4>Random intercepts and slopes model using <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code> (BONUS TOPIC)<a class="headerlink" href="#random-intercepts-and-slopes-model-using-statsmodels-bonus-topic" title="Link to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sm4</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">mixedlm</span><span class="p">(</span><span class="s2">&quot;log_radon ~ 1 + floor&quot;</span><span class="p">,</span>   <span class="c1"># Fixed effects (no intercept and floor as a fixed effect)</span>
+                  <span class="n">groups</span><span class="o">=</span><span class="s2">&quot;county&quot;</span><span class="p">,</span>           <span class="c1"># Grouping variable for random effects</span>
+                  <span class="n">re_formula</span><span class="o">=</span><span class="s2">&quot;1 + floor&quot;</span><span class="p">,</span>    <span class="c1"># Random effects: 1 for intercept, floor for slope</span>
+                  <span class="n">data</span><span class="o">=</span><span class="n">radon</span><span class="p">)</span>
+<span class="n">res4</span> <span class="o">=</span> <span class="n">sm4</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">res4</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span><span class="o">.</span><span class="n">tables</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Coef.</th>
+      <th>Std.Err.</th>
+      <th>z</th>
+      <th>P&gt;|z|</th>
+      <th>[0.025</th>
+      <th>0.975]</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Intercept</th>
+      <td>1.463</td>
+      <td>0.054</td>
+      <td>26.977</td>
+      <td>0.000</td>
+      <td>1.356</td>
+      <td>1.569</td>
+    </tr>
+    <tr>
+      <th>floor[T.ground]</th>
+      <td>-0.681</td>
+      <td>0.089</td>
+      <td>-7.624</td>
+      <td>0.000</td>
+      <td>-0.856</td>
+      <td>-0.506</td>
+    </tr>
+    <tr>
+      <th>county Var</th>
+      <td>0.122</td>
+      <td>0.049</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>county x floor[T.ground] Cov</th>
+      <td>-0.040</td>
+      <td>0.057</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>floor[T.ground] Var</th>
+      <td>0.118</td>
+      <td>0.120</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># slope estimate</span>
+<span class="n">res4</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;floor[T.ground]&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-0.6810977572101939
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># sigma-hat</span>
+<span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">res4</span><span class="o">.</span><span class="n">scale</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.7461559982563548
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># standard deviation of the variability among county-specific Intercepts</span>
+<span class="n">county_var_int</span> <span class="o">=</span> <span class="n">res4</span><span class="o">.</span><span class="n">cov_re</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s2">&quot;county&quot;</span><span class="p">,</span> <span class="s2">&quot;county&quot;</span><span class="p">]</span>
+<span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">county_var_int</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.34867221107257745
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># standard deviation of the variability among county-specific slopes</span>
+<span class="n">county_var_slopes</span> <span class="o">=</span> <span class="n">res4</span><span class="o">.</span><span class="n">cov_re</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s2">&quot;floor[T.ground]&quot;</span><span class="p">,</span> <span class="s2">&quot;floor[T.ground]&quot;</span><span class="p">]</span>
+<span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">county_var_slopes</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.3435539748320272
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># correlation between Intercept and slope group-level coefficients</span>
+<span class="n">county_floor_cov</span> <span class="o">=</span> <span class="n">res4</span><span class="o">.</span><span class="n">cov_re</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s2">&quot;county&quot;</span><span class="p">,</span> <span class="s2">&quot;floor[T.ground]&quot;</span><span class="p">]</span>
+<span class="n">county_floor_cov</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">county_var_int</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">county_var_slopes</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-0.3372303607779022
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="discussion">
+<h2>Discussion<a class="headerlink" href="#discussion" title="Link to this heading">#</a></h2>
+<section id="alternative-notations-for-hierarchical-models">
+<h3>Alternative notations for hierarchical models<a class="headerlink" href="#alternative-notations-for-hierarchical-models" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>IMPORT FROM Gelman &amp; Hill Section 12.5 printout</p></li>
+<li><p>watch the subscripts!</p></li>
+</ul>
+</section>
+<section id="computational-challenges-associated-with-hierarchical-models">
+<h3>Computational challenges associated with hierarchical models<a class="headerlink" href="#computational-challenges-associated-with-hierarchical-models" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>centred vs. noncentred representations</p></li>
+</ul>
+</section>
+<section id="benefits-of-multilevel-models">
+<h3>Benefits of multilevel models<a class="headerlink" href="#benefits-of-multilevel-models" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>TODO LIST</p></li>
+<li><p>Better than repeated measures ANOVA because:</p>
+<ul>
+<li><p>tells you the direction and magnitude of effect</p></li>
+<li><p>can handle more multiple grouping scenarios (e.g. by-item, and by-student)</p></li>
+<li><p>works for categorical predictors</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="applications">
+<h3>Applications<a class="headerlink" href="#applications" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Need for hierarchical models often occurs in social sciences (better than ANOVA)</p></li>
+<li><p>Hierarchical models are often used for Bayesian meta-analysis</p></li>
+</ul>
+</section>
+</section>
+<section id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Link to this heading">#</a></h2>
+<section id="exercise-mod1u">
+<h3>Exercise: mod1u<a class="headerlink" href="#exercise-mod1u" title="Link to this heading">#</a></h3>
+<p>Same model as Example 3 but also include the predictor <code class="docutils literal notranslate"><span class="pre">log_uranium</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">bambi</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bmb</span>
+
+<span class="n">covariate_priors</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;floor&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Normal&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
+    <span class="s2">&quot;log_uranium&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Normal&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
+    <span class="s2">&quot;1|county&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Normal&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Exponential&quot;</span><span class="p">,</span> <span class="n">lam</span><span class="o">=</span><span class="mi">1</span><span class="p">)),</span>
+    <span class="s2">&quot;sigma&quot;</span><span class="p">:</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Prior</span><span class="p">(</span><span class="s2">&quot;Exponential&quot;</span><span class="p">,</span> <span class="n">lam</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+<span class="p">}</span>
+
+<span class="n">mod1u</span> <span class="o">=</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">formula</span><span class="o">=</span><span class="s2">&quot;log_radon ~ 1 + floor + (1|county) + log_uranium&quot;</span><span class="p">,</span>
+                  <span class="n">priors</span><span class="o">=</span><span class="n">covariate_priors</span><span class="p">,</span>
+                  <span class="n">data</span><span class="o">=</span><span class="n">radon</span><span class="p">)</span>
+
+<span class="n">mod1u</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>       Formula: log_radon ~ 1 + floor + (1|county) + log_uranium
+        Family: gaussian
+          Link: mu = identity
+  Observations: 919
+        Priors: 
+    target = mu
+        Common-level effects
+            Intercept ~ Normal(mu: 1.2246, sigma: 2.1322)
+            floor ~ Normal(mu: 0.0, sigma: 10.0)
+            log_uranium ~ Normal(mu: 0.0, sigma: 10.0)
+        
+        Group-level effects
+            1|county ~ Normal(mu: 0.0, sigma: Exponential(lam: 1.0))
+        
+        Auxiliary parameters
+            sigma ~ Exponential(lam: 1.0)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="exercise-pigs-dataset">
+<h3>Exercise: pigs dataset<a class="headerlink" href="#exercise-pigs-dataset" title="Link to this heading">#</a></h3>
+<p><a class="reference external" href="https://bambinos.github.io/bambi/notebooks/multi-level_regression.html">https://bambinos.github.io/bambi/notebooks/multi-level_regression.html</a></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
+<span class="n">dietox</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">get_rdataset</span><span class="p">(</span><span class="s2">&quot;dietox&quot;</span><span class="p">,</span> <span class="s2">&quot;geepack&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
+<span class="n">dietox</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Pig</th>
+      <th>Evit</th>
+      <th>Cu</th>
+      <th>Litter</th>
+      <th>Start</th>
+      <th>Weight</th>
+      <th>Feed</th>
+      <th>Time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>4601</td>
+      <td>Evit000</td>
+      <td>Cu000</td>
+      <td>1</td>
+      <td>26.5</td>
+      <td>26.50000</td>
+      <td>NaN</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>4601</td>
+      <td>Evit000</td>
+      <td>Cu000</td>
+      <td>1</td>
+      <td>26.5</td>
+      <td>27.59999</td>
+      <td>5.200005</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>4601</td>
+      <td>Evit000</td>
+      <td>Cu000</td>
+      <td>1</td>
+      <td>26.5</td>
+      <td>36.50000</td>
+      <td>17.600000</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4601</td>
+      <td>Evit000</td>
+      <td>Cu000</td>
+      <td>1</td>
+      <td>26.5</td>
+      <td>40.29999</td>
+      <td>28.500000</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>4601</td>
+      <td>Evit000</td>
+      <td>Cu000</td>
+      <td>1</td>
+      <td>26.5</td>
+      <td>49.09998</td>
+      <td>45.200001</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>856</th>
+      <td>8442</td>
+      <td>Evit000</td>
+      <td>Cu175</td>
+      <td>24</td>
+      <td>25.7</td>
+      <td>73.19995</td>
+      <td>83.800003</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>857</th>
+      <td>8442</td>
+      <td>Evit000</td>
+      <td>Cu175</td>
+      <td>24</td>
+      <td>25.7</td>
+      <td>81.69995</td>
+      <td>99.800003</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>858</th>
+      <td>8442</td>
+      <td>Evit000</td>
+      <td>Cu175</td>
+      <td>24</td>
+      <td>25.7</td>
+      <td>90.29999</td>
+      <td>115.200001</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>859</th>
+      <td>8442</td>
+      <td>Evit000</td>
+      <td>Cu175</td>
+      <td>24</td>
+      <td>25.7</td>
+      <td>96.00000</td>
+      <td>133.200001</td>
+      <td>11</td>
+    </tr>
+    <tr>
+      <th>860</th>
+      <td>8442</td>
+      <td>Evit000</td>
+      <td>Cu175</td>
+      <td>24</td>
+      <td>25.7</td>
+      <td>103.50000</td>
+      <td>151.400002</td>
+      <td>12</td>
+    </tr>
+  </tbody>
+</table>
+<p>861 rows × 8 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pigsmodel</span> <span class="o">=</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="s2">&quot;Weight ~ Time + (Time|Pig)&quot;</span><span class="p">,</span> <span class="n">dietox</span><span class="p">)</span>
+<span class="n">pigsidata</span> <span class="o">=</span> <span class="n">pigsmodel</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">random_seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 4 jobs)
+NUTS: [sigma, Intercept, Time, 1|Pig_sigma, 1|Pig_offset, Time|Pig_sigma, Time|Pig_offset]
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "19ec62ec67fe458b8f38006fb9aed929", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+</div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 1_000 tune and 1_000 draw iterations (4_000 + 4_000 draws total) took 8 seconds.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">az</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">pigsidata</span><span class="p">,</span> <span class="n">var_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Intercept&quot;</span><span class="p">,</span> <span class="s2">&quot;Time&quot;</span><span class="p">,</span> <span class="s2">&quot;1|Pig_sigma&quot;</span><span class="p">,</span> <span class="s2">&quot;Time|Pig_sigma&quot;</span><span class="p">,</span> <span class="s2">&quot;sigma&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>mean</th>
+      <th>sd</th>
+      <th>hdi_3%</th>
+      <th>hdi_97%</th>
+      <th>mcse_mean</th>
+      <th>mcse_sd</th>
+      <th>ess_bulk</th>
+      <th>ess_tail</th>
+      <th>r_hat</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Intercept</th>
+      <td>15.734</td>
+      <td>0.566</td>
+      <td>14.681</td>
+      <td>16.783</td>
+      <td>0.021</td>
+      <td>0.012</td>
+      <td>747.0</td>
+      <td>1247.0</td>
+      <td>1.00</td>
+    </tr>
+    <tr>
+      <th>Time</th>
+      <td>6.933</td>
+      <td>0.084</td>
+      <td>6.772</td>
+      <td>7.084</td>
+      <td>0.003</td>
+      <td>0.002</td>
+      <td>576.0</td>
+      <td>825.0</td>
+      <td>1.01</td>
+    </tr>
+    <tr>
+      <th>1|Pig_sigma</th>
+      <td>4.543</td>
+      <td>0.436</td>
+      <td>3.816</td>
+      <td>5.470</td>
+      <td>0.012</td>
+      <td>0.008</td>
+      <td>1280.0</td>
+      <td>2035.0</td>
+      <td>1.00</td>
+    </tr>
+    <tr>
+      <th>Time|Pig_sigma</th>
+      <td>0.664</td>
+      <td>0.062</td>
+      <td>0.550</td>
+      <td>0.776</td>
+      <td>0.002</td>
+      <td>0.001</td>
+      <td>1162.0</td>
+      <td>2074.0</td>
+      <td>1.00</td>
+    </tr>
+    <tr>
+      <th>sigma</th>
+      <td>2.460</td>
+      <td>0.065</td>
+      <td>2.342</td>
+      <td>2.588</td>
+      <td>0.001</td>
+      <td>0.001</td>
+      <td>5051.0</td>
+      <td>2703.0</td>
+      <td>1.00</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="exercise-educational-data">
+<h3>Exercise: educational data<a class="headerlink" href="#exercise-educational-data" title="Link to this heading">#</a></h3>
+<p>cf. <a class="reference external" href="https://mc-stan.org/users/documentation/case-studies/tutorial_rstanarm.html">https://mc-stan.org/users/documentation/case-studies/tutorial_rstanarm.html</a></p>
+<p>1.1 Data example
+We will be analyzing the Gcsemv dataset (Rasbash et al. 2000) from the mlmRev package in R.
+The data include the General Certificate of Secondary Education (GCSE) exam scores of 1,905 students from 73 schools in England on a science subject. The Gcsemv dataset consists of the following 5 variables:</p>
+<ul class="simple">
+<li><p>school: school identifier</p></li>
+<li><p>student: student identifier</p></li>
+<li><p>gender: gender of a student (M: Male, F: Female)</p></li>
+<li><p>written: total score on written paper</p></li>
+<li><p>course: total score on coursework paper</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># import pyreadr</span>
+<span class="c1"># path = &quot;/Users/ivan/Desktop/stats stuff from desktop/Current Bayesian/Hierarchical models/mlmRev&quot;</span>
+<span class="c1"># Gcsemv_r = pyreadr.read_r(path + &#39;/data/Gcsemv.rda&#39;)</span>
+<span class="c1"># Gcsemv_r[&quot;Gcsemv&quot;].dropna().to_csv(&quot;datasets/exercises/gcsemv.csv&quot;, index=False)</span>
+
+<span class="n">gcsemv</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;datasets/exercises/gcsemv.csv&quot;</span><span class="p">)</span>
+<span class="n">gcsemv</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>school</th>
+      <th>student</th>
+      <th>gender</th>
+      <th>written</th>
+      <th>course</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>20920</td>
+      <td>27</td>
+      <td>F</td>
+      <td>39.0</td>
+      <td>76.8</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>20920</td>
+      <td>31</td>
+      <td>F</td>
+      <td>36.0</td>
+      <td>87.9</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>20920</td>
+      <td>42</td>
+      <td>M</td>
+      <td>16.0</td>
+      <td>44.4</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>20920</td>
+      <td>101</td>
+      <td>F</td>
+      <td>49.0</td>
+      <td>89.8</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>20920</td>
+      <td>113</td>
+      <td>M</td>
+      <td>25.0</td>
+      <td>17.5</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">bambi</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bmb</span>
+<span class="n">m1</span> <span class="o">=</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">formula</span><span class="o">=</span><span class="s2">&quot;course ~ 1 + (1 | school)&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">gcsemv</span><span class="p">)</span>
+<span class="n">m1</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>       Formula: course ~ 1 + (1 | school)
+        Family: gaussian
+          Link: mu = identity
+  Observations: 1523
+        Priors: 
+    target = mu
+        Common-level effects
+            Intercept ~ Normal(mu: 73.3814, sigma: 41.0781)
+        
+        Group-level effects
+            1|school ~ Normal(mu: 0.0, sigma: HalfNormal(sigma: 41.0781))
+        
+        Auxiliary parameters
+            sigma ~ HalfStudentT(nu: 4.0, sigma: 16.4312)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">idata_m1</span> <span class="o">=</span> <span class="n">m1</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">random_seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 4 jobs)
+NUTS: [sigma, Intercept, 1|school_sigma, 1|school_offset]
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "b341cb5673d94e199bcb165e3945b804", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+</div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 1_000 tune and 1_000 draw iterations (4_000 + 4_000 draws total) took 5 seconds.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">az</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">idata_m1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>mean</th>
+      <th>sd</th>
+      <th>hdi_3%</th>
+      <th>hdi_97%</th>
+      <th>mcse_mean</th>
+      <th>mcse_sd</th>
+      <th>ess_bulk</th>
+      <th>ess_tail</th>
+      <th>r_hat</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>sigma</th>
+      <td>13.976</td>
+      <td>0.256</td>
+      <td>13.522</td>
+      <td>14.481</td>
+      <td>0.003</td>
+      <td>0.004</td>
+      <td>5377.0</td>
+      <td>2626.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>Intercept</th>
+      <td>73.821</td>
+      <td>1.153</td>
+      <td>71.596</td>
+      <td>75.885</td>
+      <td>0.036</td>
+      <td>0.020</td>
+      <td>1029.0</td>
+      <td>1604.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>1|school_sigma</th>
+      <td>8.806</td>
+      <td>0.896</td>
+      <td>7.165</td>
+      <td>10.475</td>
+      <td>0.026</td>
+      <td>0.014</td>
+      <td>1159.0</td>
+      <td>1942.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>1|school[20920]</th>
+      <td>-6.962</td>
+      <td>5.171</td>
+      <td>-17.310</td>
+      <td>1.961</td>
+      <td>0.067</td>
+      <td>0.100</td>
+      <td>6012.0</td>
+      <td>2847.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>1|school[22520]</th>
+      <td>-15.657</td>
+      <td>2.117</td>
+      <td>-19.509</td>
+      <td>-11.573</td>
+      <td>0.045</td>
+      <td>0.030</td>
+      <td>2264.0</td>
+      <td>2862.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>1|school[76531]</th>
+      <td>-11.166</td>
+      <td>5.149</td>
+      <td>-20.527</td>
+      <td>-1.389</td>
+      <td>0.065</td>
+      <td>0.083</td>
+      <td>6334.0</td>
+      <td>2593.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>1|school[76631]</th>
+      <td>2.101</td>
+      <td>2.818</td>
+      <td>-3.220</td>
+      <td>7.340</td>
+      <td>0.047</td>
+      <td>0.046</td>
+      <td>3565.0</td>
+      <td>2924.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>1|school[77207]</th>
+      <td>-3.242</td>
+      <td>3.275</td>
+      <td>-9.212</td>
+      <td>2.887</td>
+      <td>0.051</td>
+      <td>0.049</td>
+      <td>4210.0</td>
+      <td>3080.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>1|school[84707]</th>
+      <td>4.050</td>
+      <td>7.479</td>
+      <td>-10.230</td>
+      <td>17.833</td>
+      <td>0.099</td>
+      <td>0.129</td>
+      <td>5880.0</td>
+      <td>3050.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>1|school[84772]</th>
+      <td>8.568</td>
+      <td>3.587</td>
+      <td>1.524</td>
+      <td>15.023</td>
+      <td>0.054</td>
+      <td>0.058</td>
+      <td>4346.0</td>
+      <td>2855.0</td>
+      <td>1.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>76 rows × 9 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">m3</span> <span class="o">=</span> <span class="n">bmb</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">formula</span><span class="o">=</span><span class="s2">&quot;course ~ gender + (1 + gender|school)&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">gcsemv</span><span class="p">)</span>
+<span class="n">m3</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>       Formula: course ~ gender + (1 + gender|school)
+        Family: gaussian
+          Link: mu = identity
+  Observations: 1523
+        Priors: 
+    target = mu
+        Common-level effects
+            Intercept ~ Normal(mu: 73.3814, sigma: 53.4663)
+            gender ~ Normal(mu: 0.0, sigma: 83.5292)
+        
+        Group-level effects
+            1|school ~ Normal(mu: 0.0, sigma: HalfNormal(sigma: 53.4663))
+            gender|school ~ Normal(mu: 0.0, sigma: HalfNormal(sigma: 83.5292))
+        
+        Auxiliary parameters
+            sigma ~ HalfStudentT(nu: 4.0, sigma: 16.4312)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">idata_m3</span> <span class="o">=</span> <span class="n">m3</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">random_seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 4 jobs)
+NUTS: [sigma, Intercept, gender, 1|school_sigma, 1|school_offset, gender|school_sigma, gender|school_offset]
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "ac68b133ce6241588bfa539ceb7b9c2a", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
+</div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling 4 chains for 1_000 tune and 1_000 draw iterations (4_000 + 4_000 draws total) took 5 seconds.
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="exercise-sleepstudy-dataset">
+<h3>Exercise: sleepstudy dataset<a class="headerlink" href="#exercise-sleepstudy-dataset" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Description: Contains reaction times of subjects under sleep deprivation conditions.</p></li>
+<li><p>Source: Featured in the R package lme4.</p></li>
+<li><p>Application: Demonstrates linear mixed-effects modeling with random slopes and intercepts.</p></li>
+</ul>
+<p>Links:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://bambinos.github.io/bambi/notebooks/sleepstudy.html">https://bambinos.github.io/bambi/notebooks/sleepstudy.html</a></p></li>
+<li><p><a class="reference external" href="https://www.tjmahr.com/plotting-partial-pooling-in-mixed-effects-models/#the-sleepstudy-dataset">https://www.tjmahr.com/plotting-partial-pooling-in-mixed-effects-models/#the-sleepstudy-dataset</a></p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sleepstudy</span> <span class="o">=</span> <span class="n">bmb</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="s2">&quot;sleepstudy&quot;</span><span class="p">)</span>
+<span class="n">sleepstudy</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Reaction</th>
+      <th>Days</th>
+      <th>Subject</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>249.5600</td>
+      <td>0</td>
+      <td>308</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>258.7047</td>
+      <td>1</td>
+      <td>308</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>250.8006</td>
+      <td>2</td>
+      <td>308</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>321.4398</td>
+      <td>3</td>
+      <td>308</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>356.8519</td>
+      <td>4</td>
+      <td>308</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>175</th>
+      <td>329.6076</td>
+      <td>5</td>
+      <td>372</td>
+    </tr>
+    <tr>
+      <th>176</th>
+      <td>334.4818</td>
+      <td>6</td>
+      <td>372</td>
+    </tr>
+    <tr>
+      <th>177</th>
+      <td>343.2199</td>
+      <td>7</td>
+      <td>372</td>
+    </tr>
+    <tr>
+      <th>178</th>
+      <td>369.1417</td>
+      <td>8</td>
+      <td>372</td>
+    </tr>
+    <tr>
+      <th>179</th>
+      <td>364.1236</td>
+      <td>9</td>
+      <td>372</td>
+    </tr>
+  </tbody>
+</table>
+<p>180 rows × 3 columns</p>
+</div></div></div>
+</div>
+</section>
+<section id="exercise-tadpoles-bonus">
+<h3>Exercise: tadpoles (BONUS)<a class="headerlink" href="#exercise-tadpoles-bonus" title="Link to this heading">#</a></h3>
+<p><a class="reference external" href="https://www.youtube.com/watch?v=iwVqiiXYeC4">https://www.youtube.com/watch?v=iwVqiiXYeC4</a></p>
+<p>logistic regression model</p>
+</section>
+</section>
+<section id="links">
+<h2>Links<a class="headerlink" href="#links" title="Link to this heading">#</a></h2>
+</section>
+<section id="extra-material">
+<h2>EXTRA MATERIAL<a class="headerlink" href="#extra-material" title="Link to this heading">#</a></h2>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "minireference/noBSstats",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="54_difference_between_means.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Section 5.4 — Bayesian difference between means</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../tutorials/appendix.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Appendix</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebook-setup">Notebook setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definitions">Definitions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hierarchical-multilevel-models">Hierarchical (multilevel) models</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-formula">Model formula</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#radon-dataset">Radon dataset</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-the-data">Loading the data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#descriptive-statistics">Descriptive statistics</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1-complete-pooling-model">Example 1: complete pooling model</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bayesian-model">Bayesian model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bambi-model">Bambi model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-fitting-and-analysis">Model fitting and analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2-no-pooling-model">Example 2: no pooling model</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Bayesian model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Bambi model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Model fitting and analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Conclusion</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-3-hierarchical-model">Example 3: hierarchical model</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bayesian-hierarchical-model">Bayesian hierarchical model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Bambi model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Model fitting and analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#compare-models">Compare models</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusions">Conclusions</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanations">Explanations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prior-selection-for-hierarchical-models">Prior selection for hierarchical models</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#varying-intercepts-and-slopes-model">Varying intercepts and slopes model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-models">Comparing models</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#elpd-and-elpd-loo">ELPD and elpd_loo</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#frequentist-multilevel-models">Frequentist multilevel models</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#random-intercepts-model-using-statsmodels">Random intercepts model using <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#random-intercepts-and-slopes-model-using-statsmodels-bonus-topic">Random intercepts and slopes model using <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code> (BONUS TOPIC)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#alternative-notations-for-hierarchical-models">Alternative notations for hierarchical models</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#computational-challenges-associated-with-hierarchical-models">Computational challenges associated with hierarchical models</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#benefits-of-multilevel-models">Benefits of multilevel models</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#applications">Applications</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-mod1u">Exercise: mod1u</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-pigs-dataset">Exercise: pigs dataset</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-educational-data">Exercise: educational data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-sleepstudy-dataset">Exercise: sleepstudy dataset</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-tadpoles-bonus">Exercise: tadpoles (BONUS)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#links">Links</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extra-material">EXTRA MATERIAL</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Ivan Savov
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

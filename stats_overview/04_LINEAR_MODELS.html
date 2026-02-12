@@ -1,0 +1,1421 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Chapter 4: Linear models &#8212; No Bullshit Guide to Statistics</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=1ae7504c"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'stats_overview/04_LINEAR_MODELS';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="No Bullshit Guide to Statistics - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="No Bullshit Guide to Statistics - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    No Bullshit Guide to Statistics
+                </a>
+            </li>
+        </ul>
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../notebooks/10_DATA.html">Chapter 1 — Data</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/11_intro_to_data.html">Section 1.1 — Introduction to data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/12_data_in_practice.html">Section 1.2 — Data in practice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/13_descriptive_statistics.html">Section 1.3 — Descriptive statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../exercises/exercises_13_descr_stats.html">Descriptive statistics exercises</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../notebooks/20_PROB.html">Chapter 2 — Probability theory</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/21_discrete_random_vars.html">Section 2.1 — Discrete random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/22_multiple_random_vars.html">Section 2.2 — Multiple random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/23_inventory_discrete_dists.html">Section 2.3 — Inventory of discrete distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/24_continuous_random_vars.html">Section 2.4 — Continuous random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/25_multiple_continuous_random_vars.html">Section 2.5 — Multiple continuous random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/26_inventory_continuous_dists.html">Section 2.6 — Inventory of continuous distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/27_simulations.html">Section 2.7 — Simulation and empirical distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/28_random_samples.html">Section 2.8 — Probability models for random samples</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../notebooks/30_STATS.html">Chapter 3 — Classical statistics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/31_estimators.html">Section 3.1 — Estimators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../exercises/exercises_31_estimtors.html">Exercises for Section 3.1 Estimates and estimators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/32_confidence_intervals.html">Section 3.2 — Confidence intervals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../exercises/exercises_32_confidence_intervals.html">Exercises for Section 3.2 Confidence intervals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/33_intro_to_NHST.html">Section 3.3 — Introduction to hypothesis testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/34_analytical_approx.html">Section 3.4 — Hypothesis testing using analytical approximations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/35_two_sample_tests.html">Section 3.5 — Two-sample hypothesis tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/36_design.html">Section 3.6 — Statistical design and error analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/37_inventory_stats_tests.html">Section 3.7 — Inventory of statistical tests</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../examples/README.html">Statistical analysis examples</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../examples/statistical_design.html">Statistical design examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/one_sample_z-test.html">One-sample z-test for the mean</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/one_sample_t-test.html">One-sample t-test for the mean</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/two_sample_t-test.html">Welch’s two-sample <span class="math notranslate nohighlight">\(t\)</span>-test</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/ANOVA.html">Analysis of variance (ANOVA)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/two_sample_equivalence_test.html">Two-sample equivalence test</a></li>
+
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../notebooks/40_LINEAR_MODELS.html">Chapter 4 — Linear models</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/41_simple_linear_regression.html">Section 4.1 — Simple linear regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/42_multiple_linear_regression.html">Section 4.2 — Multiple linear regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/43_interpreting_linear_models.html">Section 4.3 — Interpreting linear models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/44_regression_with_categorical_predictors.html">Section 4.4 — Regression with categorical predictors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/45_causal_inference.html">Section 4.5 — Model selection for causal inference</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/46_generalized_linear_models.html">Section 4.6 — Generalized linear models</a></li>
+
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../notebooks/50_BAYESIAN_STATS.html">Chapter 5 — Bayesian statistics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/51_intro_to_Bayesian_stats.html">Section 5.1 — Introduction to Bayesian statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/52_Bayesian_inference_computations.html">Section 5.2 — Bayesian inference computations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/53_Bayesian_linear_models.html">Section 5.3 — Bayesian linear models</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/54_difference_between_means.html">Section 5.4 — Bayesian difference between means</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/55_hierarchical_models.html">Section 5.5 — Hierarchical models</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials/appendix.html">Appendix</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/python_tutorial.html">Appendix C — Python tutorial</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/pandas_tutorial.html">Appendix D — Pandas tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/seaborn_tutorial.html">Appendix E — Seaborn tutorial</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/calculus_tutorial.html">Appendix F — Calculus tutorial</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../reading_group/info.html">noBSstats Reading Group</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../blogposts/index.html">Blog posts</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../blogposts/python_for_stats.html">Using Python for learning statistics Part 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../blogposts/probability_models.html">Using Python for probability calculations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../blogposts/sampling_distributions.html">Sampling distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../blogposts/bootstrap.html">Bootstrap estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../blogposts/simulation_hypothesis_tests.html">Hypothesis testing using simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../blogposts/permutation_test.html">Permutation tests for comparing two groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../blogposts/stats_procedures.html">Python libraries for doing statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../blogposts/python_stats_libraries.html">Python libraries for doing statistics</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/minireference/noBSstats/main?urlpath=lab/tree/./stats_overview/04_LINEAR_MODELS.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Binder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Binder logo" src="../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/minireference/noBSstats" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/minireference/noBSstats/issues/new?title=Issue%20on%20page%20%2Fstats_overview/04_LINEAR_MODELS.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/stats_overview/04_LINEAR_MODELS.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Chapter 4: Linear models</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebook-setup">Notebook setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-models-for-relationship-between-two-numeric-variables">4.1 Linear models for relationship between two numeric variables</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#new-dataset">New dataset</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#types-of-linear-relationship-between-input-and-output">Types of linear relationship between input and output</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fitting-linear-models">4.2 Fitting linear models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-statsmodels-formula-api">Using statsmodels formula API</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#alternative-model-fitting-methods">Alternative model fitting methods</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#data-pre-processing">Data pre-processing</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fit-using-statsmodels-ols">2. fit using statsmodels OLS</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#solution-using-linregress-from-scipy">3. solution using <code class="docutils literal notranslate"><span class="pre">linregress</span></code> from <code class="docutils literal notranslate"><span class="pre">scipy</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#using-an-optimization-approach">4. Using an optimization approach</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-algebra-solution">5. Linear algebra solution</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#using-scikit-learn">Using scikit-learn</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpreting-linear-models">4.3 Interpreting linear models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpreting-the-results">Interpreting the results</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-parameters">Model parameters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-r-2-coefficient-of-determination">The <span class="math notranslate nohighlight">\(R^2\)</span> coefficient of determination</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hypothesis-testing-for-slope-coefficient">Hypothesis testing for slope coefficient</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#predictions-using-the-model">Predictions using the model</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next steps</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="chapter-4-linear-models">
+<h1>Chapter 4: Linear models<a class="headerlink" href="#chapter-4-linear-models" title="Link to this heading">#</a></h1>
+<p><a class="reference external" href="https://docs.google.com/document/d/1fwep23-95U-w1QMPU31nOvUnUXE2X3s_Dbk5JuLlKAY/edit#heading=h.9etj7aw4al9w">Link to outline</a></p>
+<p>Concept map:
+<img alt="concepts_LINEARMODELS.png" src="stats_overview/attachment:c335ebb2-f116-486c-8737-22e517de3146.png" /></p>
+<section id="notebook-setup">
+<h2>Notebook setup<a class="headerlink" href="#notebook-setup" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">uniform</span><span class="p">,</span> <span class="n">norm</span>
+
+
+<span class="c1"># notebooks figs setup</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">rc</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">:(</span><span class="mi">8</span><span class="p">,</span><span class="mi">5</span><span class="p">)})</span>
+<span class="n">blue</span><span class="p">,</span> <span class="n">orange</span>  <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="c1"># silence annoying warnings</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="linear-models-for-relationship-between-two-numeric-variables">
+<h2>4.1 Linear models for relationship between two numeric variables<a class="headerlink" href="#linear-models-for-relationship-between-two-numeric-variables" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>def’n linear model: <strong>y ~ m*x + b</strong>, a.k.a. linear regression</p></li>
+<li><p>Amy has collected a new dataset:</p>
+<ul>
+<li><p>Instead of receiving a fixed amount of stats training (100 hours),
+<strong>each employee now receives a variable amount of stats training (anywhere from 0 hours to 100 hours)</strong></p></li>
+<li><p>Amy has collected ELV values after one year as previously</p></li>
+<li><p>Goal find best fit line for relationship <span class="math notranslate nohighlight">\(\textrm{ELV} \sim \beta_0 + \beta_1\!*\!\textrm{hours}\)</span></p></li>
+</ul>
+</li>
+<li><p>Limitation: <strong>we assume the change in ELV is proportional to number of hours</strong> (i.e. linear relationship).
+Other types of hours-ELV relationship possible, but we will not be able to model them correctly (see figure below).</p></li>
+</ul>
+<section id="new-dataset">
+<h3>New dataset<a class="headerlink" href="#new-dataset" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">hours</span></code> column contains the <code class="docutils literal notranslate"><span class="pre">x</span></code> values (how many hours of statistics training did the employee receive),</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">ELV</span></code> column contains the <code class="docutils literal notranslate"><span class="pre">y</span></code> values (the employee ELV after one year)</p></li>
+</ul>
+<p><img alt="excel_file_for_linear_models.png" src="stats_overview/attachment:71dfeb87-78ec-4523-94fa-7df9a6db4aec.png" /></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load data into a pandas dataframe</span>
+<span class="n">df2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s2">&quot;data/ELV_vs_hours.ods&quot;</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s2">&quot;Data&quot;</span><span class="p">)</span>
+<span class="c1"># df2</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df2</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>hours</th>
+      <th>ELV</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>33.000000</td>
+      <td>33.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>57.909091</td>
+      <td>1154.046364</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>28.853470</td>
+      <td>123.055405</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>4.000000</td>
+      <td>929.200000</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>35.000000</td>
+      <td>1062.210000</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>65.000000</td>
+      <td>1163.890000</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>83.000000</td>
+      <td>1253.620000</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>99.000000</td>
+      <td>1384.480000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># plot ELV vs. hours data</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;hours&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;ELV&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: xlabel=&#39;hours&#39;, ylabel=&#39;ELV&#39;&gt;
+</pre></div>
+</div>
+<img alt="../_images/a45311c4cba671c2381b1fef53124cf1185193d7ead8ff741ceb79c99b1764dd.png" src="../_images/a45311c4cba671c2381b1fef53124cf1185193d7ead8ff741ceb79c99b1764dd.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># linear model plot (preview)</span>
+<span class="c1"># sns.lmplot(x=&#39;hours&#39;, y=&#39;ELV&#39;, data=df2, ci=False)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="types-of-linear-relationship-between-input-and-output">
+<h4>Types of linear relationship between input and output<a class="headerlink" href="#types-of-linear-relationship-between-input-and-output" title="Link to this heading">#</a></h4>
+<p>Different possible relationships between the number of hours of stats training and ELV gains:</p>
+<p><img alt="figures/ELV_as_function_of_stats_hours.png" src="../_images/ELV_as_function_of_stats_hours2.png" /></p>
+</section>
+</section>
+</section>
+<section id="fitting-linear-models">
+<h2>4.2 Fitting linear models<a class="headerlink" href="#fitting-linear-models" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Main idea: use <code class="docutils literal notranslate"><span class="pre">fit</span></code> method from <code class="docutils literal notranslate"><span class="pre">statsmodels.ols</span></code> and a formula (approach 1)</p></li>
+<li><p>Visual inspection</p></li>
+<li><p>Results of linear model fit are:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">beta0</span></code> = <span class="math notranslate nohighlight">\(\beta_0\)</span> = baseline ELV (y-intercept)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">beta1</span></code> = <span class="math notranslate nohighlight">\(\beta_1\)</span> = increase in ELV for each additional hour of stats training (slope)</p></li>
+</ul>
+</li>
+<li><p>Five more alternative fitting methods (bonus material):
+2. fit using statsmodels <code class="docutils literal notranslate"><span class="pre">OLS</span></code>
+3. solution using <code class="docutils literal notranslate"><span class="pre">linregress</span></code> from <code class="docutils literal notranslate"><span class="pre">scipy</span></code>
+4. solution using <code class="docutils literal notranslate"><span class="pre">optimize</span></code> from <code class="docutils literal notranslate"><span class="pre">scipy</span></code>
+5. linear algebra solution using <code class="docutils literal notranslate"><span class="pre">numpy</span></code>
+6. solution using <code class="docutils literal notranslate"><span class="pre">LinearRegression</span></code> model from scikit-learn</p></li>
+</ul>
+<section id="using-statsmodels-formula-api">
+<h3>Using statsmodels formula API<a class="headerlink" href="#using-statsmodels-formula-api" title="Link to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code> Python library offers a convenient way to specify statistics model as a “formula”  that describes the relationship we’re looking for.</p>
+<p>Mathematically, the linear model is written:</p>
+<p><span class="math notranslate nohighlight">\(\large \textrm{ELV} \ \ \sim \ \ \beta_0\cdot 1 \ + \ \beta_1\cdot\textrm{hours}\)</span></p>
+<p>and the formula is:</p>
+<p><code class="docutils literal notranslate"><span class="pre">ELV</span>&#160;&#160;&#160; <span class="pre">~</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">1</span>&#160; <span class="pre">+</span>&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">hours</span></code></p>
+<p>Note the variables <span class="math notranslate nohighlight">\(\beta_0\)</span> and <span class="math notranslate nohighlight">\(\beta_1\)</span> are omitted, since the whole point of fitting a linear model is to find these coefficients. The parameters of the model are:</p>
+<ul class="simple">
+<li><p>Instead of <span class="math notranslate nohighlight">\(\beta_0\)</span>, the constant parameter will be called <code class="docutils literal notranslate"><span class="pre">Intercept</span></code></p></li>
+<li><p>Instead of a new name <span class="math notranslate nohighlight">\(\beta_1\)</span>, we’ll call it <code class="docutils literal notranslate"><span class="pre">hours</span></code> coefficient (i.e. the coefficient associated with the <code class="docutils literal notranslate"><span class="pre">hours</span></code> variable in the model)</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.formula.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">smf</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s1">&#39;ELV ~ 1 + hours&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df2</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># extact the best-fit model parameters</span>
+<span class="n">beta0</span><span class="p">,</span> <span class="n">beta1</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">params</span>
+<span class="n">beta0</span><span class="p">,</span> <span class="n">beta1</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1005.6736305656403, 2.562166505145919)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># data points</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;hours&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;ELV&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df2</span><span class="p">)</span>
+
+<span class="c1"># linear model for data</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">df2</span><span class="p">[</span><span class="s1">&#39;hours&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>   <span class="c1"># input = hours</span>
+<span class="n">ymodel</span> <span class="o">=</span> <span class="n">beta0</span> <span class="o">+</span> <span class="n">beta1</span><span class="o">*</span><span class="n">x</span>  <span class="c1"># output = ELV</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">ymodel</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: xlabel=&#39;hours&#39;, ylabel=&#39;ELV&#39;&gt;
+</pre></div>
+</div>
+<img alt="../_images/378d477c46dbeaa4532dbde7e2574fcf1478b6cb180e02a541cd0853b754b8a0.png" src="../_images/378d477c46dbeaa4532dbde7e2574fcf1478b6cb180e02a541cd0853b754b8a0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">result</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><table class="simpletable">
+<caption>OLS Regression Results</caption>
+<tr>
+  <th>Dep. Variable:</th>           <td>ELV</td>       <th>  R-squared:         </th> <td>   0.361</td>
+</tr>
+<tr>
+  <th>Model:</th>                   <td>OLS</td>       <th>  Adj. R-squared:    </th> <td>   0.340</td>
+</tr>
+<tr>
+  <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>   17.51</td>
+</tr>
+<tr>
+  <th>Date:</th>             <td>Thu, 12 Feb 2026</td> <th>  Prob (F-statistic):</th> <td>0.000218</td>
+</tr>
+<tr>
+  <th>Time:</th>                 <td>17:53:36</td>     <th>  Log-Likelihood:    </th> <td> -197.75</td>
+</tr>
+<tr>
+  <th>No. Observations:</th>      <td>    33</td>      <th>  AIC:               </th> <td>   399.5</td>
+</tr>
+<tr>
+  <th>Df Residuals:</th>          <td>    31</td>      <th>  BIC:               </th> <td>   402.5</td>
+</tr>
+<tr>
+  <th>Df Model:</th>              <td>     1</td>      <th>                     </th>     <td> </td>   
+</tr>
+<tr>
+  <th>Covariance Type:</th>      <td>nonrobust</td>    <th>                     </th>     <td> </td>   
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+      <td></td>         <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P>|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>Intercept</th> <td> 1005.6736</td> <td>   39.499</td> <td>   25.461</td> <td> 0.000</td> <td>  925.115</td> <td> 1086.232</td>
+</tr>
+<tr>
+  <th>hours</th>     <td>    2.5622</td> <td>    0.612</td> <td>    4.184</td> <td> 0.000</td> <td>    1.313</td> <td>    3.811</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+  <th>Omnibus:</th>       <td> 4.012</td> <th>  Durbin-Watson:     </th> <td>   2.135</td>
+</tr>
+<tr>
+  <th>Prob(Omnibus):</th> <td> 0.135</td> <th>  Jarque-Bera (JB):  </th> <td>   2.166</td>
+</tr>
+<tr>
+  <th>Skew:</th>          <td>-0.368</td> <th>  Prob(JB):          </th> <td>   0.339</td>
+</tr>
+<tr>
+  <th>Kurtosis:</th>      <td> 1.983</td> <th>  Cond. No.          </th> <td>    146.</td>
+</tr>
+</table><br/><br/>Notes:<br/>[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.</div></div>
+</div>
+</section>
+<section id="alternative-model-fitting-methods">
+<h3>Alternative model fitting methods<a class="headerlink" href="#alternative-model-fitting-methods" title="Link to this heading">#</a></h3>
+<ol class="arabic simple" start="2">
+<li><p>fit using statsmodels <a class="reference external" href="https://www.statsmodels.org/stable/generated/statsmodels.regression.linear_model.OLS.html"><code class="docutils literal notranslate"><span class="pre">OLS</span></code></a></p></li>
+<li><p>solution using <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.linregress.html"><code class="docutils literal notranslate"><span class="pre">linregress</span></code></a> from <code class="docutils literal notranslate"><span class="pre">scipy</span></code></p></li>
+<li><p>solution using <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html"><code class="docutils literal notranslate"><span class="pre">minimize</span></code></a> from <code class="docutils literal notranslate"><span class="pre">scipy</span></code></p></li>
+<li><p><a class="reference external" href="https://numpy.org/doc/stable/reference/routines.linalg.html">linear algebra</a> solution using <code class="docutils literal notranslate"><span class="pre">numpy</span></code></p></li>
+<li><p>solution using <a class="reference external" href="https://scikit-learn.org/stable/modules/linear_model.html#ordinary-least-squares"><code class="docutils literal notranslate"><span class="pre">LinearRegression</span></code></a> model from scikit-learn</p></li>
+</ol>
+<section id="data-pre-processing">
+<h4>Data pre-processing<a class="headerlink" href="#data-pre-processing" title="Link to this heading">#</a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code> formula <code class="docutils literal notranslate"><span class="pre">ols</span></code> approach we used above was able to get the data
+directly from the dataframe <code class="docutils literal notranslate"><span class="pre">df2</span></code>, but some of the other model fitting methods
+require data to be provided as regular arrays: the x-values and the y-values.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># extract hours and ELV data from df2</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">df2</span><span class="p">[</span><span class="s1">&#39;hours&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>  <span class="c1"># hours data as an array</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">df2</span><span class="p">[</span><span class="s1">&#39;ELV&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>    <span class="c1"># ELV data as an array</span>
+
+<span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span>
+<span class="c1"># x</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>((33,), (33,))
+</pre></div>
+</div>
+</div>
+</div>
+<p>Two of the approaches required “packaging” the x-values along with a column of ones,
+to form a matrix (called a design matrix). Luckily <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code> provides a convenient function for this:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
+
+<span class="c1"># add a column of ones to the x data</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+<span class="c1"># X</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(33, 2)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="fit-using-statsmodels-ols">
+<h4>2. fit using statsmodels OLS<a class="headerlink" href="#fit-using-statsmodels-ols" title="Link to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model2</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+<span class="n">result2</span> <span class="o">=</span> <span class="n">model2</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="c1"># result2.summary()</span>
+<span class="n">result2</span><span class="o">.</span><span class="n">params</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([1005.67363057,    2.56216651])
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="solution-using-linregress-from-scipy">
+<h4>3. solution using <code class="docutils literal notranslate"><span class="pre">linregress</span></code> from <code class="docutils literal notranslate"><span class="pre">scipy</span></code><a class="headerlink" href="#solution-using-linregress-from-scipy" title="Link to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">linregress</span>
+
+<span class="n">result3</span> <span class="o">=</span> <span class="n">linregress</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">result3</span><span class="o">.</span><span class="n">intercept</span><span class="p">,</span> <span class="n">result3</span><span class="o">.</span><span class="n">slope</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(np.float64(1005.6736305656411), np.float64(2.562166505145915))
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="using-an-optimization-approach">
+<h4>4. Using an optimization approach<a class="headerlink" href="#using-an-optimization-approach" title="Link to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">minimize</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">sse</span><span class="p">(</span><span class="n">beta</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the sum-of-squared-errors objective function.&quot;&quot;&quot;</span>
+    <span class="n">sumse</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">for</span> <span class="n">xi</span><span class="p">,</span> <span class="n">yi</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="n">yi_pred</span> <span class="o">=</span> <span class="n">beta</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">beta</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">xi</span>
+        <span class="n">ei</span> <span class="o">=</span> <span class="p">(</span><span class="n">yi_pred</span><span class="o">-</span><span class="n">yi</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">sumse</span> <span class="o">+=</span> <span class="n">ei</span>
+    <span class="k">return</span> <span class="n">sumse</span>
+
+<span class="n">result4</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span><span class="n">sse</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">beta0</span><span class="p">,</span> <span class="n">beta1</span> <span class="o">=</span> <span class="n">result4</span><span class="o">.</span><span class="n">x</span>
+<span class="n">beta0</span><span class="p">,</span> <span class="n">beta1</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(np.float64(1005.6733420314862), np.float64(2.5621705087641646))
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="linear-algebra-solution">
+<h4>5. Linear algebra solution<a class="headerlink" href="#linear-algebra-solution" title="Link to this heading">#</a></h4>
+<p>We obtain the least squares solution using the Moore–Penrose inverse formula:
+$<span class="math notranslate nohighlight">\( \large
+    \vec{\beta} = (X^{\sf T} X)^{-1}X^{\sf T}\; \vec{y}
+\)</span>$</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 5. linear algebra solution using `numpy`</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">result5</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">))</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="n">beta0</span><span class="p">,</span> <span class="n">beta1</span> <span class="o">=</span> <span class="n">result5</span>
+<span class="n">beta0</span><span class="p">,</span> <span class="n">beta1</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(np.float64(1005.6736305656412), np.float64(2.562166505145917))
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="using-scikit-learn">
+<h4>Using scikit-learn<a class="headerlink" href="#using-scikit-learn" title="Link to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 6. solution using `LinearRegression` from scikit-learn</span>
+<span class="c1"># %pip install scikit-learn</span>
+<span class="c1"># from sklearn import linear_model</span>
+<span class="c1"># model6 = linear_model.LinearRegression()</span>
+<span class="c1"># model6.fit(x[:,np.newaxis], y)</span>
+<span class="c1"># model6.intercept_, model6.coef_</span>
+<span class="c1"># (1005.673630565641, array([2.56216651]))</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="interpreting-linear-models">
+<h2>4.3 Interpreting linear models<a class="headerlink" href="#interpreting-linear-models" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>model fit checks</p>
+<ul>
+<li><p><span class="math notranslate nohighlight">\(R^2\)</span> <a class="reference external" href="https://en.wikipedia.org/wiki/Coefficient_of_determination">coefficient of determination</a>
+= the proportion of the variation in the dependent variable that is predictable from the independent variable</p></li>
+<li><p>plot of residuals</p></li>
+<li><p>many other: see <a class="reference external" href="https://scikit-learn.org/stable/modules/model_evaluation.html#regression-metrics">scikit docs</a></p></li>
+</ul>
+</li>
+<li><p>hypothesis tests</p>
+<ul>
+<li><p>is slope zero or nonzero? (and CI interval)</p></li>
+<li><p>caution: cannot make any cause-and-effect claims; only a correlation</p></li>
+</ul>
+</li>
+<li><p>Predictions</p>
+<ul>
+<li><p>given best-fir model obtained from data, we can make predictions (interpolations),<br />
+e.g., what is the expected ELV after 50 hours of stats training?</p></li>
+</ul>
+</li>
+</ul>
+<section id="interpreting-the-results">
+<h3>Interpreting the results<a class="headerlink" href="#interpreting-the-results" title="Link to this heading">#</a></h3>
+<p>Let’s review some of the other data included in the <code class="docutils literal notranslate"><span class="pre">results.summary()</span></code> report for the linear model fit we did earlier.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">result</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><table class="simpletable">
+<caption>OLS Regression Results</caption>
+<tr>
+  <th>Dep. Variable:</th>           <td>ELV</td>       <th>  R-squared:         </th> <td>   0.361</td>
+</tr>
+<tr>
+  <th>Model:</th>                   <td>OLS</td>       <th>  Adj. R-squared:    </th> <td>   0.340</td>
+</tr>
+<tr>
+  <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>   17.51</td>
+</tr>
+<tr>
+  <th>Date:</th>             <td>Thu, 12 Feb 2026</td> <th>  Prob (F-statistic):</th> <td>0.000218</td>
+</tr>
+<tr>
+  <th>Time:</th>                 <td>17:53:37</td>     <th>  Log-Likelihood:    </th> <td> -197.75</td>
+</tr>
+<tr>
+  <th>No. Observations:</th>      <td>    33</td>      <th>  AIC:               </th> <td>   399.5</td>
+</tr>
+<tr>
+  <th>Df Residuals:</th>          <td>    31</td>      <th>  BIC:               </th> <td>   402.5</td>
+</tr>
+<tr>
+  <th>Df Model:</th>              <td>     1</td>      <th>                     </th>     <td> </td>   
+</tr>
+<tr>
+  <th>Covariance Type:</th>      <td>nonrobust</td>    <th>                     </th>     <td> </td>   
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+      <td></td>         <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P>|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>Intercept</th> <td> 1005.6736</td> <td>   39.499</td> <td>   25.461</td> <td> 0.000</td> <td>  925.115</td> <td> 1086.232</td>
+</tr>
+<tr>
+  <th>hours</th>     <td>    2.5622</td> <td>    0.612</td> <td>    4.184</td> <td> 0.000</td> <td>    1.313</td> <td>    3.811</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+  <th>Omnibus:</th>       <td> 4.012</td> <th>  Durbin-Watson:     </th> <td>   2.135</td>
+</tr>
+<tr>
+  <th>Prob(Omnibus):</th> <td> 0.135</td> <th>  Jarque-Bera (JB):  </th> <td>   2.166</td>
+</tr>
+<tr>
+  <th>Skew:</th>          <td>-0.368</td> <th>  Prob(JB):          </th> <td>   0.339</td>
+</tr>
+<tr>
+  <th>Kurtosis:</th>      <td> 1.983</td> <th>  Cond. No.          </th> <td>    146.</td>
+</tr>
+</table><br/><br/>Notes:<br/>[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.</div></div>
+</div>
+</section>
+<section id="model-parameters">
+<h3>Model parameters<a class="headerlink" href="#model-parameters" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">beta0</span><span class="p">,</span> <span class="n">beta1</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">params</span>
+<span class="n">result</span><span class="o">.</span><span class="n">params</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Intercept    1005.673631
+hours           2.562167
+dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="the-r-2-coefficient-of-determination">
+<h3>The <span class="math notranslate nohighlight">\(R^2\)</span> coefficient of determination<a class="headerlink" href="#the-r-2-coefficient-of-determination" title="Link to this heading">#</a></h3>
+<p><span class="math notranslate nohighlight">\(R^2 = 1\)</span> corresponds to perfect prediction</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">result</span><span class="o">.</span><span class="n">rsquared</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.36091871798872777)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="hypothesis-testing-for-slope-coefficient">
+<h3>Hypothesis testing for slope coefficient<a class="headerlink" href="#hypothesis-testing-for-slope-coefficient" title="Link to this heading">#</a></h3>
+<p>Is there a non-zero slope coefficient?</p>
+<ul class="simple">
+<li><p><strong>null hypothesis <span class="math notranslate nohighlight">\(H_0\)</span></strong>: <code class="docutils literal notranslate"><span class="pre">hours</span></code> has no effect on <code class="docutils literal notranslate"><span class="pre">ELV</span></code>,
+which is equivalent to <span class="math notranslate nohighlight">\(\beta_1 = 0\)</span>:
+$<span class="math notranslate nohighlight">\( \large
+   H_0: \qquad \textrm{ELV} \sim \mathcal{N}(\color{red}{\beta_0}, \sigma^2) \qquad \qquad \qquad
+\)</span>$</p></li>
+<li><p><strong>alternative hypothesis <span class="math notranslate nohighlight">\(H_A\)</span></strong>: <code class="docutils literal notranslate"><span class="pre">hours</span></code> has an effect on <code class="docutils literal notranslate"><span class="pre">ELV</span></code>,
+and the slope is not zero, <span class="math notranslate nohighlight">\(\beta_1 \neq 0\)</span>:
+$<span class="math notranslate nohighlight">\( \large
+   H_A: \qquad \textrm{ELV} 
+               \sim
+               \mathcal{N}\left(
+                   \color{blue}{\beta_0 + \beta_1\!\cdot\!\textrm{hours}},
+                   \ \sigma^2
+               \right)
+\)</span>$</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># p-value under the null hypotheis of zero slope or &quot;no effect of `hours` on `ELV`&quot;</span>
+<span class="n">result</span><span class="o">.</span><span class="n">pvalues</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;hours&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.00021840378059913016)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 95% confidence interval for the hours-slope parameter</span>
+<span class="c1"># result.conf_int()</span>
+<span class="n">CI_hours</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">conf_int</span><span class="p">()</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;hours&#39;</span><span class="p">])</span>
+<span class="n">CI_hours</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[1.313270083442885, 3.811062926848953]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="predictions-using-the-model">
+<h3>Predictions using the model<a class="headerlink" href="#predictions-using-the-model" title="Link to this heading">#</a></h3>
+<p>We can use the model we obtained to predict (interpolate) the ELV for future employees.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;hours&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;ELV&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df2</span><span class="p">)</span>
+<span class="n">ymodel</span> <span class="o">=</span> <span class="n">beta0</span> <span class="o">+</span> <span class="n">beta1</span><span class="o">*</span><span class="n">x</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">ymodel</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: xlabel=&#39;hours&#39;, ylabel=&#39;ELV&#39;&gt;
+</pre></div>
+</div>
+<img alt="../_images/378d477c46dbeaa4532dbde7e2574fcf1478b6cb180e02a541cd0853b754b8a0.png" src="../_images/378d477c46dbeaa4532dbde7e2574fcf1478b6cb180e02a541cd0853b754b8a0.png" />
+</div>
+</div>
+<p>What ELV can we expect from a new employee that takes 50 hours of stats training?</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">result</span><span class="o">.</span><span class="n">predict</span><span class="p">({</span><span class="s1">&#39;hours&#39;</span><span class="p">:[</span><span class="mi">50</span><span class="p">]})</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0    1133.781956
+dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">result</span><span class="o">.</span><span class="n">predict</span><span class="p">({</span><span class="s1">&#39;hours&#39;</span><span class="p">:[</span><span class="mi">100</span><span class="p">]})</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0    1261.890281
+dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>WARNING</strong>: it’s not OK to extrapolate the validity of the model outside of the range of values where we have observed data.</p>
+<p>For example, there is no reason to believe in the model’s predictions about ELV for 200 or 2000 hours of stats training:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">result</span><span class="o">.</span><span class="n">predict</span><span class="p">({</span><span class="s1">&#39;hours&#39;</span><span class="p">:[</span><span class="mi">200</span><span class="p">]})</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0    1518.106932
+dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="discussion">
+<h2>Discussion<a class="headerlink" href="#discussion" title="Link to this heading">#</a></h2>
+<p>Further topics that will be covered in the book:</p>
+<ul class="simple">
+<li><p>Generalized linear models, e.g., <a class="reference external" href="https://en.wikipedia.org/wiki/Logistic_regression">Logistic regression</a></p></li>
+<li><p><a class="reference external" href="https://www.eigenfoo.xyz/tests-as-linear/">Everything is a linear model</a> article</p></li>
+<li><p>The verbs <code class="docutils literal notranslate"><span class="pre">fit</span></code> and <code class="docutils literal notranslate"><span class="pre">predict</span></code> will come up A LOT in machine learning,<br />
+so it’s worth learning linear models in detail to be prepared for further studies.</p></li>
+</ul>
+<hr class="docutils" />
+<p>Congratulations on completing this overview of statistics! We covered a lot of topics and core ideas from the book. I know some parts seemed kind of complicated at first, but if you think about them a little you’ll see there is nothing too difficult to learn. The good news is that the examples in these notebooks contain all the core ideas, and you won’t be exposed to anything more complicated that what you saw here!</p>
+<p>If you were able to handle these notebooks, you’ll be able to handle the <strong>No Bullshit Guide to Statistics</strong> too! In fact the book will cover the topics in a much smoother way, and with better explanations. You’ll have a lot of exercises and problems to help you practice statistical analysis.</p>
+<section id="next-steps">
+<h3>Next steps<a class="headerlink" href="#next-steps" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>I encourage you to check out the <a class="reference external" href="https://docs.google.com/document/d/1fwep23-95U-w1QMPU31nOvUnUXE2X3s_Dbk5JuLlKAY/edit">book outline shared gdoc</a> if you haven’t seen it already. Please leave me a comment in the google document if you see something you don’t like in the outline, or if you think some important statistics topics are missing. You can also read the <a class="reference external" href="https://minireference.com/blog/no-bullshit-guide-to-statistics-progress-update/">book proposal blog post</a> for more info about the book.</p></li>
+<li><p>Check out also the <a class="reference external" href="https://minireference.com/static/excerpts/noBSstats/conceptmaps/BookSubjectsOverview.pdf">concept map</a>. You can print it out and annotate with the concepts you heard about in these notebooks.</p></li>
+<li><p>If you want to be involved in the stats book in the coming months, sign up to the <a class="reference external" href="https://confirmsubscription.com/h/t/A17516BF2FCB41B2">stats reviewers mailing list</a> to receive chapter drafts as they are being prepared (Nov+Dec 2021). I’ll appreciate your feedback on the text. The goal is to have the book finished in the Spring 2022, and feedback and “user testing” will be very helpful.</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "minireference/noBSstats",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./stats_overview"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebook-setup">Notebook setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-models-for-relationship-between-two-numeric-variables">4.1 Linear models for relationship between two numeric variables</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#new-dataset">New dataset</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#types-of-linear-relationship-between-input-and-output">Types of linear relationship between input and output</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fitting-linear-models">4.2 Fitting linear models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-statsmodels-formula-api">Using statsmodels formula API</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#alternative-model-fitting-methods">Alternative model fitting methods</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#data-pre-processing">Data pre-processing</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fit-using-statsmodels-ols">2. fit using statsmodels OLS</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#solution-using-linregress-from-scipy">3. solution using <code class="docutils literal notranslate"><span class="pre">linregress</span></code> from <code class="docutils literal notranslate"><span class="pre">scipy</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#using-an-optimization-approach">4. Using an optimization approach</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-algebra-solution">5. Linear algebra solution</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#using-scikit-learn">Using scikit-learn</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpreting-linear-models">4.3 Interpreting linear models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpreting-the-results">Interpreting the results</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-parameters">Model parameters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-r-2-coefficient-of-determination">The <span class="math notranslate nohighlight">\(R^2\)</span> coefficient of determination</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hypothesis-testing-for-slope-coefficient">Hypothesis testing for slope coefficient</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#predictions-using-the-model">Predictions using the model</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next steps</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Ivan Savov
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,1046 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Sampling distributions &#8212; No Bullshit Guide to Statistics</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=1ae7504c"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'blogposts/sampling_distributions';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Bootstrap estimation" href="bootstrap.html" />
+    <link rel="prev" title="Using Python for probability calculations" href="probability_models.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="No Bullshit Guide to Statistics - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="No Bullshit Guide to Statistics - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    No Bullshit Guide to Statistics
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../notebooks/10_DATA.html">Chapter 1 — Data</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/11_intro_to_data.html">Section 1.1 — Introduction to data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/12_data_in_practice.html">Section 1.2 — Data in practice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/13_descriptive_statistics.html">Section 1.3 — Descriptive statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../exercises/exercises_13_descr_stats.html">Descriptive statistics exercises</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../notebooks/20_PROB.html">Chapter 2 — Probability theory</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/21_discrete_random_vars.html">Section 2.1 — Discrete random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/22_multiple_random_vars.html">Section 2.2 — Multiple random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/23_inventory_discrete_dists.html">Section 2.3 — Inventory of discrete distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/24_continuous_random_vars.html">Section 2.4 — Continuous random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/25_multiple_continuous_random_vars.html">Section 2.5 — Multiple continuous random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/26_inventory_continuous_dists.html">Section 2.6 — Inventory of continuous distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/27_simulations.html">Section 2.7 — Simulation and empirical distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/28_random_samples.html">Section 2.8 — Probability models for random samples</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../notebooks/30_STATS.html">Chapter 3 — Classical statistics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/31_estimators.html">Section 3.1 — Estimators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../exercises/exercises_31_estimtors.html">Exercises for Section 3.1 Estimates and estimators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/32_confidence_intervals.html">Section 3.2 — Confidence intervals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../exercises/exercises_32_confidence_intervals.html">Exercises for Section 3.2 Confidence intervals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/33_intro_to_NHST.html">Section 3.3 — Introduction to hypothesis testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/34_analytical_approx.html">Section 3.4 — Hypothesis testing using analytical approximations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/35_two_sample_tests.html">Section 3.5 — Two-sample hypothesis tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/36_design.html">Section 3.6 — Statistical design and error analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/37_inventory_stats_tests.html">Section 3.7 — Inventory of statistical tests</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../examples/README.html">Statistical analysis examples</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../examples/statistical_design.html">Statistical design examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/one_sample_z-test.html">One-sample z-test for the mean</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/one_sample_t-test.html">One-sample t-test for the mean</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/two_sample_t-test.html">Welch’s two-sample <span class="math notranslate nohighlight">\(t\)</span>-test</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/ANOVA.html">Analysis of variance (ANOVA)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/two_sample_equivalence_test.html">Two-sample equivalence test</a></li>
+
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../notebooks/40_LINEAR_MODELS.html">Chapter 4 — Linear models</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/41_simple_linear_regression.html">Section 4.1 — Simple linear regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/42_multiple_linear_regression.html">Section 4.2 — Multiple linear regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/43_interpreting_linear_models.html">Section 4.3 — Interpreting linear models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/44_regression_with_categorical_predictors.html">Section 4.4 — Regression with categorical predictors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/45_causal_inference.html">Section 4.5 — Model selection for causal inference</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/46_generalized_linear_models.html">Section 4.6 — Generalized linear models</a></li>
+
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../notebooks/50_BAYESIAN_STATS.html">Chapter 5 — Bayesian statistics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/51_intro_to_Bayesian_stats.html">Section 5.1 — Introduction to Bayesian statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/52_Bayesian_inference_computations.html">Section 5.2 — Bayesian inference computations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/53_Bayesian_linear_models.html">Section 5.3 — Bayesian linear models</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/54_difference_between_means.html">Section 5.4 — Bayesian difference between means</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/55_hierarchical_models.html">Section 5.5 — Hierarchical models</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials/appendix.html">Appendix</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/python_tutorial.html">Appendix C — Python tutorial</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/pandas_tutorial.html">Appendix D — Pandas tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/seaborn_tutorial.html">Appendix E — Seaborn tutorial</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/calculus_tutorial.html">Appendix F — Calculus tutorial</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../reading_group/info.html">noBSstats Reading Group</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Blog posts</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="python_for_stats.html">Using Python for learning statistics Part 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="probability_models.html">Using Python for probability calculations</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Sampling distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bootstrap.html">Bootstrap estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulation_hypothesis_tests.html">Hypothesis testing using simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="permutation_test.html">Permutation tests for comparing two groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stats_procedures.html">Python libraries for doing statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python_stats_libraries.html">Python libraries for doing statistics</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/minireference/noBSstats/main?urlpath=lab/tree/./blogposts/sampling_distributions.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Binder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Binder logo" src="../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/minireference/noBSstats" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/minireference/noBSstats/issues/new?title=Issue%20on%20page%20%2Fblogposts/sampling_distributions.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/blogposts/sampling_distributions.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Sampling distributions</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebook-setup">Notebook setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#estimates-and-estimators">Estimates and estimators</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#probability-models">Probability models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#probability-model-for-the-general-population">Probability model for the general population</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#random-samples-from-the-general-population">Random samples from the general population</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Sampling distributions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sampling-distributions-using-simulation">Sampling distributions using simulation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#two-ways-to-work-with-sampling-distributions">Two ways to work with sampling distributions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sampling-distribution-for-different-sample-sizes">Sampling distribution for different sample sizes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#central-limit-theorem">Central limit theorem</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#applications-of-the-clt">Applications of the CLT</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#verify-central-limit-theorem">Verify central limit theorem</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#links">Links</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="sampling-distributions">
+<h1>Sampling distributions<a class="headerlink" href="#sampling-distributions" title="Link to this heading">#</a></h1>
+<p>Click <a class="reference external" href="https://mybinder.org/v2/gh/minireference/noBSstats/HEAD?urlpath=%2Fdoc%2Ftree%2Fblogposts%2Fsampling_distributions.ipynb">here</a>
+to run the notebook interactively,
+so you can play with the code examples.</p>
+<section id="notebook-setup">
+<h2>Notebook setup<a class="headerlink" href="#notebook-setup" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install stats library</span>
+<span class="o">%</span><span class="k">pip</span> install --quiet ministats 
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold">[</span><span class=" -Color -Color-Blue">notice</span><span class=" -Color -Color-Bold">]</span> A new release of pip is available: <span class=" -Color -Color-Red">26.0</span> -&gt; <span class=" -Color -Color-Green">26.0.1</span>
+<span class=" -Color -Color-Bold">[</span><span class=" -Color -Color-Blue">notice</span><span class=" -Color -Color-Bold">]</span> To update, run: <span class=" -Color -Color-Green">pip install --upgrade pip</span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Note: you may need to restart the kernel to use updated packages.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Figures setup</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>  <span class="c1"># needed otherwise `sns.set_theme` doesn&#39;t work</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set_theme</span><span class="p">(</span>
+    <span class="n">style</span><span class="o">=</span><span class="s2">&quot;whitegrid&quot;</span><span class="p">,</span>
+    <span class="n">rc</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">3</span><span class="p">)},</span>
+<span class="p">)</span>
+<span class="c1"># High-resolution figures please</span>
+<span class="o">%</span><span class="k">config</span> InlineBackend.figure_format = &#39;retina&#39;
+
+<span class="k">def</span><span class="w"> </span><span class="nf">savefig</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">,</span> <span class="n">pad_inches</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Figure size 640x480 with 0 Axes&gt;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h2>
+<p>The sampling distribution is one of the most complex ideas in STATS 101 that many readers find difficult to understand. The good news is that once you understand sampling distributions, you will understand the common factor behind all the formulas and procedures.</p>
+<section id="estimates-and-estimators">
+<h3>Estimates and estimators<a class="headerlink" href="#estimates-and-estimators" title="Link to this heading">#</a></h3>
+<p>In statistics, we use the term estimator to refer to the function that computes estimates from a data sample <span class="math notranslate nohighlight">\(\mathbf{x} = [x_1, x_2, … x_n]\)</span>. For example the function <span class="math notranslate nohighlight">\(\texttt{mean}(\mathbf{x}) = \frac{1}{n} \sum_i x_i\)</span> computes the mean of the sample (the average value).</p>
+<p><img alt="" src="../_images/Esimators_contexA_blogpost.png" />
+Figure 1. The estimator <code class="docutils literal notranslate"><span class="pre">mean</span></code> computes the sample mean <span class="math notranslate nohighlight">\(\overline{\mathbf{x}}\)</span>.</p>
+<p>Estimators have this name because we use them to estimate the parameters of the population. In this case, the sample mean is an estimate for the population mean <span class="math notranslate nohighlight">\(\mu\)</span>.</p>
+<p>Any given estimate we calculate from a particular sample will be an approximation to the true population mean.</p>
+</section>
+</section>
+<section id="probability-models">
+<h2>Probability models<a class="headerlink" href="#probability-models" title="Link to this heading">#</a></h2>
+<p>The concept of a random variable, denoted <span class="math notranslate nohighlight">\(X\)</span>, is a key building block in probability theory. The random variable <span class="math notranslate nohighlight">\(X\)</span> is a quantity that can take on different values, and it is described by a probability distribution function <span class="math notranslate nohighlight">\(f_X\)</span>, which we use to compute the probability of different possible outcomes of the random variable <span class="math notranslate nohighlight">\(X\)</span>.</p>
+<p>When learning about random variables, readers are usually exposed to numerous formulas and equations for describing probability distributions. These math equations can be hard to understand, especially for people who haven’t done math recently. Using computer models, however, makes probability concepts much more accessible. Specifically, computers give us two additional points of view of the math equations:</p>
+<ul class="simple">
+<li><p><strong>Visualizations</strong>. Plotting the probability distribution <span class="math notranslate nohighlight">\(f_X\)</span> for the random variable <span class="math notranslate nohighlight">\(X\)</span> gives you a visual representation of the possible values this variable can have.</p></li>
+<li><p><strong>Computer-assisted calculations</strong>. Probability calculations can be done easily using Python as a calculator.</p></li>
+</ul>
+<section id="probability-model-for-the-general-population">
+<h3>Probability model for the general population<a class="headerlink" href="#probability-model-for-the-general-population" title="Link to this heading">#</a></h3>
+<p>Let’s now build the specific probability model we need for the analysis of the students’ IQ scores.
+We know the IQ scores in the general population has mean <span class="math notranslate nohighlight">\(\mu=100\)</span> and standard deviation <span class="math notranslate nohighlight">\(\sigma=15\)</span>.
+We will denote the general population as <span class="math notranslate nohighlight">\(X \sim \mathcal{N}(\mu=100,\sigma=15)\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">norm</span>
+
+<span class="n">mu</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="mi">15</span>
+<span class="n">rvX</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span>
+
+<span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">170</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">xs</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">rvX</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">xs</span><span class="p">));</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$x$&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$f_</span><span class="si">{X}</span><span class="s2">$&quot;</span><span class="p">)</span>
+
+<span class="n">savefig</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">(),</span> <span class="s2">&quot;figures/samples_from_rvX_n30.png&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/ddb44ddd28bb8bf598823afd2e4e9e5787fafb3fe07b4ac4ef7c6c2e9ef0da9d.png"><img alt="../_images/ddb44ddd28bb8bf598823afd2e4e9e5787fafb3fe07b4ac4ef7c6c2e9ef0da9d.png" src="../_images/ddb44ddd28bb8bf598823afd2e4e9e5787fafb3fe07b4ac4ef7c6c2e9ef0da9d.png" style="width: 781px; height: 282px;" />
+</a>
+</div>
+</div>
+<p>This is the distribution of IQ scores we can expect to observe for the general population.</p>
+</section>
+<section id="random-samples-from-the-general-population">
+<h3>Random samples from the general population<a class="headerlink" href="#random-samples-from-the-general-population" title="Link to this heading">#</a></h3>
+<p>We’ll use the notation <span class="math notranslate nohighlight">\(\mathbf{X} = (X_1, X_2, \ldots, X_{30})\)</span> to describe a <em>random sample</em> from the general population.</p>
+<p>To get a idea of what these random samples look like,
+we can generate <span class="math notranslate nohighlight">\(10\)</span> samples <span class="math notranslate nohighlight">\(\mathbf{x}_1, \mathbf{x}_2, \mathbf{x}_3, \ldots, \mathbf{x}_{10}\)</span> of size <span class="math notranslate nohighlight">\(n=30\)</span> from <span class="math notranslate nohighlight">\(X \sim \mathcal{N}(\mu=100, \sigma=15)\)</span> as follows.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="n">samples</span> <span class="o">=</span> <span class="p">[</span><span class="n">rvX</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span>
+<span class="k">with</span> <span class="n">plt</span><span class="o">.</span><span class="n">rc_context</span><span class="p">({</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:(</span><span class="mi">8</span><span class="p">,</span><span class="mf">2.8</span><span class="p">)}):</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">stripplot</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;h&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C0&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">jitter</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="mi">70</span><span class="p">,</span><span class="mi">130</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">sample</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">samples</span><span class="p">):</span>
+        <span class="n">xbar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xbar</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C1&quot;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="n">savefig</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">(),</span> <span class="s2">&quot;figures/samples_from_rvX_n30.png&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/43c6861d67a7924cd544b457e94e07e710b56b062f13352dd36e791a2f7d236b.png"><img alt="../_images/43c6861d67a7924cd544b457e94e07e710b56b062f13352dd36e791a2f7d236b.png" src="../_images/43c6861d67a7924cd544b457e94e07e710b56b062f13352dd36e791a2f7d236b.png" style="width: 784px; height: 263px;" />
+</a>
+</div>
+</div>
+<p>The diamond markers indicate the position of the sample means computed from each sample:
+<span class="math notranslate nohighlight">\([\overline{\mathbf{x}}_1, \overline{\mathbf{x}}_2, \overline{\mathbf{x}}_3, \ldots, \overline{\mathbf{x}}_{10}]\)</span>.</p>
+<p>In the next section we’re going to talk about the distribution of the diamond shapes,
+which correspond to the means computed from random samples.</p>
+</section>
+</section>
+<section id="id1">
+<h2>Sampling distributions<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>The <em>sampling distribution</em> of the mean for samples of size <span class="math notranslate nohighlight">\(n=30\)</span> from the general population <span class="math notranslate nohighlight">\(X \sim \mathcal{N}(100,15)\)</span> is the probability distribution of the random variable <span class="math notranslate nohighlight">\(\overline{\mathbf{X}} = \mathbf{Mean}(\mathbf{X})\)</span>,
+where <span class="math notranslate nohighlight">\(\mathbf{X} = (X_1, X_2, \ldots, X_{30})\)</span> is a <em>random sample</em> from <span class="math notranslate nohighlight">\(\mathcal{N}(100,15)\)</span>. The sampling distribution describes the kind of means we can expect to observe if
+we compute the mean for a sample of size <span class="math notranslate nohighlight">\(n=30\)</span> from the standard normal.</p>
+<p>REPEATS</p>
+<p>The math description of the sampling distribution of the estimator <span class="math notranslate nohighlight">\(\tt{mean}\)</span> for samples of size <span class="math notranslate nohighlight">\(n\)</span> from the population <span class="math notranslate nohighlight">\(X\)</span> is based on the concept of a random sample <span class="math notranslate nohighlight">\(\mathbf{X} = [X_1, X_2, \ldots, X_n]\)</span>.</p>
+<p>The sampling distribution of an estimator describes the estimates we can expect to observe from random samples from the population <span class="math notranslate nohighlight">\(\mathbf{X} = (X_1, X_2, \ldots, X_n)\)</span>. For example, the sampling distribution of the mean is the function <span class="math notranslate nohighlight">\(\tt{mean}(\mathbf{X}) = \frac{1}{n} \sum_i X_{i}\)</span>, where each <span class="math notranslate nohighlight">\(X_{i}\)</span> is a random observation from the general population.
+The sampling distribution of the mean for samples of size <span class="math notranslate nohighlight">\(n=30\)</span> from the standard normal distribution <span class="math notranslate nohighlight">\(X \sim \mathcal{N}(100,15)\)</span> is denoted <span class="math notranslate nohighlight">\(\overline{\mathbf{X}} = \tt{mean}(\mathbf{X})\)</span>, where <span class="math notranslate nohighlight">\(\mathbf{X} = [X_{1},X_{2}, \ldots, X_{30})\)</span> is a random sample.</p>
+<p><img alt="" src="../_images/Esimators_contexB_blogpost.png" /><br />
+Figure NN. The sampling distribution of the mean for samples of size <span class="math notranslate nohighlight">\(n\)</span>.</p>
+<p>The random variable <span class="math notranslate nohighlight">\(\overline{\mathbf{X}}\)</span> describes the kind of means we can expect to observe if we compute the mean for a sample of size <span class="math notranslate nohighlight">\(n=30\)</span> from the standard normal.</p>
+</section>
+<section id="sampling-distributions-using-simulation">
+<h2>Sampling distributions using simulation<a class="headerlink" href="#sampling-distributions-using-simulation" title="Link to this heading">#</a></h2>
+<p>Another way to think about the sampling distribution of an estimator is to think of the variability estimates you would obtain if you repeatedly generated different samples from the population.</p>
+<p><img alt="" src="../_images/Esimators_multiple_samples.png" /></p>
+<p>Now imagine we generate 990 more samples to obtain a total of <span class="math notranslate nohighlight">\(N=1000\)</span> samples from the population model. We can visualize the sampling distribution of the mean <span class="math notranslate nohighlight">\(\overline{\mathbf{X}} = \texttt{mean}(\mathbf{X})\)</span> by plotting a histogram of the means computed from the <span class="math notranslate nohighlight">\(1000\)</span> random samples, <code class="docutils literal notranslate"><span class="pre">xbars</span></code> = <span class="math notranslate nohighlight">\([\overline{\mathbf{x}}_1, \overline{\mathbf{x}}_2, \overline{\mathbf{x}}_3, \ldots, \overline{\mathbf{x}}_{1000}]\)</span>, where <span class="math notranslate nohighlight">\(\overline{\mathbf{x}}_j\)</span> denotes the sample mean computed from the data in the <span class="math notranslate nohighlight">\(j\)</span>th sample, <span class="math notranslate nohighlight">\(\overline{\mathbf{x}}_j = \texttt{mean}(\mathbf{x}_j)\)</span>.</p>
+<p>REPEATS</p>
+<p>To visualize the sampling distribution of the mean <span class="math notranslate nohighlight">\(\overline{\mathbf{X}} = \texttt{mean}(\mathbf{X})\)</span>,
+we can generate <span class="math notranslate nohighlight">\(N=1000\)</span> samples from the population model:
+<span class="math notranslate nohighlight">\(\mathbf{x}_1, \mathbf{x}_2, \mathbf{x}_3, \ldots, \mathbf{x}_{1000}\)</span>,
+then plot a histogram of the means computed from the <span class="math notranslate nohighlight">\(1000\)</span> random samples,
+<code class="docutils literal notranslate"><span class="pre">xbars</span></code> = <span class="math notranslate nohighlight">\([\overline{\mathbf{x}}_1, \overline{\mathbf{x}}_2, \overline{\mathbf{x}}_3, \ldots, \overline{\mathbf{x}}_{1000}]\)</span>,
+where <span class="math notranslate nohighlight">\(\overline{\mathbf{x}}_j\)</span> denotes the sample mean computed from the data in the <span class="math notranslate nohighlight">\(j\)</span>th sample,
+<span class="math notranslate nohighlight">\(\overline{\mathbf{x}}_j = \texttt{mean}(\mathbf{x}_j)\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">N</span> <span class="o">=</span> <span class="mi">1000</span>  <span class="c1"># number of random samples</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">30</span>    <span class="c1"># sample size</span>
+
+<span class="n">xbars</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
+    <span class="n">sample</span> <span class="o">=</span> <span class="n">rvX</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">xbar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+    <span class="n">xbars</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xbar</span><span class="p">)</span>
+
+<span class="c1"># xbars[0:5]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">plt</span><span class="o">.</span><span class="n">rc_context</span><span class="p">({</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:(</span><span class="mi">8</span><span class="p">,</span><span class="mf">2.8</span><span class="p">)}):</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">xbars</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C1&quot;</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">stat</span><span class="o">=</span><span class="s2">&quot;density&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="mi">70</span><span class="p">,</span><span class="mi">130</span><span class="p">])</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">xbars</span><span class="p">,</span> <span class="n">y</span><span class="o">=-</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C1&quot;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$</span><span class="se">\\</span><span class="s2">overline{</span><span class="se">\\</span><span class="s2">mathbf</span><span class="si">{x}</span><span class="s2">}$&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$f_{</span><span class="se">\\</span><span class="s2">overline{</span><span class="se">\\</span><span class="s2">mathbf</span><span class="si">{X}</span><span class="s2">}}$&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Sampling distribution of the mean for samples of size $n=30$ from the null population $X$.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/6c757a42f1aede607002e28d0b93cf2fe9092fa9ed149df477ea8a9afa954609.png"><img alt="../_images/6c757a42f1aede607002e28d0b93cf2fe9092fa9ed149df477ea8a9afa954609.png" src="../_images/6c757a42f1aede607002e28d0b93cf2fe9092fa9ed149df477ea8a9afa954609.png" style="width: 766px; height: 307px;" />
+</a>
+</div>
+</div>
+<p>The above figure shows the sampling distribution of the mean for samples of size <span class="math notranslate nohighlight">\(n=30\)</span> from the general population model <span class="math notranslate nohighlight">\(X \sim \mathcal{N}(\mu=100, \sigma=15)\)</span>.
+The histogram shows the “density of diamond shapes,” and provides a representation of the sampling distribution of the mean <span class="math notranslate nohighlight">\(\overline{\mathbf{X}} = \tt{mean}(\mathbf{X})\)</span>.</p>
+<p>Using computer simulations to repeatedly generate samples and compute the estimator value allows us to study the sampling distribution of any estimator. We can generate visualizations of the sampling distribution, and evaluate probabilities, and do calculations with sampling distributions. This hands-on experience with sampling distributions is extremely important, because many statistical analysis procedures like hypothesis testing depend on estimators. Indeed, once you understand sampling distributions, many of the statistics applications become very straightforward.</p>
+<p>We’ll still look at all the formulas and equations for describing the properties of the sampling distributions (law of large numbers, central limit theorem, etc.), but we’ll understand these results much better by working through hands-on simulations. In other words, knowing Python will allow you to check the math instead of taking it on faith. Even better, running various simulations will allow us to study the limitations of the analytical approximation formulas, to understand in what situations they stop being accurate.</p>
+<section id="two-ways-to-work-with-sampling-distributions">
+<h3>Two ways to work with sampling distributions<a class="headerlink" href="#two-ways-to-work-with-sampling-distributions" title="Link to this heading">#</a></h3>
+<p>You can use either a math description (analytical formulas) or a computational description (simulations) for the sampling distribution. Although the two descriptions seem very different on the surface, they both describe the same underlying concept. I’ve compiled a little list of the key properties of the estimator <span class="math notranslate nohighlight">\(\tt{mean}\)</span> to show the correspondences between two types of descriptions.</p>
+<p><img alt="math_descr_and_comp_descr.png" src="blogposts/attachment:e0fe8438-a861-4deb-a9a7-5ee855cc1b42.png" /></p>
+<p>ALT. see <a class="reference download internal" download="" href="../_downloads/eaef6c7ce471f8e604ecaab03337f5ce/math_descr_and_comp_descr.png"><span class="xref download myst">images/math_descr_and_comp_descr.png</span></a></p>
+<p>The two descriptions give us two different ways to do probability calculations. For example, we can visualize the sampling distribution of the estimator <span class="math notranslate nohighlight">\(\tt{mean}\)</span>, by plotting the probability density function of the random variable <span class="math notranslate nohighlight">\(\overline{\mathbf{X}} = \tt{mean}(\mathbf{X})\)</span> or by plotting a histogram of the values <span class="math notranslate nohighlight">\([\tt{mean}(\mathbf{x}_1), \tt{mean}(\mathbf{x}_2), \ldots, \tt{mean}(\mathbf{x}_N)]\)</span>.</p>
+<p>Suppose someone asks us to compute the probability <span class="math notranslate nohighlight">\(\Pr(\{ a \leq \overline{\mathbf{X}} \leq b \})\)</span>, which describes the probability that the estimate computed from a random sample of size <span class="math notranslate nohighlight">\(n\)</span> will be between <span class="math notranslate nohighlight">\(a\)</span> and <span class="math notranslate nohighlight">\(b\)</span>. We can obtain the answer using the probability description by calculating the difference in the cumulative distribution function <span class="math notranslate nohighlight">\(\Pr(\{ a \leq \overline{\mathbf{X}} \leq b \}) = F_{\overline{\mathbf{X}}}(b) - F_{\overline{\mathbf{X}}}(a)\)</span>.<br />
+Using the computational approach, we can obtain the same probability calculating by computing the \emph{proportion} of observations in the list <span class="math notranslate nohighlight">\([\tt{mean}(\mathbf{x}_1), \tt{mean}(\mathbf{x}_2), \ldots, \tt{mean}(\mathbf{x}_N)]\)</span> whose values are between <span class="math notranslate nohighlight">\(a\)</span> and <span class="math notranslate nohighlight">\(b\)</span>.</p>
+</section>
+<section id="sampling-distribution-for-different-sample-sizes">
+<h3>Sampling distribution for different sample sizes<a class="headerlink" href="#sampling-distribution-for-different-sample-sizes" title="Link to this heading">#</a></h3>
+<p>How is the sampling distribution of the mean affected by sample size?
+To study this,
+we’ll generate samples of size <span class="math notranslate nohighlight">\(n=10\)</span>, <span class="math notranslate nohighlight">\(n=30\)</span>, and <span class="math notranslate nohighlight">\(n=100\)</span>
+and inspect their meeans.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ministats</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_samples_panel</span>
+<span class="n">plot_samples_panel</span><span class="p">(</span><span class="n">rvX</span><span class="p">,</span> <span class="n">xlims</span><span class="o">=</span><span class="p">[</span><span class="mi">70</span><span class="p">,</span><span class="mi">130</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Distributuion of the means for samples of different sizes from $\mathcal</span><span class="si">{N}</span><span class="s2">(100,15)$.&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=-</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/300d528aa2d07af4b595db49a3c6de6be95f4fe09aec6f4c31de6e93ddc9d7f3.png"><img alt="../_images/300d528aa2d07af4b595db49a3c6de6be95f4fe09aec6f4c31de6e93ddc9d7f3.png" src="../_images/300d528aa2d07af4b595db49a3c6de6be95f4fe09aec6f4c31de6e93ddc9d7f3.png" style="width: 737px; height: 259px;" />
+</a>
+</div>
+</div>
+<p>Let’s now generate 10000 samples and plot he sampling distribution of the mean for each sample size.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ministats</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_sampling_dists_panel</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">47</span><span class="p">)</span>
+
+<span class="n">plot_sampling_dists_panel</span><span class="p">(</span><span class="n">rvX</span><span class="p">,</span> <span class="n">xlims</span><span class="o">=</span><span class="p">[</span><span class="mi">70</span><span class="p">,</span><span class="mi">130</span><span class="p">],</span> <span class="n">binwidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Sampling distribution of the mean computed from samples of size $n=10$, $n=30$, and $n=100$.&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=-</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/7f519c4354f6cb86b7e8364afb3591d18fe3aa898c35b119359cc36644a8fc74.png"><img alt="../_images/7f519c4354f6cb86b7e8364afb3591d18fe3aa898c35b119359cc36644a8fc74.png" src="../_images/7f519c4354f6cb86b7e8364afb3591d18fe3aa898c35b119359cc36644a8fc74.png" style="width: 740px; height: 232px;" />
+</a>
+</div>
+</div>
+</section>
+<section id="central-limit-theorem">
+<h3>Central limit theorem<a class="headerlink" href="#central-limit-theorem" title="Link to this heading">#</a></h3>
+<p>The central limit theorem is a math formula for the sampling distribution of the mean. It is not an exact formula, but an analytical approximation that gets better and better with larger sample sizes.</p>
+<p>The formal statement of the theorem considers a random sample of size <span class="math notranslate nohighlight">\(n\)</span> denoted <span class="math notranslate nohighlight">\(\mathbf{X} = (X_{1}, X_{2},\dots X_n)\)</span>, where each <span class="math notranslate nohighlight">\(X_i\)</span> represents an independent draw from the random variable <span class="math notranslate nohighlight">\(X\)</span>. Let <span class="math notranslate nohighlight">\(\mu\)</span> denote the mean of the random variable <span class="math notranslate nohighlight">\(X\)</span>, and let <span class="math notranslate nohighlight">\(\sigma\)</span> denote the standard deviation of <span class="math notranslate nohighlight">\(X\)</span>. Then the sampling distribution of the mean <span class="math notranslate nohighlight">\(\overline{\mathbf{X}} = \frac{1}{n}\sum_{i=1}^n X_i\)</span> will converge to a normal distribution:</p>
+<div class="math notranslate nohighlight">
+\[
+  \overline{\mathbf{X}}  \;\; \to \;\; \mathcal{N}\Big(\mu, \tfrac{\sigma}{\sqrt{n}} \Big),
+\]</div>
+<p>as the sample size <span class="math notranslate nohighlight">\(n\)</span> goes to infinity.</p>
+<p>The central limit theorem tells us three important facts:</p>
+<ul class="simple">
+<li><p>The mean of the sampling distribution <span class="math notranslate nohighlight">\(\overline{\mathbf{X}}\)</span>
+will approximately equal the population mean <span class="math notranslate nohighlight">\(\mu\)</span>.
+This means, if we use the sample mean to estimate the population mean,
+in the long term our estimates will be accurate.</p></li>
+<li><p>The second fact that the deviations of <span class="math notranslate nohighlight">\(\overline{\mathbf{X}}\)</span>
+from the true value <span class="math notranslate nohighlight">\(\mu\)</span> will be normally distributed.
+No matter what population <span class="math notranslate nohighlight">\(X\)</span> we start from (not necessary normal),
+the sample means will be normally distributed.</p></li>
+<li><p>The third fact is a precise math formula for the standard deviation
+of the sampling distribution as a function of the population
+standard deviation <span class="math notranslate nohighlight">\(\sigma\)</span> and the sample size <span class="math notranslate nohighlight">\(n\)</span>:
+<span class="math notranslate nohighlight">\(\mathbf{se} = \frac{\sigma}{\sqrt{n}}\)</span>.</p></li>
+</ul>
+<p>Recall the <em>standard error</em> is defined as the standard deviation of the sampling distribution.</p>
+<section id="applications-of-the-clt">
+<h4>Applications of the CLT<a class="headerlink" href="#applications-of-the-clt" title="Link to this heading">#</a></h4>
+<p>Many statistical inference calculations are based on sampling distributions, so the computational approach gives us a completely new perspective to do statistics. Specifically:</p>
+<ul class="simple">
+<li><p>confidence intervals</p></li>
+<li><p>hypothesis testing</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">N</span> <span class="o">=</span> <span class="mi">10000</span>
+<span class="n">xbars10</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">rvX</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="p">)]</span>    
+<span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">xbars10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(4.713454163708772)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s compare these observations from the simulation,
+to the theoretical standard deviations predicted by the CLT.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">sqrt</span>
+<span class="n">sigma</span> <span class="o">/</span> <span class="n">sqrt</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4.743416490252569
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s now verify the predictions of the central limit theorem for samples of size <span class="math notranslate nohighlight">\(n=30\)</span></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xbars30</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">rvX</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">30</span><span class="p">))</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="p">)]</span>
+<span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">xbars30</span><span class="p">),</span> <span class="n">sigma</span><span class="o">/</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(np.float64(2.7260339953850257), 2.7386127875258306)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Finally,
+let’s check the predictions for <span class="math notranslate nohighlight">\(n=100\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xbars100</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">rvX</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="p">)]</span>
+<span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">xbars100</span><span class="p">),</span> <span class="n">sigma</span><span class="o">/</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(np.float64(1.4930938336228587), 1.5)
+</pre></div>
+</div>
+</div>
+</div>
+<p>We see there is quite close agreement between the central limit theorem formula for the standard error, and the formula gets more and more accurate for larger <span class="math notranslate nohighlight">\(n\)</span>.</p>
+</section>
+</section>
+<section id="verify-central-limit-theorem">
+<h3>Verify central limit theorem<a class="headerlink" href="#verify-central-limit-theorem" title="Link to this heading">#</a></h3>
+<p>Let’s see if the standard errors of the sampling distributions for samples of size <span class="math notranslate nohighlight">\(n=10\)</span>,
+we have simulated are close to the formula predicted by the central limit theorem.</p>
+<p>First use simulation to find the true value of the standard error.</p>
+</section>
+</section>
+<section id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">#</a></h2>
+</section>
+<section id="links">
+<h2>Links<a class="headerlink" href="#links" title="Link to this heading">#</a></h2>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "minireference/noBSstats",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./blogposts"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="probability_models.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Using Python for probability calculations</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="bootstrap.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Bootstrap estimation</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebook-setup">Notebook setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#estimates-and-estimators">Estimates and estimators</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#probability-models">Probability models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#probability-model-for-the-general-population">Probability model for the general population</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#random-samples-from-the-general-population">Random samples from the general population</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Sampling distributions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sampling-distributions-using-simulation">Sampling distributions using simulation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#two-ways-to-work-with-sampling-distributions">Two ways to work with sampling distributions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sampling-distribution-for-different-sample-sizes">Sampling distribution for different sample sizes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#central-limit-theorem">Central limit theorem</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#applications-of-the-clt">Applications of the CLT</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#verify-central-limit-theorem">Verify central limit theorem</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#links">Links</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Ivan Savov
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

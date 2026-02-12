@@ -1,0 +1,2328 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Pandas cut material &#8212; No Bullshit Guide to Statistics</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=1ae7504c"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'docs/tutorials/src/pandas_cut_material';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/logo.png" class="logo__image only-light" alt="No Bullshit Guide to Statistics - Home"/>
+    <script>document.write(`<img src="../../../_static/logo.png" class="logo__image only-dark" alt="No Bullshit Guide to Statistics - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../intro.html">
+                    No Bullshit Guide to Statistics
+                </a>
+            </li>
+        </ul>
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../notebooks/10_DATA.html">Chapter 1 — Data</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/11_intro_to_data.html">Section 1.1 — Introduction to data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/12_data_in_practice.html">Section 1.2 — Data in practice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/13_descriptive_statistics.html">Section 1.3 — Descriptive statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../exercises/exercises_13_descr_stats.html">Descriptive statistics exercises</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../notebooks/20_PROB.html">Chapter 2 — Probability theory</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/21_discrete_random_vars.html">Section 2.1 — Discrete random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/22_multiple_random_vars.html">Section 2.2 — Multiple random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/23_inventory_discrete_dists.html">Section 2.3 — Inventory of discrete distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/24_continuous_random_vars.html">Section 2.4 — Continuous random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/25_multiple_continuous_random_vars.html">Section 2.5 — Multiple continuous random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/26_inventory_continuous_dists.html">Section 2.6 — Inventory of continuous distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/27_simulations.html">Section 2.7 — Simulation and empirical distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/28_random_samples.html">Section 2.8 — Probability models for random samples</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../notebooks/30_STATS.html">Chapter 3 — Classical statistics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/31_estimators.html">Section 3.1 — Estimators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../exercises/exercises_31_estimtors.html">Exercises for Section 3.1 Estimates and estimators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/32_confidence_intervals.html">Section 3.2 — Confidence intervals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../exercises/exercises_32_confidence_intervals.html">Exercises for Section 3.2 Confidence intervals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/33_intro_to_NHST.html">Section 3.3 — Introduction to hypothesis testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/34_analytical_approx.html">Section 3.4 — Hypothesis testing using analytical approximations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/35_two_sample_tests.html">Section 3.5 — Two-sample hypothesis tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/36_design.html">Section 3.6 — Statistical design and error analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/37_inventory_stats_tests.html">Section 3.7 — Inventory of statistical tests</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../examples/README.html">Statistical analysis examples</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/statistical_design.html">Statistical design examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/one_sample_z-test.html">One-sample z-test for the mean</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/one_sample_t-test.html">One-sample t-test for the mean</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/two_sample_t-test.html">Welch’s two-sample <span class="math notranslate nohighlight">\(t\)</span>-test</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/ANOVA.html">Analysis of variance (ANOVA)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/two_sample_equivalence_test.html">Two-sample equivalence test</a></li>
+
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../notebooks/40_LINEAR_MODELS.html">Chapter 4 — Linear models</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/41_simple_linear_regression.html">Section 4.1 — Simple linear regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/42_multiple_linear_regression.html">Section 4.2 — Multiple linear regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/43_interpreting_linear_models.html">Section 4.3 — Interpreting linear models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/44_regression_with_categorical_predictors.html">Section 4.4 — Regression with categorical predictors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/45_causal_inference.html">Section 4.5 — Model selection for causal inference</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/46_generalized_linear_models.html">Section 4.6 — Generalized linear models</a></li>
+
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../notebooks/50_BAYESIAN_STATS.html">Chapter 5 — Bayesian statistics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/51_intro_to_Bayesian_stats.html">Section 5.1 — Introduction to Bayesian statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/52_Bayesian_inference_computations.html">Section 5.2 — Bayesian inference computations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/53_Bayesian_linear_models.html">Section 5.3 — Bayesian linear models</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/54_difference_between_means.html">Section 5.4 — Bayesian difference between means</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/55_hierarchical_models.html">Section 5.5 — Hierarchical models</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../tutorials/appendix.html">Appendix</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/python_tutorial.html">Appendix C — Python tutorial</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/pandas_tutorial.html">Appendix D — Pandas tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/seaborn_tutorial.html">Appendix E — Seaborn tutorial</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/calculus_tutorial.html">Appendix F — Calculus tutorial</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reading_group/info.html">noBSstats Reading Group</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../blogposts/index.html">Blog posts</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../blogposts/python_for_stats.html">Using Python for learning statistics Part 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../blogposts/probability_models.html">Using Python for probability calculations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../blogposts/sampling_distributions.html">Sampling distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../blogposts/bootstrap.html">Bootstrap estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../blogposts/simulation_hypothesis_tests.html">Hypothesis testing using simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../blogposts/permutation_test.html">Permutation tests for comparing two groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../blogposts/stats_procedures.html">Python libraries for doing statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../blogposts/python_stats_libraries.html">Python libraries for doing statistics</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/minireference/noBSstats/main?urlpath=lab/tree/./docs/tutorials/src/pandas_cut_material.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Binder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Binder logo" src="../../../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/minireference/noBSstats" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/minireference/noBSstats/issues/new?title=Issue%20on%20page%20%2Fdocs/tutorials/src/pandas_cut_material.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/docs/tutorials/src/pandas_cut_material.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Pandas cut material</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-subsets-of-the-data-frame">Selecting subsets of the data frame</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#datasets-for-the-book">Datasets for the book</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-pre-processing-tasks">Data pre-processing tasks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extract">Extract</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#extract-data-from-different-source-formats">Extract data from different source formats</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load">Load</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#series">Series</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#calculations">Calculations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bonus-material-1">Bonus material 1</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bonus-material-2">Bonus material 2</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#collecting-the-website-visitors-dataset">Collecting the website visitors dataset</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#transpose">Transpose</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#bonus-explainer-2-undo-melt-with-pivot">BONUS EXPLAINER 2: UNDO MELT WITH PIVOT</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bonus-topics">Bonus topics</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pandas-plot-methods">Pandas plot methods</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#numpy-arrays">NumPy arrays</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-a-subset-of-the-values">Selecting a subset of the values</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#create-a-list-of-evenly-spaced-numbers">Create a list of evenly spaced numbers</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#xml">XML</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="pandas-cut-material">
+<h1>Pandas cut material<a class="headerlink" href="#pandas-cut-material" title="Link to this heading">#</a></h1>
+<!-- PYTHON PREREQUISITE -->
+<!-- Pandas is a library built on top of basic Python syntax: -->
+<!-- Maybe add a refresher on Python: list, sum, len, indexing, slicing, ??? -->
+<p>Pandas is a Python library,
+so any prior experience with Python will come in handy.
+Remember that Appendix C - <a class="reference internal" href="#./python_tutorial.ipynb"><span class="xref myst">python_tutorial.ipynb</span></a> contains a Python tutorial
+you can use to get up to speed quickly on the syntax,
+so if you haven’t checked that out yet now would be a good time.</p>
+<!--
+before we really start getting into the Pandas code examples.
+This intro-to-python appendix will show you Python data types (`int`, `float`, `bool`, `list`, etc.),
+Python operators (`+`, `-`, `*`, `/`, `**`, etc.),
+and functions (`len`, `sum`, `print`, etc.).
+There is nothing complicated,
+but it's good to learn the basic syntax
+so you'll know the meaning of symbols like `=`, `:`, `[`, `(`, etc.
+--><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>numpy.ndarray
+</pre></div>
+</div>
+</div>
+</div>
+<!-- NUMPY DIGRESSION -->
+<p>Under the hood,
+the values of the series use stored in a <code class="docutils literal notranslate"><span class="pre">numpy</span></code> arrays.</p>
+<!-- Robyn said: Needs definition? -->
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;datasets/minimal.csv&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># OTHER ATTRIBUTES</span>
+<span class="c1"># df.axes</span>
+<span class="c1"># df.memory_usage()</span>
+<span class="c1"># df.values</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The column <code class="docutils literal notranslate"><span class="pre">y</span></code> can also be obtained by accessing the attribute <code class="docutils literal notranslate"><span class="pre">df.y</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">equals</span><span class="p">(</span> <span class="n">df</span><span class="o">.</span><span class="n">y</span> <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+<p>Note accessing columns as attributes only works for column names that do not contain spaces or special characters.</p>
+<!-- TODO: say we won't use in this book, but you need to know since other authors may use this syntax -->
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># MAYBE</span>
+<span class="n">ys</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span>
+<span class="n">ys</span><span class="o">.</span><span class="n">values</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([2. , 1. , 1.5, 2. , 1.5])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># MAYBE</span>
+<span class="n">ys</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(1.5)
+</pre></div>
+</div>
+</div>
+</div>
+<section id="selecting-subsets-of-the-data-frame">
+<h2>Selecting subsets of the data frame<a class="headerlink" href="#selecting-subsets-of-the-data-frame" title="Link to this heading">#</a></h2>
+<p>We can use a combined selection expression to choose
+and arbitrary subset of the rows and columns of the data frame.</p>
+<p>We rarely need to do this,
+but for the purpose of illustration of the <code class="docutils literal notranslate"><span class="pre">loc</span></code> syntax,
+here is the code for selecting the <code class="docutils literal notranslate"><span class="pre">y</span></code> and <code class="docutils literal notranslate"><span class="pre">team</span></code> columns
+from the last two rows of the data frame.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">5</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">,</span><span class="s2">&quot;team&quot;</span><span class="p">]]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>y</th>
+      <th>team</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>3</th>
+      <td>2.0</td>
+      <td>b</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1.5</td>
+      <td>b</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># add the columns to the index; result is series with a multi-index</span>
+<span class="c1"># df.stack()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ALT. way to do transpose</span>
+<span class="c1"># df.stack().reorder_levels([1,0]).unstack()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="datasets-for-the-book">
+<h2>Datasets for the book<a class="headerlink" href="#datasets-for-the-book" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">students</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;datasets/students.csv&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">students</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>student_ID</th>
+      <th>background</th>
+      <th>curriculum</th>
+      <th>effort</th>
+      <th>score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>arts</td>
+      <td>debate</td>
+      <td>10.96</td>
+      <td>75.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>science</td>
+      <td>lecture</td>
+      <td>8.69</td>
+      <td>75.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>arts</td>
+      <td>debate</td>
+      <td>8.60</td>
+      <td>67.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>arts</td>
+      <td>lecture</td>
+      <td>7.92</td>
+      <td>70.3</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>science</td>
+      <td>debate</td>
+      <td>9.90</td>
+      <td>76.1</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xD</span> <span class="o">=</span> <span class="n">students</span><span class="p">[</span><span class="n">students</span><span class="p">[</span><span class="s2">&quot;curriculum&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;debate&quot;</span><span class="p">][</span><span class="s2">&quot;score&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">xL</span> <span class="o">=</span> <span class="n">students</span><span class="p">[</span><span class="n">students</span><span class="p">[</span><span class="s2">&quot;curriculum&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;lecture&quot;</span><span class="p">][</span><span class="s2">&quot;score&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">xD</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">xL</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">xD</span><span class="p">)</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">xL</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(np.float64(76.4625),
+ np.float64(68.14285714285714),
+ np.float64(8.319642857142867))
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">ttest_ind</span>
+
+<span class="n">ttest_ind</span><span class="p">(</span><span class="n">xD</span><span class="p">,</span> <span class="n">xL</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>TtestResult(statistic=np.float64(1.7197867420465698), pvalue=np.float64(0.10917234443214315), df=np.float64(13.0))
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="data-pre-processing-tasks">
+<h2>Data pre-processing tasks<a class="headerlink" href="#data-pre-processing-tasks" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><em>Extract</em> the “raw” data from various data source formats
+(spreadsheet, databases, files, web servers).</p></li>
+<li><p><em>Transform</em> the data by reshaping and cleaning it.</p></li>
+<li><p><em>Load</em> the data into the system used for statistical analysis.</p></li>
+</ul>
+</section>
+<section id="extract">
+<h2>Extract<a class="headerlink" href="#extract" title="Link to this heading">#</a></h2>
+<section id="extract-data-from-different-source-formats">
+<h3>Extract data from different source formats<a class="headerlink" href="#extract-data-from-different-source-formats" title="Link to this heading">#</a></h3>
+<p>On UNIX systems (Linux and macOS) the command line program <code class="docutils literal notranslate"><span class="pre">head</span></code> can be used to show the first few lines of any file. The command <code class="docutils literal notranslate"><span class="pre">head</span></code> is very useful for exploring files—by printing the first few lines, you can get an idea of the format it is in.</p>
+<p>Unfortunately, on Windows the command <code class="docutils literal notranslate"><span class="pre">head</span></code> is not available, so instead of relying on command line tools, we’ll write a simple Python function that called <code class="docutils literal notranslate"><span class="pre">head</span></code> that does the same thing as the command line tool: it prints the first few lines of a file. By default this function will print the first five lines of the file, but users can override the <code class="docutils literal notranslate"><span class="pre">count</span></code> argument to request a different number of lines to be printed.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">head</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">7</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Print the first `count` lines of the file at `path`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">datafile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="n">datafile</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">count</span><span class="p">]:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The function <code class="docutils literal notranslate"><span class="pre">head</span></code> contains some special handling for Windows users.
+If the path is specified using the UNIX path separator <code class="docutils literal notranslate"><span class="pre">/</span></code>,
+it will be auto-corrected to use the Windows path separator <code class="docutils literal notranslate"><span class="pre">\</span></code>.</p>
+</section>
+</section>
+<section id="load">
+<h2>Load<a class="headerlink" href="#load" title="Link to this heading">#</a></h2>
+<p>ALT. Storing statistical datasets
+ALT. Data loading</p>
+<p>When working with data,
+it’s important to follow good practices for storing data and metadata associated with your analysis.
+Make sure you always have dataset in a format
+that is easy to load into the software system we’ll be using for data analysis.</p>
+<p>It’s still a good idea to save the dataset to a new CSV file in order to separate
+the extraction, transformation, and cleaning steps from the subsequent statistical analysis.
+Saving the dataset in a general-purpose format like CSV will also make it easy to share the data with collaborators,
+or experiment with other statistical software like <a class="reference external" href="https://www.rstudio.com/">RStudio</a>,
+<a class="reference external" href="https://jasp-stats.org/">JASP</a>, and <a class="reference external" href="https://www.jamovi.org/">Jamovi</a>.</p>
+<p>To save the data frame <code class="docutils literal notranslate"><span class="pre">cleandf</span></code> as the CSV file <code class="docutils literal notranslate"><span class="pre">mydata.csv</span></code>,
+we can use its <code class="docutils literal notranslate"><span class="pre">.to_csv()</span></code> method.</p>
+<p>Let’s save the cleaned data to the file <code class="docutils literal notranslate"><span class="pre">mydata.csv</span></code> in a directory <code class="docutils literal notranslate"><span class="pre">mydataset</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># cleandf.to_csv(&quot;mydataset/mydata.csv&quot;, index=False)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can verify the data was successfully saved to disk using the <code class="docutils literal notranslate"><span class="pre">head</span></code> function,
+TODO remove head( call
+which prints the first few lines from the file.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># head(&quot;mydataset/mydata.csv&quot;)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We should also create a short text file <code class="docutils literal notranslate"><span class="pre">README.txt</span></code> that describes the data file,
+and provides the codebook information for the variables.</p>
+<!-- Robyn said: Encourage structured/standardized metadata formats -->
+<!-- Information about the dataset is provided in a text file `README.txt`. --><p>Include in the README any information about the dataset that might be relevant for the research project.</p>
+<p>Remember to document all steps we followed to obtain the dataset.
+This includes information about how we obtained the data
+and the transformation and cleaning steps we performed.
+It’s important to record all these details in order to make the ETL pipeline reproducible,
+meaning someone else could run the same procedure as you to obtain the same dataset.
+Ideally,
+you should include a Jupyter notebook or Python script with the data transformations.</p>
+<!-- Robyn said: Consider explaining the importance of reproducibility - why we don't just manually change values in an excel spreadsheet, for example. --><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># head(&quot;mydataset/README.txt&quot;, count=11)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="series">
+<h2>Series<a class="headerlink" href="#series" title="Link to this heading">#</a></h2>
+<p>Pandas <code class="docutils literal notranslate"><span class="pre">Series</span></code> objects are list-like containers of values.
+We work with series whenever performing calculations on individual columns (variables) of a data frame.
+We’ll start by creating a standalone <code class="docutils literal notranslate"><span class="pre">pd.Series</span></code> object,
+and defer the discussion about data frames until the next subsection.</p>
+<p>The code line below shows how to create a series from a list of four numbers.
+Pandas <code class="docutils literal notranslate"><span class="pre">pd.Series</span></code> objects are similar to Python lists <code class="docutils literal notranslate"><span class="pre">[3,5,7,9]</span></code>.
+They are containers for series of values.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We stored the series object into a variable named <code class="docutils literal notranslate"><span class="pre">s</span></code>,
+which is short for series.</p>
+<p>We can print the series <code class="docutils literal notranslate"><span class="pre">s</span></code> by simply typing its name in a new code cell.
+Recall that the notebook interface automatically prints the last expression evaluated in a code cell.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0    3
+1    5
+2    7
+3    9
+dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<p>The numbers printed on the left are called the <code class="docutils literal notranslate"><span class="pre">index</span></code> of the series,
+while the numbers on the right are the <code class="docutils literal notranslate"><span class="pre">values</span></code> of the series.
+The last line in the output shows some additional information about the series.
+The series <code class="docutils literal notranslate"><span class="pre">s</span></code> contains integers,
+so its <code class="docutils literal notranslate"><span class="pre">dtype</span></code> (data type) is <code class="docutils literal notranslate"><span class="pre">int64</span></code>.</p>
+<!-- Robyn said: This is the first time that dtype and int64 is brought up. Should we explain this more? -->
+<p>We use integer indices to identify the elements in the series:
+the first element is at index <code class="docutils literal notranslate"><span class="pre">0</span></code>,
+the second element is at index <code class="docutils literal notranslate"><span class="pre">1</span></code>,
+and so on,
+until the last element which is at index <code class="docutils literal notranslate"><span class="pre">len(s)-1</span></code>.
+Here is an example that shows accessing individual values of the series
+using the default 0-based indexing.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;First:  index =&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot; value =&quot;</span><span class="p">,</span> <span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Second: index =&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot; value =&quot;</span><span class="p">,</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Last:   index =&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot; value =&quot;</span><span class="p">,</span> <span class="n">s</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>First:  index = 0  value = 3
+Second: index = 1  value = 5
+Last:   index = 3  value = 9
+</pre></div>
+</div>
+</div>
+</div>
+<p>The series <code class="docutils literal notranslate"><span class="pre">index</span></code> attribute tells you all the possible indices for the series.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s</span><span class="o">.</span><span class="n">index</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>RangeIndex(start=0, stop=4, step=1)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">list</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[0, 1, 2, 3]
+</pre></div>
+</div>
+</div>
+</div>
+<p>The series <code class="docutils literal notranslate"><span class="pre">s</span></code> uses the default index <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1,</span> <span class="pre">2,</span> <span class="pre">3]</span></code>,
+which consists of a range of integers, starting at 0,
+just like the index of a Python list with four elements.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">values</span></code> attributes of the series tells you the underlying values without the index.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s</span><span class="o">.</span><span class="n">values</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([3, 5, 7, 9])
+</pre></div>
+</div>
+</div>
+</div>
+<p>You can access the individual elements of the series using the square brackets syntax
+based on the index labels for the series.
+The first element in the series is at index <code class="docutils literal notranslate"><span class="pre">0</span></code>,
+so we access it as follows:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.int64(3)
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can select a range of elements from the list using the the square
+brackets and slice notation for the indices:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0    3
+1    5
+2    7
+dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<p>The slice notation <code class="docutils literal notranslate"><span class="pre">0:3</span></code> refers to the list of indices <code class="docutils literal notranslate"><span class="pre">[0,1,2]</span></code>.
+The result of <code class="docutils literal notranslate"><span class="pre">s[0:3]</span></code> is a new series that contains a subset of the original series
+that contains the first three elements.</p>
+<section id="calculations">
+<h3>Calculations<a class="headerlink" href="#calculations" title="Link to this heading">#</a></h3>
+<p>Pandas series have methods for performing common calculations.
+For example,
+the method <code class="docutils literal notranslate"><span class="pre">.count()</span></code> tells us length of the series:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>  <span class="c1"># == len(s)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.int64(4)
+</pre></div>
+</div>
+</div>
+</div>
+<p>The method <code class="docutils literal notranslate"><span class="pre">.sum()</span></code> computes the sum of the values in the series.</p>
+<!-- TODO: mention this is the same as SUM(\...) in Excel --><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.int64(24)
+</pre></div>
+</div>
+</div>
+</div>
+<p>You can perform arithmetic operations like <code class="docutils literal notranslate"><span class="pre">+</span></code>, <code class="docutils literal notranslate"><span class="pre">-</span></code>, <code class="docutils literal notranslate"><span class="pre">*</span></code>, <code class="docutils literal notranslate"><span class="pre">/</span></code> with series.
+For example,
+we can convert the counts in the series <code class="docutils literal notranslate"><span class="pre">s</span></code> to proportions,
+but dividing the series <code class="docutils literal notranslate"><span class="pre">s</span></code> by the sum of the values.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s</span> <span class="o">/</span> <span class="n">s</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0    0.125000
+1    0.208333
+2    0.291667
+3    0.375000
+dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<p>Series have methods for computing <em>descriptive statistics</em> like
+<code class="docutils literal notranslate"><span class="pre">.min()</span></code>, <code class="docutils literal notranslate"><span class="pre">.max()</span></code>, <code class="docutils literal notranslate"><span class="pre">.mean()</span></code>, <code class="docutils literal notranslate"><span class="pre">.median()</span></code>, <code class="docutils literal notranslate"><span class="pre">.var()</span></code>, <code class="docutils literal notranslate"><span class="pre">.std()</span></code>, <code class="docutils literal notranslate"><span class="pre">.quantile()</span></code>, etc.
+For example,
+the mean (average value) and the standard deviation (dispersion from the mean)
+are two common statistics we want to compute from data.
+We can calculate the arithmetic mean of the values in the series <code class="docutils literal notranslate"><span class="pre">s</span></code> by calling its <code class="docutils literal notranslate"><span class="pre">.mean()</span></code> method.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(6.0)
+</pre></div>
+</div>
+</div>
+</div>
+<p>To find the sample standard deviation of the values in the series <code class="docutils literal notranslate"><span class="pre">s</span></code>,
+we use the <code class="docutils literal notranslate"><span class="pre">.std()</span></code> method.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(2.581988897471611)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Pandas makes it really easy to compute all descriptive statistics!</p>
+<p>TODO: TABLE showing all methods on Series objects</p>
+<p>We can also use arbitrary <code class="docutils literal notranslate"><span class="pre">numpy</span></code> functions on series,
+and Pandas will apply the function to the values in the series.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0    1.098612
+1    1.609438
+2    1.945910
+3    2.197225
+dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="bonus-material-1">
+<h3>Bonus material 1<a class="headerlink" href="#bonus-material-1" title="Link to this heading">#</a></h3>
+<p>A series can contain <code class="docutils literal notranslate"><span class="pre">float</span></code> values.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.2</span><span class="p">])</span>
+<span class="n">s2</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0    0.3
+1    1.5
+2    2.2
+dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here is another example of a series that contains strings (categorical variables).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s3</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">])</span>
+<span class="n">s3</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0    a
+1    b
+2    b
+3    c
+dtype: object
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="bonus-material-2">
+<h3>Bonus material 2<a class="headerlink" href="#bonus-material-2" title="Link to this heading">#</a></h3>
+<p>Pandas series allow arbitrary labels to be used as the index, not just integers.
+For example, we can use string labels like (<code class="docutils literal notranslate"><span class="pre">&quot;x&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;y&quot;</span></code>, etc.) as the index of a series.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s4</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">,</span> <span class="s2">&quot;t&quot;</span><span class="p">],</span>
+               <span class="n">data</span> <span class="o">=</span><span class="p">[</span> <span class="mi">3</span><span class="p">,</span>   <span class="mi">5</span><span class="p">,</span>   <span class="mi">7</span><span class="p">,</span>   <span class="mi">9</span> <span class="p">])</span>
+<span class="n">s4</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>x    3
+y    5
+z    7
+t    9
+dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s4</span><span class="o">.</span><span class="n">index</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Index([&#39;x&#39;, &#39;y&#39;, &#39;z&#39;, &#39;t&#39;], dtype=&#39;object&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s4</span><span class="o">.</span><span class="n">values</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([3, 5, 7, 9])
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can now use the string labels to access the individual elements in the series.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s4</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.int64(5)
+</pre></div>
+</div>
+</div>
+</div>
+<p>In other words,
+Pandas series also act like Python <code class="docutils literal notranslate"><span class="pre">dict</span></code>ionary objects with arbitrary keys.
+Indeed any quantity that can be used as a <code class="docutils literal notranslate"><span class="pre">key</span></code> in a dictionary (a Python hashable object),
+can also be used as a label in a Pandas series.
+The list of <code class="docutils literal notranslate"><span class="pre">keys</span></code> of a Python dictionary is the same as the <code class="docutils literal notranslate"><span class="pre">index</span></code> of a Pandas series.</p>
+</section>
+<section id="collecting-the-website-visitors-dataset">
+<h3>Collecting the website visitors dataset<a class="headerlink" href="#collecting-the-website-visitors-dataset" title="Link to this heading">#</a></h3>
+<p>Recall the website visitors dataset.
+You can see the first few rows of the dataset by loading the CSV file <code class="docutils literal notranslate"><span class="pre">datasets/visitors.csv</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">visitors</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;datasets/visitors.csv&quot;</span><span class="p">)</span>
+<span class="n">visitors</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>IP address</th>
+      <th>version</th>
+      <th>bought</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>135.185.92.4</td>
+      <td>A</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>14.75.235.1</td>
+      <td>A</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>50.132.244.139</td>
+      <td>B</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>144.181.130.234</td>
+      <td>A</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>90.92.5.100</td>
+      <td>B</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Looking at the dataset helps you understand the general structure,
+but you have some questions about how the data was collected,
+so you decide to call Vanessa and ask her.</p>
+<p>“Hi Vanessa. I’m looking at the data you sent me and I had some questions,” you start.</p>
+<p>“Yes, ask away,” she responds.</p>
+<p>“How did you assign the visitors to version A or B of the website?” you ask.</p>
+<p>“Every time the website received a new visitor (new IP address),
+it randomly sent them to either version A or version B,” she says.
+“It’s basically equivalent to flipping a coin.”
+She goes on to explain that the two versions of the website can be identified from the server logs,
+since the two designs use different background images.
+A visitor who sees version A of the website will load the background image <code class="docutils literal notranslate"><span class="pre">images/bgA.jpg</span></code>,
+while visitors who see version B will load the image <code class="docutils literal notranslate"><span class="pre">images/bgB.jpg</span></code>.</p>
+<p><a class="reference external" href="https://riptutorial.com/pandas/example/15180/read-nginx-access-log--multiple-quotechars-">https://riptutorial.com/pandas/example/15180/read-nginx-access-log–multiple-quotechars-</a></p>
+<p>“And how did you calculate the <code class="docutils literal notranslate"><span class="pre">bought</span></code> column?” you ask.</p>
+<p>“When a visitor completes the purchase steps,
+they are sent to a special <code class="docutils literal notranslate"><span class="pre">/thankyou</span></code> page,
+so I used that to identify visitors who bought something.”</p>
+<p>“Can you tell me more about the steps you took to extract the data from the server logs?”</p>
+<p>“Sure,” replies Vanessa and starts on a long explanation, which is summarized below.</p>
+<p>Vanessa started by extracting the web server access logs for the date range when the experiment was running.
+She then loaded the log files into Pandas data frames and concatenated the data from the different days.</p>
+<!-- TODO: mention pd commands used for merge -->
+<p>She then did some data cleaning by excluding rows generated from bots based on the user agent value.</p>
+<p>She then applied the main logic for determining the <code class="docutils literal notranslate"><span class="pre">bought</span></code> variable
+by collecting all the log entries for individual IP addresses.
+For each visitor (unique IP address) she looked for a request to <code class="docutils literal notranslate"><span class="pre">images/bgA.jpg</span></code>
+or <code class="docutils literal notranslate"><span class="pre">images/bgB.jpg</span></code> followed by the request to the <code class="docutils literal notranslate"><span class="pre">/thankyou</span></code> page,
+which indicates they bought something (<code class="docutils literal notranslate"><span class="pre">bought=1</span></code>).
+If the visitor never reached the <code class="docutils literal notranslate"><span class="pre">/thankyou</span></code> page,
+then we know they didn’t make a purchase,
+so she recorded <code class="docutils literal notranslate"><span class="pre">bought=0</span></code> for them.</p>
+<p>Finally she stored the data as <code class="docutils literal notranslate"><span class="pre">visitors.csv</span></code> and sent it to you.</p>
+<p>Remore shell<br />
+<code class="docutils literal notranslate"><span class="pre">zcat</span> <span class="pre">/var/log/nginx/access.log.*.gz</span> <span class="pre">&gt;</span> <span class="pre">/tmp/access_logs.txt</span></code></p>
+<p>Local shell<br />
+<code class="docutils literal notranslate"><span class="pre">scp</span> <span class="pre">minireference.com:/tmp/access_logs.txt</span> <span class="pre">data/access_logs.txt</span></code></p>
+<p>Links</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://riptutorial.com/pandas/example/15180/read-nginx-access-log--multiple-quotechars-">https://riptutorial.com/pandas/example/15180/read-nginx-access-log–multiple-quotechars-</a></p></li>
+<li><p><a class="reference internal" href="#./explorations/ParseNginxAccessLogs.ipynb"><span class="xref myst">ParseNginxAccessLogs.ipynb</span></a></p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># access_logs = open(&quot;data/access_logs.txt&quot;)</span>
+<span class="c1"># df = pd.read_csv(</span>
+<span class="c1">#     access_logs,</span>
+<span class="c1">#     sep=r&#39;\s(?=(?:[^&quot;]*&quot;[^&quot;]*&quot;)*[^&quot;]*$)(?![^\[]*\])&#39;,</span>
+<span class="c1">#     engine=&#39;python&#39;,</span>
+<span class="c1">#     usecols=[0, 3, 4, 5, 6, 7, 8],</span>
+<span class="c1">#     names=[&#39;ip&#39;, &#39;time&#39;, &#39;request&#39;, &#39;status&#39;, &#39;size&#39;, &#39;referer&#39;, &#39;user_agent&#39;],</span>
+<span class="c1">#     na_values=&#39;-&#39;,</span>
+<span class="c1">#     header=None</span>
+<span class="c1"># )</span>
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>A VIEWS = CONTAINS /static/images/homepage/bgA.jpg</p></li>
+<li><p>B VIEWS = CONTAINS /static/images/homepage/bgB.jpg</p></li>
+<li><p>A CONVERSIONS = CONTAINS /static/images/homepage/bgA.jpg and /thankyou</p></li>
+<li><p>B CONVERSIONS = CONTAINS /static/images/homepage/bgB.jpg and /thankyou</p></li>
+<li><p>p_A = A CONVERSIONS / A VIEWS</p></li>
+<li><p>p_B = B CONVERSIONS / B VIEWS</p></li>
+</ul>
+<p>We can compute the conversion rate for each version of the website
+using the <code class="docutils literal notranslate"><span class="pre">.groupby()</span></code> method.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">visitors</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;version&quot;</span><span class="p">)</span> \
+         <span class="p">[</span><span class="s2">&quot;bought&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>version  bought
+A        0         0.935175
+         1         0.064825
+B        0         0.962229
+         1         0.037771
+Name: proportion, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">visitors</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;version&quot;</span><span class="p">)</span> \
+         <span class="p">[</span><span class="s2">&quot;bought&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">agg</span><span class="p">([</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;count&quot;</span><span class="p">])</span> \
+         <span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s2">&quot;sum/count&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>version
+A    0.064825
+B    0.037771
+dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<p>For version A (the new design), the conversion rate is <span class="math notranslate nohighlight">\(p_{\!A} = 0.0648\)</span>.
+For version B (the old design), the conversion rate is <span class="math notranslate nohighlight">\(p_{B} = 0.0377\)</span>.</p>
+<!-- TODO: add conclusion + take home message -->
+<!-- TODO: add conversational Vanessa interested in stats --- explain this is an instance of compare two proportions analysis recipe -->
+<p>In other words,
+Pandas series also act like Python <code class="docutils literal notranslate"><span class="pre">dict</span></code>ionary objects with arbitrary keys.
+Indeed any quantity that can be used as a <code class="docutils literal notranslate"><span class="pre">key</span></code> in a dictionary (a Python hashable object),
+can also be used as a label in a Pandas series.
+The list of <code class="docutils literal notranslate"><span class="pre">keys</span></code> of a Python dictionary is the same as the <code class="docutils literal notranslate"><span class="pre">index</span></code> of a Pandas series.</p>
+</section>
+<section id="transpose">
+<h3>Transpose<a class="headerlink" href="#transpose" title="Link to this heading">#</a></h3>
+<p>The <em>transpose</em> transformation flips a data frame through the diagonal,
+turning the rows into columns, and columns into rows.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dfT</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+<span class="n">dfT</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>x</th>
+      <td>1.0</td>
+      <td>1.5</td>
+      <td>2.0</td>
+      <td>2.5</td>
+      <td>3.0</td>
+    </tr>
+    <tr>
+      <th>y</th>
+      <td>2.0</td>
+      <td>1.0</td>
+      <td>1.5</td>
+      <td>2.0</td>
+      <td>1.5</td>
+    </tr>
+    <tr>
+      <th>team</th>
+      <td>a</td>
+      <td>a</td>
+      <td>a</td>
+      <td>b</td>
+      <td>b</td>
+    </tr>
+    <tr>
+      <th>level</th>
+      <td>3</td>
+      <td>2</td>
+      <td>1</td>
+      <td>3</td>
+      <td>3</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>After the transpose operation,
+the index <code class="docutils literal notranslate"><span class="pre">df.index</span></code> becomes the column index <code class="docutils literal notranslate"><span class="pre">dfT.columns</span></code>,
+while the columns index <code class="docutils literal notranslate"><span class="pre">df.columns</span></code>
+becomes the rows index <code class="docutils literal notranslate"><span class="pre">dfT.index</span></code>.</p>
+<p>Other data shape transformations methods include
+<code class="docutils literal notranslate"><span class="pre">.melt()</span></code>, <code class="docutils literal notranslate"><span class="pre">.stack()</span></code>, <code class="docutils literal notranslate"><span class="pre">.unstack()</span></code>, <code class="docutils literal notranslate"><span class="pre">.merge()</span></code>, etc.
+We’ll discuss shape-transformation methods later in the tutorial as needed.</p>
+<p>Other data shape transformations methods include
+<code class="docutils literal notranslate"><span class="pre">.melt()</span></code>, <code class="docutils literal notranslate"><span class="pre">.stack()</span></code>, <code class="docutils literal notranslate"><span class="pre">.unstack()</span></code>, <code class="docutils literal notranslate"><span class="pre">.merge()</span></code>, etc.
+We’ll discuss shape-transformation methods later in the tutorial as needed.</p>
+<section id="bonus-explainer-2-undo-melt-with-pivot">
+<h4>BONUS EXPLAINER 2: UNDO MELT WITH PIVOT<a class="headerlink" href="#bonus-explainer-2-undo-melt-with-pivot" title="Link to this heading">#</a></h4>
+<p>The method for the opposite transformation (converting long data to wide data) is called <code class="docutils literal notranslate"><span class="pre">pivot</span></code> and works like this:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">views_data</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;season&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Season 1&quot;</span><span class="p">,</span> <span class="s2">&quot;Season 2&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;Episode 1&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">10000</span><span class="p">],</span>
+    <span class="s2">&quot;Episode 2&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2000</span><span class="p">,</span> <span class="mi">20000</span><span class="p">],</span>
+    <span class="s2">&quot;Episode 3&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3000</span><span class="p">,</span> <span class="mi">30000</span><span class="p">],</span>
+<span class="p">}</span>
+<span class="n">tvwide</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">views_data</span><span class="p">)</span>
+<span class="n">tvwide</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>season</th>
+      <th>Episode 1</th>
+      <th>Episode 2</th>
+      <th>Episode 3</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Season 1</td>
+      <td>1000</td>
+      <td>2000</td>
+      <td>3000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Season 2</td>
+      <td>10000</td>
+      <td>20000</td>
+      <td>30000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tvlong</span> <span class="o">=</span> <span class="n">tvwide</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="n">id_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;season&quot;</span><span class="p">],</span>
+                     <span class="n">var_name</span><span class="o">=</span><span class="s2">&quot;episode&quot;</span><span class="p">,</span>
+                     <span class="n">value_name</span><span class="o">=</span><span class="s2">&quot;views&quot;</span><span class="p">)</span>
+<span class="n">tvlong</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>season</th>
+      <th>episode</th>
+      <th>views</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Season 1</td>
+      <td>Episode 1</td>
+      <td>1000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Season 2</td>
+      <td>Episode 1</td>
+      <td>10000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Season 1</td>
+      <td>Episode 2</td>
+      <td>2000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Season 2</td>
+      <td>Episode 2</td>
+      <td>20000</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Season 1</td>
+      <td>Episode 3</td>
+      <td>3000</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Season 2</td>
+      <td>Episode 3</td>
+      <td>30000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tvlong</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;season&quot;</span><span class="p">,</span>
+             <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;episode&quot;</span><span class="p">,</span>
+             <span class="n">values</span><span class="o">=</span><span class="s2">&quot;views&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>episode</th>
+      <th>Episode 1</th>
+      <th>Episode 2</th>
+      <th>Episode 3</th>
+    </tr>
+    <tr>
+      <th>season</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Season 1</th>
+      <td>1000</td>
+      <td>2000</td>
+      <td>3000</td>
+    </tr>
+    <tr>
+      <th>Season 2</th>
+      <td>10000</td>
+      <td>20000</td>
+      <td>30000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ALT. to get *exactly* the same data frame as `tvwide`</span>
+<span class="n">tvlong</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;season&quot;</span><span class="p">,</span>
+             <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;episode&quot;</span><span class="p">,</span>
+             <span class="n">values</span><span class="o">=</span><span class="s2">&quot;views&quot;</span><span class="p">)</span> \
+       <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span> \
+       <span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>season</th>
+      <th>Episode 1</th>
+      <th>Episode 2</th>
+      <th>Episode 3</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Season 1</td>
+      <td>1000</td>
+      <td>2000</td>
+      <td>3000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Season 2</td>
+      <td>10000</td>
+      <td>20000</td>
+      <td>30000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+</section>
+</section>
+<section id="bonus-topics">
+<h2>Bonus topics<a class="headerlink" href="#bonus-topics" title="Link to this heading">#</a></h2>
+<section id="pandas-plot-methods">
+<h3>Pandas plot methods<a class="headerlink" href="#pandas-plot-methods" title="Link to this heading">#</a></h3>
+<p>Use the <code class="docutils literal notranslate"><span class="pre">.plot()</span></code> method to obtain basic plots,
+see Appendix E for Seaborn tutorial for more advanced plots (specific for statistics).</p>
+</section>
+<section id="numpy-arrays">
+<h3>NumPy arrays<a class="headerlink" href="#numpy-arrays" title="Link to this heading">#</a></h3>
+<p>Under the hood, Pandas <code class="docutils literal notranslate"><span class="pre">Series</span></code> and <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> objects are based on efficient numerical NumPy arrays.
+You generally won’t need to interact with NumPy commands when working in Pandas,
+but sometimes it can be useful to know the NumPy syntax to perform certain data selection tasks.</p>
+<p>Let’s look at some simple examples
+of the data <code class="docutils literal notranslate"><span class="pre">[1,3,5,7]</span></code> stored as a NumPy array.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">])</span>
+<span class="n">values</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([1, 3, 5, 7])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">values</span> <span class="o">-</span> <span class="mi">2</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([-1,  1,  3,  5])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([   2.71828183,   20.08553692,  148.4131591 , 1096.63315843])
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="selecting-a-subset-of-the-values">
+<h3>Selecting a subset of the values<a class="headerlink" href="#selecting-a-subset-of-the-values" title="Link to this heading">#</a></h3>
+<p>Selection of subsets is similar to what we do in Pandas:
+we use a mask to select the desired values.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">values</span> <span class="o">&lt;</span> <span class="mi">4</span>  <span class="c1"># selection mask</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ True,  True, False, False])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">values</span><span class="p">[</span><span class="n">values</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([1, 3])
+</pre></div>
+</div>
+</div>
+</div>
+<section id="create-a-list-of-evenly-spaced-numbers">
+<h4>Create a list of evenly spaced numbers<a class="headerlink" href="#create-a-list-of-evenly-spaced-numbers" title="Link to this heading">#</a></h4>
+<p>We’ll use this often when plotting functions.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.        , 0.05263158, 0.10526316, 0.15789474, 0.21052632,
+       0.26315789, 0.31578947, 0.36842105, 0.42105263, 0.47368421,
+       0.52631579, 0.57894737, 0.63157895, 0.68421053, 0.73684211,
+       0.78947368, 0.84210526, 0.89473684, 0.94736842, 1.        ])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rawdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;datasets/raw/minimal.csv&quot;</span><span class="p">)</span>
+<span class="n">cleandf</span> <span class="o">=</span> <span class="n">rawdf</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+<span class="n">cleandf</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>x</th>
+      <th>y</th>
+      <th>team</th>
+      <th>level</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>a</td>
+      <td>3.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1.5</td>
+      <td>1.0</td>
+      <td>a</td>
+      <td>2.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2.0</td>
+      <td>1.5</td>
+      <td>a</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2.5</td>
+      <td>2.0</td>
+      <td>b</td>
+      <td>3.0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>3.0</td>
+      <td>1.5</td>
+      <td>b</td>
+      <td>3.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Recode level as integer</span>
+<span class="n">cleandf</span> <span class="o">=</span> <span class="n">rawdf</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">cleandf</span><span class="p">[</span><span class="s2">&quot;level&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cleandf</span><span class="p">[</span><span class="s2">&quot;level&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="c1"># doesn&#39;t work</span>
+<span class="c1"># cleandf.loc[:,&quot;level&quot;] = cleandf[&quot;level&quot;].astype(int)</span>
+<span class="n">cleandf</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>x</th>
+      <th>y</th>
+      <th>team</th>
+      <th>level</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>a</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1.5</td>
+      <td>1.0</td>
+      <td>a</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2.0</td>
+      <td>1.5</td>
+      <td>a</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2.5</td>
+      <td>2.0</td>
+      <td>b</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>3.0</td>
+      <td>1.5</td>
+      <td>b</td>
+      <td>3</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ALT. Convert the level column to `int`</span>
+<span class="n">cleandf</span> <span class="o">=</span> <span class="n">cleandf</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">level</span> <span class="o">=</span> <span class="n">cleandf</span><span class="p">[</span><span class="s2">&quot;level&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+<span class="n">cleandf</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>x</th>
+      <th>y</th>
+      <th>team</th>
+      <th>level</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>a</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1.5</td>
+      <td>1.0</td>
+      <td>a</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2.0</td>
+      <td>1.5</td>
+      <td>a</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2.5</td>
+      <td>2.0</td>
+      <td>b</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>3.0</td>
+      <td>1.5</td>
+      <td>b</td>
+      <td>3</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<ul>
+<li><p>Web files
+Web servers also work with paths.
+The job of a web server is to respond to requests for different paths.
+For example,
+when your web browser makes a GET request for the path <code class="docutils literal notranslate"><span class="pre">/datasets/minimal.csv</span></code>
+on the server <code class="docutils literal notranslate"><span class="pre">noBSstats.com</span></code>,
+the web server software running on <code class="docutils literal notranslate"><span class="pre">noBSstats.com</span></code>
+will respond by sending back the contents of the file.
+The act of GETing a file from a remote host and saving it to the local file system is
+usually accomplished using the “Save as” operation,
+a terminal command line <code class="docutils literal notranslate"><span class="pre">wget</span> <span class="pre">https://noBSstats.com/datasets/minimal.csv</span></code>,
+of a Python script <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">requests;</span> <span class="pre">response</span> <span class="pre">=</span> <span class="pre">requests.get(&quot;...&quot;);</span> <span class="pre">...</span></code>.</p>
+<!-- TODO: finish this example ot make it a reference to some code block -->
+</li>
+<li><p><strong>Research datasets.</strong>
+Ask researchers to provide you with raw data files from any research paper.
+You can expect mixed responses,
+but it doesn’t hurt to ask.</p></li>
+<li><p><strong>SQL files.</strong>
+Structured Query Language is the standard format used to represent data in databases.
+A <em>database dump</em> files contain the complete instructions for recreating a database and all the contents in it.
+TODO: mention not meant to work directly – but load into DB then query to extract CSV.</p></li>
+</ul>
+<p><strong>Content warning:</strong> In the next few pages, acronyms like SQL, TSV, and JSON will be thrown at you.
+I know you’re thinking “wow that escalated quickly,”
+but we have to get a bit technical to make the knowledge actually useful.</p>
+<!-- If we're going to talk about data, then let's make it real.
+Let's go get the data wherever it may be:
+in Excel files, in text files, in databases, in scientific experiment logbooks, everywhere! --></section>
+<section id="xml">
+<h4>XML<a class="headerlink" href="#xml" title="Link to this heading">#</a></h4>
+<p>The eXtensible Markup Language format is used by many structured data formats and APIs.
+Here are the first few lines of the XML data file <code class="docutils literal notranslate"><span class="pre">datasets/formats/minimal.xml</span></code>.</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&#39;1.0&#39; encoding=&#39;utf-8&#39;?&gt;</span>
+<span class="nt">&lt;players&gt;</span>
+<span class="w">  </span><span class="nt">&lt;player&gt;</span>
+<span class="w">    </span><span class="nt">&lt;x&gt;</span>1.0<span class="nt">&lt;/x&gt;</span>
+<span class="w">    </span><span class="nt">&lt;y&gt;</span>2.0<span class="nt">&lt;/y&gt;</span>
+<span class="w">    </span><span class="nt">&lt;team&gt;</span>a<span class="nt">&lt;/team&gt;</span>
+<span class="w">    </span><span class="nt">&lt;level&gt;</span>3<span class="nt">&lt;/level&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/player&gt;</span>
+</pre></div>
+</div>
+<p>We use the function <code class="docutils literal notranslate"><span class="pre">pd.read_xml()</span></code> to load XML data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xmldf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_xml</span><span class="p">(</span><span class="s2">&quot;datasets/formats/minimal.xml&quot;</span><span class="p">)</span>
+<span class="n">xmldf</span><span class="o">.</span><span class="n">equals</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+<p>The Python libraries <code class="docutils literal notranslate"><span class="pre">lxml</span></code> or <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code> can be used
+for more advanced XML parsing and data processing steps (out of scope).</p>
+</section>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "minireference/noBSstats",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./docs/tutorials/src"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-subsets-of-the-data-frame">Selecting subsets of the data frame</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#datasets-for-the-book">Datasets for the book</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-pre-processing-tasks">Data pre-processing tasks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extract">Extract</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#extract-data-from-different-source-formats">Extract data from different source formats</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load">Load</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#series">Series</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#calculations">Calculations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bonus-material-1">Bonus material 1</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bonus-material-2">Bonus material 2</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#collecting-the-website-visitors-dataset">Collecting the website visitors dataset</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#transpose">Transpose</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#bonus-explainer-2-undo-melt-with-pivot">BONUS EXPLAINER 2: UNDO MELT WITH PIVOT</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bonus-topics">Bonus topics</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pandas-plot-methods">Pandas plot methods</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#numpy-arrays">NumPy arrays</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-a-subset-of-the-values">Selecting a subset of the values</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#create-a-list-of-evenly-spaced-numbers">Create a list of evenly spaced numbers</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#xml">XML</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Ivan Savov
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

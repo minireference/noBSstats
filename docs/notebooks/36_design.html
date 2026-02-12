@@ -1,0 +1,1954 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Section 3.6 — Statistical design and error analysis &#8212; No Bullshit Guide to Statistics</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js?v=1ae7504c"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'docs/notebooks/36_design';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="No Bullshit Guide to Statistics - Home"/>
+    <script>document.write(`<img src="../../_static/logo.png" class="logo__image only-dark" alt="No Bullshit Guide to Statistics - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../intro.html">
+                    No Bullshit Guide to Statistics
+                </a>
+            </li>
+        </ul>
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../notebooks/10_DATA.html">Chapter 1 — Data</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/11_intro_to_data.html">Section 1.1 — Introduction to data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/12_data_in_practice.html">Section 1.2 — Data in practice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/13_descriptive_statistics.html">Section 1.3 — Descriptive statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../exercises/exercises_13_descr_stats.html">Descriptive statistics exercises</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../notebooks/20_PROB.html">Chapter 2 — Probability theory</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/21_discrete_random_vars.html">Section 2.1 — Discrete random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/22_multiple_random_vars.html">Section 2.2 — Multiple random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/23_inventory_discrete_dists.html">Section 2.3 — Inventory of discrete distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/24_continuous_random_vars.html">Section 2.4 — Continuous random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/25_multiple_continuous_random_vars.html">Section 2.5 — Multiple continuous random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/26_inventory_continuous_dists.html">Section 2.6 — Inventory of continuous distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/27_simulations.html">Section 2.7 — Simulation and empirical distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/28_random_samples.html">Section 2.8 — Probability models for random samples</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../notebooks/30_STATS.html">Chapter 3 — Classical statistics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/31_estimators.html">Section 3.1 — Estimators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../exercises/exercises_31_estimtors.html">Exercises for Section 3.1 Estimates and estimators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/32_confidence_intervals.html">Section 3.2 — Confidence intervals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../exercises/exercises_32_confidence_intervals.html">Exercises for Section 3.2 Confidence intervals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/33_intro_to_NHST.html">Section 3.3 — Introduction to hypothesis testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/34_analytical_approx.html">Section 3.4 — Hypothesis testing using analytical approximations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/35_two_sample_tests.html">Section 3.5 — Two-sample hypothesis tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/36_design.html">Section 3.6 — Statistical design and error analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/37_inventory_stats_tests.html">Section 3.7 — Inventory of statistical tests</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../examples/README.html">Statistical analysis examples</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/statistical_design.html">Statistical design examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/one_sample_z-test.html">One-sample z-test for the mean</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/one_sample_t-test.html">One-sample t-test for the mean</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/two_sample_t-test.html">Welch’s two-sample <span class="math notranslate nohighlight">\(t\)</span>-test</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/ANOVA.html">Analysis of variance (ANOVA)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/two_sample_equivalence_test.html">Two-sample equivalence test</a></li>
+
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../notebooks/40_LINEAR_MODELS.html">Chapter 4 — Linear models</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/41_simple_linear_regression.html">Section 4.1 — Simple linear regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/42_multiple_linear_regression.html">Section 4.2 — Multiple linear regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/43_interpreting_linear_models.html">Section 4.3 — Interpreting linear models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/44_regression_with_categorical_predictors.html">Section 4.4 — Regression with categorical predictors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/45_causal_inference.html">Section 4.5 — Model selection for causal inference</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/46_generalized_linear_models.html">Section 4.6 — Generalized linear models</a></li>
+
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../notebooks/50_BAYESIAN_STATS.html">Chapter 5 — Bayesian statistics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/51_intro_to_Bayesian_stats.html">Section 5.1 — Introduction to Bayesian statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/52_Bayesian_inference_computations.html">Section 5.2 — Bayesian inference computations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/53_Bayesian_linear_models.html">Section 5.3 — Bayesian linear models</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/54_difference_between_means.html">Section 5.4 — Bayesian difference between means</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/55_hierarchical_models.html">Section 5.5 — Hierarchical models</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/appendix.html">Appendix</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/python_tutorial.html">Appendix C — Python tutorial</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/pandas_tutorial.html">Appendix D — Pandas tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/seaborn_tutorial.html">Appendix E — Seaborn tutorial</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/calculus_tutorial.html">Appendix F — Calculus tutorial</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reading_group/info.html">noBSstats Reading Group</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../blogposts/index.html">Blog posts</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../blogposts/python_for_stats.html">Using Python for learning statistics Part 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../blogposts/probability_models.html">Using Python for probability calculations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../blogposts/sampling_distributions.html">Sampling distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../blogposts/bootstrap.html">Bootstrap estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../blogposts/simulation_hypothesis_tests.html">Hypothesis testing using simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../blogposts/permutation_test.html">Permutation tests for comparing two groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../blogposts/stats_procedures.html">Python libraries for doing statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../blogposts/python_stats_libraries.html">Python libraries for doing statistics</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/minireference/noBSstats/main?urlpath=lab/tree/./docs/notebooks/36_design.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Binder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Binder logo" src="../../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/minireference/noBSstats" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/minireference/noBSstats/issues/new?title=Issue%20on%20page%20%2Fdocs/notebooks/36_design.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/docs/notebooks/36_design.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Section 3.6 — Statistical design and error analysis</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebook-setup">Notebook setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definitions">Definitions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hypothesis-decision-rules">Hypothesis decision rules</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#decision-rule-based-on-p-values">Decision rule based on <span class="math notranslate nohighlight">\(p\)</span>-values</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simplified-decision-rule">Simplified decision rule</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#statistical-design">Statistical design</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cohen-s-d-standardized-effect-size">Cohen’s d standardized effect size</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#one-sample-case">One-sample case</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#two-sample-case">Two-sample case</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1-detect-kombuncha-volume-deviation-from-theory">Example 1: detect kombuncha volume deviation from theory</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-statsmodels">Using <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-collection">Data collection</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#statistical-analysis-on-the-sample-from-batch-55">Statistical analysis on the sample from Batch 55</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2-comparison-of-east-vs-west-electricity-prices">Example 2: comparison of East vs. West electricity prices</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#solving-for-a-desired-power">Solving for a desired power</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#calculate-minimum-effect-size">Calculate minimum effect size</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-calculate-sample-size-needed-to-achieve-0-8-power">(optional) Calculate sample size needed to achieve 0.8 power</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#alternative-calculation-methods">Alternative calculation methods</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-g-power">Using G*Power</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-pingouin">Using <code class="docutils literal notranslate"><span class="pre">pingouin</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#sample-size-for-the-one-sample-t-test">Sample size for the one-sample <span class="math notranslate nohighlight">\(t\)</span>-test</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#power-of-bob-s-two-sample-t-test">Power of Bob’s two-sample <span class="math notranslate nohighlight">\(t\)</span>-test</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanations">Explanations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-sided-and-two-sided-rejection-regions">One-sided and two-sided rejection regions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#derivation-of-the-sample-size-planning-formula">Derivation of the sample size planning formula</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-conceptual-amalgam-of-two-ideas">A conceptual amalgam of two ideas</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#steps-of-the-neymanpearson-hypothesis-test">Steps of the Neyman—Pearson hypothesis test</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#steps-of-the-fisherian-hypothesis-test">Steps of the Fisherian hypothesis test</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#post-hoc-power-analysis">Post-hoc power analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unique-value-proposition-of-hypothesis-testing">Unique value proposition of hypothesis testing</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-exercise-sensitivity-of-one-sample-t-test-n-10">Exercise {exercise:sensitivity-of-one-sample-t-test-n-10}</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-exercise-power-of-two-sample-t-test-n-17">Exercise {exercise:power-of-two-sample-t-test-n-17}</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#links">Links</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="section-3-6-statistical-design-and-error-analysis">
+<h1>Section 3.6 — Statistical design and error analysis<a class="headerlink" href="#section-3-6-statistical-design-and-error-analysis" title="Link to this heading">#</a></h1>
+<p>This notebook contains the code examples from <a class="reference internal" href="#"><span class="xref myst">Section 3.6 Statistical design and error analysis</span></a> of the <strong>No Bullshit Guide to Statistics</strong>.</p>
+<section id="notebook-setup">
+<h2>Notebook setup<a class="headerlink" href="#notebook-setup" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ensure required Python modules are installed</span>
+<span class="o">%</span><span class="k">pip</span> install --quiet numpy scipy seaborn pandas ministats
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold">[</span><span class=" -Color -Color-Blue">notice</span><span class=" -Color -Color-Bold">]</span> A new release of pip is available: <span class=" -Color -Color-Red">26.0</span> -&gt; <span class=" -Color -Color-Green">26.0.1</span>
+<span class=" -Color -Color-Bold">[</span><span class=" -Color -Color-Blue">notice</span><span class=" -Color -Color-Bold">]</span> To update, run: <span class=" -Color -Color-Green">pip install --upgrade pip</span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Note: you may need to restart the kernel to use updated packages.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># load Python modules</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot helper functions</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ministats</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_pdf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ministats.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">savefigure</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Figures setup</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>  <span class="c1"># needed otherwise `sns.set_theme` doesn&#39;t work</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set_theme</span><span class="p">(</span>
+    <span class="n">context</span><span class="o">=</span><span class="s2">&quot;paper&quot;</span><span class="p">,</span>
+    <span class="n">style</span><span class="o">=</span><span class="s2">&quot;whitegrid&quot;</span><span class="p">,</span>
+    <span class="n">palette</span><span class="o">=</span><span class="s2">&quot;colorblind&quot;</span><span class="p">,</span>
+    <span class="n">rc</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;font.family&quot;</span><span class="p">:</span> <span class="s2">&quot;serif&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;font.serif&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Palatino&quot;</span><span class="p">,</span> <span class="s2">&quot;DejaVu Serif&quot;</span><span class="p">,</span> <span class="s2">&quot;serif&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;figure.figsize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">)},</span>
+<span class="p">)</span>
+<span class="o">%</span><span class="k">config</span> InlineBackend.figure_format = &#39;retina&#39;
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Figure size 640x480 with 0 Axes&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simple float __repr__  </span>
+<span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">__version__</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">legacy</span><span class="o">=</span><span class="s1">&#39;1.25&#39;</span><span class="p">)</span>
+
+<span class="c1"># set random seed for repeatability</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Download datasets/ directory if necessary</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ministats</span><span class="w"> </span><span class="kn">import</span> <span class="n">ensure_datasets</span>
+<span class="n">ensure_datasets</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>datasets/ directory already exists.
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="definitions">
+<h2>Definitions<a class="headerlink" href="#definitions" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ministats</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_alpha_beta_errors</span>
+
+<span class="k">with</span> <span class="n">sns</span><span class="o">.</span><span class="n">axes_style</span><span class="p">(</span><span class="s2">&quot;ticks&quot;</span><span class="p">),</span> <span class="n">plt</span><span class="o">.</span><span class="n">rc_context</span><span class="p">({</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:(</span><span class="mi">5</span><span class="p">,</span><span class="mf">1.5</span><span class="p">)}):</span>
+    <span class="n">plot_alpha_beta_errors</span><span class="p">(</span><span class="n">cohend</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xlims</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">n</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span>
+                           <span class="n">show_alt</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_concl</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                           <span class="n">alpha_offset</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.014</span><span class="p">),</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Design params: n = 9 , alpha = 0.05 , beta = 0.910663745890349 , Delta = 0.2 , d = 0.1 , CV = 1.0965690846343148
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../../_images/7945268dea28cad9f6275b7d1d818c90bd2364482a99bbb157e18dcca28a8f0a.png"><img alt="../../_images/7945268dea28cad9f6275b7d1d818c90bd2364482a99bbb157e18dcca28a8f0a.png" src="../../_images/7945268dea28cad9f6275b7d1d818c90bd2364482a99bbb157e18dcca28a8f0a.png" style="width: 410px; height: 182px;" />
+</a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">sns</span><span class="o">.</span><span class="n">axes_style</span><span class="p">(</span><span class="s2">&quot;ticks&quot;</span><span class="p">),</span> <span class="n">plt</span><span class="o">.</span><span class="n">rc_context</span><span class="p">({</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:(</span><span class="mi">6</span><span class="p">,</span><span class="mf">1.6</span><span class="p">)}):</span>
+    <span class="n">plot_alpha_beta_errors</span><span class="p">(</span><span class="n">cohend</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">show_dist_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                           <span class="n">show_concl</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> 
+                           <span class="n">alpha_offset</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.013</span><span class="p">),</span>
+                           <span class="n">beta_offset</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.06</span><span class="p">,</span><span class="mf">0.02</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Design params: n = 9 , alpha = 0.05 , beta = 0.2250805806658559 , Delta = 1.6 , d = 0.8 , CV = 1.0965690846343148
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../../_images/e5b054445965da958cb82e6d92a765c447165784a55b506744148f82ccee73fb.png"><img alt="../../_images/e5b054445965da958cb82e6d92a765c447165784a55b506744148f82ccee73fb.png" src="../../_images/e5b054445965da958cb82e6d92a765c447165784a55b506744148f82ccee73fb.png" style="width: 488px; height: 193px;" />
+</a>
+</div>
+</div>
+</section>
+<section id="hypothesis-decision-rules">
+<h2>Hypothesis decision rules<a class="headerlink" href="#hypothesis-decision-rules" title="Link to this heading">#</a></h2>
+<section id="decision-rule-based-on-p-values">
+<h3>Decision rule based on <span class="math notranslate nohighlight">\(p\)</span>-values<a class="headerlink" href="#decision-rule-based-on-p-values" title="Link to this heading">#</a></h3>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># pre-data</span>
+<span class="n">alpha</span> <span class="o">=</span> <span class="o">...</span>   <span class="c1"># chosen in advance</span>
+
+<span class="c1"># post-data</span>
+<span class="n">obst</span> <span class="o">=</span> <span class="o">...</span>    <span class="c1"># calculated from sample</span>
+<span class="n">rvT0</span> <span class="o">=</span> <span class="o">...</span>    <span class="c1"># sampling distribution under H0</span>
+<span class="n">pvalue</span> <span class="o">=</span> <span class="o">...</span>  <span class="c1"># prob. of obst under rvT0</span>
+
+<span class="c1"># make decision based on p-value</span>
+<span class="k">if</span> <span class="n">pvalue</span> <span class="o">&lt;=</span> <span class="n">alpha</span><span class="p">:</span>
+    <span class="n">decision</span> <span class="o">=</span> <span class="s2">&quot;Reject H0&quot;</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">decision</span> <span class="o">=</span> <span class="s2">&quot;Fail to reject H0&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="simplified-decision-rule">
+<h3>Simplified decision rule<a class="headerlink" href="#simplified-decision-rule" title="Link to this heading">#</a></h3>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># pre-data</span>
+<span class="n">alpha</span> <span class="o">=</span> <span class="o">...</span>     <span class="c1"># chosen in advance</span>
+<span class="n">rvT0</span> <span class="o">=</span> <span class="o">...</span>      <span class="c1"># sampling distribution under H0</span>
+<span class="n">CV_alpha</span> <span class="o">=</span> <span class="o">...</span>  <span class="c1"># calculated from alpha-quantile of rvT0</span>
+
+<span class="c1"># post-data</span>
+<span class="n">obst</span> <span class="o">=</span> <span class="o">...</span>      <span class="c1"># calculated from sample</span>
+<span class="c1"># make decision based on test statistic</span>
+<span class="k">if</span> <span class="n">obst</span> <span class="o">&gt;=</span> <span class="n">CV_alpha</span><span class="p">:</span>
+    <span class="n">decision</span> <span class="o">=</span> <span class="s2">&quot;Reject H0&quot;</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">decision</span> <span class="o">=</span> <span class="s2">&quot;Fail to reject H0&quot;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="statistical-design">
+<h2>Statistical design<a class="headerlink" href="#statistical-design" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># FIGURES ONLY</span>
+<span class="n">d_small</span> <span class="o">=</span> <span class="mf">0.20</span>
+<span class="n">d_medium</span> <span class="o">=</span> <span class="mf">0.57</span> <span class="c1"># chosen to avoid overlap between CV and Delta</span>
+<span class="n">d_large</span> <span class="o">=</span> <span class="mf">0.80</span>
+<span class="n">d_vlarge</span> <span class="o">=</span> <span class="mf">1.3</span>
+
+<span class="k">with</span> <span class="n">sns</span><span class="o">.</span><span class="n">axes_style</span><span class="p">(</span><span class="s2">&quot;ticks&quot;</span><span class="p">):</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="p">((</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">),</span> <span class="p">(</span><span class="n">ax3</span><span class="p">,</span> <span class="n">ax4</span><span class="p">))</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+    
+    <span class="n">plot_alpha_beta_errors</span><span class="p">(</span><span class="n">cohend</span><span class="o">=</span><span class="n">d_small</span><span class="p">,</span>  <span class="n">xlims</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">1.7</span><span class="p">,</span><span class="mf">2.8</span><span class="p">],</span> <span class="n">n</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">show_es</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                           <span class="n">alpha_offset</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.03</span><span class="p">,</span><span class="mf">0.005</span><span class="p">),</span> <span class="n">beta_offset</span><span class="o">=</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.2</span><span class="p">))</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;(a) Small effect size&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+    
+    <span class="n">plot_alpha_beta_errors</span><span class="p">(</span><span class="n">cohend</span><span class="o">=</span><span class="n">d_medium</span><span class="p">,</span> <span class="n">xlims</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">1.6</span><span class="p">,</span><span class="mf">2.9</span><span class="p">],</span> <span class="n">n</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">show_es</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                           <span class="n">alpha_offset</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.03</span><span class="p">,</span><span class="mf">0.005</span><span class="p">),</span> <span class="n">beta_offset</span><span class="o">=</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span><span class="mf">0.08</span><span class="p">))</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;(b) Medium effect size&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+    
+    <span class="n">plot_alpha_beta_errors</span><span class="p">(</span><span class="n">cohend</span><span class="o">=</span><span class="n">d_large</span><span class="p">,</span>  <span class="n">xlims</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">n</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax3</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">show_es</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                           <span class="n">alpha_offset</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.03</span><span class="p">,</span><span class="mf">0.005</span><span class="p">),</span> <span class="n">beta_offset</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.02</span><span class="p">))</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;(c) Large effect size&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+    
+    <span class="n">plot_alpha_beta_errors</span><span class="p">(</span><span class="n">cohend</span><span class="o">=</span><span class="n">d_vlarge</span><span class="p">,</span>  <span class="n">xlims</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">n</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax4</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">show_es</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                           <span class="n">alpha_offset</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.03</span><span class="p">,</span><span class="mf">0.005</span><span class="p">),</span> <span class="n">beta_offset</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.06</span><span class="p">,</span><span class="mf">0.02</span><span class="p">))</span>
+    <span class="n">ax4</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;(d) Very large effect size&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+
+    <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Design params: n = 15 , alpha = 0.05 , beta = 0.8079200023112518 , Delta = 0.4 , d = 0.2 , CV = 0.8493987605509224
+Design params: n = 15 , alpha = 0.05 , beta = 0.28680362819561334 , Delta = 1.14 , d = 0.57 , CV = 0.8493987605509224
+Design params: n = 15 , alpha = 0.05 , beta = 0.07303790512845224 , Delta = 1.6 , d = 0.8 , CV = 0.8493987605509224
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Design params: n = 15 , alpha = 0.05 , beta = 0.0003494316033385532 , Delta = 2.6 , d = 1.3 , CV = 0.8493987605509224
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../../_images/1cd3c141c06814527f067929ffa4ca0d34ecb19d60699217890aab7520cb7c3a.png"><img alt="../../_images/1cd3c141c06814527f067929ffa4ca0d34ecb19d60699217890aab7520cb7c3a.png" src="../../_images/1cd3c141c06814527f067929ffa4ca0d34ecb19d60699217890aab7520cb7c3a.png" style="width: 591px; height: 288px;" />
+</a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Delta</span> <span class="o">=</span> <span class="mf">0.6</span>
+
+<span class="c1"># TODO: check this figure --&gt; results for n=15 seem to be too good to be true...</span>
+<span class="k">with</span> <span class="n">sns</span><span class="o">.</span><span class="n">axes_style</span><span class="p">(</span><span class="s2">&quot;ticks&quot;</span><span class="p">):</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mf">1.6</span><span class="p">))</span>
+    
+    <span class="n">n1</span> <span class="o">=</span> <span class="mi">15</span>
+    <span class="n">plot_alpha_beta_errors</span><span class="p">(</span><span class="n">cohend</span><span class="o">=</span><span class="n">Delta</span><span class="p">,</span>  <span class="n">xlims</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">1.7</span><span class="p">,</span><span class="mf">2.8</span><span class="p">],</span> <span class="n">n</span><span class="o">=</span><span class="n">n1</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">show_es</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                           <span class="n">alpha_offset</span><span class="o">=</span><span class="p">(</span><span class="mf">0.03</span><span class="p">,</span><span class="mf">0.005</span><span class="p">),</span> <span class="n">beta_offset</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.05</span><span class="p">))</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;(a) Small sample size $n=</span><span class="si">{</span><span class="n">n1</span><span class="si">}</span><span class="s2">$&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+    
+    <span class="n">n2</span> <span class="o">=</span> <span class="mi">30</span>
+    <span class="n">plot_alpha_beta_errors</span><span class="p">(</span><span class="n">cohend</span><span class="o">=</span><span class="n">Delta</span><span class="p">,</span>  <span class="n">xlims</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">n</span><span class="o">=</span><span class="n">n2</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">show_es</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                           <span class="n">alpha_offset</span><span class="o">=</span><span class="p">(</span><span class="mf">0.005</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">beta_offset</span><span class="o">=</span><span class="p">(</span><span class="mf">0.04</span><span class="p">,</span><span class="mf">0.01</span><span class="p">))</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;(b) Larger sample size $n=</span><span class="si">{</span><span class="n">n2</span><span class="si">}</span><span class="s2">$&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Design params: n = 15 , alpha = 0.05 , beta = 0.24858908649659617 , Delta = 1.2 , d = 0.6 , CV = 0.8493987605509224
+Design params: n = 30 , alpha = 0.05 , beta = 0.0503487295055579 , Delta = 1.2 , d = 0.6 , CV = 0.6006156235170058
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../../_images/0f6fb2812ebd44635d92dbb99d35eaa523b7348cc6fa8f16042ce98f7267937f.png"><img alt="../../_images/0f6fb2812ebd44635d92dbb99d35eaa523b7348cc6fa8f16042ce98f7267937f.png" src="../../_images/0f6fb2812ebd44635d92dbb99d35eaa523b7348cc6fa8f16042ce98f7267937f.png" style="width: 565px; height: 190px;" />
+</a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># FIGURES ONLY</span>
+<span class="n">Delta</span> <span class="o">=</span> <span class="mf">0.6</span>
+
+<span class="k">with</span> <span class="n">sns</span><span class="o">.</span><span class="n">axes_style</span><span class="p">(</span><span class="s2">&quot;ticks&quot;</span><span class="p">):</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mf">1.6</span><span class="p">))</span>
+
+    <span class="n">n1</span> <span class="o">=</span> <span class="mi">15</span>
+    <span class="n">alpha1</span> <span class="o">=</span> <span class="mf">0.05</span>
+    <span class="n">plot_alpha_beta_errors</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha1</span><span class="p">,</span> <span class="n">cohend</span><span class="o">=</span><span class="n">Delta</span><span class="p">,</span> <span class="n">xlims</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">1.7</span><span class="p">,</span><span class="mf">2.8</span><span class="p">],</span> <span class="n">n</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">show_es</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                           <span class="n">alpha_offset</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.02</span><span class="p">,</span><span class="mf">0.005</span><span class="p">),</span> <span class="n">beta_offset</span><span class="o">=</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">))</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(a) Conventional alpha $\alpha=0.05$&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+
+    <span class="n">alpha2</span> <span class="o">=</span> <span class="mf">0.1</span>
+    <span class="n">plot_alpha_beta_errors</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha2</span><span class="p">,</span> <span class="n">cohend</span><span class="o">=</span><span class="n">Delta</span><span class="p">,</span> <span class="n">xlims</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">1.7</span><span class="p">,</span><span class="mf">2.8</span><span class="p">],</span> <span class="n">n</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">show_es</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                           <span class="n">alpha_offset</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.005</span><span class="p">),</span> <span class="n">beta_offset</span><span class="o">=</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span><span class="mf">0.05</span><span class="p">))</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(b) Larger alpha $\alpha=0.1$&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Design params: n = 15 , alpha = 0.05 , beta = 0.24858908649659617 , Delta = 1.2 , d = 0.6 , CV = 0.8493987605509224
+Design params: n = 15 , alpha = 0.1 , beta = 0.14865057213685162 , Delta = 1.2 , d = 0.6 , CV = 0.6617903827547039
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../../_images/5a2b6cfc7a7ba89e9bcdfa02ebf3327d93b34a5fb089811a669c4b8ad980591f.png"><img alt="../../_images/5a2b6cfc7a7ba89e9bcdfa02ebf3327d93b34a5fb089811a669c4b8ad980591f.png" src="../../_images/5a2b6cfc7a7ba89e9bcdfa02ebf3327d93b34a5fb089811a669c4b8ad980591f.png" style="width: 574px; height: 190px;" />
+</a>
+</div>
+</div>
+<section id="cohen-s-d-standardized-effect-size">
+<h3>Cohen’s d standardized effect size<a class="headerlink" href="#cohen-s-d-standardized-effect-size" title="Link to this heading">#</a></h3>
+<p>The effect size <span class="math notranslate nohighlight">\(\Delta\)</span> we use in statistical design is usually expressed as a standardized effect size
+like Cohen’s <span class="math notranslate nohighlight">\(d\)</span>, which is defined as the observed “difference” divided by a standard deviation
+of the theoretical model under the null hypothesis.</p>
+<section id="one-sample-case">
+<h4>One-sample case<a class="headerlink" href="#one-sample-case" title="Link to this heading">#</a></h4>
+<p>For a one-sample test of the mean relative to a null model with mean <span class="math notranslate nohighlight">\(\mu_0\)</span>,
+Cohen’s <span class="math notranslate nohighlight">\(d\)</span> is calculated as:</p>
+<div class="math notranslate nohighlight">
+\[
+  d = \frac{\overline{\mathbf{x}} - \mu_0}{ s_{\mathbf{x}} },
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(s_{\mathbf{x}}\)</span> is the sample standard deviation.</p>
+<p>When doing statistical design,
+we haven’t obtained the sample <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> yet so we don’t know what its standard deviation <span class="math notranslate nohighlight">\(s_{\mathbf{x}}\)</span> will be,
+so we have to make an educated guess of this value,
+which usually means using the standard deviation of the theoretical model <span class="math notranslate nohighlight">\(\sigma_{X_0}\)</span>.</p>
+</section>
+<section id="two-sample-case">
+<h4>Two-sample case<a class="headerlink" href="#two-sample-case" title="Link to this heading">#</a></h4>
+<p>For a two-sample test for the difference between means, Cohen’s <span class="math notranslate nohighlight">\(d\)</span> is defined as the difference between sample means divided by the pooled standard deviation:</p>
+<div class="math notranslate nohighlight">
+\[
+  d = \frac{\overline{\mathbf{x}} - \overline{\mathbf{y}} }{ s_{p} }.
+\]</div>
+<p>where the formula for the pooled variance is
+<span class="math notranslate nohighlight">\(s_{p}^2 = [(n -1)s_{\mathbf{x}}^2 + (m -1)s_{\mathbf{y}}^2]/(n + m -2)\)</span>.</p>
+<p>When doing statistical design,
+we don’t know the standard deviations <span class="math notranslate nohighlight">\(s_{\mathbf{x}}\)</span> and <span class="math notranslate nohighlight">\(s_{\mathbf{y}}\)</span>
+so we replace them with the theoretical standard deviations <span class="math notranslate nohighlight">\(\sigma_{X_0}\)</span> and <span class="math notranslate nohighlight">\(\sigma_{Y_0}\)</span> under the null hypothesis.</p>
+<p>Recall <a class="reference external" href="https://en.wikipedia.org/wiki/Effect_size#Cohen's_d">table of reference values</a> for Cohen’s <span class="math notranslate nohighlight">\(d\)</span> standardized effect sizes, suggested by Cohen in (Cohen YYYY TODO).</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Cohen’s d</p></th>
+<th class="head"><p>Effect size</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0.01</p></td>
+<td><p>very small</p></td>
+</tr>
+<tr class="row-odd"><td><p>0.20</p></td>
+<td><p>small</p></td>
+</tr>
+<tr class="row-even"><td><p>0.50</p></td>
+<td><p>medium</p></td>
+</tr>
+<tr class="row-odd"><td><p>0.80</p></td>
+<td><p>large</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The formulas for sample size planning and power calculations
+we’ll present below are based on Cohen’s <span class="math notranslate nohighlight">\(d\)</span>.</p>
+<p>This means you’ll have to express your guess about the effect size <span class="math notranslate nohighlight">\(\Delta\)</span>
+as <span class="math notranslate nohighlight">\(d = \frac{\Delta}{\sigma_0}\)</span> where <span class="math notranslate nohighlight">\(\sigma_0\)</span> is your best about the standard deviation
+of the theoretical distribution.</p>
+<p>Note Cohen’s <span class="math notranslate nohighlight">\(d\)</span> is based on the standard deviations of the “raw” theoretical population,
+and not standard error.</p>
+</section>
+</section>
+</section>
+<section id="example-1-detect-kombuncha-volume-deviation-from-theory">
+<h2>Example 1: detect kombuncha volume deviation from theory<a class="headerlink" href="#example-1-detect-kombuncha-volume-deviation-from-theory" title="Link to this heading">#</a></h2>
+<p>Design Type A: choose <span class="math notranslate nohighlight">\(\alpha=0.05\)</span>, <span class="math notranslate nohighlight">\(\beta=0.2\)</span>, <span class="math notranslate nohighlight">\(\Delta_{\textrm{min}} = 4\;\text{ml}\)</span> then calculate required sample size <span class="math notranslate nohighlight">\(n\)</span>.
+We’ll assume <span class="math notranslate nohighlight">\(\sigma=10\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.05</span>
+<span class="n">beta</span> <span class="o">=</span> <span class="mf">0.2</span>
+<span class="n">Delta_min</span> <span class="o">=</span> <span class="mi">4</span>
+
+<span class="c1"># assumption</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="mi">10</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">norm</span>
+<span class="n">rvZ</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">z_u</span> <span class="o">=</span> <span class="n">rvZ</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">alpha</span><span class="p">)</span>
+<span class="n">z_l</span> <span class="o">=</span> <span class="n">rvZ</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="n">beta</span><span class="p">)</span>
+
+<span class="n">n_approx</span> <span class="o">=</span> <span class="p">(</span><span class="n">z_u</span> <span class="o">-</span> <span class="n">z_l</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">sigma</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">Delta_min</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">n_approx</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>38.64098270012354
+</pre></div>
+</div>
+</div>
+</div>
+<section id="using-statsmodels">
+<h3>Using <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code><a class="headerlink" href="#using-statsmodels" title="Link to this heading">#</a></h3>
+<p>To use the <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code> sample size estimation function,
+we’ll need to express the effect size <span class="math notranslate nohighlight">\(\Delta=4\)</span> in terms of Cohen’s <span class="math notranslate nohighlight">\(d\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="o">=</span> <span class="n">Delta_min</span> <span class="o">/</span> <span class="n">sigma</span>
+<span class="n">d</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.4
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.stats.power</span><span class="w"> </span><span class="kn">import</span> <span class="n">TTestPower</span>
+<span class="n">ttp</span> <span class="o">=</span> <span class="n">TTestPower</span><span class="p">()</span>
+<span class="n">n</span> <span class="o">=</span> <span class="n">ttp</span><span class="o">.</span><span class="n">solve_power</span><span class="p">(</span><span class="n">effect_size</span><span class="o">=</span><span class="n">d</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+                    <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;larger&quot;</span><span class="p">)</span>
+<span class="n">n</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>40.02907613995643
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">t</span> <span class="k">as</span> <span class="n">tdist</span>
+
+<span class="n">rvT0</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">CV_alpha</span> <span class="o">=</span> <span class="n">rvT0</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.95</span><span class="p">)</span>
+<span class="n">CV_alpha</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.6848445860460983
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="n">ns</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">101</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mf">2.4</span><span class="p">))</span>
+<span class="n">ttp</span><span class="o">.</span><span class="n">plot_power</span><span class="p">(</span><span class="n">dep_var</span><span class="o">=</span><span class="s2">&quot;nobs&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+               <span class="n">effect_size</span><span class="o">=</span><span class="n">ds</span><span class="p">,</span> <span class="n">nobs</span><span class="o">=</span><span class="n">ns</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+               <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;larger&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">105</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span> <span class="p">)</span>
+<span class="c1"># ax.set_title(&quot;Power of t-test vs. sample size for different effect sizes&quot;)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;sample size $n$&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;power&quot;</span><span class="p">)</span>
+<span class="c1"># set custom line styles</span>
+<span class="n">linestyles</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;dotted&quot;</span><span class="p">,</span> <span class="s2">&quot;dashed&quot;</span><span class="p">,</span> <span class="s2">&quot;solid&quot;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">line</span><span class="p">,</span> <span class="n">ls</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_lines</span><span class="p">(),</span> <span class="n">linestyles</span><span class="p">):</span>
+    <span class="n">line</span><span class="o">.</span><span class="n">set_linestyle</span><span class="p">(</span><span class="n">ls</span><span class="p">)</span>
+<span class="c1"># set custom legend</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;$d=</span><span class="si">{</span><span class="n">d</span><span class="si">}</span><span class="s2">$&quot;</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">]</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_lines</span><span class="p">(),</span> <span class="n">labels</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;lower right&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../../_images/a1d10240f856664590e2822271e17e755149a4f982d9c6510cf5d55db0200115.png"><img alt="../../_images/a1d10240f856664590e2822271e17e755149a4f982d9c6510cf5d55db0200115.png" src="../../_images/a1d10240f856664590e2822271e17e755149a4f982d9c6510cf5d55db0200115.png" style="width: 534px; height: 248px;" />
+</a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
+<span class="n">ns</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">])</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mf">2.4</span><span class="p">))</span>
+<span class="n">ttp</span><span class="o">.</span><span class="n">plot_power</span><span class="p">(</span><span class="n">dep_var</span><span class="o">=</span><span class="s2">&quot;effect size&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+               <span class="n">effect_size</span><span class="o">=</span><span class="n">ds</span><span class="p">,</span> <span class="n">nobs</span><span class="o">=</span><span class="n">ns</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+               <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;larger&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">+</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span> <span class="p">)</span>
+<span class="c1"># ax.set_title(&quot;Power of t-test vs. effect size for different sample sizes&quot;)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;effect size $d$&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;power&quot;</span><span class="p">)</span>
+
+<span class="c1"># set custom line styles</span>
+<span class="n">linestyles</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;dashdot&quot;</span><span class="p">,</span> <span class="s2">&quot;dotted&quot;</span><span class="p">,</span> <span class="s2">&quot;dashed&quot;</span><span class="p">,</span> <span class="s2">&quot;solid&quot;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">line</span><span class="p">,</span> <span class="n">ls</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_lines</span><span class="p">(),</span> <span class="n">linestyles</span><span class="p">):</span>
+    <span class="n">line</span><span class="o">.</span><span class="n">set_linestyle</span><span class="p">(</span><span class="n">ls</span><span class="p">)</span>
+<span class="c1"># set custom legend</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;$n=</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">$&quot;</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">ns</span><span class="p">]</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_lines</span><span class="p">(),</span> <span class="n">labels</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../../_images/edd21d669a326e5fd988f15eda815d66fa79c29161f6c56516676a53ce7af53b.png"><img alt="../../_images/edd21d669a326e5fd988f15eda815d66fa79c29161f6c56516676a53ce7af53b.png" src="../../_images/edd21d669a326e5fd988f15eda815d66fa79c29161f6c56516676a53ce7af53b.png" style="width: 534px; height: 246px;" />
+</a>
+</div>
+</div>
+</section>
+<section id="data-collection">
+<h3>Data collection<a class="headerlink" href="#data-collection" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kombuchapop</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;datasets/kombuchapop.csv&quot;</span><span class="p">)</span>
+<span class="n">batch55pop</span> <span class="o">=</span> <span class="n">kombuchapop</span><span class="p">[</span><span class="n">kombuchapop</span><span class="p">[</span><span class="s2">&quot;batch&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">55</span><span class="p">]</span>
+<span class="n">kpop55</span> <span class="o">=</span> <span class="n">batch55pop</span><span class="p">[</span><span class="s2">&quot;volume&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can select a random sample of size <span class="math notranslate nohighlight">\(n=41\)</span> from the populaiton <code class="docutils literal notranslate"><span class="pre">kpop55</span></code>
+by calling the <code class="docutils literal notranslate"><span class="pre">.sample</span></code> method.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">52</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">41</span>  <span class="c1"># rounding up</span>
+<span class="n">ksample55</span> <span class="o">=</span> <span class="n">kpop55</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="nb">len</span><span class="p">(</span><span class="n">ksample55</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>41
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Uncomment to see the observed sample</span>
+<span class="c1"># ksample55.values</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Observed sample mean</span>
+<span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">ksample55</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1002.300975609756
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Observed effect size from Batch 55</span>
+<span class="n">Delta_hat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">ksample55</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1000</span>
+<span class="n">Delta_hat</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.300975609756051
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="statistical-analysis-on-the-sample-from-batch-55">
+<h3>Statistical analysis on the sample from Batch 55<a class="headerlink" href="#statistical-analysis-on-the-sample-from-batch-55" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">CV_alpha</span>  <span class="c1"># = tdist(df=n-1).ppf(0.95)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.6848445860460983
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kbar55</span> <span class="o">=</span> <span class="n">ksample55</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">sehat55</span> <span class="o">=</span>  <span class="n">ksample55</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+<span class="n">t55</span> <span class="o">=</span> <span class="p">(</span><span class="n">kbar55</span> <span class="o">-</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">/</span> <span class="n">sehat55</span>
+<span class="n">t55</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.643970432409751
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can now apply the simplified decision rule
+that compares the test statistic <code class="docutils literal notranslate"><span class="pre">t55</span></code>
+to the cutoff value <code class="docutils literal notranslate"><span class="pre">CV_alpha</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">t55</span> <span class="o">&gt;=</span> <span class="n">CV_alpha</span><span class="p">:</span>
+    <span class="n">decision</span> <span class="o">=</span> <span class="s2">&quot;Reject H0&quot;</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">decision</span> <span class="o">=</span> <span class="s2">&quot;Fail to reject H0&quot;</span>
+<span class="n">decision</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;Fail to reject H0&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>Alternatively,
+we can make the decision whether to reject <span class="math notranslate nohighlight">\(H_0\)</span> or not
+using the “old” decision rule that compares the
+<span class="math notranslate nohighlight">\(p\)</span>-value to the cutoff <span class="math notranslate nohighlight">\(\alpha=0.05\)</span>.
+We can compute the p-value from <code class="docutils literal notranslate"><span class="pre">ttest_mean</span></code> function we defined
+in Section 3.4, see <a class="reference internal" href="34_analytical_approx.html"><span class="std std-doc">34_analytical_approx.ipynb</span></a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ministats</span><span class="w"> </span><span class="kn">import</span> <span class="n">ttest_mean</span>
+<span class="n">pvalue55</span> <span class="o">=</span> <span class="n">ttest_mean</span><span class="p">(</span><span class="n">ksample55</span><span class="p">,</span> <span class="n">mu0</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">pvalue55</span> <span class="o">&lt;=</span> <span class="mf">0.05</span><span class="p">:</span>
+    <span class="n">decision</span> <span class="o">=</span> <span class="s2">&quot;Reject H0&quot;</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">decision</span> <span class="o">=</span> <span class="s2">&quot;Fail to reject H0&quot;</span>
+<span class="n">decision</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;Fail to reject H0&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># # ALT2. Use the p-value form a direct simulation test</span>
+<span class="c1"># from ministats import simulation_test_mean</span>
+<span class="c1"># simulation_test_mean(ksample55, mu0=1000, sigma0=10)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="example-2-comparison-of-east-vs-west-electricity-prices">
+<h2>Example 2: comparison of East vs. West electricity prices<a class="headerlink" href="#example-2-comparison-of-east-vs-west-electricity-prices" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">eprices</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;datasets/eprices.csv&quot;</span><span class="p">)</span>
+<span class="n">eprices</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;loc&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead tr th {
+        text-align: left;
+    }
+
+    .dataframe thead tr:last-of-type th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th colspan="8" halign="left">price</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th>count</th>
+      <th>mean</th>
+      <th>std</th>
+      <th>min</th>
+      <th>25%</th>
+      <th>50%</th>
+      <th>75%</th>
+      <th>max</th>
+    </tr>
+    <tr>
+      <th>loc</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>East</th>
+      <td>9.0</td>
+      <td>6.155556</td>
+      <td>0.877655</td>
+      <td>4.8</td>
+      <td>5.5</td>
+      <td>6.3</td>
+      <td>6.5</td>
+      <td>7.7</td>
+    </tr>
+    <tr>
+      <th>West</th>
+      <td>9.0</td>
+      <td>9.155556</td>
+      <td>1.562139</td>
+      <td>6.8</td>
+      <td>8.3</td>
+      <td>8.6</td>
+      <td>10.0</td>
+      <td>11.8</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Need a guess the effect size,
+which we’ll express in terms of Cohen’s <span class="math notranslate nohighlight">\(d\)</span>.
+We choose <span class="math notranslate nohighlight">\(d=1\)</span>,
+which corresponds to a difference of one cent <span class="math notranslate nohighlight">\(\Delta_{\text{min}} = 1\)</span>,
+assuming the standard deviation of the prices is around <span class="math notranslate nohighlight">\(\sigma=1\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cohend2_min</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="solving-for-a-desired-power">
+<h3>Solving for a desired power<a class="headerlink" href="#solving-for-a-desired-power" title="Link to this heading">#</a></h3>
+<p>The function <code class="docutils literal notranslate"><span class="pre">solve_power</span></code> takes as argument the chosen level of <code class="docutils literal notranslate"><span class="pre">power</span></code>,
+and two of the three other design parameters <code class="docutils literal notranslate"><span class="pre">alpha</span></code>, <code class="docutils literal notranslate"><span class="pre">nobs1</span></code>, and <code class="docutils literal notranslate"><span class="pre">effect_size</span></code>,
+and calculates the value of the third parameter required to achieve the chosen level of <code class="docutils literal notranslate"><span class="pre">power</span></code> <span class="math notranslate nohighlight">\(=(1-\beta)\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.stats.power</span><span class="w"> </span><span class="kn">import</span> <span class="n">TTestIndPower</span>
+<span class="n">ttindp</span> <span class="o">=</span> <span class="n">TTestIndPower</span><span class="p">()</span>
+
+<span class="c1"># power of two-sample t-test assuming cohend2_min and n=m=9 </span>
+<span class="n">ttindp</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">effect_size</span><span class="o">=</span><span class="n">cohend2_min</span><span class="p">,</span> <span class="n">nobs1</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> 
+             <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;two-sided&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.5133625331068465
+</pre></div>
+</div>
+</div>
+</div>
+<p>The Type II error rate <span class="math notranslate nohighlight">\(\beta\)</span> of this test is</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="o">-</span> <span class="mf">0.5133625331068463</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.4866374668931537
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">])</span>
+<span class="n">ns</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">71</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mf">2.4</span><span class="p">))</span>
+<span class="n">ttindp</span><span class="o">.</span><span class="n">plot_power</span><span class="p">(</span><span class="n">dep_var</span><span class="o">=</span><span class="s2">&quot;nobs&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+                  <span class="n">effect_size</span><span class="o">=</span><span class="n">ds</span><span class="p">,</span> <span class="n">nobs</span><span class="o">=</span><span class="n">ns</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+                  <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;two-sided&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">75</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span> <span class="p">)</span>
+<span class="c1"># ax.set_title(&quot;Power of two-sample t-test vs. sample size $n=m$ for different effect sizes&quot;)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;sample sizes $n=m$&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span><span class="mf">0.3</span><span class="p">,</span><span class="mf">0.4</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.6</span><span class="p">,</span><span class="mf">0.7</span><span class="p">,</span><span class="mf">0.8</span><span class="p">,</span><span class="mf">0.9</span><span class="p">,</span><span class="mf">1.0</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;power&quot;</span><span class="p">)</span>
+
+<span class="c1"># set custom line styles</span>
+<span class="n">linestyles</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;dashdot&quot;</span><span class="p">,</span> <span class="s2">&quot;dotted&quot;</span><span class="p">,</span> <span class="s2">&quot;dashed&quot;</span><span class="p">,</span> <span class="s2">&quot;solid&quot;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">line</span><span class="p">,</span> <span class="n">ls</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_lines</span><span class="p">(),</span> <span class="n">linestyles</span><span class="p">):</span>
+    <span class="n">line</span><span class="o">.</span><span class="n">set_linestyle</span><span class="p">(</span><span class="n">ls</span><span class="p">)</span>
+<span class="c1"># set custom legend</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;$d=</span><span class="si">{</span><span class="n">d</span><span class="si">}</span><span class="s2">$&quot;</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">]</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_lines</span><span class="p">(),</span> <span class="n">labels</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../../_images/c3d613543bf120347dc8860a269813b342b8c02a5a0dc125fc4fd59784441ae0.png"><img alt="../../_images/c3d613543bf120347dc8860a269813b342b8c02a5a0dc125fc4fd59784441ae0.png" src="../../_images/c3d613543bf120347dc8860a269813b342b8c02a5a0dc125fc4fd59784441ae0.png" style="width: 534px; height: 248px;" />
+</a>
+</div>
+</div>
+<p>If Bob wants to achieve 80% power for future price comparison tests,
+he needs to collect samples of size <span class="math notranslate nohighlight">\(n=1\)</span> or larger.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ttindp</span><span class="o">.</span><span class="n">solve_power</span><span class="p">(</span><span class="n">effect_size</span><span class="o">=</span><span class="n">cohend2_min</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+                   <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;two-sided&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>16.71472244695402
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="calculate-minimum-effect-size">
+<h3>Calculate minimum effect size<a class="headerlink" href="#calculate-minimum-effect-size" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># minimum effect size to achieve 80% power when n=m=9</span>
+<span class="n">ttindp</span><span class="o">.</span><span class="n">solve_power</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">nobs1</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span>
+                   <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;two-sided&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.406924652680254
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="optional-calculate-sample-size-needed-to-achieve-0-8-power">
+<h3>(optional) Calculate sample size needed to achieve 0.8 power<a class="headerlink" href="#optional-calculate-sample-size-needed-to-achieve-0-8-power" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># minimum sample size required to achieve 80% power when effect size is d=1</span>
+<span class="n">ttindp</span><span class="o">.</span><span class="n">solve_power</span><span class="p">(</span><span class="n">effect_size</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+                   <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;two-sided&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>16.71472244695402
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="alternative-calculation-methods">
+<h2>Alternative calculation methods<a class="headerlink" href="#alternative-calculation-methods" title="Link to this heading">#</a></h2>
+<section id="using-g-power">
+<h3>Using G*Power<a class="headerlink" href="#using-g-power" title="Link to this heading">#</a></h3>
+<p>TODO: add sceenshots</p>
+</section>
+<section id="using-pingouin">
+<h3>Using <code class="docutils literal notranslate"><span class="pre">pingouin</span></code><a class="headerlink" href="#using-pingouin" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pingouin</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pg</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="sample-size-for-the-one-sample-t-test">
+<h4>Sample size for the one-sample <span class="math notranslate nohighlight">\(t\)</span>-test<a class="headerlink" href="#sample-size-for-the-one-sample-t-test" title="Link to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pg</span><span class="o">.</span><span class="n">power_ttest</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span>
+               <span class="n">contrast</span><span class="o">=</span><span class="s2">&quot;one-sample&quot;</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;greater&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>40.029076225855356
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can also verify that <span class="math notranslate nohighlight">\(n=41\)</span> produces a test with <span class="math notranslate nohighlight">\(80\%\)</span> power.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pg</span><span class="o">.</span><span class="n">power_ttest</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">41</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span>
+               <span class="n">contrast</span><span class="o">=</span><span class="s2">&quot;one-sample&quot;</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;greater&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.8085822361693652
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="power-of-bob-s-two-sample-t-test">
+<h4>Power of Bob’s two-sample <span class="math notranslate nohighlight">\(t\)</span>-test<a class="headerlink" href="#power-of-bob-s-two-sample-t-test" title="Link to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># power of two-sample t-test assuming d=1 and n=m=9 </span>
+<span class="n">pg</span><span class="o">.</span><span class="n">power_ttest</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+               <span class="n">contrast</span><span class="o">=</span><span class="s2">&quot;two-samples&quot;</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;two-sided&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.5133625331068465
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="explanations">
+<h2>Explanations<a class="headerlink" href="#explanations" title="Link to this heading">#</a></h2>
+<section id="one-sided-and-two-sided-rejection-regions">
+<h3>One-sided and two-sided rejection regions<a class="headerlink" href="#one-sided-and-two-sided-rejection-regions" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">t</span> <span class="k">as</span> <span class="n">tdist</span>
+<span class="n">rvT0</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+
+<span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.05</span>
+
+<span class="c1"># right-tailed rejection region</span>
+<span class="n">rvT0</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-1.8331129326536337
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># left-tailed rejection region</span>
+<span class="n">rvT0</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">alpha</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.8331129326536335
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># two-sided rejection region</span>
+<span class="n">rvT0</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="n">alpha</span><span class="o">/</span><span class="mi">2</span><span class="p">),</span> <span class="n">rvT0</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(-2.2621571628540997, 2.2621571628540993)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ministats.book.figures</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_panel_rejection_regions</span>
+
+<span class="n">plot_panel_rejection_regions</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../../_images/4aacaf7f5f891535fee20300f8bc3c05b49d083e14f1e630846cf014931bc1b7.png"><img alt="../../_images/4aacaf7f5f891535fee20300f8bc3c05b49d083e14f1e630846cf014931bc1b7.png" src="../../_images/4aacaf7f5f891535fee20300f8bc3c05b49d083e14f1e630846cf014931bc1b7.png" style="width: 707px; height: 147px;" />
+</a>
+</div>
+</div>
+</section>
+<section id="derivation-of-the-sample-size-planning-formula">
+<h3>Derivation of the sample size planning formula<a class="headerlink" href="#derivation-of-the-sample-size-planning-formula" title="Link to this heading">#</a></h3>
+<p>MAYBE show math steps</p>
+</section>
+</section>
+<section id="discussion">
+<h2>Discussion<a class="headerlink" href="#discussion" title="Link to this heading">#</a></h2>
+<section id="a-conceptual-amalgam-of-two-ideas">
+<h3>A conceptual amalgam of two ideas<a class="headerlink" href="#a-conceptual-amalgam-of-two-ideas" title="Link to this heading">#</a></h3>
+<section id="steps-of-the-neymanpearson-hypothesis-test">
+<h4>Steps of the Neyman—Pearson hypothesis test<a class="headerlink" href="#steps-of-the-neymanpearson-hypothesis-test" title="Link to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p>Calculate the cutoff value <span class="math notranslate nohighlight">\(\text{CV}_{\alpha}\)</span>.</p></li>
+<li><p>Calculate the test statistic <span class="math notranslate nohighlight">\(t_{55}\)</span> from the sample <span class="math notranslate nohighlight">\(\mathbf{k}_{55}\)</span>.</p></li>
+<li><p>Apply the simplified decision rule that compares the test statistic to the cutoff value.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. Calculate the critical value</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">t</span> <span class="k">as</span> <span class="n">tdist</span>
+<span class="n">rvT0</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">CV_alpha</span> <span class="o">=</span> <span class="n">rvT0</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.95</span><span class="p">)</span>
+<span class="n">CV_alpha</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.6838510133356523
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 2. Calculate the test statistic</span>
+<span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ksample55</span><span class="p">)</span>
+<span class="n">kbar55</span> <span class="o">=</span> <span class="n">ksample55</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">sehat55</span> <span class="o">=</span>  <span class="n">ksample55</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="n">t55</span> <span class="o">=</span> <span class="p">(</span><span class="n">kbar55</span> <span class="o">-</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">/</span> <span class="n">sehat55</span>
+<span class="n">t55</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.643970432409751
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 3. Compare the test-statistic to the critical value</span>
+<span class="k">if</span> <span class="n">t55</span> <span class="o">&gt;=</span> <span class="n">CV_alpha</span><span class="p">:</span>
+    <span class="n">decision</span> <span class="o">=</span> <span class="s2">&quot;Reject H0&quot;</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">decision</span> <span class="o">=</span> <span class="s2">&quot;Fail to reject H0&quot;</span>
+<span class="n">decision</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;Fail to reject H0&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="steps-of-the-fisherian-hypothesis-test">
+<h4>Steps of the Fisherian hypothesis test<a class="headerlink" href="#steps-of-the-fisherian-hypothesis-test" title="Link to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p>Calculate the test statistic <span class="math notranslate nohighlight">\(t_{55}\)</span>.</p></li>
+<li><p>Calculate the <span class="math notranslate nohighlight">\(p\)</span>-value of the statistic from the sampling distribution under <span class="math notranslate nohighlight">\(H_0\)</span>.</p></li>
+<li><p>Make a decision whether to reject <span class="math notranslate nohighlight">\(H_0\)</span> by comparing the <span class="math notranslate nohighlight">\(p\)</span>-value to the cutoff <span class="math notranslate nohighlight">\(\alpha=0.05\)</span>.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. Calculate the test statistic</span>
+<span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ksample55</span><span class="p">)</span>
+<span class="n">kbar55</span> <span class="o">=</span> <span class="n">ksample55</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">sehat55</span> <span class="o">=</span>  <span class="n">ksample55</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="n">t55</span> <span class="o">=</span> <span class="p">(</span><span class="n">kbar55</span> <span class="o">-</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">/</span> <span class="n">sehat55</span>
+<span class="n">t55</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.643970432409751
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 2. Calculate the $p$-value</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">t</span> <span class="k">as</span> <span class="n">tdist</span>
+<span class="n">rvT0</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">pvalue55</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">rvT0</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">t55</span><span class="p">)</span>   <span class="c1"># right-tailed p-value</span>
+<span class="n">pvalue55</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.054010269315395765
+</pre></div>
+</div>
+</div>
+</div>
+<p>By the way,
+we can also obtain the <span class="math notranslate nohighlight">\(p\)</span>-value
+by calling the helper function <code class="docutils literal notranslate"><span class="pre">ttest_mean</span></code>
+that we defined in Section 3.4, see <a class="reference internal" href="34_analytical_approx.html"><span class="std std-doc">34_analytical_approx.ipynb</span></a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ministats</span><span class="w"> </span><span class="kn">import</span> <span class="n">ttest_mean</span>
+<span class="n">ttest_mean</span><span class="p">(</span><span class="n">ksample55</span><span class="p">,</span> <span class="n">mu0</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;greater&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.054010269315395765
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 3. Compare the p-value to the cutoff alpha</span>
+<span class="k">if</span> <span class="n">pvalue55</span> <span class="o">&lt;=</span> <span class="mf">0.05</span><span class="p">:</span>
+    <span class="n">decision</span> <span class="o">=</span> <span class="s2">&quot;Reject H0&quot;</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">decision</span> <span class="o">=</span> <span class="s2">&quot;Fail to reject H0&quot;</span>
+<span class="n">decision</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;Fail to reject H0&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>We see the results of the Neyman–Pearson and Fisherian decision rules are the same.
+Indeed,
+we’ll always come to the same decision,
+whether we use criterion <span class="math notranslate nohighlight">\(p &lt; \alpha\)</span> in the space of <span class="math notranslate nohighlight">\(p\)</span>-values,
+or the <span class="math notranslate nohighlight">\(t_{55} \geq \text{CV}_{\alpha}\)</span> in the space of <span class="math notranslate nohighlight">\(t\)</span>-values.</p>
+</section>
+</section>
+<section id="post-hoc-power-analysis">
+<h3>Post-hoc power analysis<a class="headerlink" href="#post-hoc-power-analysis" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Observed effect size from Batch 55</span>
+<span class="n">Delta_hat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">ksample55</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1000</span>
+<span class="n">Delta_hat</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.300975609756051
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Observed effect size as Cohen&#39;s d</span>
+<span class="n">d_hat</span> <span class="o">=</span> <span class="n">Delta_hat</span> <span class="o">/</span> <span class="mi">10</span>
+<span class="n">d_hat</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.23009756097560513
+</pre></div>
+</div>
+</div>
+</div>
+<p>The <em>post-hoc power</em> for the test we performed in Example~1 is:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.stats.power</span><span class="w"> </span><span class="kn">import</span> <span class="n">TTestPower</span>
+<span class="n">ttp</span> <span class="o">=</span> <span class="n">TTestPower</span><span class="p">()</span>
+<span class="n">ttp</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">nobs</span><span class="o">=</span><span class="mi">41</span><span class="p">,</span> <span class="n">effect_size</span><span class="o">=</span><span class="n">d_hat</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;larger&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.4221204906778596
+</pre></div>
+</div>
+</div>
+</div>
+<p>It’s not clear what this power means…</p>
+</section>
+<section id="unique-value-proposition-of-hypothesis-testing">
+<h3>Unique value proposition of hypothesis testing<a class="headerlink" href="#unique-value-proposition-of-hypothesis-testing" title="Link to this heading">#</a></h3>
+</section>
+</section>
+<section id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Link to this heading">#</a></h2>
+<section id="exercise-exercise-sensitivity-of-one-sample-t-test-n-10">
+<h3>Exercise {exercise:sensitivity-of-one-sample-t-test-n-10}<a class="headerlink" href="#exercise-exercise-sensitivity-of-one-sample-t-test-n-10" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.stats.power</span><span class="w"> </span><span class="kn">import</span> <span class="n">TTestPower</span>
+<span class="n">ttp</span> <span class="o">=</span> <span class="n">TTestPower</span><span class="p">()</span>
+<span class="n">ttp</span><span class="o">.</span><span class="n">solve_power</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">nobs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;larger&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.8528391375721194
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="exercise-exercise-power-of-two-sample-t-test-n-17">
+<h3>Exercise {exercise:power-of-two-sample-t-test-n-17}<a class="headerlink" href="#exercise-exercise-power-of-two-sample-t-test-n-17" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.stats.power</span><span class="w"> </span><span class="kn">import</span> <span class="n">TTestIndPower</span>
+<span class="n">ttindp</span> <span class="o">=</span> <span class="n">TTestIndPower</span><span class="p">()</span>
+<span class="n">ttindp</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">nobs1</span><span class="o">=</span><span class="mi">17</span><span class="p">,</span> <span class="n">effect_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;two-sided&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.80703671514722
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="links">
+<h2>Links<a class="headerlink" href="#links" title="Link to this heading">#</a></h2>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "minireference/noBSstats",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./docs/notebooks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebook-setup">Notebook setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definitions">Definitions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hypothesis-decision-rules">Hypothesis decision rules</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#decision-rule-based-on-p-values">Decision rule based on <span class="math notranslate nohighlight">\(p\)</span>-values</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simplified-decision-rule">Simplified decision rule</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#statistical-design">Statistical design</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cohen-s-d-standardized-effect-size">Cohen’s d standardized effect size</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#one-sample-case">One-sample case</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#two-sample-case">Two-sample case</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1-detect-kombuncha-volume-deviation-from-theory">Example 1: detect kombuncha volume deviation from theory</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-statsmodels">Using <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-collection">Data collection</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#statistical-analysis-on-the-sample-from-batch-55">Statistical analysis on the sample from Batch 55</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2-comparison-of-east-vs-west-electricity-prices">Example 2: comparison of East vs. West electricity prices</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#solving-for-a-desired-power">Solving for a desired power</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#calculate-minimum-effect-size">Calculate minimum effect size</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-calculate-sample-size-needed-to-achieve-0-8-power">(optional) Calculate sample size needed to achieve 0.8 power</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#alternative-calculation-methods">Alternative calculation methods</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-g-power">Using G*Power</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-pingouin">Using <code class="docutils literal notranslate"><span class="pre">pingouin</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#sample-size-for-the-one-sample-t-test">Sample size for the one-sample <span class="math notranslate nohighlight">\(t\)</span>-test</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#power-of-bob-s-two-sample-t-test">Power of Bob’s two-sample <span class="math notranslate nohighlight">\(t\)</span>-test</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explanations">Explanations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-sided-and-two-sided-rejection-regions">One-sided and two-sided rejection regions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#derivation-of-the-sample-size-planning-formula">Derivation of the sample size planning formula</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-conceptual-amalgam-of-two-ideas">A conceptual amalgam of two ideas</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#steps-of-the-neymanpearson-hypothesis-test">Steps of the Neyman—Pearson hypothesis test</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#steps-of-the-fisherian-hypothesis-test">Steps of the Fisherian hypothesis test</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#post-hoc-power-analysis">Post-hoc power analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unique-value-proposition-of-hypothesis-testing">Unique value proposition of hypothesis testing</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-exercise-sensitivity-of-one-sample-t-test-n-10">Exercise {exercise:sensitivity-of-one-sample-t-test-n-10}</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-exercise-power-of-two-sample-t-test-n-17">Exercise {exercise:power-of-two-sample-t-test-n-17}</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#links">Links</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Ivan Savov
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

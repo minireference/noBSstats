@@ -1,0 +1,1346 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Two-sample equivalence test &#8212; No Bullshit Guide to Statistics</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=1ae7504c"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'examples/two_sample_equivalence_test';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Chapter 4 — Linear models" href="../notebooks/40_LINEAR_MODELS.html" />
+    <link rel="prev" title="Analysis of variance (ANOVA)" href="ANOVA.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="No Bullshit Guide to Statistics - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="No Bullshit Guide to Statistics - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    No Bullshit Guide to Statistics
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../notebooks/10_DATA.html">Chapter 1 — Data</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/11_intro_to_data.html">Section 1.1 — Introduction to data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/12_data_in_practice.html">Section 1.2 — Data in practice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/13_descriptive_statistics.html">Section 1.3 — Descriptive statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../exercises/exercises_13_descr_stats.html">Descriptive statistics exercises</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../notebooks/20_PROB.html">Chapter 2 — Probability theory</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/21_discrete_random_vars.html">Section 2.1 — Discrete random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/22_multiple_random_vars.html">Section 2.2 — Multiple random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/23_inventory_discrete_dists.html">Section 2.3 — Inventory of discrete distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/24_continuous_random_vars.html">Section 2.4 — Continuous random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/25_multiple_continuous_random_vars.html">Section 2.5 — Multiple continuous random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/26_inventory_continuous_dists.html">Section 2.6 — Inventory of continuous distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/27_simulations.html">Section 2.7 — Simulation and empirical distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/28_random_samples.html">Section 2.8 — Probability models for random samples</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../notebooks/30_STATS.html">Chapter 3 — Classical statistics</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/31_estimators.html">Section 3.1 — Estimators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../exercises/exercises_31_estimtors.html">Exercises for Section 3.1 Estimates and estimators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/32_confidence_intervals.html">Section 3.2 — Confidence intervals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../exercises/exercises_32_confidence_intervals.html">Exercises for Section 3.2 Confidence intervals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/33_intro_to_NHST.html">Section 3.3 — Introduction to hypothesis testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/34_analytical_approx.html">Section 3.4 — Hypothesis testing using analytical approximations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/35_two_sample_tests.html">Section 3.5 — Two-sample hypothesis tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/36_design.html">Section 3.6 — Statistical design and error analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/37_inventory_stats_tests.html">Section 3.7 — Inventory of statistical tests</a></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="README.html">Statistical analysis examples</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="statistical_design.html">Statistical design examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="one_sample_z-test.html">One-sample z-test for the mean</a></li>
+<li class="toctree-l3"><a class="reference internal" href="one_sample_t-test.html">One-sample t-test for the mean</a></li>
+<li class="toctree-l3"><a class="reference internal" href="two_sample_t-test.html">Welch’s two-sample <span class="math notranslate nohighlight">\(t\)</span>-test</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ANOVA.html">Analysis of variance (ANOVA)</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">Two-sample equivalence test</a></li>
+
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../notebooks/40_LINEAR_MODELS.html">Chapter 4 — Linear models</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/41_simple_linear_regression.html">Section 4.1 — Simple linear regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/42_multiple_linear_regression.html">Section 4.2 — Multiple linear regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/43_interpreting_linear_models.html">Section 4.3 — Interpreting linear models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/44_regression_with_categorical_predictors.html">Section 4.4 — Regression with categorical predictors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/45_causal_inference.html">Section 4.5 — Model selection for causal inference</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/46_generalized_linear_models.html">Section 4.6 — Generalized linear models</a></li>
+
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../notebooks/50_BAYESIAN_STATS.html">Chapter 5 — Bayesian statistics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/51_intro_to_Bayesian_stats.html">Section 5.1 — Introduction to Bayesian statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/52_Bayesian_inference_computations.html">Section 5.2 — Bayesian inference computations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/53_Bayesian_linear_models.html">Section 5.3 — Bayesian linear models</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/54_difference_between_means.html">Section 5.4 — Bayesian difference between means</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/55_hierarchical_models.html">Section 5.5 — Hierarchical models</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials/appendix.html">Appendix</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/python_tutorial.html">Appendix C — Python tutorial</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/pandas_tutorial.html">Appendix D — Pandas tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/seaborn_tutorial.html">Appendix E — Seaborn tutorial</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/calculus_tutorial.html">Appendix F — Calculus tutorial</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../reading_group/info.html">noBSstats Reading Group</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../blogposts/index.html">Blog posts</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../blogposts/python_for_stats.html">Using Python for learning statistics Part 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../blogposts/probability_models.html">Using Python for probability calculations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../blogposts/sampling_distributions.html">Sampling distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../blogposts/bootstrap.html">Bootstrap estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../blogposts/simulation_hypothesis_tests.html">Hypothesis testing using simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../blogposts/permutation_test.html">Permutation tests for comparing two groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../blogposts/stats_procedures.html">Python libraries for doing statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../blogposts/python_stats_libraries.html">Python libraries for doing statistics</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/minireference/noBSstats/main?urlpath=lab/tree/./examples/two_sample_equivalence_test.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Binder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Binder logo" src="../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/minireference/noBSstats" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/minireference/noBSstats/issues/new?title=Issue%20on%20page%20%2Fexamples/two_sample_equivalence_test.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/examples/two_sample_equivalence_test.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Two-sample equivalence test</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Two-sample equivalence test</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data">Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modeling-assumptions">Modeling assumptions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hypotheses">Hypotheses</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#statistical-design">Statistical design</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estimates">Estimates</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#formulas">Formulas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#test-statistic">Test statistic</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sampling-distribution">Sampling distribution</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#p-value-calculation">P-value calculation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples">Examples</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-a-populations-are-different">Example A: populations are different</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-b-sample-from-a-population-as-expected-under-h-0">Example B: sample from a population as expected under <span class="math notranslate nohighlight">\(H_0\)</span></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#confidence-interval-for-the-effect-size">Confidence interval for the effect size</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#related">Related</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#links">Links</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comprare-with-r">Comprare with R</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#simulation-to-check-tost-sensitivity">Simulation to check TOST sensitivity</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tost-sensitivity-results">TOST sensitivity results</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="two-sample-equivalence-test">
+<h1>Two-sample equivalence test<a class="headerlink" href="#two-sample-equivalence-test" title="Link to this heading">#</a></h1>
+<p>To perform two-sample equivalence test,
+we’ll use the same procedure as Welch’s two-sample <span class="math notranslate nohighlight">\(t\)</span>-test,
+but this time prove that two unknown population <span class="math notranslate nohighlight">\(X \sim \mathcal{N}(\mu_X, \sigma_X)\)</span> and <span class="math notranslate nohighlight">\(Y \sim \mathcal{N}(\mu_Y, \sigma_Y)\)</span>
+are not different.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="o">%</span><span class="k">config</span> InlineBackend.figure_format = &#39;retina&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p><span class="math notranslate nohighlight">\(\def\stderr#1{\mathbf{se}_{#1}}\)</span>
+<span class="math notranslate nohighlight">\(\def\stderrhat#1{\hat{\mathbf{se}}_{#1}}\)</span>
+<span class="math notranslate nohighlight">\(\newcommand{\Mean}{\textbf{Mean}}\)</span>
+<span class="math notranslate nohighlight">\(\newcommand{\Var}{\textbf{Var}}\)</span>
+<span class="math notranslate nohighlight">\(\newcommand{\Std}{\textbf{Std}}\)</span>
+<span class="math notranslate nohighlight">\(\newcommand{\Freq}{\textbf{Freq}}\)</span>
+<span class="math notranslate nohighlight">\(\newcommand{\RelFreq}{\textbf{RelFreq}}\)</span>
+<span class="math notranslate nohighlight">\(\newcommand{\DMeans}{\textbf{DMeans}}\)</span>
+<span class="math notranslate nohighlight">\(\newcommand{\Prop}{\textbf{Prop}}\)</span>
+<span class="math notranslate nohighlight">\(\newcommand{\DProps}{\textbf{DProps}}\)</span></p>
+<section id="data">
+<h2>Data<a class="headerlink" href="#data" title="Link to this heading">#</a></h2>
+<p>Two samples of numerical observations <span class="math notranslate nohighlight">\(\mathbf{x}=[x_1, x_2, \ldots, x_n]\)</span>
+and <span class="math notranslate nohighlight">\(\mathbf{y}=[y_1, y_2,\ldots, y_m]\)</span> from independent populations.</p>
+</section>
+<section id="modeling-assumptions">
+<h2>Modeling assumptions<a class="headerlink" href="#modeling-assumptions" title="Link to this heading">#</a></h2>
+<p>We assume the unknown populations are normally distributed <span class="math notranslate nohighlight">\(\textbf{(NORM)}\)</span>,
+or the sample is large enough <span class="math notranslate nohighlight">\(\textbf{(LARGEn)}\)</span>.</p>
+</section>
+<section id="hypotheses">
+<h2>Hypotheses<a class="headerlink" href="#hypotheses" title="Link to this heading">#</a></h2>
+<p><span class="math notranslate nohighlight">\(H_0: |\mu_X - \mu_Y| \geq \Delta_{\text{min}}\)</span>
+versus <span class="math notranslate nohighlight">\(H_A: |\mu_X - \mu_Y| &lt; \Delta_{\text{min}}\)</span>.</p>
+<p><img alt="equiv_test_hypotheses.png" src="../_images/equiv_test_hypotheses.png" /></p>
+</section>
+<section id="statistical-design">
+<h2>Statistical design<a class="headerlink" href="#statistical-design" title="Link to this heading">#</a></h2>
+<p>for <span class="math notranslate nohighlight">\(n=5\)</span> …</p>
+<p>for <span class="math notranslate nohighlight">\(n=20\)</span> …</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sesoi</span> <span class="o">=</span> <span class="mi">4</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="estimates">
+<h2>Estimates<a class="headerlink" href="#estimates" title="Link to this heading">#</a></h2>
+<p>Compute the sample means
+<span class="math notranslate nohighlight">\(\overline{\mathbf{x}} = \Mean(\mathbf{x})\)</span>,
+<span class="math notranslate nohighlight">\(\overline{\mathbf{y}} = \Mean(\mathbf{y})\)</span>,
+and the difference between means
+<span class="math notranslate nohighlight">\(\hat{d} = \DMeans(\mathbf{x}, \mathbf{y}) = \overline{\mathbf{x}} - \overline{\mathbf{y}}\)</span>.</p>
+</section>
+<section id="formulas">
+<h2>Formulas<a class="headerlink" href="#formulas" title="Link to this heading">#</a></h2>
+<p>The estimated standard error of the difference between means estimator is</p>
+<div class="math notranslate nohighlight">
+\[
+  \stderrhat{\hat{d}}
+        \; = \; \sqrt{  \stderrhat{\overline{\mathbf{x}}}^2 + \stderrhat{\overline{\mathbf{y}}}^2 }
+        = \sqrt{ \tfrac{s_{\mathbf{x}}^2}{n} + \tfrac{s_{\mathbf{y}}^2}{m} },
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(s_{\mathbf{x}}\)</span> and <span class="math notranslate nohighlight">\(s_{\mathbf{y}}\)</span> are the sample standard deviations.</p>
+</section>
+<section id="test-statistic">
+<h2>Test statistic<a class="headerlink" href="#test-statistic" title="Link to this heading">#</a></h2>
+<p>Compute the <span class="math notranslate nohighlight">\(t\)</span>-statistic <span class="math notranslate nohighlight">\(t = \frac{\hat{d} - 0}{ \stderrhat{\hat{d}} }\)</span>.</p>
+</section>
+<section id="sampling-distribution">
+<h2>Sampling distribution<a class="headerlink" href="#sampling-distribution" title="Link to this heading">#</a></h2>
+<p>Student’s <span class="math notranslate nohighlight">\(t\)</span>-distribution with <span class="math notranslate nohighlight">\(\nu_d\)</span> degrees of freedom,
+where the degrees of freedom parameter is computed using
+the helper function <code class="docutils literal notranslate"><span class="pre">calcdf</span></code>:
+<span class="math notranslate nohighlight">\(\nu_d = \tt{calcdf}(s_{\mathbf{x}}, n, s_{\mathbf{y}}, m)\)</span>,
+which implements the Welch–Satterthwaite formula.</p>
+</section>
+<section id="p-value-calculation">
+<h2>P-value calculation<a class="headerlink" href="#p-value-calculation" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># from ministats import tost_dmeans</span>
+
+<span class="c1"># %psource tost_dmeans</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>To perform the two-sample <span class="math notranslate nohighlight">\(t\)</span>-test on the samples <code class="docutils literal notranslate"><span class="pre">xs</span></code> and <code class="docutils literal notranslate"><span class="pre">ys</span></code>,
+we call <code class="docutils literal notranslate"><span class="pre">tost_dmeans(xs,</span> <span class="pre">ys)</span></code>.</p>
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading">#</a></h2>
+<p>For all the examples we present below,
+we assume the unknown distribution are normally distributed</p>
+<div class="math notranslate nohighlight">
+\[
+    \texttt{rvX} = X \sim \mathcal{N}(\mu_X,\sigma_X)
+    \qquad
+    \text{and}
+    \qquad
+    \texttt{rvY} = Y \sim \mathcal{N}(\mu_Y,\sigma_Y).
+\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">norm</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="example-a-populations-are-different">
+<h3>Example A: populations are different<a class="headerlink" href="#example-a-populations-are-different" title="Link to this heading">#</a></h3>
+<p>Suppose the <span class="math notranslate nohighlight">\(X\)</span>-population is normally distributed
+with mean <span class="math notranslate nohighlight">\(\mu_{X}=104\)</span>
+and standard deviation <span class="math notranslate nohighlight">\(\sigma_{X} = 3\)</span>,
+while the <span class="math notranslate nohighlight">\(Y\)</span>-population is normally distributed
+with mean <span class="math notranslate nohighlight">\(\mu_{X}=100\)</span>
+and standard deviation <span class="math notranslate nohighlight">\(\sigma_{X} = 5\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+    \texttt{rvX} = X \sim \mathcal{N}(104,3)
+    \qquad
+    \text{and}
+    \qquad
+    \texttt{rvY} = Y \sim \mathcal{N}(100,5).
+\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">muXA</span> <span class="o">=</span> <span class="mi">104</span>
+<span class="n">sigmaXA</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">rvXA</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">muXA</span><span class="p">,</span> <span class="n">sigmaXA</span><span class="p">)</span>
+
+<span class="n">muYA</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">sigmaYA</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">rvYA</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">muYA</span><span class="p">,</span> <span class="n">sigmaYA</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s generate a sample <code class="docutils literal notranslate"><span class="pre">xAs</span></code> and <code class="docutils literal notranslate"><span class="pre">yAs</span></code> of size <span class="math notranslate nohighlight">\(n=20\)</span> from the random variables <span class="math notranslate nohighlight">\(X = \texttt{rvXA}\)</span> and <span class="math notranslate nohighlight">\(Y = \texttt{rvYA}\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># generate a random sample of size n=20 from rvX</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">xAs</span> <span class="o">=</span> <span class="n">rvXA</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+<span class="c1"># generate a random sample of size m=20 from rvY</span>
+<span class="n">m</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">yAs</span> <span class="o">=</span> <span class="n">rvYA</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+<span class="n">xAs</span><span class="p">,</span> <span class="n">yAs</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(array([105.49014246, 103.5852071 , 105.94306561, 108.56908957,
+        103.29753988, 103.29758913, 108.73763845, 106.30230419,
+        102.59157684, 105.62768013, 102.60974692, 102.60281074,
+        104.72588681,  98.26015927,  98.8252465 , 102.31313741,
+        100.96150664, 104.942742  , 101.27592777,  99.7630889 ]),
+ array([107.32824384,  98.8711185 , 100.33764102,  92.87625907,
+         97.27808638, 100.55461295,  94.24503211, 101.87849009,
+         96.99680655,  98.54153125,  96.99146694, 109.26139092,
+         99.93251388,  94.71144536, 104.11272456,  93.89578175,
+        101.04431798,  90.20164938,  93.35906976, 100.98430618]))
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dhatA</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">xAs</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">yAs</span><span class="p">)</span>
+<span class="n">dhatA</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(4.815979892644748)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dAs</span> <span class="o">=</span> <span class="n">xAs</span> <span class="o">-</span> <span class="n">yAs</span>
+<span class="k">with</span> <span class="n">plt</span><span class="o">.</span><span class="n">rc_context</span><span class="p">({</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:(</span><span class="mi">7</span><span class="p">,</span><span class="mi">1</span><span class="p">)}):</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">stripplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">dAs</span><span class="p">,</span> <span class="n">jitter</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/bb53bf7220cdb465548283f04b5635950d2184925c8992fd26764c5703fd47fd.png"><img alt="../_images/bb53bf7220cdb465548283f04b5635950d2184925c8992fd26764c5703fd47fd.png" src="../_images/bb53bf7220cdb465548283f04b5635950d2184925c8992fd26764c5703fd47fd.png" style="width: 567px; height: 120px;" />
+</a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+
+<span class="k">with</span> <span class="n">plt</span><span class="o">.</span><span class="n">rc_context</span><span class="p">({</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:(</span><span class="mi">7</span><span class="p">,</span><span class="mi">1</span><span class="p">)}):</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">stripplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">xAs</span><span class="p">,</span> <span class="n">jitter</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">stripplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">yAs</span><span class="p">,</span> <span class="n">jitter</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/0c38005ff47443e0fa58715d9b9234df372187ff1c9ff0a50a1ded09d6417ca5.png"><img alt="../_images/0c38005ff47443e0fa58715d9b9234df372187ff1c9ff0a50a1ded09d6417ca5.png" src="../_images/0c38005ff47443e0fa58715d9b9234df372187ff1c9ff0a50a1ded09d6417ca5.png" style="width: 581px; height: 120px;" />
+</a>
+</div>
+</div>
+<p>To obtain the <span class="math notranslate nohighlight">\(p\)</span>-value,
+we first compute the observed <span class="math notranslate nohighlight">\(t\)</span>-statistic,
+then calculate the tail probabilities in the two tails of the standard normal distribution <span class="math notranslate nohighlight">\(T_0 \sim \mathcal{T}(\nu_d)\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">t</span> <span class="k">as</span> <span class="n">tdist</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ministats</span><span class="w"> </span><span class="kn">import</span> <span class="n">calcdf</span>
+
+<span class="c1"># Calculate the sample statistics</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ministats</span><span class="w"> </span><span class="kn">import</span> <span class="n">mean</span><span class="p">,</span> <span class="n">std</span>
+<span class="n">obsdhat</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">xAs</span><span class="p">)</span> <span class="o">-</span> <span class="n">mean</span><span class="p">(</span><span class="n">yAs</span><span class="p">)</span>
+<span class="n">sx</span><span class="p">,</span> <span class="n">sy</span> <span class="o">=</span> <span class="n">std</span><span class="p">(</span><span class="n">xAs</span><span class="p">),</span> <span class="n">std</span><span class="p">(</span><span class="n">yAs</span><span class="p">)</span>
+
+<span class="c1"># Calculate the standard error and the t-statistic</span>
+<span class="n">seD</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sx</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">n</span> <span class="o">+</span> <span class="n">sy</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">m</span><span class="p">)</span>
+
+<span class="c1"># Calculate the degrees of freedom</span>
+<span class="n">dfD</span> <span class="o">=</span> <span class="n">calcdf</span><span class="p">(</span><span class="n">sx</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">sy</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
+
+<span class="c1"># Positive hypothesis test</span>
+<span class="n">obstplus</span> <span class="o">=</span> <span class="p">(</span><span class="n">obsdhat</span> <span class="o">-</span> <span class="n">sesoi</span><span class="p">)</span> <span class="o">/</span> <span class="n">seD</span>
+<span class="n">rvT0plus</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">dfD</span><span class="p">)</span>
+<span class="n">pvalueplus</span> <span class="o">=</span> <span class="n">rvT0plus</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">obstplus</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;obst+&quot;</span><span class="p">,</span> <span class="n">obstplus</span><span class="p">,</span> <span class="s2">&quot;  pvalue+&quot;</span><span class="p">,</span> <span class="n">pvalueplus</span><span class="p">)</span>
+
+<span class="c1"># Negative hypothesis test</span>
+<span class="n">obstminus</span> <span class="o">=</span> <span class="p">(</span><span class="n">obsdhat</span> <span class="o">-</span> <span class="p">(</span><span class="o">-</span><span class="n">sesoi</span><span class="p">))</span> <span class="o">/</span> <span class="n">seD</span>
+<span class="n">rvT0minus</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">dfD</span><span class="p">)</span>
+<span class="n">pvalueminus</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">rvT0minus</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">obstminus</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;obst-&quot;</span><span class="p">,</span> <span class="n">obstminus</span><span class="p">,</span> <span class="s2">&quot;   pvalue-&quot;</span><span class="p">,</span> <span class="n">pvalueminus</span><span class="p">)</span>
+
+<span class="c1"># the p-value is the largest of the two subtests</span>
+<span class="n">pvalue</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">pvalueplus</span><span class="p">,</span> <span class="n">pvalueminus</span><span class="p">)</span>
+<span class="n">pvalue</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>obst+ 0.6479055169799628   pvalue+ 0.7390885154632982
+obst- 7.000076915517506    pvalue- 3.7301428501557155e-08
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.7390885154632982)
+</pre></div>
+</div>
+</div>
+</div>
+<p>The helper function <code class="docutils literal notranslate"><span class="pre">ttost_ind</span></code> in the <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code> module performs
+exactly the same sequence of steps to compute the <span class="math notranslate nohighlight">\(p\)</span>-value.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.stats.weightstats</span><span class="w"> </span><span class="kn">import</span> <span class="n">ttost_ind</span>
+
+<span class="n">ttost_ind</span><span class="p">(</span><span class="n">xAs</span><span class="p">,</span> <span class="n">yAs</span><span class="p">,</span> <span class="n">low</span><span class="o">=-</span><span class="n">sesoi</span><span class="p">,</span> <span class="n">upp</span><span class="o">=</span><span class="n">sesoi</span><span class="p">,</span> <span class="n">usevar</span><span class="o">=</span><span class="s1">&#39;unequal&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(np.float64(0.7390885154633053),
+ (np.float64(7.000076915517528),
+  np.float64(3.730142848917544e-08),
+  np.float64(30.95572939468825)),
+ (np.float64(0.6479055169799854),
+  np.float64(0.7390885154633053),
+  np.float64(30.95572939468825)))
+</pre></div>
+</div>
+</div>
+</div>
+<p>The <span class="math notranslate nohighlight">\(p\)</span>-value we obtain is 0.739,
+which is above the cutoff value <span class="math notranslate nohighlight">\(\alpha=0.05\)</span>,
+so our conclusion is <strong>we fail to reject the null hypothesis</strong>:
+the means of the two unknown populations differ significantly from the smallest effect size of interest <span class="math notranslate nohighlight">\(\Delta_{\text{min}}\)</span>.</p>
+</section>
+<section id="example-b-sample-from-a-population-as-expected-under-h-0">
+<h3>Example B: sample from a population as expected under <span class="math notranslate nohighlight">\(H_0\)</span><a class="headerlink" href="#example-b-sample-from-a-population-as-expected-under-h-0" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">muXB</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">sigmaXB</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">rvXB</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">muXB</span><span class="p">,</span> <span class="n">sigmaXB</span><span class="p">)</span>
+
+<span class="n">muYB</span> <span class="o">=</span> <span class="n">muXB</span>
+<span class="n">sigmaYB</span> <span class="o">=</span> <span class="n">sigmaXB</span>
+<span class="n">rvYB</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">muYB</span><span class="p">,</span> <span class="n">sigmaYB</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s generate a sample <code class="docutils literal notranslate"><span class="pre">xs</span></code> of size <span class="math notranslate nohighlight">\(n=20\)</span> from the random variable <span class="math notranslate nohighlight">\(X = \texttt{rvX}\)</span>,
+which has the same distribution as the theoretical distribution we expect under the null hypothesis.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">31</span><span class="p">)</span>
+
+<span class="c1"># generate a random sample of size n=20 from rvX</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">xBs</span> <span class="o">=</span> <span class="n">rvXB</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+<span class="c1"># generate a random sample of size m=20 from rvY</span>
+<span class="n">m</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">yBs</span> <span class="o">=</span> <span class="n">rvYB</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+<span class="c1"># xBs, yBs</span>
+<span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">xBs</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">yBs</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(np.float64(98.49345582110894), np.float64(99.90646412616485))
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obsdhatB</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">xBs</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">yBs</span><span class="p">)</span>
+<span class="n">obsdhatB</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(-1.4130083050559108)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sxB</span><span class="p">,</span> <span class="n">syB</span> <span class="o">=</span> <span class="n">std</span><span class="p">(</span><span class="n">xBs</span><span class="p">),</span> <span class="n">std</span><span class="p">(</span><span class="n">yBs</span><span class="p">)</span>
+<span class="c1"># Calculate the standard error and the t-statistic</span>
+<span class="n">seDB</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sxB</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">n</span> <span class="o">+</span> <span class="n">syB</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">m</span><span class="p">)</span>
+<span class="n">seDB</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(1.3075392073324235)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="k">with</span> <span class="n">plt</span><span class="o">.</span><span class="n">rc_context</span><span class="p">({</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:(</span><span class="mi">7</span><span class="p">,</span><span class="mi">1</span><span class="p">)}):</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">stripplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">xBs</span><span class="p">,</span> <span class="n">jitter</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">stripplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">yBs</span><span class="p">,</span> <span class="n">jitter</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/7e2f51e85a4f9c31777b3360390f784c46ffb45bb71dee7c8f909b0d32e3f624.png"><img alt="../_images/7e2f51e85a4f9c31777b3360390f784c46ffb45bb71dee7c8f909b0d32e3f624.png" src="../_images/7e2f51e85a4f9c31777b3360390f784c46ffb45bb71dee7c8f909b0d32e3f624.png" style="width: 567px; height: 120px;" />
+</a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dfB</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="n">xBs</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span><span class="n">yBs</span><span class="p">})</span>
+<span class="k">with</span> <span class="n">plt</span><span class="o">.</span><span class="n">rc_context</span><span class="p">({</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">:(</span><span class="mi">7</span><span class="p">,</span><span class="mi">1</span><span class="p">)}):</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">stripplot</span><span class="p">(</span><span class="n">dfB</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;h&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/7a9a103af44641f396983289a6731296b3576556da5f99dda2048dd1ca382116.png"><img alt="../_images/7a9a103af44641f396983289a6731296b3576556da5f99dda2048dd1ca382116.png" src="../_images/7a9a103af44641f396983289a6731296b3576556da5f99dda2048dd1ca382116.png" style="width: 580px; height: 120px;" />
+</a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">t</span> <span class="k">as</span> <span class="n">tdist</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ministats</span><span class="w"> </span><span class="kn">import</span> <span class="n">calcdf</span>
+
+<span class="c1"># Calculate the sample statistics</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ministats</span><span class="w"> </span><span class="kn">import</span> <span class="n">mean</span><span class="p">,</span> <span class="n">std</span>
+<span class="n">obsdhatB</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">xBs</span><span class="p">)</span> <span class="o">-</span> <span class="n">mean</span><span class="p">(</span><span class="n">yBs</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;obsdhatB =&quot;</span><span class="p">,</span> <span class="n">obsdhatB</span><span class="p">)</span>
+<span class="n">sxB</span><span class="p">,</span> <span class="n">syB</span> <span class="o">=</span> <span class="n">std</span><span class="p">(</span><span class="n">xBs</span><span class="p">),</span> <span class="n">std</span><span class="p">(</span><span class="n">yBs</span><span class="p">)</span>
+
+<span class="c1"># Calculate the standard error and the t-statistic</span>
+<span class="n">seDB</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sxB</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">n</span> <span class="o">+</span> <span class="n">syB</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">m</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;seDB =&quot;</span><span class="p">,</span> <span class="n">seDB</span><span class="p">,</span> <span class="s2">&quot;  sesoi/seDB =&quot;</span><span class="p">,</span> <span class="n">sesoi</span><span class="o">/</span><span class="n">seDB</span><span class="p">)</span>
+
+<span class="c1"># Calculate the degrees of freedom</span>
+<span class="n">dfDB</span> <span class="o">=</span> <span class="n">calcdf</span><span class="p">(</span><span class="n">sxB</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">syB</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;dfDB =&quot;</span><span class="p">,</span> <span class="n">dfDB</span><span class="p">)</span>
+
+<span class="c1"># Positive hypothesis test</span>
+<span class="n">obstplus</span> <span class="o">=</span> <span class="p">(</span><span class="n">obsdhatB</span> <span class="o">-</span> <span class="n">sesoi</span><span class="p">)</span> <span class="o">/</span> <span class="n">seDB</span>
+<span class="n">rvT0plus</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">dfDB</span><span class="p">)</span>
+<span class="n">pvalueplus</span> <span class="o">=</span> <span class="n">rvT0plus</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">obstplus</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;obst+ =&quot;</span><span class="p">,</span> <span class="n">obstplus</span><span class="p">,</span> <span class="s2">&quot;  pvalue+ =&quot;</span><span class="p">,</span> <span class="n">pvalueplus</span><span class="p">)</span>
+
+<span class="c1"># Negative hypothesis test</span>
+<span class="n">obstminus</span> <span class="o">=</span> <span class="p">(</span><span class="n">obsdhatB</span> <span class="o">-</span> <span class="p">(</span><span class="o">-</span><span class="n">sesoi</span><span class="p">))</span> <span class="o">/</span> <span class="n">seDB</span>
+<span class="n">rvT0minus</span> <span class="o">=</span> <span class="n">tdist</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">dfDB</span><span class="p">)</span>
+<span class="n">pvalueminus</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">rvT0minus</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">obstminus</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;obst- =&quot;</span><span class="p">,</span> <span class="n">obstminus</span><span class="p">,</span> <span class="s2">&quot;   pvalue- =&quot;</span><span class="p">,</span> <span class="n">pvalueminus</span><span class="p">)</span>
+
+<span class="c1"># the p-value is the largest of the two sub-tests</span>
+<span class="n">pvalue</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">pvalueplus</span><span class="p">,</span> <span class="n">pvalueminus</span><span class="p">)</span>
+<span class="n">pvalue</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>obsdhatB = -1.4130083050558824
+seDB = 1.3075392073324235   sesoi/seDB = 3.0591816884486405
+dfDB = 37.59083188299806
+obst+ = -4.139843971561842   pvalue+ = 9.438014051414072e-05
+obst- = 1.978519405335439    pvalue- = 0.02761615756744984
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.02761615756744984)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.stats.weightstats</span><span class="w"> </span><span class="kn">import</span> <span class="n">ttost_ind</span>
+
+<span class="n">ttost_ind</span><span class="p">(</span><span class="n">xBs</span><span class="p">,</span> <span class="n">yBs</span><span class="p">,</span> <span class="n">low</span><span class="o">=-</span><span class="n">sesoi</span><span class="p">,</span> <span class="n">upp</span><span class="o">=</span><span class="n">sesoi</span><span class="p">,</span> <span class="n">usevar</span><span class="o">=</span><span class="s1">&#39;unequal&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(np.float64(0.02761615756745112),
+ (np.float64(1.978519405335417),
+  np.float64(0.02761615756745112),
+  np.float64(37.59083188299806)),
+ (np.float64(-4.139843971561863),
+  np.float64(9.438014051413471e-05),
+  np.float64(37.59083188299806)))
+</pre></div>
+</div>
+</div>
+</div>
+<p>The <span class="math notranslate nohighlight">\(p\)</span>-value we obtain is 0.0276, which is below the cutoff value <span class="math notranslate nohighlight">\(\alpha=0.05\)</span>
+so our conclusion is that we’ve <strong>reject the null hypothesis</strong>:
+this means of two samples are not significantly different.</p>
+</section>
+</section>
+<section id="confidence-interval-for-the-effect-size">
+<h2>Confidence interval for the effect size<a class="headerlink" href="#confidence-interval-for-the-effect-size" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ministats</span><span class="w"> </span><span class="kn">import</span> <span class="n">ci_dmeans</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The confidence interval for the effect size <span class="math notranslate nohighlight">\(\Delta = \mu_X - \mu_Y\)</span> in Example A is</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ci_dmeans</span><span class="p">(</span><span class="n">xAs</span><span class="p">,</span> <span class="n">yAs</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[np.float64(2.6805293867922644), np.float64(6.951430398497231)]
+</pre></div>
+</div>
+</div>
+</div>
+<p>The confidence interval for the effect size <span class="math notranslate nohighlight">\(\Delta = \mu_X - \mu_Y\)</span> in Example B is</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ci_dmeans</span><span class="p">(</span><span class="n">xBs</span><span class="p">,</span> <span class="n">yBs</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[np.float64(-3.618059499797434), np.float64(0.7920428896856118)]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="related">
+<h2>Related<a class="headerlink" href="#related" title="Link to this heading">#</a></h2>
+</section>
+<section id="discussion">
+<h2>Discussion<a class="headerlink" href="#discussion" title="Link to this heading">#</a></h2>
+</section>
+<section id="links">
+<h2>Links<a class="headerlink" href="#links" title="Link to this heading">#</a></h2>
+</section>
+<section id="comprare-with-r">
+<h2>Comprare with R<a class="headerlink" href="#comprare-with-r" title="Link to this heading">#</a></h2>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span><span class="w"> </span><span class="nf">install.packages</span><span class="p">(</span><span class="s">&quot;TOSTER&quot;</span><span class="p">)</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="nf">library</span><span class="p">(</span><span class="n">TOSTER</span><span class="p">)</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="nf">tsum_TOST</span><span class="p">(</span><span class="n">m1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">98.49345582110894</span><span class="p">,</span><span class="w"> </span><span class="n">sd1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3.913169794238548</span><span class="p">,</span><span class="w"> </span><span class="n">n1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">20</span><span class="p">,</span>
+<span class="o">+</span><span class="w">           </span><span class="n">m2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">99.90646412616485</span><span class="p">,</span><span class="w"> </span><span class="n">sd2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">4.345144155915784</span><span class="p">,</span><span class="w"> </span><span class="n">n2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">20</span><span class="p">,</span>
+<span class="o">+</span><span class="w">           </span><span class="n">eqb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">4</span><span class="p">,</span><span class="w"> </span><span class="n">alpha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.05</span><span class="p">,</span><span class="w"> </span><span class="n">var.equal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">)</span>
+
+<span class="n">Welch</span><span class="w"> </span><span class="n">Modified</span><span class="w"> </span><span class="n">Two</span><span class="o">-</span><span class="n">Sample</span><span class="w"> </span><span class="n">t</span><span class="o">-</span><span class="n">Test</span>
+<span class="n">The</span><span class="w"> </span><span class="n">equivalence</span><span class="w"> </span><span class="n">test</span><span class="w"> </span><span class="n">was</span><span class="w"> </span><span class="n">significant</span><span class="p">,</span><span class="w"> </span><span class="nf">t</span><span class="p">(</span><span class="m">37.59</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1.979</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2.76e-02</span>
+<span class="n">The</span><span class="w"> </span><span class="n">null</span><span class="w"> </span><span class="n">hypothesis</span><span class="w"> </span><span class="n">test</span><span class="w"> </span><span class="n">was</span><span class="w"> </span><span class="n">non</span><span class="o">-</span><span class="n">significant</span><span class="p">,</span><span class="w"> </span><span class="nf">t</span><span class="p">(</span><span class="m">37.59</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">-1.081</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2.87e-01</span>
+<span class="n">NHST</span><span class="o">:</span><span class="w"> </span><span class="n">do</span><span class="w"> </span><span class="n">not</span><span class="w"> </span><span class="n">reject</span><span class="w"> </span><span class="n">null</span><span class="w"> </span><span class="n">significance</span><span class="w"> </span><span class="n">hypothesis</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">effect</span><span class="w"> </span><span class="n">is</span><span class="w"> </span><span class="n">equal</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">zero</span><span class="w"> </span>
+<span class="n">TOST</span><span class="o">:</span><span class="w"> </span><span class="n">reject</span><span class="w"> </span><span class="n">null</span><span class="w"> </span><span class="n">equivalence</span><span class="w"> </span><span class="n">hypothesis</span>
+
+<span class="n">TOST</span><span class="w"> </span><span class="n">Results</span><span class="w"> </span>
+<span class="w">                </span><span class="n">t</span><span class="w">    </span><span class="n">df</span><span class="w"> </span><span class="n">p.value</span>
+<span class="n">t</span><span class="o">-</span><span class="n">test</span><span class="w">     </span><span class="m">-1.081</span><span class="w"> </span><span class="m">37.59</span><span class="w">   </span><span class="m">0.287</span>
+<span class="n">TOST</span><span class="w"> </span><span class="n">Lower</span><span class="w">  </span><span class="m">1.979</span><span class="w"> </span><span class="m">37.59</span><span class="w">   </span><span class="m">0.028</span>
+<span class="n">TOST</span><span class="w"> </span><span class="n">Upper</span><span class="w"> </span><span class="m">-4.140</span><span class="w"> </span><span class="m">37.59</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">0.001</span>
+
+<span class="n">Effect</span><span class="w"> </span><span class="n">Sizes</span><span class="w"> </span>
+<span class="w">               </span><span class="n">Estimate</span><span class="w">     </span><span class="n">SE</span><span class="w">              </span><span class="n">C.I.</span><span class="w"> </span><span class="n">Conf.</span><span class="w"> </span><span class="n">Level</span>
+<span class="n">Raw</span><span class="w">             </span><span class="m">-1.4130</span><span class="w"> </span><span class="m">1.3075</span><span class="w">  </span><span class="p">[</span><span class="m">-3.6181</span><span class="p">,</span><span class="w"> </span><span class="m">0.792</span><span class="p">]</span><span class="w">         </span><span class="m">0.9</span>
+<span class="n">Hedges</span><span class="w"> </span><span class="nf">g</span><span class="p">(</span><span class="n">av</span><span class="p">)</span><span class="w">    </span><span class="m">-0.3349</span><span class="w"> </span><span class="m">0.3412</span><span class="w"> </span><span class="p">[</span><span class="m">-0.8463</span><span class="p">,</span><span class="w"> </span><span class="m">0.1809</span><span class="p">]</span><span class="w">         </span><span class="m">0.9</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="simulation-to-check-tost-sensitivity">
+<h1>Simulation to check TOST sensitivity<a class="headerlink" href="#simulation-to-check-tost-sensitivity" title="Link to this heading">#</a></h1>
+<p>Let’s run a simulation to see how the accuracy of the TOST procedure
+for detecting when two samples come from the same population.
+We’ll use the standard normal <span class="math notranslate nohighlight">\(Z \sim \mathcal{N}(0,1)\)</span> as the population,
+and run <code class="docutils literal notranslate"><span class="pre">ttost_ind</span></code> for different choices of <code class="docutils literal notranslate"><span class="pre">sesoi</span></code> and sample sizes <code class="docutils literal notranslate"><span class="pre">n=m</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">one_equiv_test</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">sesoi</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Run TOST on two samples from the same population.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># two identical populations</span>
+    <span class="n">muX</span><span class="p">,</span> <span class="n">sigmaX</span> <span class="o">=</span> <span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span>
+    <span class="n">muY</span><span class="p">,</span> <span class="n">sigmaY</span> <span class="o">=</span> <span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span>
+    <span class="n">rvX</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">muX</span><span class="p">,</span> <span class="n">sigmaX</span><span class="p">)</span>
+    <span class="n">rvY</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">muY</span><span class="p">,</span> <span class="n">sigmaY</span><span class="p">)</span>
+
+    <span class="c1"># generate a random samples</span>
+    <span class="n">xs</span> <span class="o">=</span> <span class="n">rvX</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">ys</span> <span class="o">=</span> <span class="n">rvY</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+
+    <span class="c1"># run TOST</span>
+    <span class="n">p</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">ttost_ind</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">low</span><span class="o">=-</span><span class="n">sesoi</span><span class="p">,</span> <span class="n">upp</span><span class="o">=</span><span class="n">sesoi</span><span class="p">,</span> <span class="n">usevar</span><span class="o">=</span><span class="s1">&#39;unequal&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">p</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">replicate_many_equiv_tests</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">sesoi</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="mf">0.05</span><span class="p">):</span>
+    <span class="n">pvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+        <span class="n">pval</span> <span class="o">=</span> <span class="n">one_equiv_test</span><span class="p">(</span><span class="n">mu</span><span class="o">=</span><span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">sigma</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="n">m</span><span class="p">,</span> <span class="n">sesoi</span><span class="o">=</span><span class="n">sesoi</span><span class="p">)</span>
+        <span class="n">pvals</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">pval</span>
+    <span class="n">prop</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">pvals</span> <span class="o">&lt;</span> <span class="n">cutoff</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">pvals</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">prop</span>
+
+
+
+<span class="n">SIMULATE</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># don&#39;t need to re-run simulation every time</span>
+
+<span class="k">if</span> <span class="n">SIMULATE</span><span class="p">:</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">33</span><span class="p">)</span>    
+    <span class="n">sesois</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+    <span class="n">ns</span> <span class="o">=</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">100</span><span class="p">]</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;sesoi&quot;</span><span class="p">,</span> <span class="s2">&quot;n&quot;</span><span class="p">,</span> <span class="s2">&quot;prop&quot;</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">sesoi</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">product</span><span class="p">(</span><span class="n">sesois</span><span class="p">,</span> <span class="n">ns</span><span class="p">)):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> running replicate_many_equiv_tests for </span><span class="si">{</span><span class="n">sesoi</span><span class="si">=}</span><span class="s2"> and </span><span class="si">{</span><span class="n">n</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">prop</span> <span class="o">=</span> <span class="n">replicate_many_equiv_tests</span><span class="p">(</span><span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="n">n</span><span class="p">,</span> <span class="n">sesoi</span><span class="o">=</span><span class="n">sesoi</span><span class="p">)</span>
+        <span class="n">results</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">sesoi</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">prop</span><span class="p">]</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">(</span>
+        <span class="p">[</span>  <span class="p">(</span><span class="mf">0.2</span><span class="p">,</span>  <span class="mf">20.</span><span class="p">,</span> <span class="mf">0.</span>   <span class="p">),</span> <span class="p">(</span><span class="mf">0.2</span><span class="p">,</span>  <span class="mf">30.</span><span class="p">,</span> <span class="mf">0.</span>   <span class="p">),</span> <span class="p">(</span><span class="mf">0.2</span><span class="p">,</span>  <span class="mf">40.</span><span class="p">,</span> <span class="mf">0.</span>   <span class="p">),</span>
+           <span class="p">(</span><span class="mf">0.2</span><span class="p">,</span>  <span class="mf">60.</span><span class="p">,</span> <span class="mf">0.</span>   <span class="p">),</span> <span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">100.</span><span class="p">,</span> <span class="mf">0.</span>   <span class="p">),</span> <span class="p">(</span><span class="mf">0.3</span><span class="p">,</span>  <span class="mf">20.</span><span class="p">,</span> <span class="mf">0.</span>   <span class="p">),</span>
+           <span class="p">(</span><span class="mf">0.3</span><span class="p">,</span>  <span class="mf">30.</span><span class="p">,</span> <span class="mf">0.</span>   <span class="p">),</span> <span class="p">(</span><span class="mf">0.3</span><span class="p">,</span>  <span class="mf">40.</span><span class="p">,</span> <span class="mf">0.</span>   <span class="p">),</span> <span class="p">(</span><span class="mf">0.3</span><span class="p">,</span>  <span class="mf">60.</span><span class="p">,</span> <span class="mf">0.025</span><span class="p">),</span>
+           <span class="p">(</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">100.</span><span class="p">,</span> <span class="mf">0.384</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.4</span><span class="p">,</span>  <span class="mf">20.</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.4</span><span class="p">,</span>  <span class="mf">30.</span><span class="p">,</span> <span class="mf">0.012</span><span class="p">),</span>
+           <span class="p">(</span><span class="mf">0.4</span><span class="p">,</span>  <span class="mf">40.</span><span class="p">,</span> <span class="mf">0.115</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.4</span><span class="p">,</span>  <span class="mf">60.</span><span class="p">,</span> <span class="mf">0.411</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">100.</span><span class="p">,</span> <span class="mf">0.747</span><span class="p">),</span>
+           <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span>  <span class="mf">20.</span><span class="p">,</span> <span class="mf">0.035</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span>  <span class="mf">30.</span><span class="p">,</span> <span class="mf">0.203</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span>  <span class="mf">40.</span><span class="p">,</span> <span class="mf">0.412</span><span class="p">),</span>
+           <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span>  <span class="mf">60.</span><span class="p">,</span> <span class="mf">0.723</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">100.</span><span class="p">,</span> <span class="mf">0.932</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.6</span><span class="p">,</span>  <span class="mf">20.</span><span class="p">,</span> <span class="mf">0.186</span><span class="p">),</span>
+           <span class="p">(</span><span class="mf">0.6</span><span class="p">,</span>  <span class="mf">30.</span><span class="p">,</span> <span class="mf">0.497</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.6</span><span class="p">,</span>  <span class="mf">40.</span><span class="p">,</span> <span class="mf">0.704</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.6</span><span class="p">,</span>  <span class="mf">60.</span><span class="p">,</span> <span class="mf">0.898</span><span class="p">),</span>
+           <span class="p">(</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">100.</span><span class="p">,</span> <span class="mf">0.992</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.7</span><span class="p">,</span>  <span class="mf">20.</span><span class="p">,</span> <span class="mf">0.395</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.7</span><span class="p">,</span>  <span class="mf">30.</span><span class="p">,</span> <span class="mf">0.708</span><span class="p">),</span>
+           <span class="p">(</span><span class="mf">0.7</span><span class="p">,</span>  <span class="mf">40.</span><span class="p">,</span> <span class="mf">0.865</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.7</span><span class="p">,</span>  <span class="mf">60.</span><span class="p">,</span> <span class="mf">0.971</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">100.</span><span class="p">,</span> <span class="mf">0.996</span><span class="p">),</span>
+           <span class="p">(</span><span class="mf">0.8</span><span class="p">,</span>  <span class="mf">20.</span><span class="p">,</span> <span class="mf">0.606</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.8</span><span class="p">,</span>  <span class="mf">30.</span><span class="p">,</span> <span class="mf">0.862</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.8</span><span class="p">,</span>  <span class="mf">40.</span><span class="p">,</span> <span class="mf">0.94</span> <span class="p">),</span>
+           <span class="p">(</span><span class="mf">0.8</span><span class="p">,</span>  <span class="mf">60.</span><span class="p">,</span> <span class="mf">0.993</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">100.</span><span class="p">,</span> <span class="mf">1.</span>   <span class="p">),</span> <span class="p">(</span><span class="mf">0.9</span><span class="p">,</span>  <span class="mf">20.</span><span class="p">,</span> <span class="mf">0.761</span><span class="p">),</span>
+           <span class="p">(</span><span class="mf">0.9</span><span class="p">,</span>  <span class="mf">30.</span><span class="p">,</span> <span class="mf">0.937</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.9</span><span class="p">,</span>  <span class="mf">40.</span><span class="p">,</span> <span class="mf">0.975</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.9</span><span class="p">,</span>  <span class="mf">60.</span><span class="p">,</span> <span class="mf">0.998</span><span class="p">),</span>
+           <span class="p">(</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">100.</span><span class="p">,</span> <span class="mf">1.</span>   <span class="p">),</span> <span class="p">(</span><span class="mf">1.</span> <span class="p">,</span>  <span class="mf">20.</span><span class="p">,</span> <span class="mf">0.853</span><span class="p">),</span> <span class="p">(</span><span class="mf">1.</span> <span class="p">,</span>  <span class="mf">30.</span><span class="p">,</span> <span class="mf">0.968</span><span class="p">),</span>
+           <span class="p">(</span><span class="mf">1.</span> <span class="p">,</span>  <span class="mf">40.</span><span class="p">,</span> <span class="mf">0.998</span><span class="p">),</span> <span class="p">(</span><span class="mf">1.</span> <span class="p">,</span>  <span class="mf">60.</span><span class="p">,</span> <span class="mf">1.</span>   <span class="p">),</span> <span class="p">(</span><span class="mf">1.</span> <span class="p">,</span> <span class="mf">100.</span><span class="p">,</span> <span class="mf">1.</span>   <span class="p">),</span>
+           <span class="p">(</span><span class="mf">1.1</span><span class="p">,</span>  <span class="mf">20.</span><span class="p">,</span> <span class="mf">0.927</span><span class="p">),</span> <span class="p">(</span><span class="mf">1.1</span><span class="p">,</span>  <span class="mf">30.</span><span class="p">,</span> <span class="mf">0.991</span><span class="p">),</span> <span class="p">(</span><span class="mf">1.1</span><span class="p">,</span>  <span class="mf">40.</span><span class="p">,</span> <span class="mf">0.999</span><span class="p">),</span>
+           <span class="p">(</span><span class="mf">1.1</span><span class="p">,</span>  <span class="mf">60.</span><span class="p">,</span> <span class="mf">1.</span>   <span class="p">),</span> <span class="p">(</span><span class="mf">1.1</span><span class="p">,</span> <span class="mf">100.</span><span class="p">,</span> <span class="mf">1.</span>   <span class="p">),</span> <span class="p">(</span><span class="mf">1.2</span><span class="p">,</span>  <span class="mf">20.</span><span class="p">,</span> <span class="mf">0.971</span><span class="p">),</span>
+           <span class="p">(</span><span class="mf">1.2</span><span class="p">,</span>  <span class="mf">30.</span><span class="p">,</span> <span class="mf">0.998</span><span class="p">),</span> <span class="p">(</span><span class="mf">1.2</span><span class="p">,</span>  <span class="mf">40.</span><span class="p">,</span> <span class="mf">1.</span>   <span class="p">),</span> <span class="p">(</span><span class="mf">1.2</span><span class="p">,</span>  <span class="mf">60.</span><span class="p">,</span> <span class="mf">1.</span>   <span class="p">),</span>
+           <span class="p">(</span><span class="mf">1.2</span><span class="p">,</span> <span class="mf">100.</span><span class="p">,</span> <span class="mf">1.</span>   <span class="p">),</span> <span class="p">(</span><span class="mf">1.3</span><span class="p">,</span>  <span class="mf">20.</span><span class="p">,</span> <span class="mf">0.982</span><span class="p">),</span> <span class="p">(</span><span class="mf">1.3</span><span class="p">,</span>  <span class="mf">30.</span><span class="p">,</span> <span class="mf">0.999</span><span class="p">),</span>
+           <span class="p">(</span><span class="mf">1.3</span><span class="p">,</span>  <span class="mf">40.</span><span class="p">,</span> <span class="mf">1.</span>   <span class="p">),</span> <span class="p">(</span><span class="mf">1.3</span><span class="p">,</span>  <span class="mf">60.</span><span class="p">,</span> <span class="mf">1.</span>   <span class="p">),</span> <span class="p">(</span><span class="mf">1.3</span><span class="p">,</span> <span class="mf">100.</span><span class="p">,</span> <span class="mf">1.</span>   <span class="p">),</span>
+           <span class="p">(</span><span class="mf">1.4</span><span class="p">,</span>  <span class="mf">20.</span><span class="p">,</span> <span class="mf">0.992</span><span class="p">),</span> <span class="p">(</span><span class="mf">1.4</span><span class="p">,</span>  <span class="mf">30.</span><span class="p">,</span> <span class="mf">1.</span>   <span class="p">),</span> <span class="p">(</span><span class="mf">1.4</span><span class="p">,</span>  <span class="mf">40.</span><span class="p">,</span> <span class="mf">1.</span>   <span class="p">),</span>
+           <span class="p">(</span><span class="mf">1.4</span><span class="p">,</span>  <span class="mf">60.</span><span class="p">,</span> <span class="mf">1.</span>   <span class="p">),</span> <span class="p">(</span><span class="mf">1.4</span><span class="p">,</span> <span class="mf">100.</span><span class="p">,</span> <span class="mf">1.</span>   <span class="p">)</span> <span class="p">],</span>
+        <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;sesoi&quot;</span><span class="p">,</span> <span class="s2">&quot;n&quot;</span><span class="p">,</span> <span class="s2">&quot;prop&quot;</span><span class="p">]</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="tost-sensitivity-results">
+<h2>TOST sensitivity results<a class="headerlink" href="#tost-sensitivity-results" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;sesoi&quot;</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;prop&quot;</span><span class="p">],</span> <span class="n">hue</span><span class="o">=</span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;n&quot;</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Proportion of TOST tests that correctly reject H0 </span><span class="se">\n</span><span class="s2"> for two samples of size n from a standard normal&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Proportion of TOST results with p &lt; 0.05&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/5fe540f3232e26a2fb99f0563801679762255760fb5f502b6a1e67006236b6c7.png"><img alt="../_images/5fe540f3232e26a2fb99f0563801679762255760fb5f502b6a1e67006236b6c7.png" src="../_images/5fe540f3232e26a2fb99f0563801679762255760fb5f502b6a1e67006236b6c7.png" style="width: 567px; height: 473px;" />
+</a>
+</div>
+</div>
+<p>The above graph shows that, for <span class="math notranslate nohighlight">\(n=30\)</span> we need to use <code class="docutils literal notranslate"><span class="pre">sesoi</span></code> of around 0.7 standard deviations if we want TOST to have 80% power at detecting the equivalence.</p>
+<p>For <span class="math notranslate nohighlight">\(n=20\)</span> we need <code class="docutils literal notranslate"><span class="pre">sesoi</span></code> to be 1 standard deviation if we want 80% power.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "minireference/noBSstats",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./examples"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="ANOVA.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Analysis of variance (ANOVA)</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../notebooks/40_LINEAR_MODELS.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Chapter 4 — Linear models</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Two-sample equivalence test</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data">Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modeling-assumptions">Modeling assumptions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hypotheses">Hypotheses</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#statistical-design">Statistical design</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estimates">Estimates</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#formulas">Formulas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#test-statistic">Test statistic</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sampling-distribution">Sampling distribution</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#p-value-calculation">P-value calculation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples">Examples</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-a-populations-are-different">Example A: populations are different</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-b-sample-from-a-population-as-expected-under-h-0">Example B: sample from a population as expected under <span class="math notranslate nohighlight">\(H_0\)</span></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#confidence-interval-for-the-effect-size">Confidence interval for the effect size</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#related">Related</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion">Discussion</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#links">Links</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comprare-with-r">Comprare with R</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#simulation-to-check-tost-sensitivity">Simulation to check TOST sensitivity</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tost-sensitivity-results">TOST sensitivity results</a></li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Ivan Savov
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
