@@ -53,7 +53,7 @@ Yes, I'll be going through the book alongside you to make the final pass of corr
 so we're in this together!
 
 The weekly reading will not be too demanding: just one or two sections per week,
-which means you'll need only **an two or three** to read the material and try the exercises.
+which means you'll need only **about two to three hours** to read the material and try the exercises.
 But, please give me a good morning hours—when you're properly caffeinated and ready to handle some advanced math and code examples!
 
 
@@ -67,7 +67,7 @@ I'll be beefing up the exercises for each section,
 and preparing solutions for them,
 which I'll provide for you each week.
 
-The goal goal for the exercises is not to be hard:
+The goal for the exercises is not to be hard:
 they are just spot-checks to make sure you're on board with the new material.
 It's important that you try to solve these exercises on your own:
 don't just look at them as a spectator!
