@@ -17,6 +17,8 @@ Here is the proposed [schedule](https://docs.google.com/spreadsheets/d/1Prwh9q-M
 
 <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQmBwfQE2R9BOx2RGltcNtrqB7BdTtp0S6vQtMnDZb_o7hiz3hz7MiZULYyIM2D87nMuBSMmHl84S0f/pubhtml?range=A1:I9&amp;gid=0&amp;single=true&amp;widget=true&amp;headers=false" style="height:270px;width:100%;border:none;overflow:hidden;"></iframe>
 
+This [gsheet](https://docs.google.com/spreadsheets/d/1Prwh9q-MTwScMLoH20rxmmNxZ9vEDx820nikQadxpkI/edit?usp=sharing) contains the links to weekly exercises, exercises solutions, overview videos, etc. and it will be updated each week.
+
 
 
 Weekly tasks
@@ -93,7 +95,7 @@ Discussion forum
 I've setup a Discord server called `noBSstats` where we can
 have ongoing discussions during the week.
 Sign up link is here: 
-https://discord.gg/DEzBpZN4
+https://discord.gg/6Nsde9tZwK
 
 Use the `#chapter1-questions` channel to ask questions
 that come up while reading the assigned reading,
