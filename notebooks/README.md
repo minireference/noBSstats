@@ -20,15 +20,15 @@ Data is
 
 
 
-### 1.1 Introduction to data
+### 1.1 Data collection
 This is a very short notebook that gives some examples of random selection and random assignment.
-See the text for the actual definitions of core ideas.
+See the text for the actual definitions of concepts related to data collection.
 
-- View notebook: [11_intro_to_data.ipynb](./11_intro_to_data.ipynb)
+- View notebook: [11_data_collection.ipynb](./11_data_collection.ipynb)
 - Binder link: 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstats/main?labpath=notebooks%2F11_intro_to_data.ipynb)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstats/main?labpath=notebooks%2F11_data_collection.ipynb)
 - Colab link:
-[![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/minireference/noBSstats/blob/main/notebooks/11_intro_to_data.ipynb)
+[![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/minireference/noBSstats/blob/main/notebooks/11_data_collection.ipynb)
 
 
 ### 1.2 Data in practice
