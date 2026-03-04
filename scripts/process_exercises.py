@@ -123,8 +123,8 @@ def process_exercises_notebook(src_filepath: str, dest_filepath: str, version: s
                     if "outputs" in cell:
                         cell["outputs"] = []
                     if "execution_count" in cell:
-                        del cell["execution_count"]
-                
+                        cell["execution_count"] = None
+
                 # minimize empty cells
                 if previous_cell:
                     # avoid multiple empty cell
