@@ -38,10 +38,10 @@ These are the datasets used in examples and explanations throughout the book.
 ### Dataset 2: Electricity prices
 
 - `eprices.csv`
-- `epriceswide.csv`
+- `raw/epriceswide.csv`
 
 - columns:
-  - `end`: location of the charging station
+  - `loc`: location of the charging station
   - `price`: observed price
 
 
