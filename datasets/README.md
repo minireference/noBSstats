@@ -1,10 +1,11 @@
 Datasets
 ========
 
-This folder contains the datasets used for the examples, exercises, and problem in the **No Bullshit Guide to Statistics**.
+This folder contains the datasets used for the examples,
+exercises, and problem in the **No Bullshit Guide to Statistics**.
 
-The files are stored in `CSV` format, which you can load using the function `pd.read_csv()`.
-Each data file has a metadata information in a file of the same name with the extension `.md`.
+The files are stored in `CSV` format,
+which you can load using the pandas function `pd.read_csv()`.
 
 
 
@@ -68,6 +69,7 @@ These are the datasets used in examples and explanations throughout the book.
 
 
 TODO: move detailed info to `students.md`
+
 
 
 
@@ -179,12 +181,134 @@ I have filtered the data to select only individuals of age 30 or less.
 
 
 
-## Other datasets
 
-Additional datasets you'll need for the exercises can be found in the directory `exercises/`
-while data sets used for problems are in `problems/`.
+## Exercises datasets
 
-The directory `formats/` contains examples of clean data in various file formats like.
 
-The directory `datasets/raw/` contains "raw" data files that need data cleanup and transformations,
+## Problems datasets
+
+
+### Test marks
+
+- Dataset: [`markswide.csv`](./markswide.csv)
+- Description: A toy dataset in wide format.
+- Format: CSV file in wide format that has 7 rows and observations from 3 variables:
+  - `student_ID`: unique identifier for the student
+  - `name`: student name
+  - `test1`: the marks from the first test
+  - `test2`: the marks from the second test
+  - `test3`: the marks from the third test
+- Source: Synthetic data created by the author.
+- Use case: Practice using the `.melt()` method to convert to long form (tidy data).
+
+
+
+
+### Grades
+
+TODO
+
+- Datasets: [`grades.csv`](./grades.csv)
+- Description: 
+- Format: CSV file that contain n observations and k variables:
+  - `hours` = number of hours student spent studying
+  - `grade` = 
+  - `tutor` = 0 or 1  
+  - `sup` = amount of support (hours) -- computed from tutor
+  - `mem` = second confounder
+  - `M` = mediator
+  - `C` = collider
+
+
+
+### Medical trial
+
+TODO
+
+- Datasets: [`medtrial.csv`](./medtrial.csv)
+- Description: TODO
+- Format: CSV file that contain n observations and k variables:
+  - `id`
+  - `age`
+  - `sex`
+  - `pre` = pretest 
+  - `treat`: =1 hypertension medication; treat=0
+  - `sev`: = severity (SBP) 
+- Source: Synthetic dataset
+- Use cases:
+  - computed columns https://chatgpt.com/c/69b1b782-3600-8327-a844-6e92c94e2214 
+  - classify into stages https://www.mayoclinic.org/diseases-conditions/high-blood-pressure/in-depth/blood-pressure/art-20050982 
+
+
+
+
+### Blood pressure datasets
+
+- Datasets: [`bpwide.csv`](./bpwide.csv) and [`bplong.csv`](./bplong.csv)
+- Description: Fictional blood-pressure data provided in "wide format" and "long format"
+- Format: CSV file that contain 240 observations and 5 variables:
+  - `patient`: patient id
+  - `sex`: patient sex
+  - `agegrp`: age group
+  - `when`: when the blood was taken
+  - `bp`: blood pressure measurement
+- Source:
+  - Data files [`bpwide.dta`](http://www.stata-press.com/data/r9/bpwide.dta)
+    and [`bplong.dta`](http://www.stata-press.com/data/r9/bplong.dta)
+    are provided as part of the [Stata User's Guide](https://www.stata-press.com/data/r9/u.html).
+	
+
+
+## Raw datasets
+
+The subdirectory `raw/` contains "raw" data files that need data cleanup and transformations,
 and are used as part of the exercises in the Pandas tutorial (Appendix D).
+
+- `raw/minimal.csv`
+
+
+## Data file formats datasets
+
+The subdirectory `formats/` contains examples of clean data in various file formats like.
+
+- `formats/minimal.html`: HTML table
+- `formats/minimal.json`: JSON
+- `formats/minimal.sqlite`: Sqlite3 database 
+- `formats/minimal.tsv`: TSV
+- `formats/minimal.xlsx`: Microsoft Excel file
+- `formats/minimal.ods`: OpenDocument spreadsheet
+- `formats/minimal.xml`: XML
+- `formats/students_meta.csv`: extra metadata rows 
+
+
+
+### Old Faithful
+
+Old Faithful is geyser in the Yellowstone National Park in Wyoming, USA.
+It erupts every 35 to 120 minutes for 1 to 5 minutes.
+This dataset records duration of the eruption and the waiting time between eruptions.
+
+- Datasets: [`faithful.csv`](./faithful.csv)
+- Description: 
+- Format: CSV file that contain 272 observations and 2 variables:
+  - `duration`: how long the eruption lasts in minutes
+  - `waiting`: time until the next eruption in minutes
+- Source:
+  - https://plotnine.org/reference/faithful.html
+  - Härdle, W. (1991) Smoothing Techniques with Implementation in S. New York: Springer.
+  - https://yellowstone.net/geysers/old-faithful/
+
+
+
+
+
+
+### NAME
+
+- Datasets: [``](./)
+- Description: 
+- Format: CSV file that contain n observations and k variables:
+  - `id`
+
+- Source:
+
