@@ -1,0 +1,2730 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Appendix E — Seaborn tutorial &#8212; No Bullshit Guide to Statistics</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'tutorials/seaborn_tutorial';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Appendix F — Calculus tutorial" href="calculus_tutorial.html" />
+    <link rel="prev" title="Appendix D — Pandas tutorial" href="pandas_tutorial.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="No Bullshit Guide to Statistics - Home"/>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="No Bullshit Guide to Statistics - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    No Bullshit Guide to Statistics
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../notebooks/10_DATA.html">Chapter 1 — Data</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/11_data_collection.html">Section 1.1 — Introduction to data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/12_data_in_practice.html">Section 1.2 — Data in practice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/13_descriptive_statistics.html">Section 1.3 — Descriptive statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../exercises/sec13_descriptive_statistics.html">Descriptive statistics exercises</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../problems/ch1_data_problems.html">Chapter 1 problems</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../notebooks/20_PROB.html">Chapter 2 — Probability theory</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/21_discrete_random_vars.html">Section 2.1 — Discrete random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/22_multiple_random_vars.html">Section 2.2 — Multiple random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/23_inventory_discrete_dists.html">Section 2.3 — Inventory of discrete distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/24_continuous_random_vars.html">Section 2.4 — Continuous random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/25_multiple_continuous_random_vars.html">Section 2.5 — Multiple continuous random variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/26_inventory_continuous_dists.html">Section 2.6 — Inventory of continuous distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/27_simulations.html">Section 2.7 — Simulation and empirical distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/28_random_samples.html">Section 2.8 — Probability models for random samples</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../notebooks/30_STATS.html">Chapter 3 — Classical statistics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/31_estimators.html">Section 3.1 — Estimators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../exercises/exercises_31_estimtors.html">Exercises for Section 3.1 Estimates and estimators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/32_confidence_intervals.html">Section 3.2 — Confidence intervals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../exercises/exercises_32_confidence_intervals.html">Exercises for Section 3.2 Confidence intervals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/33_intro_to_NHST.html">Section 3.3 — Introduction to hypothesis testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/34_analytical_approx.html">Section 3.4 — Hypothesis testing using analytical approximations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/35_two_sample_tests.html">Section 3.5 — Two-sample hypothesis tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/36_design.html">Section 3.6 — Statistical design and error analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/37_inventory_stats_tests.html">Section 3.7 — Inventory of statistical tests</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../examples/README.html">Statistical analysis examples</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../examples/statistical_design.html">Statistical design examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/one_sample_z-test.html">One-sample z-test for the mean</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/one_sample_t-test.html">One-sample t-test for the mean</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/two_sample_t-test.html">Welch’s two-sample <span class="math notranslate nohighlight">\(t\)</span>-test</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/ANOVA.html">Analysis of variance (ANOVA)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/two_sample_equivalence_test.html">Two-sample equivalence test</a></li>
+
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../notebooks/40_LINEAR_MODELS.html">Chapter 4 — Linear models</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/41_simple_linear_regression.html">Section 4.1 — Simple linear regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/42_multiple_linear_regression.html">Section 4.2 — Multiple linear regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/43_interpreting_linear_models.html">Section 4.3 — Interpreting linear models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/44_regression_with_categorical_predictors.html">Section 4.4 — Regression with categorical predictors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/45_causal_inference.html">Section 4.5 — Model selection for causal inference</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/46_generalized_linear_models.html">Section 4.6 — Generalized linear models</a></li>
+
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../notebooks/50_BAYESIAN_STATS.html">Chapter 5 — Bayesian statistics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/51_intro_to_Bayesian_stats.html">Section 5.1 — Introduction to Bayesian statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/52_Bayesian_inference_computations.html">Section 5.2 — Bayesian inference computations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/53_Bayesian_linear_models.html">Section 5.3 — Bayesian linear models</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/54_difference_between_means.html">Section 5.4 — Bayesian difference between means</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/55_hierarchical_models.html">Section 5.5 — Hierarchical models</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="appendix.html">Appendix</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="python_tutorial.html">Appendix C — Python tutorial</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="toctree-l2"><a class="reference internal" href="pandas_tutorial.html">Appendix D — Pandas tutorial</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Appendix E — Seaborn tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="calculus_tutorial.html">Appendix F — Calculus tutorial</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../reading_group/info.html">noBSstats Reading Group</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../blogposts/index.html">Blog posts</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../blogposts/python_for_stats.html">Using Python for learning statistics Part 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../blogposts/probability_models.html">Using Python for probability calculations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../blogposts/sampling_distributions.html">Sampling distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../blogposts/bootstrap.html">Bootstrap estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../blogposts/simulation_hypothesis_tests.html">Hypothesis testing using simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../blogposts/permutation_test.html">Permutation tests for comparing two groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../blogposts/stats_procedures.html">Python libraries for doing statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../blogposts/python_stats_libraries.html">Python libraries for doing statistics</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/minireference/noBSstats/main?urlpath=lab/tree/./tutorials/seaborn_tutorial.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Binder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Binder logo" src="../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/minireference/noBSstats" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/minireference/noBSstats/issues/new?title=Issue%20on%20page%20%2Ftutorials/seaborn_tutorial.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/tutorials/seaborn_tutorial.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Appendix E — Seaborn tutorial</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebook-setup">Notebook setup</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#installing-seaborn-and-other-libraries">Installing Seaborn and other libraries</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#setting-display-options">Setting display options</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#download-datasets">Download datasets</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-datasets">Loading datasets</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seaborn-overview">Seaborn overview</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seaborn-line-plots">Seaborn line plots</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simple-line-plot">Simple line plot</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#line-plot-with-statistical-calculations">Line plot with statistical calculations</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pandas-datasets">Pandas datasets</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-iris-dataset">The iris dataset</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-tips-dataset">The tips dataset</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-students-dataset">The students dataset</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inventory-of-seaborn-plotting-functions">Inventory of Seaborn plotting functions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#strip-plots">Strip plots</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#point-plots">Point plots</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scatter-plots">Scatter plots</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#line-plot">Line plot</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#histograms">Histograms</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kernel-density-plots">Kernel density plots</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#box-plots">Box plots</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#violin-plots">Violin plots</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#empirical-cumulative-distribution-function-ecdf-plot">Empirical Cumulative Distribution Function (ECDF) plot</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#count-plot">Count plot</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bar-plots">Bar plots</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-function-graphs">Plotting function graphs</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-model-plots">Linear model plots</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-regression-plot">Linear regression plot</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#residuals-plot">Residuals plot</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-model-plots-from-scratch">Linear model plots from scratch</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-model-plots-using-statsmodels">Linear model plots using <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-probability-distributions">Plotting probability distributions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#line-plots-for-continuous-random-variables">Line plots for continuous random variables</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stem-plots-for-discrete-random-variables">Stem plots for discrete random variables</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#customizing-plots">Customizing plots</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#anotomy-of-a-figure">Anotomy of a figure</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-text-annotations">Adding text annotations</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#layout-options">Layout options</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#matplotlib-pass-through-options">Matplotlib pass through options</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bonus-topics">Bonus topics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-visualization-tips">Data visualization tips</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#links">Links</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#official-docs">Official docs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tutorials">Tutorials</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#video-tutorials">Video tutorials</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#other-plotting-libraries">Other plotting libraries:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cut-material">CUT MATERIAL</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fmri">FMRI</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-dow-jones-dataset">The Dow Jones dataset</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="appendix-e-seaborn-tutorial">
+<h1>Appendix E — Seaborn tutorial<a class="headerlink" href="#appendix-e-seaborn-tutorial" title="Link to this heading">#</a></h1>
+<p>In this tutorial,
+we’ll learn about the Seaborn library for data visualizations.
+We’ll start by explaining the plotting function interface that is common to all Seaborn functions,
+then list all the Seaborn functions thought examples.
+We’ll also describe the various options for customize plots’ the appearance,
+add adding annotations and labels.</p>
+<p>Click the binder button <a class="reference external" href="https://mybinder.org/v2/gh/minireference/noBSstats/HEAD?labpath=tutorials/seaborn_tutorial.ipynb"><img alt="Binder" src="https://mybinder.org/badge_logo.svg" /></a>
+or this link <a class="reference external" href="https://bit.ly/4twDwZu"><code class="docutils literal notranslate"><span class="pre">bit.ly/4twDwZu</span></code></a>
+to play with the tutorial notebook interactively.</p>
+<section id="notebook-setup">
+<h2>Notebook setup<a class="headerlink" href="#notebook-setup" title="Link to this heading">#</a></h2>
+<p>Before we begin the tutorial,
+we we must take care of some preliminary tasks
+to prepare the notebook environment.
+Feel free to skip this commands</p>
+<section id="installing-seaborn-and-other-libraries">
+<h3>Installing Seaborn and other libraries<a class="headerlink" href="#installing-seaborn-and-other-libraries" title="Link to this heading">#</a></h3>
+<p>We can install Python package <code class="docutils literal notranslate"><span class="pre">pandas</span></code> in the current environment using the <code class="docutils literal notranslate"><span class="pre">%pip</span></code> Jupyter magic command.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">pip</span> install --quiet seaborn matplotlib pandas ministats
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Note: you may need to restart the kernel to use updated packages.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="setting-display-options">
+<h3>Setting display options<a class="headerlink" href="#setting-display-options" title="Link to this heading">#</a></h3>
+<p>Next,
+we run some commands to configure the display of figures
+and number formatting.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">set_theme</span><span class="p">(</span>
+    <span class="n">context</span><span class="o">=</span><span class="s2">&quot;paper&quot;</span><span class="p">,</span>
+    <span class="n">style</span><span class="o">=</span><span class="s2">&quot;whitegrid&quot;</span><span class="p">,</span>
+    <span class="n">palette</span><span class="o">=</span><span class="s2">&quot;colorblind&quot;</span><span class="p">,</span>
+    <span class="n">rc</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;font.family&quot;</span><span class="p">:</span> <span class="s2">&quot;serif&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;font.serif&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Palatino&quot;</span><span class="p">,</span> <span class="s2">&quot;DejaVu Serif&quot;</span><span class="p">,</span> <span class="s2">&quot;serif&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;figure.figsize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">)},</span>
+<span class="p">)</span>
+<span class="o">%</span><span class="k">config</span> InlineBackend.figure_format = &#39;retina&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># simple float __repr__</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">legacy</span><span class="o">=</span><span class="s1">&#39;1.25&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="download-datasets">
+<h3>Download datasets<a class="headerlink" href="#download-datasets" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">ministats</span></code> package provides a helper function
+for downloading datasets.
+We’ll use this function now to make sure the <code class="docutils literal notranslate"><span class="pre">datasets/</span></code> folder
+that accompanies this tutorial is present.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># download datasets/ directory if necessary</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ministats</span><span class="w"> </span><span class="kn">import</span> <span class="n">ensure_datasets</span>
+<span class="n">ensure_datasets</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>datasets/ directory present and ready.
+</pre></div>
+</div>
+</div>
+</div>
+<p>With all these preliminaries in place,
+we can now get the Pandas show started!</p>
+</section>
+<section id="loading-datasets">
+<h3>Loading datasets<a class="headerlink" href="#loading-datasets" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">healthexp</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">load_dataset</span><span class="p">(</span><span class="s2">&quot;healthexp&quot;</span><span class="p">)</span>
+<span class="n">healthexp</span>
+<span class="c1"># pyg.walk(healthexp)</span>
+
+<span class="c1"># TODO: show how to add per-datum labels</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Year</th>
+      <th>Country</th>
+      <th>Spending_USD</th>
+      <th>Life_Expectancy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1970</td>
+      <td>Germany</td>
+      <td>252.311</td>
+      <td>70.6</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1970</td>
+      <td>France</td>
+      <td>192.143</td>
+      <td>72.2</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1970</td>
+      <td>Great Britain</td>
+      <td>123.993</td>
+      <td>71.9</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1970</td>
+      <td>Japan</td>
+      <td>150.437</td>
+      <td>72.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1970</td>
+      <td>USA</td>
+      <td>326.961</td>
+      <td>70.9</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>269</th>
+      <td>2020</td>
+      <td>Germany</td>
+      <td>6938.983</td>
+      <td>81.1</td>
+    </tr>
+    <tr>
+      <th>270</th>
+      <td>2020</td>
+      <td>France</td>
+      <td>5468.418</td>
+      <td>82.3</td>
+    </tr>
+    <tr>
+      <th>271</th>
+      <td>2020</td>
+      <td>Great Britain</td>
+      <td>5018.700</td>
+      <td>80.4</td>
+    </tr>
+    <tr>
+      <th>272</th>
+      <td>2020</td>
+      <td>Japan</td>
+      <td>4665.641</td>
+      <td>84.7</td>
+    </tr>
+    <tr>
+      <th>273</th>
+      <td>2020</td>
+      <td>USA</td>
+      <td>11859.179</td>
+      <td>77.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>274 rows × 4 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># dots = sns.load_dataset(&quot;dots&quot;)</span>
+<span class="c1"># data = dots[(dots[&quot;choice&quot;]==&quot;T1&quot;) &amp; (dots[&quot;align&quot;]==&quot;dots&quot;)]</span>
+<span class="c1"># sns.lineplot(data=data, x=&quot;time&quot;, y=&quot;firing_rate&quot;)</span>
+<span class="c1"># # data[&quot;align&quot;].unique()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># attention = sns.load_dataset(&quot;attention&quot;, index_col=0)</span>
+<span class="c1"># attention</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="seaborn-overview">
+<h2>Seaborn overview<a class="headerlink" href="#seaborn-overview" title="Link to this heading">#</a></h2>
+<p>The Seaborn library is a powerful toolbox for generating statistical data visualizations.
+Seaborn makes it very easy to visualize data stored in Pandas data frames.
+You can generate standard statistical plots like <code class="docutils literal notranslate"><span class="pre">barplot</span></code>s, <code class="docutils literal notranslate"><span class="pre">stripplot</span></code>s, <code class="docutils literal notranslate"><span class="pre">scatterplot</span></code>s,
+using just a few lines of code.
+If you plan to pursue a career in a data-related field,
+learning a bit about Seeaborn is highly recommend.</p>
+<!--
+We'll look at a few examples of the Seaborn functions
+for generating statistical visualizations of data stored in Pandas data frames.
+The combination of the JupyterLab computational environment
+and the Python libraries Pandas and Seaborn
+is a best-in-class toolset for doing statistics in Python.
+
+Seaborn includes numerous plot functions like `stripplot`, `scatterplot`,
+`histplot`, `boxplot`, `barplot`, and `countplot`.
+In this subsection,
+we'll show some examples of these function.
+-->
+<section id="learning-objectives">
+<h3>Learning objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h3>
+<p>In this tutorial, I’m going to show you how to …</p>
+</section>
+</section>
+<section id="seaborn-line-plots">
+<h2>Seaborn line plots<a class="headerlink" href="#seaborn-line-plots" title="Link to this heading">#</a></h2>
+<p>We’ll start by playing with the Seaborn function for generating line plots <code class="docutils literal notranslate"><span class="pre">sns.lineplot</span></code>.
+We’ll use this function to learn the the syntax for mapping data to graph attributes,
+which is common to all Seaborn plotting function.</p>
+<section id="simple-line-plot">
+<h3>Simple line plot<a class="headerlink" href="#simple-line-plot" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">ys</span> <span class="o">=</span> <span class="n">xs</span><span class="o">**</span><span class="mi">2</span> 
+<span class="n">quadfun</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;x&quot;</span><span class="p">:</span><span class="n">xs</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span><span class="n">ys</span><span class="p">})</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">quadfun</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;$f(x) = x^2$&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: xlabel=&#39;x&#39;, ylabel=&#39;y&#39;&gt;
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/d5599843288a4a7595ac75f49f3604e5824a0f61510639134f426f16f5cc51cf.png"><img alt="../_images/d5599843288a4a7595ac75f49f3604e5824a0f61510639134f426f16f5cc51cf.png" src="../_images/d5599843288a4a7595ac75f49f3604e5824a0f61510639134f426f16f5cc51cf.png" style="width: 445px; height: 192px;" />
+</a>
+</div>
+</div>
+</section>
+<section id="line-plot-with-statistical-calculations">
+<h3>Line plot with statistical calculations<a class="headerlink" href="#line-plot-with-statistical-calculations" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wloss</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;datasets/wloss.csv&quot;</span><span class="p">)</span>
+<span class="n">wloss</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>week</th>
+      <th>weight</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>338</th>
+      <td>14</td>
+      <td>103.9</td>
+    </tr>
+    <tr>
+      <th>466</th>
+      <td>19</td>
+      <td>97.9</td>
+    </tr>
+    <tr>
+      <th>167</th>
+      <td>7</td>
+      <td>108.8</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">wloss</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;week&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;weight&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: xlabel=&#39;week&#39;, ylabel=&#39;weight&#39;&gt;
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/5f026404741ff2d5b57262e8d5e94ef168cf851791af5aec960c0dc110bb9478.png"><img alt="../_images/5f026404741ff2d5b57262e8d5e94ef168cf851791af5aec960c0dc110bb9478.png" src="../_images/5f026404741ff2d5b57262e8d5e94ef168cf851791af5aec960c0dc110bb9478.png" style="width: 461px; height: 192px;" />
+</a>
+</div>
+</div>
+</section>
+</section>
+<section id="pandas-datasets">
+<h2>Pandas datasets<a class="headerlink" href="#pandas-datasets" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="the-iris-dataset">
+<h3>The iris dataset<a class="headerlink" href="#the-iris-dataset" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">iris</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">load_dataset</span><span class="p">(</span><span class="s2">&quot;iris&quot;</span><span class="p">)</span>
+<span class="n">iris</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sepal_length</th>
+      <th>sepal_width</th>
+      <th>petal_length</th>
+      <th>petal_width</th>
+      <th>species</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>5.1</td>
+      <td>3.5</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>4.9</td>
+      <td>3.0</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>4.7</td>
+      <td>3.2</td>
+      <td>1.3</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4.6</td>
+      <td>3.1</td>
+      <td>1.5</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5.0</td>
+      <td>3.6</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="the-tips-dataset">
+<h3>The tips dataset<a class="headerlink" href="#the-tips-dataset" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tips</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">load_dataset</span><span class="p">(</span><span class="s2">&quot;tips&quot;</span><span class="p">)</span>
+<span class="n">tips</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>total_bill</th>
+      <th>tip</th>
+      <th>sex</th>
+      <th>smoker</th>
+      <th>day</th>
+      <th>time</th>
+      <th>size</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>16.99</td>
+      <td>1.01</td>
+      <td>Female</td>
+      <td>No</td>
+      <td>Sun</td>
+      <td>Dinner</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>10.34</td>
+      <td>1.66</td>
+      <td>Male</td>
+      <td>No</td>
+      <td>Sun</td>
+      <td>Dinner</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>21.01</td>
+      <td>3.50</td>
+      <td>Male</td>
+      <td>No</td>
+      <td>Sun</td>
+      <td>Dinner</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>23.68</td>
+      <td>3.31</td>
+      <td>Male</td>
+      <td>No</td>
+      <td>Sun</td>
+      <td>Dinner</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>24.59</td>
+      <td>3.61</td>
+      <td>Female</td>
+      <td>No</td>
+      <td>Sun</td>
+      <td>Dinner</td>
+      <td>4</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="the-students-dataset">
+<h3>The students dataset<a class="headerlink" href="#the-students-dataset" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">students</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;datasets/students.csv&quot;</span><span class="p">,</span>
+                       <span class="n">index_col</span><span class="o">=</span><span class="s2">&quot;student_ID&quot;</span><span class="p">)</span>
+<span class="n">students</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>background</th>
+      <th>curriculum</th>
+      <th>effort</th>
+      <th>score</th>
+    </tr>
+    <tr>
+      <th>student_ID</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>arts</td>
+      <td>debate</td>
+      <td>10.96</td>
+      <td>75.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>science</td>
+      <td>lecture</td>
+      <td>8.69</td>
+      <td>75.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>arts</td>
+      <td>debate</td>
+      <td>8.60</td>
+      <td>67.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>arts</td>
+      <td>lecture</td>
+      <td>7.92</td>
+      <td>70.3</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>science</td>
+      <td>debate</td>
+      <td>9.90</td>
+      <td>76.1</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>business</td>
+      <td>debate</td>
+      <td>10.80</td>
+      <td>79.8</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>science</td>
+      <td>lecture</td>
+      <td>7.81</td>
+      <td>72.7</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>business</td>
+      <td>lecture</td>
+      <td>9.13</td>
+      <td>75.4</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>business</td>
+      <td>lecture</td>
+      <td>5.21</td>
+      <td>57.0</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>science</td>
+      <td>lecture</td>
+      <td>7.71</td>
+      <td>69.0</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>business</td>
+      <td>debate</td>
+      <td>9.82</td>
+      <td>70.4</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>arts</td>
+      <td>debate</td>
+      <td>11.53</td>
+      <td>96.2</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>science</td>
+      <td>debate</td>
+      <td>7.10</td>
+      <td>62.9</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>science</td>
+      <td>lecture</td>
+      <td>6.39</td>
+      <td>57.6</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>arts</td>
+      <td>debate</td>
+      <td>12.00</td>
+      <td>84.3</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">students</span><span class="p">,</span>
+             <span class="n">x</span><span class="o">=</span><span class="s2">&quot;effort&quot;</span><span class="p">,</span>
+             <span class="n">y</span><span class="o">=</span><span class="s2">&quot;score&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: xlabel=&#39;effort&#39;, ylabel=&#39;score&#39;&gt;
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/6186ce64730b22210d48c520c5c52ff89eeb5488d021da0cb107fa988b6bcf7c.png"><img alt="../_images/6186ce64730b22210d48c520c5c52ff89eeb5488d021da0cb107fa988b6bcf7c.png" src="../_images/6186ce64730b22210d48c520c5c52ff89eeb5488d021da0cb107fa988b6bcf7c.png" style="width: 453px; height: 192px;" />
+</a>
+</div>
+</div>
+</section>
+</section>
+<section id="inventory-of-seaborn-plotting-functions">
+<h2>Inventory of Seaborn plotting functions<a class="headerlink" href="#inventory-of-seaborn-plotting-functions" title="Link to this heading">#</a></h2>
+<section id="strip-plots">
+<h3>Strip plots<a class="headerlink" href="#strip-plots" title="Link to this heading">#</a></h3>
+<p>Use the function <code class="docutils literal notranslate"><span class="pre">sns.stripplot</span></code></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">stripplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">students</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;score&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/2818176aee26d5c43de82c2ecc9bb8d6b6976520690b34be8cff96beca5ace99.png"><img alt="../_images/2818176aee26d5c43de82c2ecc9bb8d6b6976520690b34be8cff96beca5ace99.png" src="../_images/2818176aee26d5c43de82c2ecc9bb8d6b6976520690b34be8cff96beca5ace99.png" style="width: 407px; height: 192px;" />
+</a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">stripplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">students</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;score&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/977378fcc98e712f53ba4b62fca574f784282bd7064126c0544433e76d3ab146.png"><img alt="../_images/977378fcc98e712f53ba4b62fca574f784282bd7064126c0544433e76d3ab146.png" src="../_images/977378fcc98e712f53ba4b62fca574f784282bd7064126c0544433e76d3ab146.png" style="width: 484px; height: 139px;" />
+</a>
+</div>
+</div>
+<p>ALT. <code class="docutils literal notranslate"><span class="pre">sns.swarmplot</span></code> or <code class="docutils literal notranslate"><span class="pre">sns.rugplot</span></code></p>
+</section>
+<section id="point-plots">
+<h3>Point plots<a class="headerlink" href="#point-plots" title="Link to this heading">#</a></h3>
+<p>Use the function <code class="docutils literal notranslate"><span class="pre">sns.pointplot</span></code></p>
+</section>
+<section id="scatter-plots">
+<h3>Scatter plots<a class="headerlink" href="#scatter-plots" title="Link to this heading">#</a></h3>
+<p>Use the function <code class="docutils literal notranslate"><span class="pre">sns.scatterplot</span></code></p>
+</section>
+<section id="line-plot">
+<h3>Line plot<a class="headerlink" href="#line-plot" title="Link to this heading">#</a></h3>
+<p>Use the function <code class="docutils literal notranslate"><span class="pre">sns.lineplot</span></code></p>
+</section>
+<section id="histograms">
+<h3>Histograms<a class="headerlink" href="#histograms" title="Link to this heading">#</a></h3>
+<p>Use the function <code class="docutils literal notranslate"><span class="pre">sns.histplot</span></code></p>
+</section>
+<section id="kernel-density-plots">
+<h3>Kernel density plots<a class="headerlink" href="#kernel-density-plots" title="Link to this heading">#</a></h3>
+<p>Use the function <code class="docutils literal notranslate"><span class="pre">sns.kdeplot</span></code></p>
+</section>
+<section id="box-plots">
+<h3>Box plots<a class="headerlink" href="#box-plots" title="Link to this heading">#</a></h3>
+<p>Use the function <code class="docutils literal notranslate"><span class="pre">sns.boxplot</span></code></p>
+</section>
+<section id="violin-plots">
+<h3>Violin plots<a class="headerlink" href="#violin-plots" title="Link to this heading">#</a></h3>
+<p>Use the function <code class="docutils literal notranslate"><span class="pre">sns.violinplot</span></code></p>
+</section>
+<section id="empirical-cumulative-distribution-function-ecdf-plot">
+<h3>Empirical Cumulative Distribution Function (ECDF) plot<a class="headerlink" href="#empirical-cumulative-distribution-function-ecdf-plot" title="Link to this heading">#</a></h3>
+<p>Use the function <code class="docutils literal notranslate"><span class="pre">sns.ecdfplot</span></code></p>
+</section>
+<section id="count-plot">
+<h3>Count plot<a class="headerlink" href="#count-plot" title="Link to this heading">#</a></h3>
+<p>Use the function <code class="docutils literal notranslate"><span class="pre">sns.countplot</span></code></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">titanic</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">load_dataset</span><span class="p">(</span><span class="s2">&quot;titanic&quot;</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">countplot</span><span class="p">(</span><span class="n">titanic</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;sex&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: xlabel=&#39;class&#39;, ylabel=&#39;count&#39;&gt;
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/297c49ed48b549131af7fe9944b5d43d47a7903e7cd596d29e1263a5a658e884.png"><img alt="../_images/297c49ed48b549131af7fe9944b5d43d47a7903e7cd596d29e1263a5a658e884.png" src="../_images/297c49ed48b549131af7fe9944b5d43d47a7903e7cd596d29e1263a5a658e884.png" style="width: 461px; height: 192px;" />
+</a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">titanic</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>survived</th>
+      <th>pclass</th>
+      <th>sex</th>
+      <th>age</th>
+      <th>sibsp</th>
+      <th>parch</th>
+      <th>fare</th>
+      <th>embarked</th>
+      <th>class</th>
+      <th>who</th>
+      <th>adult_male</th>
+      <th>deck</th>
+      <th>embark_town</th>
+      <th>alive</th>
+      <th>alone</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>3</td>
+      <td>male</td>
+      <td>22.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>7.2500</td>
+      <td>S</td>
+      <td>Third</td>
+      <td>man</td>
+      <td>True</td>
+      <td>NaN</td>
+      <td>Southampton</td>
+      <td>no</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>1</td>
+      <td>female</td>
+      <td>38.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>71.2833</td>
+      <td>C</td>
+      <td>First</td>
+      <td>woman</td>
+      <td>False</td>
+      <td>C</td>
+      <td>Cherbourg</td>
+      <td>yes</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1</td>
+      <td>3</td>
+      <td>female</td>
+      <td>26.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>7.9250</td>
+      <td>S</td>
+      <td>Third</td>
+      <td>woman</td>
+      <td>False</td>
+      <td>NaN</td>
+      <td>Southampton</td>
+      <td>yes</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1</td>
+      <td>1</td>
+      <td>female</td>
+      <td>35.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>53.1000</td>
+      <td>S</td>
+      <td>First</td>
+      <td>woman</td>
+      <td>False</td>
+      <td>C</td>
+      <td>Southampton</td>
+      <td>yes</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0</td>
+      <td>3</td>
+      <td>male</td>
+      <td>35.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>8.0500</td>
+      <td>S</td>
+      <td>Third</td>
+      <td>man</td>
+      <td>True</td>
+      <td>NaN</td>
+      <td>Southampton</td>
+      <td>no</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>886</th>
+      <td>0</td>
+      <td>2</td>
+      <td>male</td>
+      <td>27.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>13.0000</td>
+      <td>S</td>
+      <td>Second</td>
+      <td>man</td>
+      <td>True</td>
+      <td>NaN</td>
+      <td>Southampton</td>
+      <td>no</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>887</th>
+      <td>1</td>
+      <td>1</td>
+      <td>female</td>
+      <td>19.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>30.0000</td>
+      <td>S</td>
+      <td>First</td>
+      <td>woman</td>
+      <td>False</td>
+      <td>B</td>
+      <td>Southampton</td>
+      <td>yes</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>888</th>
+      <td>0</td>
+      <td>3</td>
+      <td>female</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>2</td>
+      <td>23.4500</td>
+      <td>S</td>
+      <td>Third</td>
+      <td>woman</td>
+      <td>False</td>
+      <td>NaN</td>
+      <td>Southampton</td>
+      <td>no</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>889</th>
+      <td>1</td>
+      <td>1</td>
+      <td>male</td>
+      <td>26.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>30.0000</td>
+      <td>C</td>
+      <td>First</td>
+      <td>man</td>
+      <td>True</td>
+      <td>C</td>
+      <td>Cherbourg</td>
+      <td>yes</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>890</th>
+      <td>0</td>
+      <td>3</td>
+      <td>male</td>
+      <td>32.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>7.7500</td>
+      <td>Q</td>
+      <td>Third</td>
+      <td>man</td>
+      <td>True</td>
+      <td>NaN</td>
+      <td>Queenstown</td>
+      <td>no</td>
+      <td>True</td>
+    </tr>
+  </tbody>
+</table>
+<p>891 rows × 15 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">titanic</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;sex&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;survived&quot;</span><span class="p">,</span> <span class="n">estimator</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/31596afddb7d6858d2f5004586ef6ba2812f606ecfcd57de44aec1712c6bb1d9.png"><img alt="../_images/31596afddb7d6858d2f5004586ef6ba2812f606ecfcd57de44aec1712c6bb1d9.png" src="../_images/31596afddb7d6858d2f5004586ef6ba2812f606ecfcd57de44aec1712c6bb1d9.png" style="width: 461px; height: 192px;" />
+</a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">titanic_counts</span> <span class="o">=</span> <span class="n">titanic</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">titanic_counts</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;class&quot;</span><span class="p">,</span>  <span class="n">y</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: xlabel=&#39;class&#39;, ylabel=&#39;count&#39;&gt;
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/59922a9cd8e2b5b1d1e1e47011744f7e44575830e61e9a29fc697d213967bf5c.png"><img alt="../_images/59922a9cd8e2b5b1d1e1e47011744f7e44575830e61e9a29fc697d213967bf5c.png" src="../_images/59922a9cd8e2b5b1d1e1e47011744f7e44575830e61e9a29fc697d213967bf5c.png" style="width: 461px; height: 192px;" />
+</a>
+</div>
+</div>
+</section>
+<section id="bar-plots">
+<h3>Bar plots<a class="headerlink" href="#bar-plots" title="Link to this heading">#</a></h3>
+<p>Use the function <code class="docutils literal notranslate"><span class="pre">sns.barplot</span></code></p>
+</section>
+<section id="plotting-function-graphs">
+<h3>Plotting function graphs<a class="headerlink" href="#plotting-function-graphs" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">g</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="n">gxs</span> <span class="o">=</span> <span class="n">g</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">xs</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">gxs</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Graph of g(x)&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/8e2882ec3ba80a7c2a489ccbc510c7d0ae4ffb6e6ebc01482b4f69a11e5cddd4.png"><img alt="../_images/8e2882ec3ba80a7c2a489ccbc510c7d0ae4ffb6e6ebc01482b4f69a11e5cddd4.png" src="../_images/8e2882ec3ba80a7c2a489ccbc510c7d0ae4ffb6e6ebc01482b4f69a11e5cddd4.png" style="width: 434px; height: 173px;" />
+</a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># # FIGURES ONLY</span>
+<span class="c1"># from ministats.utils import savefigure</span>
+<span class="c1"># ax = sns.lineplot(x=xs, y=gxs, label=&quot;Graph of g(x)&quot;);</span>
+<span class="c1"># filename = &quot;figures/tutorials/seaborn/graph_of_function_g_eq_halfx2.pdf&quot;</span>
+<span class="c1"># savefigure(ax, filename)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="linear-model-plots">
+<h2>Linear model plots<a class="headerlink" href="#linear-model-plots" title="Link to this heading">#</a></h2>
+<section id="linear-regression-plot">
+<h3>Linear regression plot<a class="headerlink" href="#linear-regression-plot" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">regplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">tips</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;total_bill&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;tip&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/f8d8ea579c84f174eeef5aa30a4f37014fb16df57ac0f55cf5fdec7981d65e09.png"><img alt="../_images/f8d8ea579c84f174eeef5aa30a4f37014fb16df57ac0f55cf5fdec7981d65e09.png" src="../_images/f8d8ea579c84f174eeef5aa30a4f37014fb16df57ac0f55cf5fdec7981d65e09.png" style="width: 453px; height: 193px;" />
+</a>
+</div>
+</div>
+</section>
+<section id="residuals-plot">
+<h3>Residuals plot<a class="headerlink" href="#residuals-plot" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">residplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">tips</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;total_bill&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;tip&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/ff84d7bdaf89f91ae7e0031e69e44387e9aae6cd98a4641f6b8bd6f5a8b1d2cb.png"><img alt="../_images/ff84d7bdaf89f91ae7e0031e69e44387e9aae6cd98a4641f6b8bd6f5a8b1d2cb.png" src="../_images/ff84d7bdaf89f91ae7e0031e69e44387e9aae6cd98a4641f6b8bd6f5a8b1d2cb.png" style="width: 456px; height: 196px;" />
+</a>
+</div>
+</div>
+</section>
+<section id="linear-model-plots-from-scratch">
+<h3>Linear model plots from scratch<a class="headerlink" href="#linear-model-plots-from-scratch" title="Link to this heading">#</a></h3>
+</section>
+<section id="linear-model-plots-using-statsmodels">
+<h3>Linear model plots using <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code><a class="headerlink" href="#linear-model-plots-using-statsmodels" title="Link to this heading">#</a></h3>
+</section>
+</section>
+<section id="plotting-probability-distributions">
+<h2>Plotting probability distributions<a class="headerlink" href="#plotting-probability-distributions" title="Link to this heading">#</a></h2>
+<section id="line-plots-for-continuous-random-variables">
+<h3>Line plots for continuous random variables<a class="headerlink" href="#line-plots-for-continuous-random-variables" title="Link to this heading">#</a></h3>
+</section>
+<section id="stem-plots-for-discrete-random-variables">
+<h3>Stem plots for discrete random variables<a class="headerlink" href="#stem-plots-for-discrete-random-variables" title="Link to this heading">#</a></h3>
+</section>
+</section>
+<section id="customizing-plots">
+<h2>Customizing plots<a class="headerlink" href="#customizing-plots" title="Link to this heading">#</a></h2>
+<section id="anotomy-of-a-figure">
+<h3>Anotomy of a figure<a class="headerlink" href="#anotomy-of-a-figure" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.ticker</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultipleLocator</span><span class="p">,</span> <span class="n">FuncFormatter</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">Y1</span> <span class="o">=</span> <span class="mi">3</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">Y2</span> <span class="o">=</span> <span class="mi">1</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">X</span><span class="o">/</span><span class="mf">0.75</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>
+<span class="n">Y3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">Y1</span><span class="p">,</span> <span class="n">Y2</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">minor_tick</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">pos</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">x</span> <span class="o">%</span> <span class="mf">1.0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">x</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">MultipleLocator</span><span class="p">(</span><span class="mf">1.000</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_minor_locator</span><span class="p">(</span><span class="n">MultipleLocator</span><span class="p">(</span><span class="mf">0.250</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">MultipleLocator</span><span class="p">(</span><span class="mf">1.000</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_minor_locator</span><span class="p">(</span><span class="n">MultipleLocator</span><span class="p">(</span><span class="mf">0.250</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_minor_formatter</span><span class="p">(</span><span class="n">FuncFormatter</span><span class="p">(</span><span class="n">minor_tick</span><span class="p">))</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">which</span><span class="o">=</span><span class="s1">&#39;minor&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">which</span><span class="o">=</span><span class="s1">&#39;minor&#39;</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">labelcolor</span><span class="o">=</span><span class="s1">&#39;0.25&#39;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;.25&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=-</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y1</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">1.00</span><span class="p">),</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Blue signal&quot;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y2</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="p">(</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">),</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Red signal&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y3</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Anatomy of a figure&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;X axis label&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Y axis label&quot;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">circle</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.15</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.patches</span><span class="w"> </span><span class="kn">import</span> <span class="n">Circle</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.patheffects</span><span class="w"> </span><span class="kn">import</span> <span class="n">withStroke</span>
+    <span class="n">circle</span> <span class="o">=</span> <span class="n">Circle</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">radius</span><span class="p">,</span> <span class="n">clip_on</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                    <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">.0125</span><span class="p">),</span>
+                    <span class="n">path_effects</span><span class="o">=</span><span class="p">[</span><span class="n">withStroke</span><span class="p">(</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">foreground</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">)])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="n">circle</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">text</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">backgroundcolor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+            <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+
+
+<span class="c1"># Minor tick</span>
+<span class="n">circle</span><span class="p">(</span><span class="mf">0.50</span><span class="p">,</span> <span class="o">-</span><span class="mf">.05</span><span class="p">)</span>
+<span class="n">text</span><span class="p">(</span><span class="mf">0.50</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.25</span><span class="p">,</span> <span class="s2">&quot;Minor tick label&quot;</span><span class="p">)</span>
+
+<span class="c1"># Major tick</span>
+<span class="n">circle</span><span class="p">(</span><span class="mf">4.00</span><span class="p">,</span> <span class="mf">2.00</span><span class="p">)</span>
+<span class="n">text</span><span class="p">(</span><span class="mf">4.00</span><span class="p">,</span> <span class="mf">1.80</span><span class="p">,</span> <span class="s2">&quot;Major tick&quot;</span><span class="p">)</span>
+
+<span class="c1"># Minor tick</span>
+<span class="n">circle</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">4.00</span><span class="p">)</span>
+<span class="n">text</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">3.80</span><span class="p">,</span> <span class="s2">&quot;Minor tick&quot;</span><span class="p">)</span>
+
+<span class="c1"># Major tick label</span>
+<span class="n">circle</span><span class="p">(</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">3.00</span><span class="p">)</span>
+<span class="n">text</span><span class="p">(</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">2.80</span><span class="p">,</span> <span class="s2">&quot;Major tick label&quot;</span><span class="p">)</span>
+
+<span class="c1"># X Label</span>
+<span class="n">circle</span><span class="p">(</span><span class="mf">1.80</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.22</span><span class="p">)</span>
+<span class="n">text</span><span class="p">(</span><span class="mf">1.80</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.4</span><span class="p">,</span> <span class="s2">&quot;X axis label&quot;</span><span class="p">)</span>
+
+<span class="c1"># Y Label</span>
+<span class="n">circle</span><span class="p">(</span><span class="o">-</span><span class="mf">0.20</span><span class="p">,</span> <span class="mf">1.80</span><span class="p">)</span>
+<span class="n">text</span><span class="p">(</span><span class="o">-</span><span class="mf">0.20</span><span class="p">,</span> <span class="mf">1.6</span><span class="p">,</span> <span class="s2">&quot;Y axis label&quot;</span><span class="p">)</span>
+
+<span class="c1"># Title</span>
+<span class="n">circle</span><span class="p">(</span><span class="mf">1.60</span><span class="p">,</span> <span class="mf">4.10</span><span class="p">)</span>
+<span class="n">text</span><span class="p">(</span><span class="mf">1.60</span><span class="p">,</span> <span class="mf">3.9</span><span class="p">,</span> <span class="s2">&quot;Title&quot;</span><span class="p">)</span>
+
+<span class="c1"># Blue plot</span>
+<span class="n">circle</span><span class="p">(</span><span class="mf">1.75</span><span class="p">,</span> <span class="mf">2.80</span><span class="p">)</span>
+<span class="n">text</span><span class="p">(</span><span class="mf">1.75</span><span class="p">,</span> <span class="mf">2.60</span><span class="p">,</span> <span class="s2">&quot;Line</span><span class="se">\n</span><span class="s2">(line plot)&quot;</span><span class="p">)</span>
+
+<span class="c1"># Red plot</span>
+<span class="n">circle</span><span class="p">(</span><span class="mf">1.20</span><span class="p">,</span> <span class="mf">0.60</span><span class="p">)</span>
+<span class="n">text</span><span class="p">(</span><span class="mf">1.20</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="s2">&quot;Line</span><span class="se">\n</span><span class="s2">(line plot)&quot;</span><span class="p">)</span>
+
+<span class="c1"># Scatter plot</span>
+<span class="n">circle</span><span class="p">(</span><span class="mf">3.20</span><span class="p">,</span> <span class="mf">1.75</span><span class="p">)</span>
+<span class="n">text</span><span class="p">(</span><span class="mf">3.20</span><span class="p">,</span> <span class="mf">1.55</span><span class="p">,</span> <span class="s2">&quot;Markers</span><span class="se">\n</span><span class="s2">(scatter plot)&quot;</span><span class="p">)</span>
+
+<span class="c1"># Grid</span>
+<span class="n">circle</span><span class="p">(</span><span class="mf">3.00</span><span class="p">,</span> <span class="mf">3.00</span><span class="p">)</span>
+<span class="n">text</span><span class="p">(</span><span class="mf">3.00</span><span class="p">,</span> <span class="mf">2.80</span><span class="p">,</span> <span class="s2">&quot;Grid&quot;</span><span class="p">)</span>
+
+<span class="c1"># Legend</span>
+<span class="n">circle</span><span class="p">(</span><span class="mf">3.70</span><span class="p">,</span> <span class="mf">3.75</span><span class="p">)</span>
+<span class="n">text</span><span class="p">(</span><span class="mf">3.70</span><span class="p">,</span> <span class="mf">3.55</span><span class="p">,</span> <span class="s2">&quot;Legend&quot;</span><span class="p">)</span>
+
+<span class="c1"># Axes</span>
+<span class="n">circle</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="n">text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="s2">&quot;Axes&quot;</span><span class="p">)</span>
+
+<span class="c1"># Figure</span>
+<span class="n">circle</span><span class="p">(</span><span class="o">-</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.65</span><span class="p">)</span>
+<span class="n">text</span><span class="p">(</span><span class="o">-</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.45</span><span class="p">,</span> <span class="s2">&quot;Figure&quot;</span><span class="p">)</span>
+
+<span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;blue&#39;</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s1">&#39;Spines&#39;</span><span class="p">,</span> <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">0.35</span><span class="p">),</span> <span class="n">xycoords</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">,</span>
+            <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="mf">3.3</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span> <span class="n">textcoords</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">,</span>
+            <span class="n">weight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+            <span class="n">arrowprops</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">arrowstyle</span><span class="o">=</span><span class="s1">&#39;-&gt;&#39;</span><span class="p">,</span>
+                            <span class="n">connectionstyle</span><span class="o">=</span><span class="s2">&quot;arc3&quot;</span><span class="p">,</span>
+                            <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">))</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="mf">3.15</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="n">xycoords</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">,</span>
+            <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="mf">3.45</span><span class="p">,</span> <span class="mf">0.45</span><span class="p">),</span> <span class="n">textcoords</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">,</span>
+            <span class="n">weight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+            <span class="n">arrowprops</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">arrowstyle</span><span class="o">=</span><span class="s1">&#39;-&gt;&#39;</span><span class="p">,</span>
+                            <span class="n">connectionstyle</span><span class="o">=</span><span class="s2">&quot;arc3&quot;</span><span class="p">,</span>
+                            <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">))</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper right&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f6cb2225eb0&gt;
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/85ae8306e4e1d419603f674ab3aa52e8572b50982219617dda074cb0ee639f51.png"><img alt="../_images/85ae8306e4e1d419603f674ab3aa52e8572b50982219617dda074cb0ee639f51.png" src="../_images/85ae8306e4e1d419603f674ab3aa52e8572b50982219617dda074cb0ee639f51.png" style="width: 747px; height: 749px;" />
+</a>
+</div>
+</div>
+<section id="adding-text-annotations">
+<h4>Adding text annotations<a class="headerlink" href="#adding-text-annotations" title="Link to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">healthexp</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">load_dataset</span><span class="p">(</span><span class="s2">&quot;healthexp&quot;</span><span class="p">)</span>
+<span class="n">healthexp_2020</span> <span class="o">=</span> <span class="n">healthexp</span><span class="p">[</span><span class="n">healthexp</span><span class="p">[</span><span class="s2">&quot;Year&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">2020</span><span class="p">]</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">healthexp_2020</span><span class="p">,</span>
+                     <span class="n">x</span><span class="o">=</span><span class="s2">&quot;Spending_USD&quot;</span><span class="p">,</span>
+                     <span class="n">y</span><span class="o">=</span><span class="s2">&quot;Life_Expectancy&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">healthexp_2020</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+    <span class="n">x_pos</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;Spending_USD&quot;</span><span class="p">]</span>
+    <span class="n">y_pos</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;Life_Expectancy&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.1</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x_pos</span><span class="p">,</span> <span class="n">y_pos</span><span class="p">,</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;Country&quot;</span><span class="p">],</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;bottom&quot;</span><span class="p">)</span>
+
+<span class="c1"># ha supported values are &#39;center&#39;, &#39;right&#39;, &#39;left&#39;</span>
+<span class="c1"># va supported values are &#39;center&#39;, &#39;top&#39;, &#39;bottom&#39;, </span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/3d5e1d603a554f0bfd0d3d3a85013671f8c9e53f870cef4b15cc9b06a948f520.png"><img alt="../_images/3d5e1d603a554f0bfd0d3d3a85013671f8c9e53f870cef4b15cc9b06a948f520.png" src="../_images/3d5e1d603a554f0bfd0d3d3a85013671f8c9e53f870cef4b15cc9b06a948f520.png" style="width: 462px; height: 202px;" />
+</a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">healthexp</span><span class="p">,</span>
+                <span class="n">x</span><span class="o">=</span><span class="s2">&quot;Spending_USD&quot;</span><span class="p">,</span>
+                <span class="n">y</span><span class="o">=</span><span class="s2">&quot;Life_Expectancy&quot;</span><span class="p">,</span>
+                <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;Country&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/1abc9b53ae82df45069d98778e3ff991eee3f3903400886d67d57217af68209c.png"><img alt="../_images/1abc9b53ae82df45069d98778e3ff991eee3f3903400886d67d57217af68209c.png" src="../_images/1abc9b53ae82df45069d98778e3ff991eee3f3903400886d67d57217af68209c.png" style="width: 459px; height: 194px;" />
+</a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">healthexp</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;Country&quot;</span><span class="p">)[</span><span class="s2">&quot;Year&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">last</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Country
+Canada           2020
+France           2020
+Germany          2020
+Great Britain    2020
+Japan            2020
+USA              2020
+Name: Year, dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="layout-options">
+<h3>Layout options<a class="headerlink" href="#layout-options" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>option</p></th>
+<th class="head"><p>meaning</p></th>
+<th class="head"><p>values / example</p></th>
+<th class="head"><p>applies to</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">color</span></code></p></td>
+<td><p>single colour override</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;k&quot;</span></code></p></td>
+<td><p>sca, lin, his, kde, ecdf, str, swa, box, vio, poi, bar, cnt, reg, res</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">orient</span></code></p></td>
+<td><p>vertical/horizontal</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;v&quot;/&quot;h&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;x&quot;/&quot;y&quot;</span></code></p></td>
+<td><p>lin, str, swa, box, vio, poi, bar, cnt</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">dodge</span></code></p></td>
+<td><p>separate hue groups</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">True/False/&quot;auto&quot;</span></code></p></td>
+<td><p>his, str, swa, box, vio, poi, bar, cnt</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">jitter</span></code></p></td>
+<td><p>random x spread</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">0.2</span></code></p></td>
+<td><p>str</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">width</span></code></p></td>
+<td><p>element width</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">0.8</span></code></p></td>
+<td><p>box, vio, bar, cnt</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">log_scale</span></code></p></td>
+<td><p>log axes</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">10</span></code>, <code class="docutils literal notranslate"><span class="pre">(True,</span> <span class="pre">False)</span></code></p></td>
+<td><p>his, kde, ecdf, str, swa, box, vio, poi, bar, cnt</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="matplotlib-pass-through-options">
+<h3>Matplotlib pass through options<a class="headerlink" href="#matplotlib-pass-through-options" title="Link to this heading">#</a></h3>
+<p>Seaborn plot functions will “forward” keywords arguments to the underlying Matplotlib plotting function.
+The following list of Matplotlib options are often used to change plot appearance.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>option</p></th>
+<th class="head"><p>meaning</p></th>
+<th class="head"><p>values / example</p></th>
+<th class="head"><p>applies to</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">fill</span></code></p></td>
+<td><p>filled vs outlines</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">True/False</span></code></p></td>
+<td><p>his, box, vio, bar, cnt</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">alpha</span></code></p></td>
+<td><p>transparency</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">0.3</span></code></p></td>
+<td><p>sca, lin, his, kde, ecdf, str, swa, box, vio, poi, bar, cnt, reg, res, hea</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">linewidth</span></code></p></td>
+<td><p>line/edge width</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">1.5</span></code></p></td>
+<td><p>sca, lin, his, kde, ecdf, str, swa, box, vio, poi, bar, cnt, reg, res, hea</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">marker/markers</span></code></p></td>
+<td><p>marker style</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;o&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;.&quot;</span></code>, dict</p></td>
+<td><p>sca, lin, str, swa, poi, reg, res</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">linestyle/linestyles</span></code></p></td>
+<td><p>line style</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;-&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;--&quot;</span></code></p></td>
+<td><p>lin, kde, ecdf, poi, reg</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="bonus-topics">
+<h2>Bonus topics<a class="headerlink" href="#bonus-topics" title="Link to this heading">#</a></h2>
+</section>
+<section id="data-visualization-tips">
+<h2>Data visualization tips<a class="headerlink" href="#data-visualization-tips" title="Link to this heading">#</a></h2>
+</section>
+<section id="links">
+<h2>Links<a class="headerlink" href="#links" title="Link to this heading">#</a></h2>
+<p>Here are some links to learning resources for Seaborn and data visualization techniques.</p>
+<section id="official-docs">
+<h3>Official docs<a class="headerlink" href="#official-docs" title="Link to this heading">#</a></h3>
+<p>[ Seaborn documentation website ]<br />
+<a class="reference external" href="https://seaborn.pydata.org/">https://seaborn.pydata.org/</a><br />
+<a class="reference external" href="https://seaborn.pydata.org/introduction.html">https://seaborn.pydata.org/introduction.html</a></p>
+<p>[ Seaborn tutorials featuring lots of useful plot examples ]<br />
+<a class="reference external" href="https://seaborn.pydata.org/tutorial.html">https://seaborn.pydata.org/tutorial.html</a></p>
+<p>[ Gallery of data visualizations produced using Seaborn ]
+<a class="reference external" href="https://seaborn.pydata.org/examples/index.html">https://seaborn.pydata.org/examples/index.html</a></p>
+</section>
+<section id="tutorials">
+<h3>Tutorials<a class="headerlink" href="#tutorials" title="Link to this heading">#</a></h3>
+<p>[ Seaborn tutorial for beginners ]<br />
+<a class="reference external" href="https://www.datacamp.com/community/tutorials/seaborn-python-tutorial">https://www.datacamp.com/community/tutorials/seaborn-python-tutorial</a></p>
+<p>[ The ultimate Python Seaborn tutorial ]<br />
+<a class="reference external" href="https://elitedatascience.com/python-seaborn-tutorial">https://elitedatascience.com/python-seaborn-tutorial</a></p>
+<p>[ Seaborn Tutorial ]<br />
+<a class="reference external" href="https://www.geeksforgeeks.org/python-seaborn-tutorial/">https://www.geeksforgeeks.org/python-seaborn-tutorial/</a></p>
+</section>
+<section id="video-tutorials">
+<h3>Video tutorials<a class="headerlink" href="#video-tutorials" title="Link to this heading">#</a></h3>
+<p>[ <em>Intro to Seaborn</em> by Kimberly Fessel  (excellent!) ]<br />
+<a class="reference external" href="https://www.youtube.com/playlist?list=PLtPIclEQf-3cG31dxSMZ8KTcDG7zYng1j">https://www.youtube.com/playlist?list=PLtPIclEQf-3cG31dxSMZ8KTcDG7zYng1j</a><br />
+see also <a class="reference external" href="https://github.com/kimfetti/Videos/tree/master/Seaborn">notebooks</a> from the videos.</p>
+<p>[ <em>Seaborn Tutorial 2021</em> by Derek Banas ]<br />
+<a class="reference external" href="https://www.youtube.com/watch?v=6GUZXDef2U0">https://www.youtube.com/watch?v=6GUZXDef2U0</a></p>
+<p>[ <em>Data Visualisation with Seaborn Crash Course</em> by Valentine Mwangi ]<br />
+<a class="reference external" href="https://www.youtube.com/watch?v=zafPvR4MmBA">https://www.youtube.com/watch?v=zafPvR4MmBA</a><br />
+See also the <a class="reference external" href="https://colab.research.google.com/drive/1M0PT25aKwetQbADNxEfDQYpeJ0KKpr70">colab notebook</a> for the course.</p>
+</section>
+<section id="other-plotting-libraries">
+<h3>Other plotting libraries:<a class="headerlink" href="#other-plotting-libraries" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>altair <a class="github reference external" href="https://github.com/vega/altair">vega/altair</a></p></li>
+<li><p>plotnine [<a class="reference external" href="https://github.com/cmparlettpelleriti/CPSC392ParlettPelleriti/blob/master/InClass/LectureNotebooks/Visualization%20I--Class%204.ipynb">1</a>,<a class="reference external" href="https://github.com/cmparlettpelleriti/CPSC392ParlettPelleriti/blob/master/InClass/LectureNotebooks/Visualization%20II--Class%205.ipynb">2</a>,<a class="reference external" href="https://datascienceworkshops.com/blog/plotnine-grammar-of-graphics-for-python/">3</a>,<a class="reference external" href="https://github.com/datascienceworkshops/r4ds-python-plotnine">4</a>]</p></li>
+<li><p>PyGwalker <a class="github reference external" href="https://github.com/Kanaries/pygwalker">Kanaries/pygwalker</a></p></li>
+</ul>
+<!-- SEE ALSO
+
+%DATA VIZ LINKS: (imported from \tt{dataviz\_dictionary.tex})
+
+%	\url{https://www.data-to-viz.com/} \\
+%	\url{http://vita.had.co.nz/papers/layered-grammar.pdf} \\
+%	\url{https://www.tandfonline.com/doi/abs/10.1198/jcgs.2009.07098} \\
+%	Please see the online version of this article for supplementary materials. \\
+%	\url{https://www.tandfonline.com/doi/suppl/10.1198/jcgs.2009.07098/suppl_file/ucgs_a_10712021_sm0001.zip}
+
+--></section>
+</section>
+<section id="cut-material">
+<h2>CUT MATERIAL<a class="headerlink" href="#cut-material" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">pip</span> install -q pygwalker 
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Note: you may need to restart the kernel to use updated packages.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pygwalker</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pyg</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">exercise</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">load_dataset</span><span class="p">(</span><span class="s2">&quot;exercise&quot;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">exercise</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<span class="c1"># pyg.walk(exercise)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>diet</th>
+      <th>pulse</th>
+      <th>time</th>
+      <th>kind</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>low fat</td>
+      <td>85</td>
+      <td>1 min</td>
+      <td>rest</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>low fat</td>
+      <td>85</td>
+      <td>15 min</td>
+      <td>rest</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1</td>
+      <td>low fat</td>
+      <td>88</td>
+      <td>30 min</td>
+      <td>rest</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2</td>
+      <td>low fat</td>
+      <td>90</td>
+      <td>1 min</td>
+      <td>rest</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2</td>
+      <td>low fat</td>
+      <td>92</td>
+      <td>15 min</td>
+      <td>rest</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">catplot</span><span class="p">(</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">exercise</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;pulse&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;kind&quot;</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="s2">&quot;diet&quot;</span><span class="p">,</span>
+    <span class="n">capsize</span><span class="o">=</span><span class="mf">.2</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="s2">&quot;YlGnBu_d&quot;</span><span class="p">,</span> <span class="n">errorbar</span><span class="o">=</span><span class="s2">&quot;se&quot;</span><span class="p">,</span>
+    <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;point&quot;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="mf">.75</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.FacetGrid at 0x7f6d0378bce0&gt;
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/87e748d8f53aa8a35df2a547be9ec3d12df907139bd40dbeeba33e214ef5f4d8.png"><img alt="../_images/87e748d8f53aa8a35df2a547be9ec3d12df907139bd40dbeeba33e214ef5f4d8.png" src="../_images/87e748d8f53aa8a35df2a547be9ec3d12df907139bd40dbeeba33e214ef5f4d8.png" style="width: 986px; height: 590px;" />
+</a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">seaice</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">load_dataset</span><span class="p">(</span><span class="s2">&quot;seaice&quot;</span><span class="p">)</span>
+<span class="n">seaice</span>
+<span class="c1"># pyg.walk(healthexp)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Date</th>
+      <th>Extent</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1980-01-01</td>
+      <td>14.200</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1980-01-03</td>
+      <td>14.302</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1980-01-05</td>
+      <td>14.414</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1980-01-07</td>
+      <td>14.518</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1980-01-09</td>
+      <td>14.594</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>13170</th>
+      <td>2019-12-27</td>
+      <td>12.721</td>
+    </tr>
+    <tr>
+      <th>13171</th>
+      <td>2019-12-28</td>
+      <td>12.712</td>
+    </tr>
+    <tr>
+      <th>13172</th>
+      <td>2019-12-29</td>
+      <td>12.780</td>
+    </tr>
+    <tr>
+      <th>13173</th>
+      <td>2019-12-30</td>
+      <td>12.858</td>
+    </tr>
+    <tr>
+      <th>13174</th>
+      <td>2019-12-31</td>
+      <td>12.889</td>
+    </tr>
+  </tbody>
+</table>
+<p>13175 rows × 2 columns</p>
+</div></div></div>
+</div>
+<section id="fmri">
+<h3>FMRI<a class="headerlink" href="#fmri" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fmri</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">load_dataset</span><span class="p">(</span><span class="s2">&quot;fmri&quot;</span><span class="p">)</span>
+<span class="n">fmri</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<span class="c1"># fmri.shape</span>
+<span class="c1"># fmri[&quot;subject&quot;].value_counts()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>subject</th>
+      <th>timepoint</th>
+      <th>event</th>
+      <th>region</th>
+      <th>signal</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>s13</td>
+      <td>18</td>
+      <td>stim</td>
+      <td>parietal</td>
+      <td>-0.017552</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>s5</td>
+      <td>14</td>
+      <td>stim</td>
+      <td>parietal</td>
+      <td>-0.080883</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>s12</td>
+      <td>18</td>
+      <td>stim</td>
+      <td>parietal</td>
+      <td>-0.081033</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>s11</td>
+      <td>18</td>
+      <td>stim</td>
+      <td>parietal</td>
+      <td>-0.046134</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>s10</td>
+      <td>18</td>
+      <td>stim</td>
+      <td>parietal</td>
+      <td>-0.037970</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the responses for different events and regions</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">fmri</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;timepoint&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;signal&quot;</span><span class="p">,</span>
+             <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;region&quot;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;event&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/2a13f4d5ef7c73c466bd683ce00a7588b1b39777ea796f515c7fc13450e66f6b.png"><img alt="../_images/2a13f4d5ef7c73c466bd683ce00a7588b1b39777ea796f515c7fc13450e66f6b.png" src="../_images/2a13f4d5ef7c73c466bd683ce00a7588b1b39777ea796f515c7fc13450e66f6b.png" style="width: 457px; height: 192px;" />
+</a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tips</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">load_dataset</span><span class="p">(</span><span class="s2">&quot;tips&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tips</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">tips</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(244, 7)
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>total_bill</th>
+      <th>tip</th>
+      <th>sex</th>
+      <th>smoker</th>
+      <th>day</th>
+      <th>time</th>
+      <th>size</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>16.99</td>
+      <td>1.01</td>
+      <td>Female</td>
+      <td>No</td>
+      <td>Sun</td>
+      <td>Dinner</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>10.34</td>
+      <td>1.66</td>
+      <td>Male</td>
+      <td>No</td>
+      <td>Sun</td>
+      <td>Dinner</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>21.01</td>
+      <td>3.50</td>
+      <td>Male</td>
+      <td>No</td>
+      <td>Sun</td>
+      <td>Dinner</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>23.68</td>
+      <td>3.31</td>
+      <td>Male</td>
+      <td>No</td>
+      <td>Sun</td>
+      <td>Dinner</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>24.59</td>
+      <td>3.61</td>
+      <td>Female</td>
+      <td>No</td>
+      <td>Sun</td>
+      <td>Dinner</td>
+      <td>4</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="the-dow-jones-dataset">
+<h3>The Dow Jones dataset<a class="headerlink" href="#the-dow-jones-dataset" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dowjones</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">load_dataset</span><span class="p">(</span><span class="s2">&quot;dowjones&quot;</span><span class="p">)</span>
+<span class="n">dowjones</span><span class="p">[</span><span class="s2">&quot;Year&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dowjones</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">year</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">dowjones</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;Year&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;Price&quot;</span><span class="p">,</span> <span class="n">estimator</span><span class="o">=</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span> <span class="n">errorbar</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;sd&quot;</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Axes: xlabel=&#39;Year&#39;, ylabel=&#39;Price&#39;&gt;
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/99a9eae8a0ab5ba597b393abe302874c279de5b7e9842fae930a98a25a1526c0.png"><img alt="../_images/99a9eae8a0ab5ba597b393abe302874c279de5b7e9842fae930a98a25a1526c0.png" src="../_images/99a9eae8a0ab5ba597b393abe302874c279de5b7e9842fae930a98a25a1526c0.png" style="width: 472px; height: 192px;" />
+</a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">pointplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">titanic</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;survived&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;sex&quot;</span><span class="p">,</span>
+                   <span class="n">markers</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;^&quot;</span><span class="p">,</span> <span class="s2">&quot;o&quot;</span><span class="p">],</span> <span class="n">linestyles</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;--&quot;</span><span class="p">])</span>
+
+<span class="c1"># sns.despine(top=True)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/1fe734cbc325f4c09323fa5157c915b331dde6519e9dd0153c0949b208bfe404.png"><img alt="../_images/1fe734cbc325f4c09323fa5157c915b331dde6519e9dd0153c0949b208bfe404.png" src="../_images/1fe734cbc325f4c09323fa5157c915b331dde6519e9dd0153c0949b208bfe404.png" style="width: 457px; height: 293px;" />
+</a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># [attr for attr in dir(sns) if attr.endswith(&quot;plot&quot;)]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "minireference/noBSstats",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./tutorials"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="pandas_tutorial.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Appendix D — Pandas tutorial</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="calculus_tutorial.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Appendix F — Calculus tutorial</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notebook-setup">Notebook setup</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#installing-seaborn-and-other-libraries">Installing Seaborn and other libraries</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#setting-display-options">Setting display options</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#download-datasets">Download datasets</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-datasets">Loading datasets</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seaborn-overview">Seaborn overview</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seaborn-line-plots">Seaborn line plots</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simple-line-plot">Simple line plot</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#line-plot-with-statistical-calculations">Line plot with statistical calculations</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pandas-datasets">Pandas datasets</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-iris-dataset">The iris dataset</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-tips-dataset">The tips dataset</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-students-dataset">The students dataset</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inventory-of-seaborn-plotting-functions">Inventory of Seaborn plotting functions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#strip-plots">Strip plots</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#point-plots">Point plots</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scatter-plots">Scatter plots</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#line-plot">Line plot</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#histograms">Histograms</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kernel-density-plots">Kernel density plots</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#box-plots">Box plots</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#violin-plots">Violin plots</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#empirical-cumulative-distribution-function-ecdf-plot">Empirical Cumulative Distribution Function (ECDF) plot</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#count-plot">Count plot</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bar-plots">Bar plots</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-function-graphs">Plotting function graphs</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-model-plots">Linear model plots</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-regression-plot">Linear regression plot</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#residuals-plot">Residuals plot</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-model-plots-from-scratch">Linear model plots from scratch</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-model-plots-using-statsmodels">Linear model plots using <code class="docutils literal notranslate"><span class="pre">statsmodels</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-probability-distributions">Plotting probability distributions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#line-plots-for-continuous-random-variables">Line plots for continuous random variables</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stem-plots-for-discrete-random-variables">Stem plots for discrete random variables</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#customizing-plots">Customizing plots</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#anotomy-of-a-figure">Anotomy of a figure</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-text-annotations">Adding text annotations</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#layout-options">Layout options</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#matplotlib-pass-through-options">Matplotlib pass through options</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bonus-topics">Bonus topics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-visualization-tips">Data visualization tips</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#links">Links</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#official-docs">Official docs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tutorials">Tutorials</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#video-tutorials">Video tutorials</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#other-plotting-libraries">Other plotting libraries:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cut-material">CUT MATERIAL</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fmri">FMRI</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-dow-jones-dataset">The Dow Jones dataset</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Ivan Savov
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
