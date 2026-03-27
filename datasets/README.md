@@ -259,6 +259,7 @@ TODO
 	
 
 
+
 ## Raw datasets
 
 The subdirectory `raw/` contains "raw" data files that need data cleanup and transformations,
@@ -271,20 +272,21 @@ and are used as part of the exercises in the Pandas tutorial (Appendix D).
 
 The subdirectory `formats/` contains examples of clean data in various file formats like.
 
-- `formats/minimal.html`: HTML table
-- `formats/minimal.json`: JSON
-- `formats/minimal.sqlite`: Sqlite3 database 
 - `formats/minimal.tsv`: TSV
 - `formats/minimal.xlsx`: Microsoft Excel file
 - `formats/minimal.ods`: OpenDocument spreadsheet
+- `formats/minimal.json`: JSON
+- `formats/minimal.html`: HTML table
 - `formats/minimal.xml`: XML
-- `formats/students_meta.csv`: extra metadata rows 
+- `formats/minimal.sqlite`: SQLite3 database
+- `formats/students_meta.csv`: the students dataset with extra metadata rows at the top
+
 
 
 
 ### Old Faithful
 
-Old Faithful is geyser in the Yellowstone National Park in Wyoming, USA.
+Old Faithful is a geyser in the Yellowstone National Park in Wyoming, USA.
 It erupts every 35 to 120 minutes for 1 to 5 minutes.
 This dataset records duration of the eruption and the waiting time between eruptions.
 
@@ -297,7 +299,6 @@ This dataset records duration of the eruption and the waiting time between erupt
   - https://plotnine.org/reference/faithful.html
   - Härdle, W. (1991) Smoothing Techniques with Implementation in S. New York: Springer.
   - https://yellowstone.net/geysers/old-faithful/
-
 
 
 
