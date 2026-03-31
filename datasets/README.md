@@ -153,14 +153,23 @@ TODO: move detailed info to `students.md`
 An experiment whether training increases income.
 
 
+
 ### Howell
 
-The dataset `howell30.csv` contains `age`, `sex`, `height`, and `weight` measurements
-from a sample of 270 individuals of the !Kung San people of Botswana.
-The dataset was compiled by Nancy Howell between 1967 and 1969.
-See [here](https://tspace.library.utoronto.ca/handle/1807/10395) for more info about the dataset.
-The specific data file I used was [`All_17996.xls`](https://tspace.library.utoronto.ca/handle/1807/17996).
-I have filtered the data to select only individuals of age 30 or less.
+- Datasets: [`howell30.csv`](./howell30.csv)
+- Description: Demographic data from Kalahari !Kung San people of Botswana collected by Nancy Howell.
+  The dataset `howell30.csv` is a subset of the data that selects individuals under the age of 30.
+- Format: CSV file that contain n observations and k variables:
+  - `caseid`: unique identifier 
+  - `sex`: sex `M` or `F`
+  - `age`: age in years
+  - `height`: height in cm
+  - `weight`: weight in kilograms
+- Source:
+  - The raw source file [`All_17996.xls`](https://tspace.library.utoronto.ca/handle/1807/17996)
+    was obtained from the https://hdl.handle.net/1807/17996
+  - I filtered the data to select only individuals of age 30 or less
+    using the code in the notebook [`howell30_gen.ipynb`](https://github.com/minireference/noBSstats/blob/main/data_generation/howell30_gen.ipynb).
 
 
 ### Radon
@@ -203,7 +212,6 @@ I have filtered the data to select only individuals of age 30 or less.
 
 
 
-
 ### Grades
 
 TODO
@@ -238,7 +246,6 @@ TODO
 - Use cases:
   - computed columns https://chatgpt.com/c/69b1b782-3600-8327-a844-6e92c94e2214 
   - classify into stages https://www.mayoclinic.org/diseases-conditions/high-blood-pressure/in-depth/blood-pressure/art-20050982 
-
 
 
 

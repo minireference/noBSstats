@@ -1,18 +1,16 @@
 #!/usr/bin/env python
 """
-Process exercise notebooks
+Process exercises notebooks in the src/ folder to produce the student and solutions notebooks.
 
 Folder structure:
-
     exercises/
-        stc/
+        src/
             sec11_name_src.ipynb            source notebook (combines student prompts and solutions) 
             attachments/
-                my_figure.png               image served via raw.gihub 
+                my_figure.png               image served via raw.github 
         sec11_name.ipynb                    student notebook
         solutions/
-            sec11_name_solutions.ipynb      soutions notebook
-
+            sec11_name_solutions.ipynb      solutions notebook
 """
 import nbformat
 import os
@@ -25,7 +23,7 @@ EXERCISES_SRC_DIR = "exercises/src/"
 EXERCISES_SOLUTIONS_DIR = "exercises/solutions/"
 
 GITHUB_RAW_TREE_URL = "https://raw.githubusercontent.com/minireference/noBSstats/main"
-
+SRC_ATT_BASE = GITHUB_RAW_TREE_URL + "/exercises/src/attachments/"
 
 
 def has_exercise_start(cell):
@@ -69,12 +67,11 @@ def has_solution_tag(cell):
 
 
 def rewrite_attachments_links(cell):
-    tut_src_att_url = GITHUB_RAW_TREE_URL + "/exercises/src/attachments/"
     if cell.cell_type == 'markdown':
         cell_source = cell["source"]
         attachments_pat = r'(?:\./)?attachments/'
         if re.search(attachments_pat, cell_source):
-            updated_source = re.sub(attachments_pat, tut_src_att_url, cell_source)
+            updated_source = re.sub(attachments_pat, SRC_ATT_BASE, cell_source)
             cell["source"] = updated_source
 
 
@@ -186,10 +183,11 @@ if __name__ == "__main__":
     # src_dir = os.path.join(PROJECT_DIR, EXERCISES_SRC_DIR)
     # exercises_notebooks = find_exercises_notebooks(src_dir)
     # for sec_name, sec_filenames in exercises_notebooks.items():
-    sec_name = "sec12"
-    sec_filenames = {'src_nb': 'sec12_data_in_practice_src.ipynb',
-                     'student_nb': 'sec12_data_in_practice.ipynb',
-                     'solutions_nb': 'sec12_data_in_practice_solutions.ipynb'}
+    sec_name = "sec21"
+    sec_filenames = {'src_nb': 'sec21_discrete_RVs_src.ipynb',
+                     'student_nb': 'sec21_discrete_RVs.ipynb',
+                     'solutions_nb': 'sec21_discrete_RVs_solutions.ipynb'}
+
 
     print("Processing the", sec_name, "exercises source file", sec_filenames["src_nb"])
 

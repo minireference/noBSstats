@@ -1,31 +1,33 @@
 Design of exercise processing steps
 ===================================
 
-cf. [scripts/process_tutorials.py](../scripts/process_tutorials.py)
+The script [scripts/process_exercises.py](../scripts/process_exercises.py)
+takes the source notebooks from the `exercises/src/` folder and produces
+the student version in `exercises/` and the solutions version in `exercises/solutions/`.
 
 
 Folder structure
 ----------------
 
     exercises/                                  (B1)
-        exercises_13_descr_stats.ipynb          (ex:exrc)
         src/                                    (SRC)
-            exercises_13_descr_stats_src.ipynb  (ex:src)
+            sec13_descr_stats_src.ipynb         (src_nb)
+        sec13_descr_stats.ipynb                 (student_nb)
         solutions/                              (SOL)
-            exercise_find_mean.py               (ex:sol)
+            sec13_descr_stats_solutions.ipynb   (solutions_nb)
     notebooks/                                  (B2) 
         13_descriptive_statistics.ipynb         (ex:nb)
 
-
-
-where:
-- `(SRC)` main location for exercises notebooks with solutions
-- `(B1)` build output for standalone exercise notebooks
-- `(B2)` build output for section notebooks (append to the `## Exercises` block in the notebook)
-- `(SOL)` main location for solution snippets
-
 The full notebook with solutions lives in `exercises/src/`.
 This is where you edit and create the exercises.
+
+where:
+- `(SRC)` location for exercises notebooks with solutions
+- `(B1)` build output for standalone exercise notebooks
+- `(B2)` build output for section notebooks (append to the `## Exercises` block in the notebook)
+- `(SOL)` folder for solution notebooks
+
+
 The build script parses these notebooks and outputs to `(B1)`, `(B2)`, and `(SOL)`.
 
 
