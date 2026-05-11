@@ -17,24 +17,14 @@ import nbformat
 import os
 import re
 
-
-PROJECT_DIR = "/Users/ivan/Projects/Minireference/STATSbook/noBSstats/"
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_DIR = os.path.dirname(SCRIPT_DIR)
 PROBLEMS_DIR = "problems/"
 PROBLEMS_SRC_DIR = "problems/src/"
 PROBLEMS_SOLUTIONS_DIR = "problems/solutions/"
 
 GITHUB_RAW_TREE_URL = "https://raw.githubusercontent.com/minireference/noBSstats/main"
 SRC_ATT_BASE = GITHUB_RAW_TREE_URL + "/problems/src/attachments/"
-
-
-def has_problem_start(cell):
-    """
-    Return True if cell contains a heading of the form ### E?.??
-    TODO: extend to handle P?.?? as well
-    """
-    cell_text = cell["source"].replace(" ", "").lower()
-    return cell_text.startswith("#@studentprompt")
-
 
 def has_studentprompt(cell):
     """
@@ -52,19 +42,17 @@ def has_solution(cell):
         cell_text = cell["source"].replace(" ", "").lower()
         return cell_text.startswith("#@titlesolution") or cell_text.startswith("#@solution")
     elif cell.cell_type == 'markdown':
-        # Check for <!-- @solution --> in markdown source
-        solution_pat = re.compile(r"<!--\s*@solution\b[\s\S]*?-->", re.MULTILINE)
-        if solution_pat.search(cell["source"].lower()):
-            return True
-        else:
-            return False        
+        # Check for <!-- @solution --> on first line of markdown source
+        lines = cell["source"].splitlines()
+        first_line = lines[0] if lines else ""
+        solution_pat = re.compile(r"<!--\s*@solution\b.*?-->", re.IGNORECASE)
+        return bool(solution_pat.search(first_line))
     else:
         return False
 
 def has_solution_tag(cell):
     tags = cell.get("metadata", {}).get("tags", [])
     return "solution" in tags or "@solution" in tags
-
 
 
 def rewrite_attachments_links(cell):
@@ -82,10 +70,11 @@ def process_problems_notebook(src_filepath: str, dest_filepath: str, version: st
     - rewrite attachment/ images to images URLs hosted on github
     - when version == "student":
       - leave `@studentprompt` cells and remove solutions cells
-    - when version == "student":
+    - when version == "solutions":
       - leave solutions cells and remove `@studentprompt` cells
     """
-    assert version in ["student", "solutions"]
+    if version not in ["student", "solutions"]:
+        raise ValueError(f"Unknown version: {version}; use `student` or `solutions`")
     with open(src_filepath, 'r', encoding='utf-8') as inf:
         nb = nbformat.read(inf, as_version=4)
 
@@ -116,7 +105,7 @@ def process_problems_notebook(src_filepath: str, dest_filepath: str, version: st
 
                 # clear cell outputs
                 if cell.cell_type == 'code':    
-                    if "outputID" in cell["metadata"]:
+                    if "outputId" in cell["metadata"]:
                         del cell["metadata"]["outputId"]
                     if "outputs" in cell:
                         cell["outputs"] = []
@@ -157,8 +146,10 @@ def process_problems_notebook(src_filepath: str, dest_filepath: str, version: st
 
             new_cells.append(cell)
 
-
     nb.cells = new_cells
+
+    # Write the processed output to `dest_filepath`
+    os.makedirs(os.path.dirname(dest_filepath), exist_ok=True)
     with open(dest_filepath, 'w', encoding='utf-8') as outf:
         nbformat.write(nb, outf)
 
@@ -166,7 +157,7 @@ def process_problems_notebook(src_filepath: str, dest_filepath: str, version: st
 def find_problems_notebooks(src_dir: str):
     all_files = os.listdir(src_dir)
     src_nbs = [name for name in all_files if name.endswith("_src.ipynb")]
-    exercies_notebooks = {}
+    problems_notebooks = {}
     for src_nb in src_nbs:
         ch_name = src_nb.split("_", 1)[0]
         student_nb = src_nb.replace("_src.ipynb", ".ipynb")
@@ -174,29 +165,22 @@ def find_problems_notebooks(src_dir: str):
         ch_nbs = dict(src_nb=src_nb,
                       student_nb=student_nb,
                       solutions_nb=solutions_nb)
-        exercies_notebooks[ch_name] = ch_nbs
-    return exercies_notebooks
-
-
+        problems_notebooks[ch_name] = ch_nbs
+    return problems_notebooks
 
 if __name__ == "__main__":
     print("Processing problems solutions files...")
-    # src_dir = os.path.join(PROJECT_DIR, PROBLEMS_SRC_DIR)
-    # problems_notebooks = find_problems_notebooks(src_dir)
-    # for ch_name, ch_filenames in problems_notebooks.items():
-    ch_name = "ch1"
-    ch_filenames = {'src_nb': 'ch1_data_problems_src.ipynb',
-                     'student_nb': 'ch1_data_problems.ipynb',
-                     'solutions_nb': 'ch1_data_problems_solutions.ipynb'}
+    src_dir = os.path.join(PROJECT_DIR, PROBLEMS_SRC_DIR)
+    problems_notebooks = find_problems_notebooks(src_dir)
+    for ch_name, ch_filenames in problems_notebooks.items():
+        print("Processing the", ch_name, "problems source file", ch_filenames["src_nb"])
+        print("  Generating the student version", ch_filenames["student_nb"])
+        src_filepath = os.path.join(PROJECT_DIR, PROBLEMS_SRC_DIR, ch_filenames["src_nb"])
+        student_filepath = os.path.join(PROJECT_DIR, PROBLEMS_DIR, ch_filenames["student_nb"])
+        process_problems_notebook(src_filepath, student_filepath, version="student")
 
-    print("Processing the", ch_name, "problems source file", ch_filenames["src_nb"])
+        print("  Generating the solutions version", ch_filenames["solutions_nb"])
+        solutions_filepath = os.path.join(PROJECT_DIR, PROBLEMS_SOLUTIONS_DIR, ch_filenames["solutions_nb"])
+        process_problems_notebook(src_filepath, solutions_filepath, version="solutions")
 
-    print("  Generating the student version", ch_filenames["student_nb"])
-    src_filepath = os.path.join(PROJECT_DIR, PROBLEMS_SRC_DIR, ch_filenames["src_nb"])
-    student_filepath = os.path.join(PROJECT_DIR, PROBLEMS_DIR, ch_filenames["student_nb"])
-    process_problems_notebook(src_filepath, student_filepath, version="student")
-
-    print("  Generating the solutions version", ch_filenames["solutions_nb"])
-    solutions_filepath = os.path.join(PROJECT_DIR, PROBLEMS_SOLUTIONS_DIR, ch_filenames["solutions_nb"])
-    process_problems_notebook(src_filepath, solutions_filepath, version="solutions")
-
+    print("DONE")
