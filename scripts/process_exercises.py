@@ -16,23 +16,14 @@ import nbformat
 import os
 import re
 
-
-PROJECT_DIR = "/Users/ivan/Projects/Minireference/STATSbook/noBSstats/"
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_DIR = os.path.dirname(SCRIPT_DIR)
 EXERCISES_DIR = "exercises/"
 EXERCISES_SRC_DIR = "exercises/src/"
 EXERCISES_SOLUTIONS_DIR = "exercises/solutions/"
 
 GITHUB_RAW_TREE_URL = "https://raw.githubusercontent.com/minireference/noBSstats/main"
 SRC_ATT_BASE = GITHUB_RAW_TREE_URL + "/exercises/src/attachments/"
-
-
-def has_exercise_start(cell):
-    """
-    Return True if cell contains a heading of the form ### E?.??
-    TODO: extend to handle P?.?? as well
-    """
-    cell_text = cell["source"].replace(" ", "").lower()
-    return cell_text.startswith("#@studentprompt")
 
 
 def has_studentprompt(cell):
@@ -51,19 +42,17 @@ def has_solution(cell):
         cell_text = cell["source"].replace(" ", "").lower()
         return cell_text.startswith("#@titlesolution") or cell_text.startswith("#@solution")
     elif cell.cell_type == 'markdown':
-        # Check one: <!-- @solution --> in markdown source
-        solution_pat = re.compile(r"<!--\s*@solution\b[\s\S]*?-->", re.MULTILINE)
-        if solution_pat.search(cell["source"].lower()):
-            return True
-        else:
-            return False        
+        # Check for <!-- @solution --> on first line of markdown source
+        lines = cell["source"].splitlines()
+        first_line = lines[0] if lines else ""
+        solution_pat = re.compile(r"<!--\s*@solution\b.*?-->", re.IGNORECASE)
+        return bool(solution_pat.search(first_line))
     else:
         return False
 
 def has_solution_tag(cell):
     tags = cell.get("metadata", {}).get("tags", [])
     return "solution" in tags or "@solution" in tags
-
 
 
 def rewrite_attachments_links(cell):
@@ -81,10 +70,11 @@ def process_exercises_notebook(src_filepath: str, dest_filepath: str, version: s
     - rewrite attachment/ images to images URLs hosted on github
     - when version == "student":
       - leave `@studentprompt` cells and remove solutions cells
-    - when version == "student":
+    - when version == "solutions":
       - leave solutions cells and remove `@studentprompt` cells
     """
-    assert version in ["student", "solutions"]
+    if version not in ["student", "solutions"]:
+        raise ValueError(f"Unknown version: {version}; use `student` or `solutions`")
     with open(src_filepath, 'r', encoding='utf-8') as inf:
         nb = nbformat.read(inf, as_version=4)
 
@@ -115,7 +105,7 @@ def process_exercises_notebook(src_filepath: str, dest_filepath: str, version: s
 
                 # clear cell outputs
                 if cell.cell_type == 'code':    
-                    if "outputID" in cell["metadata"]:
+                    if "outputId" in cell["metadata"]:
                         del cell["metadata"]["outputId"]
                     if "outputs" in cell:
                         cell["outputs"] = []
@@ -156,8 +146,10 @@ def process_exercises_notebook(src_filepath: str, dest_filepath: str, version: s
 
             new_cells.append(cell)
 
-
     nb.cells = new_cells
+
+    # Write the processed output to `dest_filepath`
+    os.makedirs(os.path.dirname(dest_filepath), exist_ok=True)
     with open(dest_filepath, 'w', encoding='utf-8') as outf:
         nbformat.write(nb, outf)
 
@@ -177,26 +169,21 @@ def find_exercises_notebooks(src_dir: str):
     return exercies_notebooks
 
 
-
 if __name__ == "__main__":
     print("Processing exercises solutions files...")
-    # src_dir = os.path.join(PROJECT_DIR, EXERCISES_SRC_DIR)
-    # exercises_notebooks = find_exercises_notebooks(src_dir)
-    # for sec_name, sec_filenames in exercises_notebooks.items():
-    sec_name = "sec21"
-    sec_filenames = {'src_nb': 'sec21_discrete_RVs_src.ipynb',
-                     'student_nb': 'sec21_discrete_RVs.ipynb',
-                     'solutions_nb': 'sec21_discrete_RVs_solutions.ipynb'}
+    src_dir = os.path.join(PROJECT_DIR, EXERCISES_SRC_DIR)
+    exercises_notebooks = find_exercises_notebooks(src_dir)
+    for sec_name, sec_filenames in exercises_notebooks.items():
+        print("Processing the", sec_name, "exercises source file", sec_filenames["src_nb"])
+        print("  Generating the student version", sec_filenames["student_nb"])
+        src_filepath = os.path.join(PROJECT_DIR, EXERCISES_SRC_DIR, sec_filenames["src_nb"])
+        student_filepath = os.path.join(PROJECT_DIR, EXERCISES_DIR, sec_filenames["student_nb"])
+        process_exercises_notebook(src_filepath, student_filepath, version="student")
 
+        print("  Generating the solutions version", sec_filenames["solutions_nb"])
+        solutions_filepath = os.path.join(PROJECT_DIR, EXERCISES_SOLUTIONS_DIR, sec_filenames["solutions_nb"])
+        process_exercises_notebook(src_filepath, solutions_filepath, version="solutions")
 
-    print("Processing the", sec_name, "exercises source file", sec_filenames["src_nb"])
+    print("DONE")
 
-    print("  Generating the student version", sec_filenames["student_nb"])
-    src_filepath = os.path.join(PROJECT_DIR, EXERCISES_SRC_DIR, sec_filenames["src_nb"])
-    student_filepath = os.path.join(PROJECT_DIR, EXERCISES_DIR, sec_filenames["student_nb"])
-    process_exercises_notebook(src_filepath, student_filepath, version="student")
-
-    print("  Generating the solutions version", sec_filenames["solutions_nb"])
-    solutions_filepath = os.path.join(PROJECT_DIR, EXERCISES_SOLUTIONS_DIR, sec_filenames["solutions_nb"])
-    process_exercises_notebook(src_filepath, solutions_filepath, version="solutions")
      
