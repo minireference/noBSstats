@@ -197,6 +197,25 @@ An experiment whether training increases income.
 ## Problems datasets
 
 
+### Mortality
+
+Simulated data of lifetimes to use in Problem {problem:empirical-dist-mortality} to estimate life expectency
++ conditional life expectency
+
+
+- `id`
+- `sex`
+- `born`
+- `died`
+- `lifetime`
+- `nkids`
+- `ncibligs`
+- `edulvl`
+- `occup`
+- `rel`: relationship status (at time of death) single, married, widowed, etc.
+
+
+
 ### Test marks
 
 - Dataset: [`markswide.csv`](./markswide.csv)
@@ -307,6 +326,22 @@ This dataset records duration of the eruption and the waiting time between erupt
   - Härdle, W. (1991) Smoothing Techniques with Implementation in S. New York: Springer.
   - https://yellowstone.net/geysers/old-faithful/
 
+
+
+### Longevity
+
+- Datasets: [``](./)
+- Description: 
+- Format: CSV file that contain n observations and k variables:
+  - `id`:
+  - `sex`: `M` of `F`
+  - `born`:
+  - `died`:
+  - `lifetime`: lifetime in years
+  - `occupation`: 
+  - `status`: marital status, one of `never married`, `married`, `divorced`,  `widowed`
+- Source:
+- Use cases: ch2 problem to calculate life expectancy + conditional life expectancy
 
 
 
