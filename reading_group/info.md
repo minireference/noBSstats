@@ -1,7 +1,8 @@
 noBSstats Reading Group
 =======================
 
-The **No Bullshit Guide to Statistics** reading group will run between February and May 2026.
+The **No Bullshit Guide to Statistics** reading group Part 2
+will run between August and December 2026.
 There will be an assigned weekly reading of one section (roughly 30 pages),
 which you're expected to read on your own.
 I will prepare exercises to check your understanding of the new material,
@@ -14,7 +15,9 @@ Schedule
 --------
 Here is the [schedule](https://docs.google.com/spreadsheets/d/1Prwh9q-MTwScMLoH20rxmmNxZ9vEDx820nikQadxpkI/edit?usp=sharing):
 
-<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQmBwfQE2R9BOx2RGltcNtrqB7BdTtp0S6vQtMnDZb_o7hiz3hz7MiZULYyIM2D87nMuBSMmHl84S0f/pubhtml?range=A1:I15&amp;gid=0&amp;single=true&amp;widget=true&amp;headers=false" style="height:375px;width:100%;border:none;overflow:hidden;"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQmBwfQE2R9BOx2RGltcNtrqB7BdTtp0S6vQtMnDZb_o7hiz3hz7MiZULYyIM2D87nMuBSMmHl84S0f/pubhtml?range=A1:I20&amp;gid=1831482130&amp;single=true&amp;widget=true&amp;headers=false" style="height:420px;width:100%;border:none;overflow:hidden;"></iframe>
+
+
 
 This [gsheet](https://docs.google.com/spreadsheets/d/1Prwh9q-MTwScMLoH20rxmmNxZ9vEDx820nikQadxpkI/edit?usp=sharing) contains the links to weekly exercises, exercises solutions, overview videos, etc. and it will be updated each week.
 
@@ -26,8 +29,8 @@ Each week includes the following activities:
 
 - Watch the introductory video tutorial (10–15 mins)
 - Go through the assigned reading for that week (30–50 pages)
-- Try to solve the exercises (sent on Monday of each week)
-- Check the provided solutions to the exercises (sent on Friday of each week)
+- Try to solve the exercises
+- Check the provided solutions to the exercises from the previous week
 - Ask clarifying questions in the discussion forum if needed
 - Attend the "office hours" if you have followup questions
 
@@ -37,7 +40,8 @@ Each week includes the following activities:
 I've been recording short intro videos for each section of the book.
 These videos serve as "trailers" for what you'll learn in each section,
 and aim to motivate you to dedicate the time needed to read and understand the text.
-The videos introduce the key ideas using informal language, but you'll need to read the text for the details.
+The videos introduce the key ideas using informal language,
+but you'll need to read the text for the details.
 
 I'll be adding the new videos to this playlist: 
 https://www.youtube.com/playlist?list=PLGmu4KtWiH6-WQrTReNIIQhLxU8cirdxA
@@ -49,12 +53,14 @@ The goal of the reading group is help you stick with the reading,
 which might require several months of sustained effort.
 If we read the book as group,
 we're much more likely to stay on track and finish it.
-Yes, I'll be going through the book alongside you to make the final pass of corrections and edits,
+I'll be going through the book alongside you
+to make the final pass of corrections and edits,
 so we're in this together!
 
 The weekly reading will not be too demanding:
 just one or two sections per week,
-which means you'll need only **about two to three hours** to read the material and try the exercises.
+which means you'll need only **about two to three hours** to read the material
+and try the exercises.
 But, please give me a good morning hours—when you're properly caffeinated
 and ready to handle some advanced math and code examples!
 
@@ -63,7 +69,7 @@ and ready to handle some advanced math and code examples!
 ### Exercises
 
 Each week I will prepare 5–10 exercises related to the reading material for that week.
-There are already some exercises in v0.92 of the book,
+There are already some exercises in v0.93 of the book,
 but over the next few months,
 I'll be beefing up the exercises for each section,
 and preparing solutions for them,
@@ -95,8 +101,7 @@ Discussion forum
 ----------------
 I've setup a Discord server called `noBSstats` where we can
 have ongoing discussions during the week.
-Sign up link is here: 
-https://discord.gg/6Nsde9tZwK
+Sign up link is here: https://discord.gg/6Nsde9tZwK
 
 You can assume the discussions will happen async,
 but I'll try to stay logged in on most days for fast turnaround time.
@@ -108,14 +113,12 @@ but if you post your questions on the forum others will be able to learn from yo
 FAQ
 ---
 
-- **What if I can't joint in Mar?**  
+- **What if I can't joint in August?**  
   No problem, you can still benefit from the video intros and the exercises asynchronously.
   
-- **When do we get to Part 2?**  
-  We're starting by reading Part 1 during Feb, March and April 2026.
-  If things work out,
-  we'll continue the reading group for Part 2 as well in Summer 2026.
-
+- **What about the material from Part 1?**  
+  You can review the prerequisite material on your own
+  with the help of the videos in the playlist.
 
 
 
