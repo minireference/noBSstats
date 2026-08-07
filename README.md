@@ -1,6 +1,6 @@
 # noBS STATS Notebooks
 
-Hands-on tutorials, exercises, and projects to accompany the **No Bullshit Guide to Statistics**.
+Computational notebooks, exercises, and tutorial to accompany the **No Bullshit Guide to Statistics**.
 Motivation: reading about stats is not enough... you need to experiment with stats,
 play with different examples, and do some real-world data analysis tasks.
 This is what this repo is about.
