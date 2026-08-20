@@ -1,0 +1,240 @@
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.14/x64/lib/python3.12/site-packages/jupyter_cache/executors/utils.py", line 58, in single_nb_execution
+    executenb(
+  File "/opt/hostedtoolcache/Python/3.12.14/x64/lib/python3.12/site-packages/nbclient/client.py", line 1323, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.14/x64/lib/python3.12/site-packages/jupyter_core/utils/__init__.py", line 165, in wrapped
+    return loop.run_until_complete(inner)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.14/x64/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.14/x64/lib/python3.12/site-packages/nbclient/client.py", line 709, in async_execute
+    await self.async_execute_cell(
+  File "/opt/hostedtoolcache/Python/3.12.14/x64/lib/python3.12/site-packages/nbclient/client.py", line 1062, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/opt/hostedtoolcache/Python/3.12.14/x64/lib/python3.12/site-packages/nbclient/client.py", line 918, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+# via https://apmonitor.com/che263/index.php/Main/PythonRegressionStatistics
+# see also https://www.youtube.com/watch?v=r4pgGD1kpYM
+import numpy as np
+from scipy.optimize import curve_fit
+import matplotlib.pyplot as plt    
+from scipy import stats
+import pandas as pd
+
+# pip install uncertainties, if needed
+try:
+    import uncertainties.unumpy as unp
+    import uncertainties as unc
+except:
+    try:
+        from pip import main as pipmain
+    except:
+        from pip._internal import main as pipmain
+    pipmain(['install','uncertainties'])
+    import uncertainties.unumpy as unp
+    import uncertainties as unc
+
+# import data
+url = 'http://apmonitor.com/che263/uploads/Main/stats_data.txt'
+data = pd.read_csv(url)
+x = data['x'].values
+y = data['y'].values
+n = len(y)
+
+def f(x, a, b):
+    return a * x + b
+
+popt, pcov = curve_fit(f, x, y)
+
+# retrieve parameter values
+a = popt[0]
+b = popt[1]
+print('Optimal Values')
+print('a: ' + str(a))
+print('b: ' + str(b))
+
+# compute r^2
+r2 = 1.0 - ( sum((y-f(x,a,b))**2) / ((n-1.0)*np.var(y,ddof=1)) )
+print('R^2: ' + str(r2))
+
+# calculate parameter confidence interval
+a, b = unc.correlated_values(popt, pcov)
+print('Uncertainty')
+print('a: ' + str(a))
+print('b: ' + str(b))
+
+# plot data
+plt.scatter(x, y, s=3, label='Data')
+
+# calculate regression confidence interval
+px = np.linspace(14, 24, 100)
+py = a*px + b
+nom = unp.nominal_values(py)
+std = unp.std_devs(py)
+
+def predband(x, xd, yd, p, func, conf=0.95):
+    # x = requested points
+    # xd = x data
+    # yd = y data
+    # p = parameters
+    # func = function name
+    alpha = 1.0 - conf    # significance
+    N = xd.size          # data sample size
+    var_n = len(p)  # number of parameters
+    # Quantile of Student's t distribution for p=(1-alpha/2)
+    q = stats.t.ppf(1.0 - alpha / 2.0, N - var_n)
+    # Stdev of an individual measurement
+    se = np.sqrt(1. / (N - var_n) * np.sum((yd - func(xd, *p)) ** 2))
+    # Auxiliary definitions
+    sx = (x - xd.mean()) ** 2
+    sxd = np.sum((xd - xd.mean()) ** 2)
+    # Predicted values (best-fit model)
+    yp = func(x, *p)
+    # Prediction band
+    dy = q * se * np.sqrt(1.0 + (1.0/N) + (sx/sxd))
+    # Upper & lower prediction bands.
+    lpb, upb = yp - dy, yp + dy
+    return lpb, upb
+
+lpb, upb = predband(px, x, y, popt, f, conf=0.95)
+
+# plot the regression
+plt.plot(px, nom, c='black', label='y=a x + b')
+
+# uncertainty lines (95% confidence)
+plt.plot(px, nom - 1.96 * std, c='orange', label='95% Confidence Region')
+plt.plot(px, nom + 1.96 * std, c='orange')
+# prediction band (95% confidence)
+plt.plot(px, lpb, 'k--',label='95% Prediction Band')
+plt.plot(px, upb, 'k--')
+plt.ylabel('y')
+plt.xlabel('x')
+plt.legend(loc='best')
+------------------
+
+----- stderr -----
+WARNING: pip is being invoked by an old script wrapper. This will fail in a future version of pip.
+Please see https://github.com/pypa/pip/issues/5599 for advice on fixing the underlying issue.
+To avoid this problem you can invoke Python with '-m pip' instead of running pip directly.
+------------------
+
+[31m---------------------------------------------------------------------------[39m
+[31mHTTPError[39m                                 Traceback (most recent call last)
+[36mCell[39m[36m [39m[32mIn[12][39m[32m, line 24[39m
+[32m     20[39m     [38;5;28;01mimport[39;00m uncertainties [38;5;28;01mas[39;00m unc
+[32m     21[39m 
+[32m     22[39m [38;5;66;03m# import data[39;00m
+[32m     23[39m url = [33m'http://apmonitor.com/che263/uploads/Main/stats_data.txt'[39m
+[32m---> [39m[32m24[39m data = pd.read_csv(url)
+[32m     25[39m x = data[[33m'x'[39m].values
+[32m     26[39m y = data[[33m'y'[39m].values
+[32m     27[39m n = len(y)
+
+[36mFile [39m[32m/opt/hostedtoolcache/Python/3.12.14/x64/lib/python3.12/site-packages/pandas/io/parsers/readers.py:873[39m, in [36mread_csv[39m[34m(filepath_or_buffer, sep, delimiter, header, names, index_col, usecols, dtype, engine, converters, true_values, false_values, skipinitialspace, skiprows, skipfooter, nrows, na_values, keep_default_na, na_filter, skip_blank_lines, parse_dates, date_format, dayfirst, cache_dates, iterator, chunksize, compression, thousands, decimal, lineterminator, quotechar, quoting, doublequote, escapechar, comment, encoding, encoding_errors, dialect, on_bad_lines, low_memory, memory_map, float_precision, storage_options, dtype_backend)[39m
+[32m    861[39m kwds_defaults = _refine_defaults_read(
+[32m    862[39m     dialect,
+[32m    863[39m     delimiter,
+[32m   (...)[39m[32m    869[39m     dtype_backend=dtype_backend,
+[32m    870[39m )
+[32m    871[39m kwds.update(kwds_defaults)
+[32m--> [39m[32m873[39m [38;5;28;01mreturn[39;00m [30;43m_read[39;49m[30;43m([39;49m[30;43mfilepath_or_buffer[39;49m[30;43m,[39;49m[30;43m [39;49m[30;43mkwds[39;49m[30;43m)[39;49m
+
+[36mFile [39m[32m/opt/hostedtoolcache/Python/3.12.14/x64/lib/python3.12/site-packages/pandas/io/parsers/readers.py:300[39m, in [36m_read[39m[34m(filepath_or_buffer, kwds)[39m
+[32m    297[39m _validate_names(kwds.get([33m"[39m[33mnames[39m[33m"[39m, [38;5;28;01mNone[39;00m))
+[32m    299[39m [38;5;66;03m# Create the parser.[39;00m
+[32m--> [39m[32m300[39m parser = [30;43mTextFileReader[39;49m[30;43m([39;49m[30;43mfilepath_or_buffer[39;49m[30;43m,[39;49m[30;43m [39;49m[30;43m*[39;49m[30;43m*[39;49m[30;43mkwds[39;49m[30;43m)[39;49m
+[32m    302[39m [38;5;28;01mif[39;00m chunksize [38;5;129;01mor[39;00m iterator:
+[32m    303[39m     [38;5;28;01mreturn[39;00m parser
+
+[36mFile [39m[32m/opt/hostedtoolcache/Python/3.12.14/x64/lib/python3.12/site-packages/pandas/io/parsers/readers.py:1645[39m, in [36mTextFileReader.__init__[39m[34m(self, f, engine, **kwds)[39m
+[32m   1642[39m     [38;5;28mself[39m.options[[33m"[39m[33mhas_index_names[39m[33m"[39m] = kwds[[33m"[39m[33mhas_index_names[39m[33m"[39m]
+[32m   1644[39m [38;5;28mself[39m.handles: IOHandles | [38;5;28;01mNone[39;00m = [38;5;28;01mNone[39;00m
+[32m-> [39m[32m1645[39m [38;5;28mself[39m._engine = [30;43mself[39;49m[30;43m.[39;49m[30;43m_make_engine[39;49m[30;43m([39;49m[30;43mf[39;49m[30;43m,[39;49m[30;43m [39;49m[30;43mself[39;49m[30;43m.[39;49m[30;43mengine[39;49m[30;43m)[39;49m
+
+[36mFile [39m[32m/opt/hostedtoolcache/Python/3.12.14/x64/lib/python3.12/site-packages/pandas/io/parsers/readers.py:1904[39m, in [36mTextFileReader._make_engine[39m[34m(self, f, engine)[39m
+[32m   1902[39m     [38;5;28;01mif[39;00m [33m"[39m[33mb[39m[33m"[39m [38;5;129;01mnot[39;00m [38;5;129;01min[39;00m mode:
+[32m   1903[39m         mode += [33m"[39m[33mb[39m[33m"[39m
+[32m-> [39m[32m1904[39m [38;5;28mself[39m.handles = [30;43mget_handle[39;49m[30;43m([39;49m
+[32m   1905[39m [30;43m    [39;49m[30;43mf[39;49m[30;43m,[39;49m
+[32m   1906[39m [30;43m    [39;49m[30;43mmode[39;49m[30;43m,[39;49m
+[32m   1907[39m [30;43m    [39;49m[30;43mencoding[39;49m[30;43m=[39;49m[30;43mself[39;49m[30;43m.[39;49m[30;43moptions[39;49m[30;43m.[39;49m[30;43mget[39;49m[30;43m([39;49m[30;43m"[39;49m[30;43mencoding[39;49m[30;43m"[39;49m[30;43m,[39;49m[30;43m [39;49m[30;43;01mNone[39;49;00m[30;43m)[39;49m[30;43m,[39;49m
+[32m   1908[39m [30;43m    [39;49m[30;43mcompression[39;49m[30;43m=[39;49m[30;43mself[39;49m[30;43m.[39;49m[30;43moptions[39;49m[30;43m.[39;49m[30;43mget[39;49m[30;43m([39;49m[30;43m"[39;49m[30;43mcompression[39;49m[30;43m"[39;49m[30;43m,[39;49m[30;43m [39;49m[30;43;01mNone[39;49;00m[30;43m)[39;49m[30;43m,[39;49m
+[32m   1909[39m [30;43m    [39;49m[30;43mmemory_map[39;49m[30;43m=[39;49m[30;43mself[39;49m[30;43m.[39;49m[30;43moptions[39;49m[30;43m.[39;49m[30;43mget[39;49m[30;43m([39;49m[30;43m"[39;49m[30;43mmemory_map[39;49m[30;43m"[39;49m[30;43m,[39;49m[30;43m [39;49m[30;43;01mFalse[39;49;00m[30;43m)[39;49m[30;43m,[39;49m
+[32m   1910[39m [30;43m    [39;49m[30;43mis_text[39;49m[30;43m=[39;49m[30;43mis_text[39;49m[30;43m,[39;49m
+[32m   1911[39m [30;43m    [39;49m[30;43merrors[39;49m[30;43m=[39;49m[30;43mself[39;49m[30;43m.[39;49m[30;43moptions[39;49m[30;43m.[39;49m[30;43mget[39;49m[30;43m([39;49m[30;43m"[39;49m[30;43mencoding_errors[39;49m[30;43m"[39;49m[30;43m,[39;49m[30;43m [39;49m[30;43m"[39;49m[30;43mstrict[39;49m[30;43m"[39;49m[30;43m)[39;49m[30;43m,[39;49m
+[32m   1912[39m [30;43m    [39;49m[30;43mstorage_options[39;49m[30;43m=[39;49m[30;43mself[39;49m[30;43m.[39;49m[30;43moptions[39;49m[30;43m.[39;49m[30;43mget[39;49m[30;43m([39;49m[30;43m"[39;49m[30;43mstorage_options[39;49m[30;43m"[39;49m[30;43m,[39;49m[30;43m [39;49m[30;43;01mNone[39;49;00m[30;43m)[39;49m[30;43m,[39;49m
+[32m   1913[39m [30;43m[39;49m[30;43m)[39;49m
+[32m   1914[39m [38;5;28;01massert[39;00m [38;5;28mself[39m.handles [38;5;129;01mis[39;00m [38;5;129;01mnot[39;00m [38;5;28;01mNone[39;00m
+[32m   1915[39m f = [38;5;28mself[39m.handles.handle
+
+[36mFile [39m[32m/opt/hostedtoolcache/Python/3.12.14/x64/lib/python3.12/site-packages/pandas/io/common.py:772[39m, in [36mget_handle[39m[34m(path_or_buf, mode, encoding, compression, memory_map, is_text, errors, storage_options)[39m
+[32m    769[39m     codecs.lookup_error(errors)
+[32m    771[39m [38;5;66;03m# open URLs[39;00m
+[32m--> [39m[32m772[39m ioargs = [30;43m_get_filepath_or_buffer[39;49m[30;43m([39;49m
+[32m    773[39m [30;43m    [39;49m[30;43mpath_or_buf[39;49m[30;43m,[39;49m
+[32m    774[39m [30;43m    [39;49m[30;43mencoding[39;49m[30;43m=[39;49m[30;43mencoding[39;49m[30;43m,[39;49m
+[32m    775[39m [30;43m    [39;49m[30;43mcompression[39;49m[30;43m=[39;49m[30;43mcompression[39;49m[30;43m,[39;49m
+[32m    776[39m [30;43m    [39;49m[30;43mmode[39;49m[30;43m=[39;49m[30;43mmode[39;49m[30;43m,[39;49m
+[32m    777[39m [30;43m    [39;49m[30;43mstorage_options[39;49m[30;43m=[39;49m[30;43mstorage_options[39;49m[30;43m,[39;49m
+[32m    778[39m [30;43m[39;49m[30;43m)[39;49m
+[32m    780[39m handle = ioargs.filepath_or_buffer
+[32m    781[39m handles: [38;5;28mlist[39m[BaseBuffer]
+
+[36mFile [39m[32m/opt/hostedtoolcache/Python/3.12.14/x64/lib/python3.12/site-packages/pandas/io/common.py:404[39m, in [36m_get_filepath_or_buffer[39m[34m(filepath_or_buffer, encoding, compression, mode, storage_options)[39m
+[32m    402[39m [38;5;66;03m# assuming storage_options is to be interpreted as headers[39;00m
+[32m    403[39m req_info = urllib.request.Request(filepath_or_buffer, headers=storage_options)
+[32m--> [39m[32m404[39m [38;5;28;01mwith[39;00m [30;43murlopen[39;49m[30;43m([39;49m[30;43mreq_info[39;49m[30;43m)[39;49m [38;5;28;01mas[39;00m req:
+[32m    405[39m     content_encoding = req.headers.get([33m"[39m[33mContent-Encoding[39m[33m"[39m, [38;5;28;01mNone[39;00m)
+[32m    406[39m     [38;5;28;01mif[39;00m content_encoding == [33m"[39m[33mgzip[39m[33m"[39m:
+[32m    407[39m         [38;5;66;03m# Override compression based on Content-Encoding header[39;00m
+
+[36mFile [39m[32m/opt/hostedtoolcache/Python/3.12.14/x64/lib/python3.12/site-packages/pandas/io/common.py:281[39m, in [36murlopen[39m[34m(*args, **kwargs)[39m
+[32m    275[39m [38;5;250m[39m[33;03m"""[39;00m
+[32m    276[39m [33;03mLazy-import wrapper for stdlib urlopen, as that imports a big chunk of[39;00m
+[32m    277[39m [33;03mthe stdlib.[39;00m
+[32m    278[39m [33;03m"""[39;00m
+[32m    279[39m [38;5;28;01mimport[39;00m[38;5;250m [39m[34;01murllib[39;00m[34;01m.[39;00m[34;01mrequest[39;00m
+[32m--> [39m[32m281[39m [38;5;28;01mreturn[39;00m [30;43murllib[39;49m[30;43m.[39;49m[30;43mrequest[39;49m[30;43m.[39;49m[30;43murlopen[39;49m[30;43m([39;49m[30;43m*[39;49m[30;43margs[39;49m[30;43m,[39;49m[30;43m [39;49m[30;43m*[39;49m[30;43m*[39;49m[30;43mkwargs[39;49m[30;43m)[39;49m
+
+[36mFile [39m[32m/opt/hostedtoolcache/Python/3.12.14/x64/lib/python3.12/urllib/request.py:215[39m, in [36murlopen[39m[34m(url, data, timeout, cafile, capath, cadefault, context)[39m
+[32m    213[39m [38;5;28;01melse[39;00m:
+[32m    214[39m     opener = _opener
+[32m--> [39m[32m215[39m [38;5;28;01mreturn[39;00m [30;43mopener[39;49m[30;43m.[39;49m[30;43mopen[39;49m[30;43m([39;49m[30;43murl[39;49m[30;43m,[39;49m[30;43m [39;49m[30;43mdata[39;49m[30;43m,[39;49m[30;43m [39;49m[30;43mtimeout[39;49m[30;43m)[39;49m
+
+[36mFile [39m[32m/opt/hostedtoolcache/Python/3.12.14/x64/lib/python3.12/urllib/request.py:521[39m, in [36mOpenerDirector.open[39m[34m(self, fullurl, data, timeout)[39m
+[32m    519[39m [38;5;28;01mfor[39;00m processor [38;5;129;01min[39;00m [38;5;28mself[39m.process_response.get(protocol, []):
+[32m    520[39m     meth = [38;5;28mgetattr[39m(processor, meth_name)
+[32m--> [39m[32m521[39m     response = [30;43mmeth[39;49m[30;43m([39;49m[30;43mreq[39;49m[30;43m,[39;49m[30;43m [39;49m[30;43mresponse[39;49m[30;43m)[39;49m
+[32m    523[39m [38;5;28;01mreturn[39;00m response
+
+[36mFile [39m[32m/opt/hostedtoolcache/Python/3.12.14/x64/lib/python3.12/urllib/request.py:630[39m, in [36mHTTPErrorProcessor.http_response[39m[34m(self, request, response)[39m
+[32m    627[39m [38;5;66;03m# According to RFC 2616, "2xx" code indicates that the client's[39;00m
+[32m    628[39m [38;5;66;03m# request was successfully received, understood, and accepted.[39;00m
+[32m    629[39m [38;5;28;01mif[39;00m [38;5;129;01mnot[39;00m ([32m200[39m <= code < [32m300[39m):
+[32m--> [39m[32m630[39m     response = [30;43mself[39;49m[30;43m.[39;49m[30;43mparent[39;49m[30;43m.[39;49m[30;43merror[39;49m[30;43m([39;49m
+[32m    631[39m [30;43m        [39;49m[30;43m'[39;49m[30;43mhttp[39;49m[30;43m'[39;49m[30;43m,[39;49m[30;43m [39;49m[30;43mrequest[39;49m[30;43m,[39;49m[30;43m [39;49m[30;43mresponse[39;49m[30;43m,[39;49m[30;43m [39;49m[30;43mcode[39;49m[30;43m,[39;49m[30;43m [39;49m[30;43mmsg[39;49m[30;43m,[39;49m[30;43m [39;49m[30;43mhdrs[39;49m[30;43m)[39;49m
+[32m    633[39m [38;5;28;01mreturn[39;00m response
+
+[36mFile [39m[32m/opt/hostedtoolcache/Python/3.12.14/x64/lib/python3.12/urllib/request.py:559[39m, in [36mOpenerDirector.error[39m[34m(self, proto, *args)[39m
+[32m    557[39m [38;5;28;01mif[39;00m http_err:
+[32m    558[39m     args = ([38;5;28mdict[39m, [33m'[39m[33mdefault[39m[33m'[39m, [33m'[39m[33mhttp_error_default[39m[33m'[39m) + orig_args
+[32m--> [39m[32m559[39m     [38;5;28;01mreturn[39;00m [30;43mself[39;49m[30;43m.[39;49m[30;43m_call_chain[39;49m[30;43m([39;49m[30;43m*[39;49m[30;43margs[39;49m[30;43m)[39;49m
+
+[36mFile [39m[32m/opt/hostedtoolcache/Python/3.12.14/x64/lib/python3.12/urllib/request.py:492[39m, in [36mOpenerDirector._call_chain[39m[34m(self, chain, kind, meth_name, *args)[39m
+[32m    490[39m [38;5;28;01mfor[39;00m handler [38;5;129;01min[39;00m handlers:
+[32m    491[39m     func = [38;5;28mgetattr[39m(handler, meth_name)
+[32m--> [39m[32m492[39m     result = [30;43mfunc[39;49m[30;43m([39;49m[30;43m*[39;49m[30;43margs[39;49m[30;43m)[39;49m
+[32m    493[39m     [38;5;28;01mif[39;00m result [38;5;129;01mis[39;00m [38;5;129;01mnot[39;00m [38;5;28;01mNone[39;00m:
+[32m    494[39m         [38;5;28;01mreturn[39;00m result
+
+[36mFile [39m[32m/opt/hostedtoolcache/Python/3.12.14/x64/lib/python3.12/urllib/request.py:639[39m, in [36mHTTPDefaultErrorHandler.http_error_default[39m[34m(self, req, fp, code, msg, hdrs)[39m
+[32m    638[39m [38;5;28;01mdef[39;00m[38;5;250m [39m[34mhttp_error_default[39m([38;5;28mself[39m, req, fp, code, msg, hdrs):
+[32m--> [39m[32m639[39m     [38;5;28;01mraise[39;00m HTTPError(req.full_url, code, msg, hdrs, fp)
+
+[31mHTTPError[39m: HTTP Error 403: Forbidden
+
