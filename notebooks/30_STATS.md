@@ -15,7 +15,7 @@ to check all the probability calculations for yourself.
 - Confidence intervals [32_confidence_intervals.ipynb](./32_confidence_intervals.ipynb)
 - Introduction to hypothesis testing [33_intro_to_NHST.ipynb](./33_intro_to_NHST.ipynb)
 - Analytical approximations [34_analytical_approx.ipynb](./34_analytical_approx.ipynb)
-- Two-sample tests [35_two_sample_tests.ipynb](./35_two_sample_tests.ipynb)
+- Two-sample tests [35_comparing_two_populations.ipynb](./35_comparing_two_populations.ipynb)
 - Statistical design and error analysis [36_design.ipynb](./36_design.ipynb)
 - Inventory of statistical tests [37_inventory_stats_tests.ipynb](./37_inventory_stats_tests.ipynb)
 - No notebook available for **Section 3.8 Stats practice** yet

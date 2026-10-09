@@ -210,9 +210,9 @@ We revisit the hypothesis testing procedures using analytical formulas.
 In this notebook,
 we focus on the specific problem of comparing samples from two unknown populations.
 
-- View notebook: [35_two_sample_tests.ipynb](./35_two_sample_tests.ipynb)
-- Binder link: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstats/main?labpath=notebooks%2F35_two_sample_tests.ipynb)
-- Colab link: [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/minireference/noBSstats/blob/main/notebooks/35_two_sample_tests.ipynb)
+- View notebook: [35_comparing_two_populations.ipynb](./35_comparing_two_populations.ipynb)
+- Binder link: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/minireference/noBSstats/main?labpath=notebooks%2F35_comparing_two_populations.ipynb)
+- Colab link: [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/minireference/noBSstats/blob/main/notebooks/35_comparing_two_populations.ipynb)
 
 ### 3.6 Statistical design and error analysis
 This section describes the possible mistakes we can make when using the hypothesis testing procedure.
