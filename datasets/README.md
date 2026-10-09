@@ -282,7 +282,9 @@ TODO
   - Data files [`bpwide.dta`](http://www.stata-press.com/data/r9/bpwide.dta)
     and [`bplong.dta`](http://www.stata-press.com/data/r9/bplong.dta)
     are provided as part of the [Stata User's Guide](https://www.stata-press.com/data/r9/u.html).
-	
+  - Use cases
+    - convert from `bpwide` to `bplong`
+    - Paired t-test exercise in Sec 3.7
 
 
 
