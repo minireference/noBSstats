@@ -80,41 +80,48 @@ TODO: move detailed info to `students.md`
 
 
 ### Dataset 5: Doctors sleep study
+- Dataset: [``doctors.csv`](./`doctors.csv)
+- Description: 
+- Format: CSV file that contain n observations and k variables:
+  - `id`
+- Source:
+  - Synthetic data
 
- - `doctors.csv`
+
+
+### IQ score comparison
+- Dataset: [`iqs2.csv`](./iqs2.csv)
+- Description: 
+- Format: CSV file that contain n observations and k variables:
+  - `id`
+- Source:
+
+
+### IQ scores
+- Dataset: [`iqs.csv`](./iqs.csv)
+- Description: 
+- Format: CSV file that contain n observations and k variables:
+  - `id`
+- Source:
+
+
+
+
+
 
 
 
 ### Dataset 6: Website A/B test
 
-- `visitors.csv`
-
-- columns:
+- Dataset: [`visitors.csv`](./visitors.csv)
+- Description: 
+- Format: CSV file that contain n observations and k variables:
   - `version` (categorical) which is either B = baseline or A = alternative
   - `bought` (boolean) whether visitor bought something or not
+- Source:
 
 
 
-
-## Datasets used in exercises
-
-
-### Asthma
-- Dataset: [`exercises/asthma.csv`](./exercises/asthma.csv)
-
-
-### Admissions (binary decision)
-
-- Dataset: [`exercises/binary.csv`](./exercises/binary.csv)
-
-### Honors class
-
-- Dataset: [`exercises/honors.csv`](./exercises/honors.csv)
-
-
-### Titanic
-
-- Dataset: [`exercises/titanic.csv`](./exercises/titanic.csv)
 
 
 
@@ -151,6 +158,11 @@ TODO: move detailed info to `students.md`
 ### Lalonde
 
 An experiment whether training increases income.
+- Dataset: [`lalonde.csv`](./lalonde.csv)
+- Description: 
+- Format: CSV file that contain n observations and k variables:
+  - `id`
+- Source:
 
 
 
@@ -190,8 +202,6 @@ An experiment whether training increases income.
 
 
 
-
-## Exercises datasets
 
 
 ## Problems datasets
@@ -347,13 +357,160 @@ This dataset records duration of the eruption and the waiting time between erupt
 
 
 
+## Datasets used in exercises
 
-### NAME
 
-- Datasets: [``](./)
+### Asthma
+- Dataset: [`asthma.csv`](./asthma.csv)
 - Description: 
 - Format: CSV file that contain n observations and k variables:
   - `id`
-
 - Source:
+
+
+### Admissions (binary decision)
+
+- Dataset: [`binary.csv`](./binary.csv)
+- Description: 
+- Format: CSV file that contain n observations and k variables:
+  - `id`
+- Source:
+
+
+### Honors class
+
+- Dataset: [`honors.csv`](./honors.csv)
+- Description: 
+- Format: CSV file that contain n observations and k variables:
+  - `id`
+- Source:
+
+
+### Titanic
+
+- Dataset: [`titanic.csv`](./titanic.csv)
+- Description: 
+- Format: CSV file that contain n observations and k variables:
+  - `id`
+- Source:
+
+
+
+
+
+### Job satisfaction
+
+- Dataset: [`jobsatisfaction.csv`](./jobsatisfaction.csv)
+- Description: Contains the job satisfaction score organized by gender and education level.
+- Format: CSV file that contain 58 observations and 3 variables:
+  - `id`
+- Source:
+  - https://github.com/kassambara/datarium
+
+
+
+### Marketing 
+
+- Dataset: [`marketing.csv`](./marketing.csv)
+- Description: A data frame containing the impact of three advertising medias
+   (youtube, facebook and newspa- per) on sales.
+   Data are the advertising budget in thousands of dollars along with the sales.
+   The advertising experiment has been repeated 200 times.
+- Format: CSV file that contain 200 observations and 4 variables:
+  - `id`
+- Source:
+  - https://github.com/kassambara/datarium
+
+
+
+
+
+### GCSE 
+
+- Datasets: [`gcsemv.csv`](./gcsemv.csv)
+- Description: 1523 student records from 73 schools. 
+- Notes:
+  - Gender F=899, M=624.
+  - Student alone is not unique (575 distinct codes); school + student is unique.
+  - School sizes range 1–83, with 9 schools below 5.
+- Format: CSV file that contain n observations and k variables:
+  - `??`
+- Source:
+
+
+
+
+### Coin tosses
+
+- Dataset: [`ctosses.csv`](./ctosses.csv)
+- Description: Data used to illustrate Bayesian inference
+- Format: CSV file that contain n observations and k variables:
+  - `id`
+- Source:
+
+
+## Other datasets (TO DOCUMENT)
+
+
+
+### Hard disks
+
+- Dataset: [`hdisks.csv`](./hdisks.csv)
+- Description:
+- Format:
+- Source:
+
+
+### Interns
+
+- Dataset: [`interns.csv`](./interns.csv)
+- Description:
+- Format:
+- Source:
+
+
+### Weight loss
+
+- Dataset: [`wloss.csv`](./wloss.csv)
+- Description:
+- Format:
+- Source:
+
+
+### Movies
+
+- Dataset: [`movies.csv`](./movies.csv)
+- Description:
+- Format:
+- Source:
+
+
+### Outliers
+
+- Dataset: [`outliers2.csv`](./outliers2.csv)
+- Description:
+- Format:
+- Source:
+
+
+### OECD Better Life Index
+
+- Dataset: [`oecd_bli.csv`](./oecd_bli.csv)
+- Description:
+- Format:
+- Source:
+
+
+
+
+
+
+### NAME
+
+- Dataset: [``](./)
+- Description: 
+- Format: CSV file that contain n observations and k variables:
+  - `id`
+- Source:
+
 
