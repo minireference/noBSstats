@@ -68,9 +68,6 @@ These are the datasets used in examples and explanations throughout the book.
 - Source: Caroline Smith (experimental data)
 
 
-TODO: move detailed info to `students.md`
-
-
 
 
 ### Dataset 4: Kombucha volumes
@@ -207,22 +204,31 @@ An experiment whether training increases income.
 ## Problems datasets
 
 
+
 ### Mortality
 
-Simulated data of lifetimes to use in Problem {problem:empirical-dist-mortality} to estimate life expectency
-+ conditional life expectency
+TODO: generate this dataset
+
+- Datasets: [`mortality.csv`](./mortality.csv)
+- Description: Simulated data of lifetimes to use in Problem {problem:empirical-dist-mortality}
+   to estimate life expectancy and conditional life expectancy given a certain age.
+- Format: CSV file that contain n observations and k variables:
+  - `id`:
+  - `sex`: `M` of `F`
+  - `born`:
+  - `died`:
+  - `lifetime`: lifetime in years
+  - `nkids`
+  - `ncibligs`
+  - `edulvl`
+  - `occupation`: 
+  - `mstatus`: marital status, one of `never married`, `married`, `divorced`,  `widowed`
+- Source:
+  - Synthetic data
+- Use cases: ch2 problem to calculate life expectancy + conditional life expectancy
 
 
-- `id`
-- `sex`
-- `born`
-- `died`
-- `lifetime`
-- `nkids`
-- `ncibligs`
-- `edulvl`
-- `occup`
-- `rel`: relationship status (at time of death) single, married, widowed, etc.
+
 
 
 
@@ -243,7 +249,7 @@ Simulated data of lifetimes to use in Problem {problem:empirical-dist-mortality}
 
 ### Grades
 
-TODO
+TODO: generate this dataset
 
 - Datasets: [`grades.csv`](./grades.csv)
 - Description: 
@@ -260,7 +266,7 @@ TODO
 
 ### Medical trial
 
-TODO
+TODO: generate this dataset
 
 - Datasets: [`medtrial.csv`](./medtrial.csv)
 - Description: TODO
@@ -340,22 +346,6 @@ This dataset records duration of the eruption and the waiting time between erupt
 
 
 
-### Longevity
-
-- Datasets: [``](./)
-- Description: 
-- Format: CSV file that contain n observations and k variables:
-  - `id`:
-  - `sex`: `M` of `F`
-  - `born`:
-  - `died`:
-  - `lifetime`: lifetime in years
-  - `occupation`: 
-  - `status`: marital status, one of `never married`, `married`, `divorced`,  `widowed`
-- Source:
-- Use cases: ch2 problem to calculate life expectancy + conditional life expectancy
-
-
 
 ## Datasets used in exercises
 
@@ -403,7 +393,7 @@ This dataset records duration of the eruption and the waiting time between erupt
 - Dataset: [`jobsatisfaction.csv`](./jobsatisfaction.csv)
 - Description: Contains the job satisfaction score organized by gender and education level.
 - Format: CSV file that contain 58 observations and 3 variables:
-  - `id`
+
 - Source:
   - https://github.com/kassambara/datarium
 
@@ -412,15 +402,18 @@ This dataset records duration of the eruption and the waiting time between erupt
 ### Marketing 
 
 - Dataset: [`marketing.csv`](./marketing.csv)
-- Description: A data frame containing the impact of three advertising medias
-   (youtube, facebook and newspa- per) on sales.
-   Data are the advertising budget in thousands of dollars along with the sales.
-   The advertising experiment has been repeated 200 times.
-- Format: CSV file that contain 200 observations and 4 variables:
-  - `id`
+- Description: The impact of three advertising medias (youtube, facebook, and newspaper) on weekly sales.
+    The data was collected from the past 200 weeks.
+- Format: CSV file that contain 200 observations of 4 variables:
+  - `youtube`: money spent on youtube ads
+  - `facebook`: money spent on facebook ads
+  - `newspaper`: money spent on newspaper ads
+  - `sales`: sales in thousands of dollars.
 - Source:
   - https://github.com/kassambara/datarium
-
+    See [this page](https://www.datanovia.com/learn/biostatistics/regression/multiple-linear-regression-in-r) for the analysis.
+- Use cases:
+  - Exercises in Sec 4.1 and Sec 4.2
 
 
 
