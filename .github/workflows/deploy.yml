@@ -35,7 +35,19 @@ jobs:
     # Build the book
     - name: Build the book
       run: |
-        jupyter-book build .
+        jupyter book build --html
+
+
+    # Extra steps to create backward-comparible URLs
+    - name: Install uv
+      uses: astral-sh/setup-uv@v4
+
+    - name: Generate redirects
+      run: |
+        uv run https://raw.githubusercontent.com/jupyter-book/jb1-redirect-generator/main/generate_redirects.py \
+          --base-url https://noBSstats.com/ \
+          --output-dir _build/html
+
 
     # Aletenrative site generated using mkdocs
     - name: Build mkdocs site
