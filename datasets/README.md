@@ -494,6 +494,16 @@ This dataset records duration of the eruption and the waiting time between erupt
 - Source:
 
 
+### Four groups
+
+- Dataset: [`fourgroups.csv`](./fourgroups.csv)
+- Description: Synthetic dataset to use in ANOVA and LMs with a categorical predictor.
+- Format: CSV file that contain 80 observations and 2 variables:
+  - `group`: categorical with values `A`, `B`, `C`, and `D`
+  - `value`: numerical
+- Source: synthetic data; see the notebook [`fourgroup_gen.ipynb`](https://github.com/minireference/noBSstats/blob/main/data_generation/fourgroup_gen.ipynb).
+
+
 
 
 
