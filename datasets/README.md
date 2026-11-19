@@ -181,6 +181,8 @@ An experiment whether training increases income.
     using the code in the notebook [`howell30_gen.ipynb`](https://github.com/minireference/noBSstats/blob/main/data_generation/howell30_gen.ipynb).
 
 
+
+
 ### Radon
 
 - Dataset: [`radon.csv`](./radon.csv)
@@ -440,6 +442,79 @@ This dataset records duration of the eruption and the waiting time between erupt
 - Format: CSV file that contain n observations and k variables:
   - `id`
 - Source:
+
+
+
+## Datasets used in causal inference examples
+
+The following datasets are taken from examples 1 through 4
+from the paper [Why We Should Teach Causal Inference: Examples in Linear Regression With Simulated Data](https://www.tandfonline.com/doi/full/10.1080/10691898.2020.1752859).
+The variable names have been shortened, but the numbers come out the same.
+
+
+### Example 1: learning to understanding pipe 
+
+- Dataset: [`learning1.csv`](./learning1.csv)
+- Description: Synthetic data in which learning increases knowing, which in turn increases understanding.
+- Format: CSV file that contain 1000 observations and 3 variables:
+  - `learn`:
+  - `know`:
+  - `undstd`:
+- Source:
+  - [Why We Should Teach Causal Inference: Examples in Linear Regression With Simulated Data](https://www.tandfonline.com/doi/full/10.1080/10691898.2020.1752859)
+    > Example 3
+  - Synthetic data; see the notebook [`causal_inference_gen.ipynb`](https://github.com/minireference/noBSstats/blob/main/data_generation/causal_inference_gen.ipynb).
+
+
+
+### Example 2: learning time and test scores
+
+- Dataset: [`learning2.csv`](./learning2.csv)
+- Description: Data from a scenario in which intelligence reduces learning time,
+  while both intelligence and learning time increase test scores.
+- Format: CSV file that contain 1000 observations and 3 variables:
+  - `iq`
+  - `ltime`
+  - `tscore`
+- Source:
+  - [Why We Should Teach Causal Inference: Examples in Linear Regression With Simulated Data](https://www.tandfonline.com/doi/full/10.1080/10691898.2020.1752859)
+    > Example 3
+  - Synthetic data; see the notebook [`causal_inference_gen.ipynb`](https://github.com/minireference/noBSstats/blob/main/data_generation/causal_inference_gen.ipynb).
+
+
+
+### Example 3: collider bias
+
+- Dataset: [`learning3.csv`](./learning3.csv)
+- Description: Data from a scenario in which networking ability and competence
+  are not causally related, but both lead to promotions.
+- Format: CSV file that contain 1000 observations and 3 variables:
+  - `ntwrk`
+  - `comp`
+  - `prom`
+- Source:
+  - [Why We Should Teach Causal Inference: Examples in Linear Regression With Simulated Data](https://www.tandfonline.com/doi/full/10.1080/10691898.2020.1752859)
+    > Example 3
+  - Synthetic data; see the notebook [`causal_inference_gen.ipynb`](https://github.com/minireference/noBSstats/blob/main/data_generation/causal_inference_gen.ipynb).
+
+
+
+### Example 4: random assignment to avoid confounding
+
+- Dataset: [`learning4.csv`](./learning4.csv)
+- Description: Experiment in which students are randomly assigned 80 or 120 units of learning time,
+  and both learning time and intelligence affect test scores.
+- Format: CSV file that contain 1000 observations and 4 variables:
+  - `iq`:
+  - `group`:  
+  - `ltime`: 
+  - `tscore`
+- Source:
+  - [Why We Should Teach Causal Inference: Examples in Linear Regression With Simulated Data](https://www.tandfonline.com/doi/full/10.1080/10691898.2020.1752859)
+    > Example 4
+  - Synthetic data; see the notebook [`causal_inference_gen.ipynb`](https://github.com/minireference/noBSstats/blob/main/data_generation/causal_inference_gen.ipynb).
+
+
 
 
 ## Other datasets (TO DOCUMENT)

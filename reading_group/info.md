@@ -13,9 +13,9 @@ when you can ask further clarifying questions.
 
 Schedule
 --------
-Here is the [schedule](https://docs.google.com/spreadsheets/d/1Prwh9q-MTwScMLoH20rxmmNxZ9vEDx820nikQadxpkI/edit?usp=sharing):
+Here is the [schedule](https://docs.google.com/spreadsheets/d/1Prwh9q-MTwScMLoH20rxmmNxZ9vEDx820nikQadxpkI/edit?usp=sharing) for Part 2 (August 2026 to January 2027):
 
-<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQmBwfQE2R9BOx2RGltcNtrqB7BdTtp0S6vQtMnDZb_o7hiz3hz7MiZULYyIM2D87nMuBSMmHl84S0f/pubhtml?range=A1:I20&amp;gid=1831482130&amp;single=true&amp;widget=true&amp;headers=false" style="height:420px;width:100%;border:none;overflow:hidden;"></iframe>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQmBwfQE2R9BOx2RGltcNtrqB7BdTtp0S6vQtMnDZb_o7hiz3hz7MiZULYyIM2D87nMuBSMmHl84S0f/pubhtml?range=A1:I20&amp;gid=1831482130&amp;single=true&amp;widget=true&amp;headers=false" style="height:500px;width:100%;border:none;overflow:hidden;"></iframe>
 
 
 
